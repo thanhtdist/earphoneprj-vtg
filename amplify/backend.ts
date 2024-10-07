@@ -73,6 +73,21 @@ meetingPath.addMethod("POST", createMeetingLambdaIntegration);
 //itemsPath.addMethod("DELETE", lambdaIntegration);
 //itemsPath.addMethod("PUT", lambdaIntegration);
 
+// Add attendee API from meeting API
+// create a new Lambda integration for creating attendees
+const createAttendeeLambdaIntegration = new LambdaIntegration(
+  backend.createAttendee.resources.lambda
+);
+
+// create a dynamic {MeetingID} resource under /meeting
+const meetingIdPath = meetingPath.addResource("{MeetingID}");
+
+// create the 'attendees' resource under /meeting/{MeetingID}
+const attendeesPath = meetingIdPath.addResource("attendees");
+
+// add POST method to /meeting/{MeetingID}/attendees with Lambda integration
+attendeesPath.addMethod("POST", createAttendeeLambdaIntegration);
+
 // add a proxy resource path to the API
 // itemsPath.addProxy({
 //   anyMethod: true,
