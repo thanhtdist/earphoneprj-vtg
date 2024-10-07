@@ -54,7 +54,7 @@ function LiveViewer() {
     //const userID = "a4c894e8-c021-7097-8ff0-f639dca1f3fb";
     //const userArn = `arn:aws:chime:us-east-1:647755634525:app-instance/dec63f1a-bff4-48f9-a75e-2575ca8036a9/user/${userID}`;
     //const userArn = await createAppInstanceUsers(userId, username);
-    const userArn = createAppInstanceUsers(Config.ListenerIDTest);
+    const userArn = createAppInstanceUsers(userId);
     console.log("Listener createAppInstanceUsers", userArn);
     //arn:aws:chime:us-east-1:647755634525:app-instance/dec63f1a-bff4-48f9-a75e-2575ca8036a9/channel/daa5f379-c02c-4c34-96ed-14bdfa193712
     const channelArn = `arn:aws:chime:us-east-1:647755634525:app-instance/dec63f1a-bff4-48f9-a75e-2575ca8036a9/channel/${channelId}`;

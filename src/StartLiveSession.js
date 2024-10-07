@@ -48,7 +48,7 @@ function StartLiveSession() {
     console.log("Host sign-in details", signInDetails);
     // Create userArn/ channelArn
     //const userID = 'e45834d8-8081-7080-3c1b-cb836aee5aa6';
-    const userArn = createAppInstanceUsers(Config.HostIDTest);
+    const userArn = createAppInstanceUsers(userId);
     // console.log("Create App Instance User Response", userArn.AppInstanceUserArn);
     const channel = await createChanel(userArn);
     console.log("Channel", channel);
