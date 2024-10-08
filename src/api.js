@@ -63,7 +63,7 @@ export async function createChanel(userArn) {
   }
   console.log("Create Channel Input", input);
   const command = new CreateChannelCommand(input);
-  consele.log("Create Channel Command", command);
+  console.log("Create Channel Command", command);
   const response = await chimeSDKMessagingClient().send(command);
   console.log("Create Channel Response", response);
   return response;
