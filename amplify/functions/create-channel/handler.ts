@@ -3,25 +3,25 @@ import AWS from 'aws-sdk';
 
 export const handler: APIGatewayProxyHandler = async (event) => {
   const region = process.env.AWS_REGION || 'us-east-1';
-  const chime = new AWS.ChimeSDKMeetings({ region });
-  
+  const chime = new AWS.ChimeSDKMessaging({ region });
+
   try {
     // Parse body from API Gateway event
-    console.log('Event Attendees: ', event);
+    console.log('Event: ', event);
     console.log('Event body: ', event.body);
-    const meetingId = event.pathParameters ? event.pathParameters.MeetingID : null;
-    console.log('MeetingId2: ', meetingId);
     //const { clientRequestToken, externalMeetingId } = JSON.parse(event.body || '{}'); // Ensure parsing from body
     // const { clientRequestToken, externalMeetingId } = JSON.parse(event.body || '{}');// Ensure parsing from body
-    const { externalUserId } = JSON.parse(event.body || '{}');
+    const { appInstanceArn, name, mode, privacy, clientRequestToken, chimeBearer } = JSON.parse(event.body || '{}');
 
-    console.log('Creating attendee with meetingId: ', meetingId, 'externalUserId: ', externalUserId);
+    console.log('Creating channel with appInstanceArn: ', appInstanceArn,
+      'name: ', name, 'mode:', mode, 'privacy: ',
+      privacy, 'clientRequestToken: ', clientRequestToken, 'chimeBearer: ', chimeBearer);
 
     // Input validation
-    if (!meetingId || !externalUserId) {
+    if (!appInstanceArn || !name || !mode || !privacy || !clientRequestToken || !chimeBearer) {
       return {
         statusCode: 400,
-        body: JSON.stringify({ error: 'Invalid input: meetingId and externalUserId are required.' }),
+        body: JSON.stringify({ error: 'Invalid input: appInstanceArn, name, mode, privacy, clientRequestToken and chimeBearer are required.' }),
         headers: {
           'Content-Type': 'application/json',
           'Access-Control-Allow-Origin': '*', // Enable CORS if needed
@@ -29,19 +29,23 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       };
     }
 
-    // Create a new Chime meeting
-    const attendeeResponse = await chime.createAttendee({
-      MeetingId: meetingId,
-      ExternalUserId: externalUserId  // Unique ID for each attendee (host or listener)
+    // Create a new Chime Channel
+    const createChannelResponse = await chime.createChannel({
+      AppInstanceArn: appInstanceArn,  // AppInstanceUserArn
+      Name: name,  // Must be a unique channel name
+      Mode: mode,  // RESTRICTED or UNRESTRICTED
+      Privacy: privacy,  // PUBLIC or PRIVATE
+      ClientRequestToken: clientRequestToken,  // Unique channel identifier
+      ChimeBearer: chimeBearer // chime Bearer
     }).promise();
-    
-    console.log('Created Chime Attendee: ', attendeeResponse.Attendee?.AttendeeId);
+
+    console.log('Created Channel Response: ', createChannelResponse.ChannelArn);
 
     // Return successful response
     return {
       statusCode: 200,
       body: JSON.stringify({
-        data: attendeeResponse.Attendee,
+        data: createChannelResponse.ChannelArn,
       }),
       headers: {
         'Content-Type': 'application/json',
@@ -49,7 +53,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       },
     };
   } catch (error: any) {
-    console.error('Error creating meeting: ', { error, event });
+    console.error('Error creating Channel: ', { error, event });
     return {
       statusCode: 500,
       body: JSON.stringify({ error: error.message || 'Internal Server Error' }),

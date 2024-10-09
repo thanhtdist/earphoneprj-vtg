@@ -3,27 +3,24 @@ import AWS from 'aws-sdk';
 
 export const handler: APIGatewayProxyHandler = async (event) => {
   const region = process.env.AWS_REGION || 'us-east-1';
-  const chime = new AWS.ChimeSDKMeetings({ region });
+  const chime = new AWS.ChimeSDKMessaging({ region });
 
   try {
-    // Retrieve meeting parameters from query string
-    // const meetingId = event.queryStringParameters?.meetingId;
-    const meetingId = event.pathParameters ? event.pathParameters.MeetingID : null;
-    console.log('Creating meeting with meetingId: ', meetingId);
     // Parse body from API Gateway event
-    // console.log('Event: ', event);
-    // console.log('Event body: ', event.body);
+    console.log('Event: ', event);
+    console.log('Event body: ', event.body);
     //const { clientRequestToken, externalMeetingId } = JSON.parse(event.body || '{}'); // Ensure parsing from body
     // const { clientRequestToken, externalMeetingId } = JSON.parse(event.body || '{}');// Ensure parsing from body
-    //const { clientRequestToken, externalMeetingId } = JSON.parse(event.body || '{}');
+    const channelArn = event.pathParameters ? event.pathParameters.channelArn : null;
+    const { memberArn, type, chimeBearer } = JSON.parse(event.body || '{}');
 
-    //console.log('Creating meeting with clientRequestToken: ', clientRequestToken, 'externalMeetingId: ', externalMeetingId);
-
+    console.log('Creating Channel Membership with channelArn: ', channelArn,
+      'memberArn: ', memberArn, 'type:', memberArn, 'chimeBearer: ', chimeBearer);
     // Input validation
-    if (!meetingId) {
+    if (!channelArn || !memberArn || !type || !chimeBearer) {
       return {
         statusCode: 400,
-        body: JSON.stringify({ error: 'Invalid input: meetingId are required.' }),
+        body: JSON.stringify({ error: 'Invalid input: channelArn, memberArn, type and chimeBearer are required.' }),
         headers: {
           'Content-Type': 'application/json',
           'Access-Control-Allow-Origin': '*', // Enable CORS if needed
@@ -31,18 +28,21 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       };
     }
 
-    // Create a new Chime meeting
-    const meetingResponse = await chime.getMeeting({
-      MeetingId: meetingId
+    // Create a new Chime Channel
+    const createChannelMembershipResponse = await chime.createChannelMembership({
+      ChannelArn: decodeURIComponent(channelArn),  // AppInstanceUserArn
+      MemberArn: memberArn,  // Must be a unique channel name
+      Type: type,  // RESTRICTED or UNRESTRICTED
+      ChimeBearer: chimeBearer // chime Bearer
     }).promise();
 
-    console.log('Created Chime meeting: ', meetingResponse.Meeting?.MeetingId);
+    console.log('Created Channel Membership Response: ', createChannelMembershipResponse);
 
     // Return successful response
     return {
       statusCode: 200,
       body: JSON.stringify({
-        data: meetingResponse.Meeting,
+        data: createChannelMembershipResponse,
       }),
       headers: {
         'Content-Type': 'application/json',
@@ -50,7 +50,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       },
     };
   } catch (error: any) {
-    console.error('Error creating meeting: ', { error, event });
+    console.error('Error creating Channel Membership: ', { error, event });
     return {
       statusCode: 500,
       body: JSON.stringify({ error: error.message || 'Internal Server Error' }),

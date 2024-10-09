@@ -3,8 +3,7 @@ import {
   getMeeting,
   createAttendee,
   createAppInstanceUsers,
-  listUsers,
-  addUserToChannel,
+  addChannelMembership,
 } from './api';
 import {
   DefaultDeviceController,
@@ -31,9 +30,6 @@ function LiveViewer() {
   const [userArn, setUserArn] = useState('');
 
   const joinMeeting = async () => {
-
-    const listUsersResponse = await listUsers();
-    console.log("List app users", listUsersResponse);
     const meetingId = prompt("Enter meeting ID:");
     if (!meetingId) {
       alert("Meeting ID is required");
@@ -45,26 +41,26 @@ function LiveViewer() {
       return;
     }
 
+    // Get current login user
     const { username, userId, signInDetails } = await getCurrentUser();
-
     console.log("Listener username", username);
     console.log("Listener user id", userId);
     console.log("Listener sign-in details", signInDetails);
     // Create userArn/ channelArn
-    //const userID = "a4c894e8-c021-7097-8ff0-f639dca1f3fb";
-    //const userArn = `arn:aws:chime:us-east-1:647755634525:app-instance/dec63f1a-bff4-48f9-a75e-2575ca8036a9/user/${userID}`;
-    //const userArn = await createAppInstanceUsers(userId, username);
-    const userArn = createAppInstanceUsers(userId);
-    console.log("Listener createAppInstanceUsers", userArn);
-    //arn:aws:chime:us-east-1:647755634525:app-instance/dec63f1a-bff4-48f9-a75e-2575ca8036a9/channel/daa5f379-c02c-4c34-96ed-14bdfa193712
-    const channelArn = `arn:aws:chime:us-east-1:647755634525:app-instance/dec63f1a-bff4-48f9-a75e-2575ca8036a9/channel/${channelId}`;
-    await addUserToChannel(channelArn, userArn);
+    // create app instance user
+    const userArn = await createAppInstanceUsers(userId, username);
+    console.log("Listener createAppInstanceUsers", userArn.AppInstanceUserArn);
+    // join member to channel that is created by host
+    // Get channel ID from host
+    const channelArn = `${Config.appInstanceArn}/channel/${channelId}`;
+    // Join member to channel
+    await addChannelMembership(channelArn, userArn.AppInstanceUserArn);
     //setUserArn(userArn.AppInstanceUserArn);
-    setUserArn(userArn);
+    setUserArn(userArn.AppInstanceUserArn);
     setChannelArn(channelArn);
-
+    // join meeting
     const meeting = await getMeeting(meetingId);
-    const attendee = await createAttendee(meetingId, `listener-${Date.now()}`);
+    const attendee = await createAttendee(meetingId, userId);
     initializeMeetingSession(meeting, attendee);
   };
 

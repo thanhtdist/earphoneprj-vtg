@@ -4,12 +4,10 @@ import {
   createAttendee,
   //createRecording,
   //stopRecording,
-  //postItem,
-  getMeeting,
+  //getMeeting,
   createAppInstanceUsers,
-  listUsers,
-  createChanel,
-  addUserToChannel,
+  createChannel,
+  addChannelMembership,
 } from './api';
 import {
   DefaultDeviceController,
@@ -32,55 +30,43 @@ function StartLiveSession() {
   //const [mediaPipelineId, setMediaPipelineId] = useState('');
   const [selectedAudioInput, setSelectedAudioInput] = useState('');
   const [audioInputDevices, setAudioInputDevices] = useState([]);
-
-  //const userArn = 'arn:aws:chime:us-east-1:647755634525:app-instance/dec63f1a-bff4-48f9-a75e-2575ca8036a9/user/user001'; // Example ARN
   const [userArn, setUserArn] = useState('');
 
   const startMeeting = async () => {
-
-    const listUsersResponse = await listUsers();
-    console.log("List app users at Host", listUsersResponse);
-
+    // Get current login user
     const { username, userId, signInDetails } = await getCurrentUser();
-
     console.log("Host username", username);
     console.log("Host user id", userId);
     console.log("Host sign-in details", signInDetails);
-    // Create userArn/ channelArn
-    //const userID = 'e45834d8-8081-7080-3c1b-cb836aee5aa6';
+    // Get App Instance ARN from Config
     console.log("App instance", Config.appInstanceArn);
-    const userArn = createAppInstanceUsers(userId);
-    console.log("Create App Instance User Response", userArn);
-    const channel = await createChanel(userArn);
-    console.log("Channel", channel);
-    const channel_splits = channel.ChannelArn.split('/');
+    // create app instance user
+    const userArn = await createAppInstanceUsers(userId, username);
+    console.log("Create App Instance User Response", userArn.AppInstanceUserArn);
+    // create channel
+    const channelArn = await createChannel(userArn.AppInstanceUserArn);
+    console.log("Channel", channelArn);
+    const channel_splits = channelArn.split('/');
     console.log("Channel ID", channel_splits[channel_splits.length - 1]);
     setChannelID(channel_splits[channel_splits.length - 1]);
-    console.log(`Start Channel: ${channel.ChannelArn}`);
-    await addUserToChannel(channel.ChannelArn, userArn);
-    setUserArn(userArn);
-    setChannelArn(channel.ChannelArn);
+    // add member to channel
+    await addChannelMembership(channelArn, userArn.AppInstanceUserArn);
+    setUserArn(userArn.AppInstanceUserArn);
+    setChannelArn(channelArn);
 
-
-    // Create meeting and attendee
+    // Create meeting
     const meeting = await createMeeting();  // Create a new meeting
     setMeeting(meeting);
     console.log(`Meeting: ${meeting.MeetingId}`);
-    const getMeetingResult = await getMeeting(meeting.MeetingId);
-    console.log("getMeetingResult", getMeetingResult);
-    const attendee = await createAttendee(meeting.MeetingId, `host-${Date.now()}`);  // Create host attendee
-
+    // const getMeetingResult = await getMeeting(meeting.MeetingId);
+    // console.log("getMeetingResult", getMeetingResult);
+    // Create host attendee
+    //const attendee = await createAttendee(meeting.MeetingId, `host-${Date.now()}`);
+    const attendee = await createAttendee(meeting.MeetingId, userId);
     console.log(`Attendee: ${attendee.AttendeeId}`);
-    initializeMeetingSession(meeting, attendee);  // Initialize host session to broadcast audio
-    //startRecording(meeting.MeetingId);  // Start capture pipeline for recording
+    // Initialize host session to broadcast audio
+    initializeMeetingSession(meeting, attendee);
   };
-
-  // const startRecording = async (meetingId) => {
-  //   console.log(`Recording meeting: ${meetingId}`);
-  //   const pipeline = await createRecording(meetingId);
-  //   console.log(`Recording successfully: ${pipeline.MediaPipelineId}`);
-  //   setMediaPipelineId(pipeline.MediaPipelineId);
-  // };
 
   const stopMeeting = async () => {
     console.log("Audio video session stopped before", meetingSession.audioVideo);

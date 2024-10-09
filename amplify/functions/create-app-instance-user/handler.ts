@@ -3,27 +3,23 @@ import AWS from 'aws-sdk';
 
 export const handler: APIGatewayProxyHandler = async (event) => {
   const region = process.env.AWS_REGION || 'us-east-1';
-  const chime = new AWS.ChimeSDKMeetings({ region });
-
+  const chime = new AWS.ChimeSDKIdentity({ region });
+  
   try {
-    // Retrieve meeting parameters from query string
-    // const meetingId = event.queryStringParameters?.meetingId;
-    const meetingId = event.pathParameters ? event.pathParameters.MeetingID : null;
-    console.log('Creating meeting with meetingId: ', meetingId);
     // Parse body from API Gateway event
-    // console.log('Event: ', event);
-    // console.log('Event body: ', event.body);
+    console.log('Event: ', event);
+    console.log('Event body: ', event.body);
     //const { clientRequestToken, externalMeetingId } = JSON.parse(event.body || '{}'); // Ensure parsing from body
     // const { clientRequestToken, externalMeetingId } = JSON.parse(event.body || '{}');// Ensure parsing from body
-    //const { clientRequestToken, externalMeetingId } = JSON.parse(event.body || '{}');
+    const { appInstanceArn, appInstanceUserId, clientRequestToken, name } = JSON.parse(event.body || '{}');
 
-    //console.log('Creating meeting with clientRequestToken: ', clientRequestToken, 'externalMeetingId: ', externalMeetingId);
+    console.log('Creating App Instance User with appInstanceArn: ', appInstanceArn, 'appInstanceUserId: ', appInstanceUserId, 'clientRequestToken: ', clientRequestToken, 'name: ', name);
 
     // Input validation
-    if (!meetingId) {
+    if (!appInstanceArn || !appInstanceUserId || !clientRequestToken || !name) {
       return {
         statusCode: 400,
-        body: JSON.stringify({ error: 'Invalid input: meetingId are required.' }),
+        body: JSON.stringify({ error: 'Invalid input: appInstanceArn, appInstanceUserId, clientRequestToken and name are required.' }),
         headers: {
           'Content-Type': 'application/json',
           'Access-Control-Allow-Origin': '*', // Enable CORS if needed
@@ -32,17 +28,20 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     }
 
     // Create a new Chime meeting
-    const meetingResponse = await chime.getMeeting({
-      MeetingId: meetingId
+    const createAppInstanceUserResponse = await chime.createAppInstanceUser({
+      AppInstanceArn: appInstanceArn, // App Instance Arn
+      AppInstanceUserId: appInstanceUserId,  // Unique ID for each attendee (host or listener)
+      ClientRequestToken: clientRequestToken,  // Unique attendee identifier
+      Name: name,  // Attendee name
     }).promise();
-
-    console.log('Created Chime meeting: ', meetingResponse.Meeting?.MeetingId);
+    
+    console.log('Created App Instance User: ', createAppInstanceUserResponse.AppInstanceUserArn);
 
     // Return successful response
     return {
       statusCode: 200,
       body: JSON.stringify({
-        data: meetingResponse.Meeting,
+        data: createAppInstanceUserResponse.AppInstanceUserArn,
       }),
       headers: {
         'Content-Type': 'application/json',
@@ -50,7 +49,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       },
     };
   } catch (error: any) {
-    console.error('Error creating meeting: ', { error, event });
+    console.error('Error creating App Instance User: ', { error, event });
     return {
       statusCode: 500,
       body: JSON.stringify({ error: error.message || 'Internal Server Error' }),
