@@ -11,14 +11,14 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     console.log('Event body: ', event.body);
     //const { clientRequestToken, externalMeetingId } = JSON.parse(event.body || '{}'); // Ensure parsing from body
     // const { clientRequestToken, externalMeetingId } = JSON.parse(event.body || '{}');// Ensure parsing from body
-    const { appInstanceArn, name, mode, privacy, clientRequestToken, chimeBearer } = JSON.parse(event.body || '{}');
+    const { appInstanceArn, name, mode, privacy, clientRequestToken, chimeBearer, expirationCriterion, expirationDays } = JSON.parse(event.body || '{}');
 
     console.log('Creating channel with appInstanceArn: ', appInstanceArn,
       'name: ', name, 'mode:', mode, 'privacy: ',
       privacy, 'clientRequestToken: ', clientRequestToken, 'chimeBearer: ', chimeBearer);
 
     // Input validation
-    if (!appInstanceArn || !name || !mode || !privacy || !clientRequestToken || !chimeBearer) {
+    if (!appInstanceArn || !name || !mode || !privacy || !clientRequestToken || !chimeBearer || !expirationCriterion || !expirationDays) {
       return {
         statusCode: 400,
         body: JSON.stringify({ error: 'Invalid input: appInstanceArn, name, mode, privacy, clientRequestToken and chimeBearer are required.' }),
@@ -36,7 +36,11 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       Mode: mode,  // RESTRICTED or UNRESTRICTED
       Privacy: privacy,  // PUBLIC or PRIVATE
       ClientRequestToken: clientRequestToken,  // Unique channel identifier
-      ChimeBearer: chimeBearer // chime Bearer
+      ChimeBearer: chimeBearer, // chime Bearer
+      ExpirationSettings: {
+        ExpirationCriterion: expirationCriterion,
+        ExpirationDays: expirationDays
+      }
     }).promise();
 
     console.log('Created Channel Response: ', createChannelResponse.ChannelArn);

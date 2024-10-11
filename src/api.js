@@ -4,10 +4,12 @@ import {
   ChimeSDKIdentityClient,
   //CreateAppInstanceUserCommand,
   ListAppInstanceUsersCommand,
+
 } from "@aws-sdk/client-chime-sdk-identity"; // ES Modules import
 
 import {
   ChimeSDKMessagingClient,
+  ListChannelMessagesCommand,
 } from '@aws-sdk/client-chime-sdk-messaging';
 import Config from './Config';
 const { v4: uuid } = require('uuid');
@@ -49,33 +51,22 @@ export async function listUsers() {
   }
 };
 
-export async function createAppInstanceUsers(userID, userName) {
+export async function listChannelMessages(channelArn, userArn) {
+  const input = {
+    ChimeBearer: userArn,
+    ChannelArn: channelArn,
+    SortOrder: 'DESCENDING',
+  };
+  const command = new ListChannelMessagesCommand(input);
   try {
-    const checkExistingAppInstanceUser = await getAppInstanceUsers(userID);
-    if (checkExistingAppInstanceUser) {
-      console.log("App Instance User already exists", checkExistingAppInstanceUser);
-      return checkExistingAppInstanceUser;
-    }
-    const restOperation = post({
-      apiName: 'AppInstanceUserVTGRestApi',
-      path: 'app-instance-users',
-      options: {
-        body: {
-          appInstanceArn: Config.appInstanceArn,
-          appInstanceUserId: userID,
-          clientRequestToken: uuid(),
-          name: userName,
-        }
-      }
-    });
-
-    const { body } = await restOperation.response;
-    const response = await body.json();
-    return response.data;
+    const response = await chimeSDKMessagingClient().send(command);
+    console.log("listChannelMessages", response);
+    return response;
   } catch (error) {
-    console.log('POST call failed: ', JSON.parse(error.response.body));
+    console.error(error);
   }
 }
+
 
 export async function getAppInstanceUsers(userID) {
   try {
@@ -92,6 +83,36 @@ export async function getAppInstanceUsers(userID) {
   }
 }
 
+export async function createAppInstanceUsers(userID, userName) {
+  try {
+    // const checkExistingAppInstanceUser = await getAppInstanceUsers(userID);
+    // if (checkExistingAppInstanceUser) {
+    //   console.log("App Instance User already exists", checkExistingAppInstanceUser);
+    //   return checkExistingAppInstanceUser;
+    // }
+    const restOperation = post({
+      apiName: 'AppInstanceUserVTGRestApi',
+      path: 'app-instance-users',
+      options: {
+        body: {
+          appInstanceArn: Config.appInstanceArn,
+          appInstanceUserId: userID,
+          clientRequestToken: uuid(),
+          name: userName,
+          expirationCriterion: "CREATED_TIMESTAMP", 
+          expirationDays: Config.appInstanceUserExpirationDays,
+        }
+      }
+    });
+
+    const { body } = await restOperation.response;
+    const response = await body.json();
+    return response.data;
+  } catch (error) {
+    console.log('POST call failed: ', JSON.parse(error.response.body));
+  }
+}
+
 export async function createChannel(userArn) {
   try {
     const restOperation = post({
@@ -105,6 +126,8 @@ export async function createChannel(userArn) {
           privacy: "PUBLIC",
           clientRequestToken: uuid(),
           chimeBearer: userArn,
+          expirationCriterion: "LAST_MESSAGE_TIMESTAMP", // CREATED_TIMESTAMP | LAST_MESSAGE_TIMESTAMP
+          expirationDays: Config.channelExpirationDays,
         }
       }
     });

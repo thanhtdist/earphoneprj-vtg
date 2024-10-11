@@ -11,15 +11,16 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     console.log('Event body: ', event.body);
     //const { clientRequestToken, externalMeetingId } = JSON.parse(event.body || '{}'); // Ensure parsing from body
     // const { clientRequestToken, externalMeetingId } = JSON.parse(event.body || '{}');// Ensure parsing from body
-    const { appInstanceArn, appInstanceUserId, clientRequestToken, name } = JSON.parse(event.body || '{}');
+    const { appInstanceArn, appInstanceUserId, clientRequestToken, name, expirationCriterion, expirationDays } = JSON.parse(event.body || '{}');
 
     console.log('Creating App Instance User with appInstanceArn: ', appInstanceArn, 'appInstanceUserId: ', appInstanceUserId, 'clientRequestToken: ', clientRequestToken, 'name: ', name);
 
     // Input validation
-    if (!appInstanceArn || !appInstanceUserId || !clientRequestToken || !name) {
+    //if (!appInstanceArn || !appInstanceUserId || !clientRequestToken || !name || !expirationCriterion || !expirationDays) {
+    if (!appInstanceArn || !appInstanceUserId || !clientRequestToken || !name || !expirationCriterion || !expirationDays) {
       return {
         statusCode: 400,
-        body: JSON.stringify({ error: 'Invalid input: appInstanceArn, appInstanceUserId, clientRequestToken and name are required.' }),
+        body: JSON.stringify({ error: 'Invalid input: appInstanceArn, appInstanceUserId, clientRequestToken, name  expirationCriterion and expirationDays are required.' }),
         headers: {
           'Content-Type': 'application/json',
           'Access-Control-Allow-Origin': '*', // Enable CORS if needed
@@ -33,6 +34,10 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       AppInstanceUserId: appInstanceUserId,  // Unique ID for each attendee (host or listener)
       ClientRequestToken: clientRequestToken,  // Unique attendee identifier
       Name: name,  // Attendee name
+      ExpirationSettings: {
+        ExpirationCriterion: expirationCriterion,
+        ExpirationDays: expirationDays
+      }
     }).promise();
     
     console.log('Created App Instance User: ', createAppInstanceUserResponse.AppInstanceUserArn);

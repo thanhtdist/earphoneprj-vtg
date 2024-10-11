@@ -4,6 +4,7 @@ import {
   createAttendee,
   createAppInstanceUsers,
   addChannelMembership,
+  //getAppInstanceUsers,
 } from './api';
 import {
   DefaultDeviceController,
@@ -16,8 +17,12 @@ import {
 import './LiveViewer.css';
 import ChatMessage from './ChatMessage';
 import Config from './Config';
-import { Authenticator } from '@aws-amplify/ui-react';
-import { getCurrentUser } from 'aws-amplify/auth';
+// import { Authenticator } from '@aws-amplify/ui-react';
+// import {
+//   getCurrentUser,
+//   fetchUserAttributes,
+// } from 'aws-amplify/auth';
+import { v4 as uuidv4 } from 'uuid';
 
 function LiveViewer() {
   const [channelArn, setChannelArn] = useState('');
@@ -42,25 +47,38 @@ function LiveViewer() {
     }
 
     // Get current login user
-    const { username, userId, signInDetails } = await getCurrentUser();
-    console.log("Listener username", username);
-    console.log("Listener user id", userId);
-    console.log("Listener sign-in details", signInDetails);
+    // const { username, userId, signInDetails } = await getCurrentUser();
+    // console.log("Listener username", username);
+    // console.log("Listener user id", userId);
+    // console.log("Listener sign-in details", signInDetails);
+
+    // const { preferred_username } = await fetchUserAttributes();
+    // console.log("preferred_username", preferred_username);
+
+    const userID = uuidv4(); // Generate a unique user ID
+    console.log("Host userID", userID);
+    const userName = `user-${Date.now()}`;
+    console.log("Host userName", userName);
+
+    // Get userArn
+    // const getUserArn = await getAppInstanceUsers(userID);
+    // console.log("Listener getUserArn", getUserArn);
+
     // Create userArn/ channelArn
     // create app instance user
-    const userArn = await createAppInstanceUsers(userId, username);
-    console.log("Listener createAppInstanceUsers", userArn.AppInstanceUserArn);
+    const userArn = await createAppInstanceUsers(userID, userName);
+    console.log("Listener createAppInstanceUsers", userArn);
     // join member to channel that is created by host
     // Get channel ID from host
     const channelArn = `${Config.appInstanceArn}/channel/${channelId}`;
     // Join member to channel
-    await addChannelMembership(channelArn, userArn.AppInstanceUserArn);
+    await addChannelMembership(channelArn, userArn);
     //setUserArn(userArn.AppInstanceUserArn);
-    setUserArn(userArn.AppInstanceUserArn);
+    setUserArn(userArn);
     setChannelArn(channelArn);
     // join meeting
     const meeting = await getMeeting(meetingId);
-    const attendee = await createAttendee(meetingId, userId);
+    const attendee = await createAttendee(meetingId, userID);
     initializeMeetingSession(meeting, attendee);
   };
 
@@ -108,37 +126,58 @@ function LiveViewer() {
   // };
 
   return (
-    <Authenticator>
-      {({ signOut, user }) => {
-        console.log(user);
-        return (
-          <main>
-            <h1>Hello {user?.username}</h1>
-            <button onClick={signOut}>Sign out</button>
-            <div className="live-viewer-container">
-              <audio id="audioElementListener" controls autoPlay className="audio-player" />
-              <br />
-              {/* Add ChatComponent here */}
-              {channelArn && <ChatMessage userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} />}
-              {/* <ChatMessage userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} /> */}
-              <button className="join-btn" onClick={() => {
-                joinMeeting(); // Join the meeting
-                //setIsModalOpen(true); // Open modal after joining
-              }}>
-                Join
-              </button>
-              {/* <Modal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)} // Close modal
-        audioOutputDevices={audioOutputDevices}
-        selectedAudioOutput={selectedAudioOutput}
-        handleAudioOutputChange={handleAudioOutputChange}
-      /> */}
-            </div>
-          </main>
-        );
-      }}
-    </Authenticator>
+    // <Authenticator>
+    //   {({ signOut, user }) => {
+    //     console.log(user);
+    //     return (
+    //       <main>
+    //         <h1>Hello {user?.username}</h1>
+    //         <button onClick={signOut}>Sign out</button>
+    //         <div className="live-viewer-container">
+    //           <audio id="audioElementListener" controls autoPlay className="audio-player" />
+    //           <br />
+    //           {/* Add ChatComponent here */}
+    //           {channelArn && <ChatMessage userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} />}
+    //           {/* <ChatMessage userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} /> */}
+    //           <button className="join-btn" onClick={() => {
+    //             joinMeeting(); // Join the meeting
+    //             //setIsModalOpen(true); // Open modal after joining
+    //           }}>
+    //             Join
+    //           </button>
+    //           {/* <Modal
+    //     isOpen={isModalOpen}
+    //     onClose={() => setIsModalOpen(false)} // Close modal
+    //     audioOutputDevices={audioOutputDevices}
+    //     selectedAudioOutput={selectedAudioOutput}
+    //     handleAudioOutputChange={handleAudioOutputChange}
+    //   /> */}
+    //         </div>
+    //       </main>
+    //     );
+    //   }}
+    // </Authenticator>
+    <div className="live-viewer-container">
+      <audio id="audioElementListener" controls autoPlay className="audio-player" />
+      <br />
+      {/* Add ChatComponent here */}
+      {channelArn && <ChatMessage userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} />}
+      {/* <ChatMessage userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} /> */}
+      <button className="join-btn" onClick={() => {
+        joinMeeting(); // Join the meeting
+        //setIsModalOpen(true); // Open modal after joining
+      }}>
+        Join
+      </button>
+      {/* <Modal
+isOpen={isModalOpen}
+onClose={() => setIsModalOpen(false)} // Close modal
+audioOutputDevices={audioOutputDevices}
+selectedAudioOutput={selectedAudioOutput}
+handleAudioOutputChange={handleAudioOutputChange}
+/> */}
+    </div>
+
   );
 }
 

@@ -3,7 +3,8 @@ import {
   ChimeSDKMessagingClient,
 } from '@aws-sdk/client-chime-sdk-messaging';
 import {
-  sendMessage
+  sendMessage,
+  //listChannelMessages
 } from './api';
 import {
   ConsoleLogger,
@@ -25,6 +26,24 @@ const ChatMessage = ({ userArn, channelArn, sessionId }) => {
 
   useEffect(() => {
     const initializeMessagingSession = async () => {
+      // const listChannelMessagesResponse = await listChannelMessages(channelArn, userArn);
+      // console.log("List Channel Messages", listChannelMessagesResponse);
+      // // display messages
+      // if(listChannelMessagesResponse && listChannelMessagesResponse.ChannelMessages && listChannelMessagesResponse.ChannelMessages.length > 0) {
+      //   console.log("List Channel Messages 222", listChannelMessagesResponse);
+      //   const messages = listChannelMessagesResponse.ChannelMessages.map((message) => {
+      //     return {
+      //       type: message.Type,
+      //       content: message.Content,
+      //       senderArn: message?.Sender?.Arn,
+      //       senderName: message?.Sender?.Name,
+      //       timestamp: message.CreatedTimestamp,
+      //     };
+      //   });
+      //   setMessages(messages);
+
+      // }
+
       const logger = new ConsoleLogger('SDK', LogLevel.INFO);
       const chime = new ChimeSDKMessagingClient({
         region: Config.region, 
@@ -60,7 +79,7 @@ const ChatMessage = ({ userArn, channelArn, sessionId }) => {
           console.log("Received message Data:", messageData);
 
           if (messageData && messageData.Content) {
-            console.log("Received message Content:", messageData.Content);
+            console.log("Received message Created:", messageData.Content);
             const newMessage = {
               type: message.type,
               //content: message.chimeChatContent.message,
@@ -71,6 +90,20 @@ const ChatMessage = ({ userArn, channelArn, sessionId }) => {
               timestamp: new Date().toISOString(),
             };
             setMessages((prevMessages) => [...prevMessages, newMessage]);
+          }
+
+          if(messageData && messageData.ChannelMessages && messageData.ChannelMessages.length > 0) {
+            console.log("Received message ChannelMessages:", messageData.ChannelMessages);
+            for (const message of messageData.ChannelMessages.reverse()) {
+              const newMessage = {
+                type: message.Type,
+                content: message.Content,
+                senderArn: message?.Sender?.Arn,
+                senderName: message?.Sender?.Name,
+                timestamp: message.CreatedTimestamp,
+              };
+              setMessages((prevMessages) => [...prevMessages, newMessage]);
+            }
           }
          
         },
@@ -93,7 +126,7 @@ const ChatMessage = ({ userArn, channelArn, sessionId }) => {
         messagingSessionRef.current.stop();
       }
     };
-  }, [userArn, sessionId]); // Only depend on userArn and sessionId
+  }, [channelArn, userArn, sessionId]); // Only depend on userArn and sessionId
 
   const sendMessageClick = async () => {
     if (inputMessage && messagingSessionRef.current) {
@@ -120,8 +153,9 @@ const ChatMessage = ({ userArn, channelArn, sessionId }) => {
         <div className="chat-window">
           {messages.map((message, index) => (
             <div key={index} className={`message ${message.senderArn === userArn ? 'my-message' : 'other-message'}`}>
-              <strong>{message.senderArn === userArn ? 'Me' : message.senderName}</strong>: {message.content}
-              <div className="timestamp">{message.timestamp}</div>
+              <strong>{message.senderArn === userArn ? 'You' : message.senderName}</strong>: {message.content}
+              {/* <div className="timestamp">{message.timestamp}</div> */}
+              <div className="timestamp">{new Date(message.timestamp).toISOString().slice(11, 16)}</div>
             </div>
           ))}
         </div>

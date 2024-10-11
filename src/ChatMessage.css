@@ -18,7 +18,8 @@
   
   .my-message {
     text-align: right;
-    background-color: #e0f7fa;
+    /* background-color: #e0f7fa; */
+    background-color: #b3e5fc;
     padding: 5px;
     border-radius: 5px;
   }
