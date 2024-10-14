@@ -23,8 +23,16 @@ import Config from './Config';
 //   fetchUserAttributes,
 // } from 'aws-amplify/auth';
 import { v4 as uuidv4 } from 'uuid';
+import { useLocation } from 'react-router-dom';
 
 function LiveViewer() {
+  const location = useLocation();
+  
+  // Create a URLSearchParams object from the location's search string
+  const queryParams = new URLSearchParams(location.search);
+  const meetingId = queryParams.get('meetingId');
+  const channelId = queryParams.get('channelId');
+
   const [channelArn, setChannelArn] = useState('');
   // const [audioOutputDevices, setAudioOutputDevices] = useState([]);
   // const [selectedAudioOutput, setSelectedAudioOutput] = useState('');
@@ -35,12 +43,15 @@ function LiveViewer() {
   const [userArn, setUserArn] = useState('');
 
   const joinMeeting = async () => {
-    const meetingId = prompt("Enter meeting ID:");
+
+    console.log("Meeting ID", meetingId);
+    console.log("Channel ID", channelId);
+    //const meetingId = prompt("Enter meeting ID:");
     if (!meetingId) {
       alert("Meeting ID is required");
       return;
     }
-    const channelId = prompt("Enter channel ID:");
+    //const channelId = prompt("Enter channel ID:");
     if (!channelId) {
       alert("Channel ID is required");
       return;

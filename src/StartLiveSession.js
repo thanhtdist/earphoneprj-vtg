@@ -27,6 +27,8 @@ import Config from './Config';
 //   fetchUserAttributes,
 // } from 'aws-amplify/auth';
 import { v4 as uuidv4 } from 'uuid';
+import { QRCodeSVG } from 'qrcode.react';
+import appConfig from './Config';
 
 function StartLiveSession() {
   const [channelArn, setChannelArn] = useState('');
@@ -262,6 +264,8 @@ function StartLiveSession() {
           {selectedAudioInput && (<button onClick={stopMeeting}>Stop</button>)}
           {/* <button onClick={stopMeeting}>Stop</button> */}
           {/* Add ChatComponent here */}
+          {meeting && channelArn && (<QRCodeSVG value={appConfig.AppURL + "?meetingId=" + meeting.MeetingId + "&channelId=" + channelID} size={256} level="H" />)}
+          {meeting && channelArn && (<a target='blank' style={{ color: "green" }} href={appConfig.AppURL + "?meetingId=" + meeting.MeetingId + "&channelId=" + channelID}>Join as Listener</a>)}
           <ChatMessage userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} />
         </>
       )}

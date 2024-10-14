@@ -16,11 +16,11 @@ function App() {
                 Start as Host
               </a>
             </li>
-            <li>
+            {/* <li>
               <a href="/viewer" target="_blank" rel="noopener noreferrer">
                 Join as Listener
               </a>
-            </li>
+            </li> */}
           </ul>
         </nav>
         <Routes>
