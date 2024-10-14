@@ -31,10 +31,11 @@ const appConfig = {
     //process.env.REACT_APP_MY_APP_AWS_ACCESS_KEY_ID
     //process.env.REACT_APP_MY_APP_AWS_SECRET_ACCESS_KEY
     sessionId: 'sessionChatVTG',
-    //accessKeyId: '',
-    //secretAccessKey: '',
+    accessKeyId: '',
+    secretAccessKey: '',
     accessKeyId: process.env.REACT_APP_MY_APP_AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.REACT_APP_MY_APP_AWS_SECRET_ACCESS_KEY,
+    // AppURL: 'http://localhost:3001/viewer/',
     AppURL: 'https://main.d1kjg68sgeplir.amplifyapp.com/viewer/',
 };
 export default appConfig;

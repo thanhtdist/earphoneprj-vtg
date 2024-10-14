@@ -2,55 +2,74 @@
     border: 1px solid #ccc;
     padding: 10px;
     margin-top: 20px;
-    max-width: 400px;
-  }
-  
-  .chat-window {
-    height: 200px;
-    overflow-y: scroll;
+    max-width: 100%; /* Make the chat container responsive */
+    width: 400px; /* Set a default width */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Add some shadow for depth */
+}
+
+.chat-window {
+    height: 300px; /* Increased height for better usability */
+    overflow-y: auto; /* Allow scrolling */
     border-bottom: 1px solid #ccc;
     padding: 10px;
-  }
-  
-  .message {
+    margin-bottom: 10px; /* Space between messages and input */
+}
+
+.message {
     margin-bottom: 10px;
-  }
-  
-  .my-message {
-    text-align: right;
-    /* background-color: #e0f7fa; */
-    background-color: #b3e5fc;
-    padding: 5px;
+    padding: 8px; /* Added padding for better readability */
     border-radius: 5px;
-  }
-  
-  .other-message {
+}
+
+.my-message {
+    text-align: right;
+    background-color: #b3e5fc;
+}
+
+.other-message {
     text-align: left;
     background-color: #e1bee7;
-    padding: 5px;
-    border-radius: 5px;
-  }
-  
-  .timestamp {
+}
+
+.timestamp {
     font-size: 0.8em;
     color: #888;
-  }
-  
-  .chat-input {
+}
+
+.chat-input {
     display: flex;
-  }
-  
-  .chat-input input {
+    align-items: center;
+    margin-top: 10px; /* Add space above the input field */
+}
+
+.chat-input input {
     flex-grow: 1;
-    padding: 5px;
+    padding: 10px; /* Increase padding for a better user experience */
     border: 1px solid #ccc;
-  }
-  
-  .chat-input button {
-    padding: 5px 10px;
+    border-radius: 5px; /* Rounded corners */
+    margin-right: 10px; /* Space between input and button */
+}
+
+.send-button {
+    background: none;
     border: none;
-    background-color: #007bff;
-    color: white;
     cursor: pointer;
-  }
-  
+    color: #1da1f2; /* Twitter-like blue */
+    display: flex;
+    align-items: center;
+}
+
+.send-button:hover {
+    color: #0d95e8; /* Slightly darker blue */
+}
+
+/* Responsive Styles */
+@media (max-width: 500px) {
+    .chat-container {
+        max-width: 100%; /* Full width on smaller screens */
+    }
+
+    .chat-window {
+        height: 250px; /* Reduced height for smaller screens */
+    }
+}

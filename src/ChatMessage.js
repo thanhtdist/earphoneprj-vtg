@@ -1,150 +1,115 @@
-import React, { useState, useEffect, useRef } from 'react';
-import {
-  ChimeSDKMessagingClient,
-} from '@aws-sdk/client-chime-sdk-messaging';
-import {
-  sendMessage,
-  //listChannelMessages
-} from './api';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { ChimeSDKMessagingClient } from '@aws-sdk/client-chime-sdk-messaging';
+import { sendMessage } from './api';
 import {
   ConsoleLogger,
   DefaultMessagingSession,
   LogLevel,
   MessagingSessionConfiguration,
-  PrefetchOn,         // Import Prefetch
-  PrefetchSortBy    // Import PrefetchSortBy
+  PrefetchOn,
+  PrefetchSortBy,
 } from 'amazon-chime-sdk-js';
+import { FiSend } from 'react-icons/fi';
 import './ChatMessage.css';
 import Config from './Config';
 
 const ChatMessage = ({ userArn, channelArn, sessionId }) => {
-  console.log("Chat userArn", userArn);
-  console.log("Chat channelArn", channelArn);
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState('');
-  const messagingSessionRef = useRef(null); // Use a ref for messagingSession
+  const messagingSessionRef = useRef(null);
 
-  useEffect(() => {
-    const initializeMessagingSession = async () => {
-      // const listChannelMessagesResponse = await listChannelMessages(channelArn, userArn);
-      // console.log("List Channel Messages", listChannelMessagesResponse);
-      // // display messages
-      // if(listChannelMessagesResponse && listChannelMessagesResponse.ChannelMessages && listChannelMessagesResponse.ChannelMessages.length > 0) {
-      //   console.log("List Channel Messages 222", listChannelMessagesResponse);
-      //   const messages = listChannelMessagesResponse.ChannelMessages.map((message) => {
-      //     return {
-      //       type: message.Type,
-      //       content: message.Content,
-      //       senderArn: message?.Sender?.Arn,
-      //       senderName: message?.Sender?.Name,
-      //       timestamp: message.CreatedTimestamp,
-      //     };
-      //   });
-      //   setMessages(messages);
+  const formatTimestamp = (timestamp) => {
+    return new Date(timestamp).toLocaleString('en-US', {
+      timeZone: 'Asia/Tokyo',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+    });
+  };
 
-      // }
+  const initializeMessagingSession = useCallback(async () => {
+    const logger = new ConsoleLogger('SDK', LogLevel.INFO);
+    const chime = new ChimeSDKMessagingClient({
+      region: Config.region,
+      credentials: {
+        accessKeyId: Config.accessKeyId,
+        secretAccessKey: Config.secretAccessKey,
+      },
+    });
 
-      const logger = new ConsoleLogger('SDK', LogLevel.INFO);
-      const chime = new ChimeSDKMessagingClient({
-        region: Config.region, 
-        credentials: {
-          accessKeyId: Config.accessKeyId, // Ensure these are set properly
-          secretAccessKey: Config.secretAccessKey,
-        },
-      });
+    const configuration = new MessagingSessionConfiguration(userArn, sessionId, undefined, chime);
+    configuration.prefetchOn = PrefetchOn.Connect;
+    configuration.prefetchSortBy = PrefetchSortBy.Unread;
 
-      const configuration = new MessagingSessionConfiguration(userArn, sessionId, undefined, chime);
-      configuration.prefetchOn = PrefetchOn.Connect;
-      configuration.prefetchSortBy = PrefetchSortBy.Unread;
-      const session = new DefaultMessagingSession(configuration, logger);
-      messagingSessionRef.current = session; // Assign session to the ref
+    const session = new DefaultMessagingSession(configuration, logger);
+    messagingSessionRef.current = session;
 
-      // Observer for messaging session events
-      const observer = {
-        messagingSessionDidStart: () => {
-          console.log('Messaging session started');
-        },
-        messagingSessionDidStartConnecting: (reconnecting) => {
-          console.log(reconnecting ? 'Reconnecting...' : 'Connecting...');
-        },
-        messagingSessionDidStop: (event) => {
-          console.log(`Session stopped: ${event.code} ${event.reason}`);
-        },
-        messagingSessionDidReceiveMessage: (message) => {
-          console.log('Received message:', message);
-          if (!message.payload) {
-            return;
-          }
-          const messageData = JSON.parse(message.payload);
-          console.log("Received message Data:", messageData);
+    const observer = {
+      messagingSessionDidStart: () => console.log('Messaging session started'),
+      messagingSessionDidStartConnecting: (reconnecting) =>
+        console.log(reconnecting ? 'Reconnecting...' : 'Connecting...'),
+      messagingSessionDidStop: (event) => console.log(`Session stopped: ${event.code} ${event.reason}`),
+      messagingSessionDidReceiveMessage: (message) => {
+        if (!message.payload) return;
+        const messageData = JSON.parse(message.payload);
 
-          if (messageData && messageData.Content) {
-            console.log("Received message Created:", messageData.Content);
-            const newMessage = {
-              type: message.type,
-              //content: message.chimeChatContent.message,
-              //senderArn: message.chimeChatContent.senderArn,
-              content: messageData.Content,
-              senderArn: messageData?.Sender?.Arn,
-              senderName: messageData?.Sender?.Name,
-              timestamp: new Date().toISOString(),
-            };
-            setMessages((prevMessages) => [...prevMessages, newMessage]);
-          }
+        if (messageData.Content) {
+          const newMessage = {
+            type: message.type,
+            content: messageData.Content,
+            senderArn: messageData?.Sender?.Arn,
+            senderName: messageData?.Sender?.Name,
+            timestamp: new Date().toISOString(),
+          };
+          setMessages((prevMessages) => [...prevMessages, newMessage]);
+        }
 
-          if(messageData && messageData.ChannelMessages && messageData.ChannelMessages.length > 0) {
-            console.log("Received message ChannelMessages:", messageData.ChannelMessages);
-            for (const message of messageData.ChannelMessages.reverse()) {
-              const newMessage = {
-                type: message.Type,
-                content: message.Content,
-                senderArn: message?.Sender?.Arn,
-                senderName: message?.Sender?.Name,
-                timestamp: message.CreatedTimestamp,
-              };
-              setMessages((prevMessages) => [...prevMessages, newMessage]);
-            }
-          }
-         
-        },
-      };
-
-      session.addObserver(observer);
-      try {
-        await session.start();
-      } catch (error) {
-        console.log('Error starting session:', error);
-      }
-     
+        if (messageData.ChannelMessages?.length) {
+          const newMessages = messageData.ChannelMessages.reverse().map((msg) => ({
+            type: msg.Type,
+            content: msg.Content,
+            senderArn: msg?.Sender?.Arn,
+            senderName: msg?.Sender?.Name,
+            timestamp: msg.CreatedTimestamp,
+          }));
+          setMessages((prevMessages) => [...prevMessages, ...newMessages]);
+        }
+      },
     };
 
+    session.addObserver(observer);
+
+    try {
+      await session.start();
+    } catch (error) {
+      console.log('Error starting session:', error);
+    }
+  }, [userArn, sessionId]);
+
+  useEffect(() => {
     initializeMessagingSession();
 
-    // Clean up session on unmount
     return () => {
       if (messagingSessionRef.current) {
         messagingSessionRef.current.stop();
       }
     };
-  }, [channelArn, userArn, sessionId]); // Only depend on userArn and sessionId
+  }, [initializeMessagingSession, channelArn, userArn, sessionId]);
 
-  const sendMessageClick = async () => {
-    if (inputMessage && messagingSessionRef.current) {
-      console.log("messagingSessionRef.current", messagingSessionRef.current);
+  const sendMessageClick = useCallback(async () => {
+    if (!inputMessage) return;
 
-      try {
-        // Use the Chime SDK to send the message
-        const response = await sendMessage(channelArn, userArn, inputMessage)
-
-        console.log('Message sent successfully:', response);
-
-        // Update local messages state
-        // setMessages((prevMessages) => [...prevMessages, newMessage]);
-        setInputMessage(''); // Clear input after sending
-      } catch (error) {
-        console.error('Error sending message:', error);
-      }
+    try {
+      const response = await sendMessage(channelArn, userArn, inputMessage);
+      console.log('Message sent successfully:', response);
+      setInputMessage('');
+    } catch (error) {
+      console.error('Error sending message:', error);
     }
+  }, [inputMessage, channelArn, userArn]);
+
+  const handleInputChange = (e) => {
+    setInputMessage(e.target.value);
   };
 
   return (
@@ -152,10 +117,12 @@ const ChatMessage = ({ userArn, channelArn, sessionId }) => {
       {messages.length > 0 && (
         <div className="chat-window">
           {messages.map((message, index) => (
-            <div key={index} className={`message ${message.senderArn === userArn ? 'my-message' : 'other-message'}`}>
+            <div
+              key={index}
+              className={`message ${message.senderArn === userArn ? 'my-message' : 'other-message'}`}
+            >
               <strong>{message.senderArn === userArn ? 'You' : message.senderName}</strong>: {message.content}
-              {/* <div className="timestamp">{message.timestamp}</div> */}
-              <div className="timestamp">{new Date(message.timestamp).toISOString().slice(11, 16)}</div>
+              <div className="timestamp">{formatTimestamp(message.timestamp)}</div>
             </div>
           ))}
         </div>
@@ -164,15 +131,17 @@ const ChatMessage = ({ userArn, channelArn, sessionId }) => {
         <input
           type="text"
           value={inputMessage}
-          onChange={(e) => setInputMessage(e.target.value)}
+          onChange={handleInputChange}
           placeholder="Type a message..."
           onKeyDown={(e) => {
-            if (e.key === "Enter") {
+            if (e.key === 'Enter') {
               sendMessageClick();
             }
           }}
         />
-        <button onClick={sendMessageClick}>Send</button>
+        <button className="send-button" onClick={sendMessageClick}>
+          <FiSend size={24} />
+        </button>
       </div>
     </div>
   );
