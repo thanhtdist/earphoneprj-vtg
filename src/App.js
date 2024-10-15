@@ -9,22 +9,22 @@ function App() {
     <>
     <Router>
       <div className="App">
-        <nav>
+        {/* <nav>
           <ul>
             <li>
               <a href="/host" target="_blank" rel="noopener noreferrer">
                 Start as Host
               </a>
             </li>
-            {/* <li>
+            <li>
               <a href="/viewer" target="_blank" rel="noopener noreferrer">
                 Join as Listener
               </a>
-            </li> */}
+            </li>
           </ul>
-        </nav>
+        </nav> */}
         <Routes>
-          <Route path="/host" element={<StartLiveSession />} /> 
+          <Route path="/" element={<StartLiveSession />} /> 
           <Route path="/viewer" element={<LiveViewer />} /> 
         </Routes>
       </div>
