@@ -19,6 +19,8 @@ import Config from './Config';
 import { v4 as uuidv4 } from 'uuid';
 import { QRCodeSVG } from 'qrcode.react';
 import appConfig from './Config';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlay, faStop } from '@fortawesome/free-solid-svg-icons';
 
 function StartLiveSession() {
   const [channelArn, setChannelArn] = useState('');
@@ -29,6 +31,7 @@ function StartLiveSession() {
   const [audioInputDevices, setAudioInputDevices] = useState([]);
   const [userArn, setUserArn] = useState('');
   const [isMeetingActive, setIsMeetingActive] = useState(false); // State to track if meeting is active
+  const [isLoading, setIsLoading] = useState(false); // State for loading
 
   useEffect(() => {
     const getAudioInputDevices = async () => {
@@ -37,6 +40,8 @@ function StartLiveSession() {
         setAudioInputDevices(devices);
         if (devices.length > 0) {
           setSelectedAudioInput(devices[0].deviceId);
+        }else {
+          alert("No audio input devices were found. Please check your device.");
         }
       }
     };
@@ -44,6 +49,7 @@ function StartLiveSession() {
   }, [meetingSession]);
 
   const startMeeting = async () => {
+    setIsLoading(true); // Set loading state to true
     try {
       const userID = uuidv4(); // Generate a unique user ID
       const userName = `admin-${Date.now()}`;
@@ -62,6 +68,8 @@ function StartLiveSession() {
       initializeMeetingSession(meeting, attendee);
     } catch (error) {
       console.error('Error starting meeting:', error);
+    } finally {
+      setIsLoading(false); // Set loading state to false
     }
   };
 
@@ -75,14 +83,12 @@ function StartLiveSession() {
 
   const toggleLiveSession = async () => {
     if (isMeetingActive) {
-      // Stop the meeting
       if (meetingSession) {
         meetingSession.audioVideo.stop();
         console.log('Audio video session stopped');
         setIsMeetingActive(false);
       }
     } else {
-      // Start the meeting
       if (meetingSession) {
         try {
           await meetingSession.audioVideo.startAudioInput(selectedAudioInput);
@@ -99,11 +105,18 @@ function StartLiveSession() {
   return (
     <div className="container">
       {!meeting ? (
-        <button onClick={startMeeting}>Start Live Session</button>
+        <>
+          {isLoading ? (
+            <div className="loading">
+              <div className="spinner"></div>
+              <p>Please wait...</p>
+            </div> // Display loading message with animation
+          ) : (
+            <button onClick={startMeeting}>Start Live Session</button>
+          )}
+        </>
       ) : (
         <>
-          {/* <p>Meeting ID: {meeting.MeetingId}</p>
-          <p>Channel ID: {channelID}</p> */}
           <h3>Select Audio Input Device (Microphone)</h3>
           <select value={selectedAudioInput} onChange={(e) => setSelectedAudioInput(e.target.value)}>
             {audioInputDevices.map((device) => (
@@ -114,7 +127,11 @@ function StartLiveSession() {
           </select>
           {selectedAudioInput && (
             <button onClick={toggleLiveSession} className="toggle-button">
-              {isMeetingActive ? 'Stop' : 'Start'}
+              {isMeetingActive ? (
+                <FontAwesomeIcon icon={faStop} size="2x" color="red" />
+              ) : (
+                <FontAwesomeIcon icon={faPlay} size="2x" color="green" />
+              )}
             </button>
           )}
           {meeting && channelArn && (
