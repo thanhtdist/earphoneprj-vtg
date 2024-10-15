@@ -19,7 +19,6 @@ import Config from './Config';
 import { v4 as uuidv4 } from 'uuid';
 import { QRCodeSVG } from 'qrcode.react';
 import appConfig from './Config';
-import { FiSend } from 'react-icons/fi'; // Importing send icon from react-icons
 
 function StartLiveSession() {
   const [channelArn, setChannelArn] = useState('');
@@ -29,6 +28,7 @@ function StartLiveSession() {
   const [selectedAudioInput, setSelectedAudioInput] = useState('');
   const [audioInputDevices, setAudioInputDevices] = useState([]);
   const [userArn, setUserArn] = useState('');
+  const [isMeetingActive, setIsMeetingActive] = useState(false); // State to track if meeting is active
 
   useEffect(() => {
     const getAudioInputDevices = async () => {
@@ -73,22 +73,26 @@ function StartLiveSession() {
     setMeetingSession(session);
   };
 
-  const startLive = async () => {
-    if (meetingSession) {
-      try {
-        await meetingSession.audioVideo.startAudioInput(selectedAudioInput);
-        meetingSession.audioVideo.start();
-        console.log('Audio video session started');
-      } catch (error) {
-        console.error('Failed to start audio video session:', error);
+  const toggleLiveSession = async () => {
+    if (isMeetingActive) {
+      // Stop the meeting
+      if (meetingSession) {
+        meetingSession.audioVideo.stop();
+        console.log('Audio video session stopped');
+        setIsMeetingActive(false);
       }
-    }
-  };
-
-  const stopMeeting = () => {
-    if (meetingSession) {
-      meetingSession.audioVideo.stop();
-      console.log('Audio video session stopped');
+    } else {
+      // Start the meeting
+      if (meetingSession) {
+        try {
+          await meetingSession.audioVideo.startAudioInput(selectedAudioInput);
+          meetingSession.audioVideo.start();
+          console.log('Audio video session started');
+          setIsMeetingActive(true);
+        } catch (error) {
+          console.error('Failed to start audio video session:', error);
+        }
+      }
     }
   };
 
@@ -109,12 +113,9 @@ function StartLiveSession() {
             ))}
           </select>
           {selectedAudioInput && (
-            <>
-              <button onClick={startLive} className="start-button">
-                <FiSend /> Start
-              </button>
-              <button onClick={stopMeeting}>Stop</button>
-            </>
+            <button onClick={toggleLiveSession} className="toggle-button">
+              {isMeetingActive ? 'Stop' : 'Start'}
+            </button>
           )}
           {meeting && channelArn && (
             <>
