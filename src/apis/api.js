@@ -11,7 +11,7 @@ import {
   ChimeSDKMessagingClient,
   ListChannelMessagesCommand,
 } from '@aws-sdk/client-chime-sdk-messaging';
-import Config from '../config';
+import Config from '../utils/config';
 const { v4: uuid } = require('uuid');
 const API_URL = 'http://localhost:4000';
 

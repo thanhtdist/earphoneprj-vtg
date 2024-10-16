@@ -14,7 +14,7 @@ import {
 } from 'amazon-chime-sdk-js';
 import '../styles/LiveViewer.css';
 import ChatMessage from './ChatMessage';
-import Config from '../config';
+import Config from '../apis/utils/config';
 import { v4 as uuidv4 } from 'uuid';
 import { useLocation } from 'react-router-dom';
 

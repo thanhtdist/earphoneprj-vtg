@@ -11,7 +11,7 @@ import {
 } from 'amazon-chime-sdk-js';
 import { FiSend } from 'react-icons/fi';
 import '../styles/ChatMessage.css';
-import Config from '../config';
+import Config from '../utils/config';
 
 const ChatMessage = ({ userArn, channelArn, sessionId }) => {
   const [messages, setMessages] = useState([]);
