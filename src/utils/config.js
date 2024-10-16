@@ -1,5 +1,5 @@
 // This file contains the configuration for the app.
-const appConfig = {
+const Config = {
     // Apply for app instance
     appInstanceArn: "arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0",
     // Apply for app instance user and channel
@@ -18,4 +18,4 @@ const appConfig = {
     //AppURL: 'http://localhost:3000/viewer/',
     AppURL: 'https://main.d1kjg68sgeplir.amplifyapp.com/viewer/',
 };
-export default appConfig;
+export default Config;

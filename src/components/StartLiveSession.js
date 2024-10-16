@@ -15,7 +15,7 @@ import {
 } from 'amazon-chime-sdk-js';
 import '../styles/StartLiveSession.css'; // Importing the CSS file for responsiveness
 import ChatMessage from './ChatMessage';
-import Config from '../apis/utils/config';
+import Config from '../utils/config';
 import { v4 as uuidv4 } from 'uuid';
 import { QRCodeSVG } from 'qrcode.react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
