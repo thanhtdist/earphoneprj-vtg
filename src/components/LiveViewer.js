@@ -4,7 +4,7 @@ import {
   createAttendee,
   createAppInstanceUsers,
   addChannelMembership,
-} from './api';
+} from '../apis/api';
 import {
   DefaultDeviceController,
   DefaultMeetingSession,
@@ -12,9 +12,9 @@ import {
   LogLevel,
   MeetingSessionConfiguration,
 } from 'amazon-chime-sdk-js';
-import './LiveViewer.css';
+import '../styles/LiveViewer.css';
 import ChatMessage from './ChatMessage';
-import Config from './Config';
+import Config from '../config';
 import { v4 as uuidv4 } from 'uuid';
 import { useLocation } from 'react-router-dom';
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { ChimeSDKMessagingClient } from '@aws-sdk/client-chime-sdk-messaging';
-import { sendMessage } from './api';
+import { sendMessage } from '../apis/api';
 import {
   ConsoleLogger,
   DefaultMessagingSession,
@@ -10,8 +10,8 @@ import {
   PrefetchSortBy,
 } from 'amazon-chime-sdk-js';
 import { FiSend } from 'react-icons/fi';
-import './ChatMessage.css';
-import Config from './Config';
+import '../styles/ChatMessage.css';
+import Config from '../config';
 
 const ChatMessage = ({ userArn, channelArn, sessionId }) => {
   const [messages, setMessages] = useState([]);

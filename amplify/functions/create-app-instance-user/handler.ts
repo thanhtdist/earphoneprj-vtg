@@ -7,16 +7,11 @@ export const handler: APIGatewayProxyHandler = async (event) => {
   
   try {
     // Parse body from API Gateway event
-    console.log('Event: ', event);
-    console.log('Event body: ', event.body);
-    //const { clientRequestToken, externalMeetingId } = JSON.parse(event.body || '{}'); // Ensure parsing from body
-    // const { clientRequestToken, externalMeetingId } = JSON.parse(event.body || '{}');// Ensure parsing from body
     const { appInstanceArn, appInstanceUserId, clientRequestToken, name, expirationCriterion, expirationDays } = JSON.parse(event.body || '{}');
 
     console.log('Creating App Instance User with appInstanceArn: ', appInstanceArn, 'appInstanceUserId: ', appInstanceUserId, 'clientRequestToken: ', clientRequestToken, 'name: ', name);
 
     // Input validation
-    //if (!appInstanceArn || !appInstanceUserId || !clientRequestToken || !name || !expirationCriterion || !expirationDays) {
     if (!appInstanceArn || !appInstanceUserId || !clientRequestToken || !name || !expirationCriterion || !expirationDays) {
       return {
         statusCode: 400,

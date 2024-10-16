@@ -5,7 +5,7 @@ import {
   createAppInstanceUsers,
   createChannel,
   addChannelMembership,
-} from './api';
+} from '../apis/api';
 import {
   DefaultDeviceController,
   DefaultMeetingSession,
@@ -13,12 +13,11 @@ import {
   LogLevel,
   MeetingSessionConfiguration,
 } from 'amazon-chime-sdk-js';
-import './StartLiveSession.css'; // Importing the CSS file for responsiveness
+import '../styles/StartLiveSession.css'; // Importing the CSS file for responsiveness
 import ChatMessage from './ChatMessage';
-import Config from './Config';
+import Config from '../config';
 import { v4 as uuidv4 } from 'uuid';
 import { QRCodeSVG } from 'qrcode.react';
-import appConfig from './Config';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlay, faStop } from '@fortawesome/free-solid-svg-icons';
 
@@ -136,8 +135,8 @@ function StartLiveSession() {
           )}
           {meeting && channelArn && (
             <>
-              <QRCodeSVG value={`${appConfig.AppURL}?meetingId=${meeting.MeetingId}&channelId=${channelID}`} size={256} level="H" />
-              <a target="_blank" rel="noopener noreferrer" style={{ color: 'green' }} href={`${appConfig.AppURL}?meetingId=${meeting.MeetingId}&channelId=${channelID}`}>
+              <QRCodeSVG value={`${Config.AppURL}?meetingId=${meeting.MeetingId}&channelId=${channelID}`} size={256} level="H" />
+              <a target="_blank" rel="noopener noreferrer" style={{ color: 'green' }} href={`${Config.AppURL}?meetingId=${meeting.MeetingId}&channelId=${channelID}`}>
                 Join as Listener
               </a>
             </>

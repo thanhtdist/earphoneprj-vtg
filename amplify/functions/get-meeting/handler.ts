@@ -7,17 +7,8 @@ export const handler: APIGatewayProxyHandler = async (event) => {
 
   try {
     // Retrieve meeting parameters from query string
-    // const meetingId = event.queryStringParameters?.meetingId;
     const meetingId = event.pathParameters ? event.pathParameters.MeetingID : null;
     console.log('Creating meeting with meetingId: ', meetingId);
-    // Parse body from API Gateway event
-    // console.log('Event: ', event);
-    // console.log('Event body: ', event.body);
-    //const { clientRequestToken, externalMeetingId } = JSON.parse(event.body || '{}'); // Ensure parsing from body
-    // const { clientRequestToken, externalMeetingId } = JSON.parse(event.body || '{}');// Ensure parsing from body
-    //const { clientRequestToken, externalMeetingId } = JSON.parse(event.body || '{}');
-
-    //console.log('Creating meeting with clientRequestToken: ', clientRequestToken, 'externalMeetingId: ', externalMeetingId);
 
     // Input validation
     if (!meetingId) {

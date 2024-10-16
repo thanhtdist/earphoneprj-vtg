@@ -7,10 +7,6 @@ export const handler: APIGatewayProxyHandler = async (event) => {
 
   try {
     // Parse body from API Gateway event
-    console.log('Event: ', event);
-    console.log('Event body: ', event.body);
-    //const { clientRequestToken, externalMeetingId } = JSON.parse(event.body || '{}'); // Ensure parsing from body
-    // const { clientRequestToken, externalMeetingId } = JSON.parse(event.body || '{}');// Ensure parsing from body
     const { appInstanceArn, name, mode, privacy, clientRequestToken, chimeBearer, expirationCriterion, expirationDays } = JSON.parse(event.body || '{}');
 
     console.log('Creating channel with appInstanceArn: ', appInstanceArn,
