@@ -1,12 +1,10 @@
 import type { APIGatewayProxyHandler } from 'aws-lambda';
 import AWS from 'aws-sdk';
-import { CONTENT_TYPE, REGION } from '../config';
+import { Config } from '../config';
 
 export const handler: APIGatewayProxyHandler = async (event) => {
-  console.log('ContentType: ', CONTENT_TYPE);
-  console.log('Region: ', REGION);
-  //const region = process.env.AWS_REGION || 'us-east-1';
-  const chime = new AWS.ChimeSDKMeetings({ region: REGION });
+  // Create a new Chime SDK Meeting instance
+  const chime = new AWS.ChimeSDKMeetings({ region: Config.region });
 
   try {
     // Parse body from API Gateway event
@@ -20,8 +18,8 @@ export const handler: APIGatewayProxyHandler = async (event) => {
         statusCode: 400,
         body: JSON.stringify({ error: 'Invalid input: externalMeetingId is required.' }),
         headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*', // Enable CORS if needed
+          'Content-Type': Config.contentType, // json type
+          'Access-Control-Allow-Origin': Config.accessControlAllowOrigin, // Enable CORS
         },
       };
     }
@@ -32,8 +30,8 @@ export const handler: APIGatewayProxyHandler = async (event) => {
         statusCode: 403,
         body: JSON.stringify({ error: 'clientRequestToken is invalid.' }),
         headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*', // Enable CORS if needed
+          'Content-Type': Config.contentType, // json type
+          'Access-Control-Allow-Origin': Config.accessControlAllowOrigin, // Enable CORS
         },
       };
     }
@@ -42,7 +40,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     const meetingResponse = await chime.createMeeting({
       ClientRequestToken: clientRequestToken, // Unique meeting identifier
       ExternalMeetingId: externalMeetingId, // External meeting identifier
-      MediaRegion: REGION, // Region for the meeting
+      MediaRegion: Config.region, // Region for the meeting
       MeetingFeatures: {
         Audio: {
           EchoReduction: "AVAILABLE" // remove echo from the meeting
@@ -65,8 +63,8 @@ export const handler: APIGatewayProxyHandler = async (event) => {
         data: meetingResponse.Meeting,
       }),
       headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*', // Enable CORS if needed
+        'Content-Type': Config.contentType, // json type
+        'Access-Control-Allow-Origin': Config.accessControlAllowOrigin, // Enable CORS
       },
     };
   } catch (error: any) {
@@ -75,8 +73,8 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       statusCode: 500,
       body: JSON.stringify({ error: error.message || 'Internal Server Error' }),
       headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*', // Enable CORS if needed
+        'Content-Type': Config.contentType, // json type
+        'Access-Control-Allow-Origin': Config.accessControlAllowOrigin, // Enable CORS
       },
     };
   }

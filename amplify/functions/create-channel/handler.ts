@@ -1,13 +1,15 @@
 import type { APIGatewayProxyHandler } from 'aws-lambda';
 import AWS from 'aws-sdk';
+import { Config } from '../config';
 
 export const handler: APIGatewayProxyHandler = async (event) => {
-  const region = process.env.AWS_REGION || 'us-east-1';
-  const chime = new AWS.ChimeSDKMessaging({ region });
+  // Create a new Chime SDK Message instance
+  const chime = new AWS.ChimeSDKMessaging({ region: Config.region });
 
   try {
     // Parse body from API Gateway event
-    const { appInstanceArn, name, mode, privacy, clientRequestToken, chimeBearer, expirationCriterion, expirationDays } = JSON.parse(event.body || '{}');
+    const { appInstanceArn, name, mode, privacy, clientRequestToken,
+      chimeBearer, expirationCriterion, expirationDays } = JSON.parse(event.body || '{}');
 
     console.log('Creating channel with appInstanceArn: ', appInstanceArn,
       'name: ', name, 'mode:', mode, 'privacy: ',
@@ -17,10 +19,12 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     if (!appInstanceArn || !name || !mode || !privacy || !expirationCriterion || !expirationDays) {
       return {
         statusCode: 400,
-        body: JSON.stringify({ error: 'Invalid input: appInstanceArn, name, mode, and privacy are required.' }),
+        body: JSON.stringify({
+          error: 'Invalid input: appInstanceArn, name, mode, and privacy are required.'
+        }),
         headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*', // Enable CORS if needed
+          'Content-Type': Config.contentType, // json type
+          'Access-Control-Allow-Origin': Config.accessControlAllowOrigin, // Enable CORS
         },
       };
     }
@@ -31,8 +35,8 @@ export const handler: APIGatewayProxyHandler = async (event) => {
         statusCode: 403,
         body: JSON.stringify({ error: 'clientRequestToken and chimeBearer are invalid.' }),
         headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*', // Enable CORS if needed
+          'Content-Type': Config.contentType, // json type
+          'Access-Control-Allow-Origin': Config.accessControlAllowOrigin, // Enable CORS
         },
       };
     }
@@ -60,8 +64,8 @@ export const handler: APIGatewayProxyHandler = async (event) => {
         data: createChannelResponse.ChannelArn,
       }),
       headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*', // Enable CORS if needed
+        'Content-Type': Config.contentType, // json type
+        'Access-Control-Allow-Origin': Config.accessControlAllowOrigin, // Enable CORS
       },
     };
   } catch (error: any) {
@@ -70,8 +74,8 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       statusCode: 500,
       body: JSON.stringify({ error: error.message || 'Internal Server Error' }),
       headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*', // Enable CORS if needed
+        'Content-Type': Config.contentType, // json type
+        'Access-Control-Allow-Origin': Config.accessControlAllowOrigin, // Enable CORS
       },
     };
   }

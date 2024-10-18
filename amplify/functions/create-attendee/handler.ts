@@ -1,9 +1,10 @@
 import type { APIGatewayProxyHandler } from 'aws-lambda';
 import AWS from 'aws-sdk';
+import { Config } from '../config';
 
 export const handler: APIGatewayProxyHandler = async (event) => {
-  const region = process.env.AWS_REGION || 'us-east-1';
-  const chime = new AWS.ChimeSDKMeetings({ region });
+  // Create a new Chime SDK Meeting instance
+  const chime = new AWS.ChimeSDKMeetings({ region: Config.region });
   
   try {
     // Parse body from API Gateway event
@@ -18,8 +19,8 @@ export const handler: APIGatewayProxyHandler = async (event) => {
         statusCode: 400,
         body: JSON.stringify({ error: 'Invalid input: meetingId and externalUserId are required.' }),
         headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*', // Enable CORS if needed
+          'Content-Type': Config.contentType, // json type
+          'Access-Control-Allow-Origin': Config.accessControlAllowOrigin, // Enable CORS
         },
       };
     }
@@ -39,8 +40,8 @@ export const handler: APIGatewayProxyHandler = async (event) => {
         data: attendeeResponse.Attendee,
       }),
       headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*', // Enable CORS if needed
+        'Content-Type': Config.contentType, // json type
+        'Access-Control-Allow-Origin': Config.accessControlAllowOrigin, // Enable CORS
       },
     };
   } catch (error: any) {
@@ -49,8 +50,8 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       statusCode: 500,
       body: JSON.stringify({ error: error.message || 'Internal Server Error' }),
       headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*', // Enable CORS if needed
+        'Content-Type': Config.contentType, // json type
+        'Access-Control-Allow-Origin': Config.accessControlAllowOrigin, // Enable CORS
       },
     };
   }

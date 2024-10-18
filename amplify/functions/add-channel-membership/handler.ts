@@ -1,9 +1,10 @@
 import type { APIGatewayProxyHandler } from 'aws-lambda';
 import AWS from 'aws-sdk';
+import { Config } from '../config';
 
 export const handler: APIGatewayProxyHandler = async (event) => {
-  const region = process.env.AWS_REGION || 'us-east-1';
-  const chime = new AWS.ChimeSDKMessaging({ region });
+  // Create a new Chime SDK Message instance
+  const chime = new AWS.ChimeSDKMessaging({ region: Config.region });
 
   try {
     // Parse body from API Gateway event
@@ -18,8 +19,8 @@ export const handler: APIGatewayProxyHandler = async (event) => {
         statusCode: 400,
         body: JSON.stringify({ error: 'Invalid input: channelArn, memberArn, and type are required.' }),
         headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*', // Enable CORS if needed
+          'Content-Type': Config.contentType, // json type
+          'Access-Control-Allow-Origin': Config.accessControlAllowOrigin, // Enable CORS
         },
       };
     }
@@ -29,8 +30,8 @@ export const handler: APIGatewayProxyHandler = async (event) => {
         statusCode: 403,
         body: JSON.stringify({ error: 'ChimeBearer is invalid.' }),
         headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*', // Enable CORS if needed
+          'Content-Type': Config.contentType, // json type
+          'Access-Control-Allow-Origin': Config.accessControlAllowOrigin, // Enable CORS
         },
       };
     }
@@ -52,8 +53,8 @@ export const handler: APIGatewayProxyHandler = async (event) => {
         data: createChannelMembershipResponse,
       }),
       headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*', // Enable CORS if needed
+        'Content-Type': Config.contentType, // json type
+        'Access-Control-Allow-Origin': Config.accessControlAllowOrigin, // Enable CORS
       },
     };
   } catch (error: any) {
@@ -62,8 +63,8 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       statusCode: 500,
       body: JSON.stringify({ error: error.message || 'Internal Server Error' }),
       headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*', // Enable CORS if needed
+        'Content-Type': Config.contentType, // json type
+        'Access-Control-Allow-Origin': Config.accessControlAllowOrigin, // Enable CORS
       },
     };
   }

@@ -1,24 +1,30 @@
 import type { APIGatewayProxyHandler } from 'aws-lambda';
 import AWS from 'aws-sdk';
+import { Config } from '../config';
 
 export const handler: APIGatewayProxyHandler = async (event) => {
-  const region = process.env.AWS_REGION || 'us-east-1';
-  const chime = new AWS.ChimeSDKIdentity({ region });
+  // Create a new Chime SDK Identity instance
+  const chime = new AWS.ChimeSDKIdentity({ region: Config.region });
 
   try {
     // Parse body from API Gateway event
-    const { appInstanceArn, appInstanceUserId, clientRequestToken, name, expirationCriterion, expirationDays } = JSON.parse(event.body || '{}');
+    const { appInstanceArn, appInstanceUserId, clientRequestToken,
+      name, expirationCriterion, expirationDays } = JSON.parse(event.body || '{}');
 
-    console.log('Creating App Instance User with appInstanceArn: ', appInstanceArn, 'appInstanceUserId: ', appInstanceUserId, 'clientRequestToken: ', clientRequestToken, 'name: ', name);
+    console.log('Creating App Instance User with appInstanceArn: ', appInstanceArn, 'appInstanceUserId: ',
+      appInstanceUserId, 'clientRequestToken: ', clientRequestToken, 'name: ', name);
 
     // Input validation
     if (!appInstanceArn || !appInstanceUserId || !name || !expirationCriterion || !expirationDays) {
       return {
         statusCode: 400,
-        body: JSON.stringify({ error: 'Invalid input: appInstanceArn, appInstanceUserId, name, expirationCriterion and expirationDays are required.' }),
+        body: JSON.stringify({
+          error:
+            'Invalid input: appInstanceArn, appInstanceUserId, name, expirationCriterion and expirationDays are required.'
+        }),
         headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*', // Enable CORS if needed
+          'Content-Type': Config.contentType, // json type
+          'Access-Control-Allow-Origin': Config.accessControlAllowOrigin, // Enable CORS
         },
       };
     }
@@ -29,8 +35,8 @@ export const handler: APIGatewayProxyHandler = async (event) => {
         statusCode: 403,
         body: JSON.stringify({ error: 'clientRequestToken is invalid.' }),
         headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*', // Enable CORS if needed
+          'Content-Type': Config.contentType, // json type
+          'Access-Control-Allow-Origin': Config.accessControlAllowOrigin, // Enable CORS
         },
       };
     }
@@ -56,8 +62,8 @@ export const handler: APIGatewayProxyHandler = async (event) => {
         data: createAppInstanceUserResponse.AppInstanceUserArn,
       }),
       headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*', // Enable CORS if needed
+        'Content-Type': Config.contentType, // json type
+        'Access-Control-Allow-Origin': Config.accessControlAllowOrigin, // Enable CORS
       },
     };
   } catch (error: any) {
@@ -66,8 +72,8 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       statusCode: 500,
       body: JSON.stringify({ error: error.message || 'Internal Server Error' }),
       headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*', // Enable CORS if needed
+        'Content-Type': Config.contentType, // json type
+        'Access-Control-Allow-Origin': Config.accessControlAllowOrigin, // Enable CORS
       },
     };
   }
