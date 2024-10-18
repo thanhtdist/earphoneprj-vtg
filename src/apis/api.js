@@ -1,106 +1,27 @@
-// src/api.js
+// This file contains the API functions to interact with the backend services
 import { get, post } from 'aws-amplify/api';
-import {
-  ChimeSDKIdentityClient,
-  //CreateAppInstanceUserCommand,
-  ListAppInstanceUsersCommand,
-
-} from "@aws-sdk/client-chime-sdk-identity"; // ES Modules import
-
-import {
-  ChimeSDKMessagingClient,
-  ListChannelMessagesCommand,
-} from '@aws-sdk/client-chime-sdk-messaging';
 import Config from '../utils/config';
 const { v4: uuid } = require('uuid');
-const API_URL = 'http://localhost:4000';
-
-// export const createAppInstanceUsers = (appInstanceUserId) =>
-//   `${Config.appInstanceArn}/user/${appInstanceUserId}`;
-
-
-export const chimeSDKIdentityClient = () =>
-  new ChimeSDKIdentityClient({
-    region: Config.region,
-    credentials: {
-      accessKeyId: Config.accessKeyId, // Ensure these are set properly
-      secretAccessKey: Config.secretAccessKey,
-    }
-  });
-
-export const chimeSDKMessagingClient = () =>
-  new ChimeSDKMessagingClient({
-    region: Config.region,
-    credentials: {
-      accessKeyId: Config.accessKeyId, // Ensure these are set properly
-      secretAccessKey: Config.secretAccessKey,
-    }
-  });
-
-export async function listUsers() {
-  const input = {
-    AppInstanceArn: Config.appInstanceArn,
-  };
-  const command = new ListAppInstanceUsersCommand(input);
-  try {
-    const response = await chimeSDKIdentityClient().send(command);
-    console.log(response);
-    return response;
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-export async function listChannelMessages(channelArn, userArn) {
-  const input = {
-    ChimeBearer: userArn,
-    ChannelArn: channelArn,
-    SortOrder: 'DESCENDING',
-  };
-  const command = new ListChannelMessagesCommand(input);
-  try {
-    const response = await chimeSDKMessagingClient().send(command);
-    console.log("listChannelMessages", response);
-    return response;
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-
-export async function getAppInstanceUsers(userID) {
-  try {
-    const appInstanceUserArn = `${Config.appInstanceArn}/user/${userID}`;
-    const restOperation = get({
-      apiName: 'AppInstanceUserVTGRestApi',
-      path: 'app-instance-users/' + encodeURIComponent(appInstanceUserArn),
-    });
-    const { body } = await restOperation.response;
-    const response = await body.json();
-    return response.data;
-  } catch (error) {
-    console.log('GET call failed: ', JSON.parse(error.response.body));
-  }
-}
-
+/**
+ * Create an app instance user for chat by the participants when joining a group chat
+ * @param {string} userID - The ID of the user to be created.
+ * @param {string} userName - The name of the user to be created.
+ * @returns {Promise<any>} The response data from the API call.
+ * @throws {Error} Logs the error details if the POST call fails.
+ */
 export async function createAppInstanceUsers(userID, userName) {
   try {
-    // const checkExistingAppInstanceUser = await getAppInstanceUsers(userID);
-    // if (checkExistingAppInstanceUser) {
-    //   console.log("App Instance User already exists", checkExistingAppInstanceUser);
-    //   return checkExistingAppInstanceUser;
-    // }
     const restOperation = post({
-      apiName: 'AppInstanceUserVTGRestApi',
-      path: 'app-instance-users',
+      apiName: 'AppInstanceUserVTGRestApi', // The name of the API defined in backend.ts
+      path: 'app-instance-users', // endpoint defined in backend.ts
       options: {
         body: {
-          appInstanceArn: Config.appInstanceArn,
-          appInstanceUserId: userID,
-          clientRequestToken: uuid(),
-          name: userName,
-          expirationCriterion: "CREATED_TIMESTAMP", 
-          expirationDays: Config.appInstanceUserExpirationDays,
+          appInstanceArn: Config.appInstanceArn, // The ARN of the app instance created in the AWS Chime SDK CLI
+          appInstanceUserId: userID, // The ID of the user to be created
+          clientRequestToken: uuid(), // Token of the user, generated using uuid because ignored user management
+          name: userName, // The name of the user to be created
+          expirationCriterion: "CREATED_TIMESTAMP",  // Criterion expiration of the user
+          expirationDays: Config.appInstanceUserExpirationDays, // Expiration days for the user
         }
       }
     });
@@ -109,25 +30,31 @@ export async function createAppInstanceUsers(userID, userName) {
     const response = await body.json();
     return response.data;
   } catch (error) {
-    console.log('POST call failed: ', JSON.parse(error.response.body));
+    console.log('POST call createAppInstanceUsers failed: ', JSON.parse(error.response.body));
   }
 }
 
+/**
+ * Create a channel (group chat) by the host so the participants can join
+ * @param {string} userArn - The Arn of the user.
+ * @returns {Promise<any>} The response data from the API call.
+ * @throws {Error} Logs the error details if the POST call fails.
+ */
 export async function createChannel(userArn) {
   try {
     const restOperation = post({
-      apiName: 'ChannelVTGRestApi',
-      path: 'channels',
+      apiName: 'ChannelVTGRestApi', // The name of the API defined in backend.ts
+      path: 'channels', // endpoint defined in backend.ts
       options: {
         body: {
-          appInstanceArn: Config.appInstanceArn,
-          name: 'LiveSession',
-          mode: "UNRESTRICTED",
-          privacy: "PUBLIC",
-          clientRequestToken: uuid(),
-          chimeBearer: userArn,
-          expirationCriterion: "LAST_MESSAGE_TIMESTAMP", // CREATED_TIMESTAMP | LAST_MESSAGE_TIMESTAMP
-          expirationDays: Config.channelExpirationDays,
+          appInstanceArn: Config.appInstanceArn, // The ARN of the app instance created in the AWS Chime SDK CLI
+          name: 'LiveSession', // The name of the channel
+          mode: "UNRESTRICTED", // Channel mode: RESTRICTED or UNRESTRICTED
+          privacy: "PUBLIC", // The channel's privacy level: PUBLIC or PRIVATE
+          clientRequestToken: uuid(), // Token of the user, generated using uuid because ignored user management
+          chimeBearer: userArn, // The Arn of the user to authenticate the chime SDK
+          expirationCriterion: "LAST_MESSAGE_TIMESTAMP", // Criterion expiration of the channel: CREATED_TIMESTAMP or LAST_MESSAGE_TIMESTAMP
+          expirationDays: Config.channelExpirationDays, // Expiration days for the channel
         }
       }
     });
@@ -136,30 +63,27 @@ export async function createChannel(userArn) {
     const response = await body.json();
     return response.data;
   } catch (error) {
-    console.log('POST call failed: ', JSON.parse(error.response.body));
+    console.log('POST call createChannel failed: ', JSON.parse(error.response.body));
   }
 }
 
+/**
+ * Add participants to a channel (group chat)
+ * @param {string} channelArn - The Arn of the channel.
+ * @param {string} userArn - The Arn of the user.
+ * @returns {Promise<any>} The response data from the API call.
+ * @throws {Error} Logs the error details if the POST call fails.
+ */
 export async function addChannelMembership(channelArn, userArn) {
-  // const input = { // CreateChannelMembershipRequest
-  //   ChannelArn: channelArn, // required
-  //   MemberArn: userArn, // required
-  //   Type: "DEFAULT", // required
-  //   ChimeBearer: userArn, // required
-  // };
-  // const command = new CreateChannelMembershipCommand(input);
-  // const response = await chimeSDKMessagingClient().send(command);
-  // console.log("Add User to Channel Response", response);
-
   try {
     const restOperation = post({
-      apiName: 'ChannelVTGRestApi',
-      path: 'channels/' + encodeURIComponent(channelArn) + '/memberships',
+      apiName: 'ChannelVTGRestApi',  // The name of the API defined in backend.ts
+      path: 'channels/' + encodeURIComponent(channelArn) + '/memberships', // endpoint defined in backend.ts, channelArn is dynamically passed
       options: {
         body: {
-          memberArn: userArn,
-          type: "DEFAULT",
-          chimeBearer: userArn,
+          memberArn: userArn, // The Arn of the user to be added to the channel
+          type: "DEFAULT", // The type of the user: DEFAULT or HIDDEN
+          chimeBearer: userArn, //The Arn of the user to authenticate the chime SDK
         }
       }
     });
@@ -168,39 +92,31 @@ export async function addChannelMembership(channelArn, userArn) {
     const response = await body.json();
     return response.data;
   } catch (error) {
-    console.log('POST call failed: ', JSON.parse(error.response.body));
+    console.log('POST call addChannelMembership failed: ', JSON.parse(error.response.body));
   }
 }
 
-
+/**
+ * Send a message to a channel(group chat)
+ * @param {string} channelArn - The Arn of the channel.
+ * @param {string} userArn - The Arn of the user.
+ * @param {string} inputMessage - The message to be sent.
+ * @returns {Promise<any>} The response data from the API call.
+ * @throws {Error} Logs the error details if the POST call fails.
+ */
 export async function sendMessage(channelArn, userArn, inputMessage) {
-
-  // // Send message using the Chime SDK Messaging Client
-  // const input = {
-  //   ChannelArn: channelArn, // Replace with your Channel ARN
-  //   Content: inputMessage, // The actual message content
-  //   Type: 'STANDARD', // or 'CONTROL' depending on your needs
-  //   Persistence: 'PERSISTENT', // 'PERSISTENT' to store the message or 'NON_PERSISTENT' for ephemeral messages
-  //   ClientRequestToken: new Date().getTime().toString(), // Unique token for idempotency
-  //   ChimeBearer: userArn, // The ARN of the user sending the message
-  // };
-
-  // // Use the Chime SDK to send the message
-  // const command = new SendChannelMessageCommand(input);
-  // const response = await chimeSDKMessagingClient().send(command);
-  // console.log("Send message", response);
   try {
     const restOperation = post({
-      apiName: 'ChannelVTGRestApi',
-      path: 'channels/' + encodeURIComponent(channelArn) + '/messages',
+      apiName: 'ChannelVTGRestApi', // The name of the API defined in backend.ts
+      path: 'channels/' + encodeURIComponent(channelArn) + '/messages', // endpoint defined in backend.ts, channelArn is dynamically passed
       options: {
         body: {
-          channelArn: channelArn,
-          content: inputMessage,
-          type: "STANDARD",
-          persistence: 'PERSISTENT',
-          clientRequestToken: uuid(),
-          chimeBearer: userArn,
+          channelArn: channelArn, // The Arn of the channel
+          content: inputMessage, // The message to be sent
+          type: "STANDARD", // The type of the message: STANDARD or CONTROL
+          persistence: 'PERSISTENT', // The persistence of the message: PERSISTENT or NON_PERSISTENT
+          clientRequestToken: uuid(), // Token of the user, generated using uuid because ignored user management
+          chimeBearer: userArn, // The Arn of the user to authenticate the chime SDK
         }
       }
     });
@@ -209,33 +125,24 @@ export async function sendMessage(channelArn, userArn, inputMessage) {
     const response = await body.json();
     return response.data;
   } catch (error) {
-    console.log('POST call failed: ', JSON.parse(error.response.body));
+    console.log('POST call sendMessage failed: ', JSON.parse(error.response.body));
   }
 }
 
-
-// Function to create a meeting
+/**
+ * Create a meeting when the host starts the meeting to brocast the audio
+ * @returns {Promise<any>} The response data from the API call.
+ * @throws {Error} Logs the error details if the POST call fails.
+ */
 export async function createMeeting() {
-  // const response = await fetch(`https://gqr4dc3syf.execute-api.ap-northeast-1.amazonaws.com/dev/meeting`, {
-  //   method: 'POST',
-  //   headers: { 'Content-Type': 'application/json' },
-  //   body: JSON.stringify({
-  //     clientRequestToken: uuid(),  // Unique token for the meeting
-  //     externalMeetingId: uuid(),  // Unique ID for the meeting
-  //   }),
-  // });
-
-  // const result = await response.json();
-  // console.log("createMeeting", result.data);
-  // return result.data;
   try {
     const restOperation = post({
-      apiName: 'MeetingVTGRestApi',
-      path: 'meetings',
+      apiName: 'MeetingVTGRestApi', // The name of the API defined in backend.ts
+      path: 'meetings', // endpoint defined in backend.ts 
       options: {
         body: {
-          clientRequestToken: uuid(),
-          externalMeetingId: uuid(),
+          clientRequestToken: uuid(), // Token of the user, generated using uuid because ignored user management
+          externalMeetingId: uuid(), // The external ID of the meeting, generated using uuid
         }
       }
     });
@@ -244,53 +151,46 @@ export async function createMeeting() {
     const response = await body.json();
     return response.data;
   } catch (error) {
-    console.log('POST call failed: ', JSON.parse(error.response.body));
+    console.log('POST call createMeeting failed: ', JSON.parse(error.response.body));
   }
 
 }
 
+/**
+ * Get a meeting by the participants to join the meeting
+ * @param {string} meetingId - The ID of the meeting.
+ * @returns {Promise<any>} The response data from the API call.
+ * @throws {Error} Logs the error details if the POST call fails.
+ */
 export async function getMeeting(meetingId) {
-  // const response = await fetch(`https://gqr4dc3syf.execute-api.ap-northeast-1.amazonaws.com/dev/meeting/?meetingId=${meetingId}`, {
-  //   method: 'GET',
-  //   headers: { 'Content-Type': 'application/json' },
-  // });
-
-  // const data = await response.json();
-  // return data.meeting;
   try {
     const restOperation = get({
-      apiName: 'MeetingVTGRestApi',
-      //path: 'meeting/?meetingId=' + meetingId,
-      path: 'meetings/' + meetingId,
+      apiName: 'MeetingVTGRestApi', // The name of the API defined in backend.ts
+      path: 'meetings/' + meetingId, // endpoint defined in backend.ts, meetingId is dynamically passed
     });
     const { body } = await restOperation.response;
     const response = await body.json();
     return response.data;
   } catch (error) {
-    console.log('GET call failed: ', JSON.parse(error.response.body));
+    console.log('GET call getMeeting failed: ', JSON.parse(error.response.body));
   }
 }
 
-// Function to create an attendee (used by both host and listeners)
+/**
+ * Add a participant to a meeting to listen to the audio
+ * @param {string} meetingId - The ID of the meeting.
+ * @param {string} externalUserId  - The external user ID for attendee.
+  * @returns {Promise<any>} The response data from the API call.
+ * @throws {Error} Logs the error details if the POST call fails.
+ */
 export async function createAttendee(meetingId, externalUserId) {
-  // const response = await fetch(`https://rtp02fdc7i.execute-api.ap-northeast-1.amazonaws.com/dev/attendee`, {
-  //   method: 'POST',
-  //   headers: { 'Content-Type': 'application/json' },
-  //   body: JSON.stringify({
-  //     meetingId,
-  //     externalUserId
-  //   }),
-  // });
-
-  // const result = await response.json();
-  // return result.data;
   try {
     const restOperation = post({
-      apiName: 'MeetingVTGRestApi',
-      path: 'meetings/' + meetingId + '/attendees',
+      apiName: 'MeetingVTGRestApi', // The name of the API defined in backend.ts
+      path: 'meetings/' + meetingId + '/attendees', // endpoint defined in backend.ts, meetingId is dynamically passed
       options: {
         body: {
-          externalUserId: externalUserId,
+          externalUserId: externalUserId, // The external ID of the user, it is userId of participant joined the meeting
         }
       }
     });
@@ -299,32 +199,6 @@ export async function createAttendee(meetingId, externalUserId) {
     const response = await body.json();
     return response.data;
   } catch (error) {
-    console.log('POST call failed: ', JSON.parse(error.response.body));
+    console.log('POST call createAttendee failed: ', JSON.parse(error.response.body));
   }
-}
-
-export async function createRecording(meetingId) {
-  const response = await fetch(`${API_URL}/start-recording`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      meetingId,
-    }),
-  });
-
-  const data = await response.json();
-  return data.pipeline;
-}
-
-export async function stopRecording(mediaPipelineId) {
-  const response = await fetch(`${API_URL}/stop-recording`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      mediaPipelineId,
-    }),
-  });
-
-  const data = await response.json();
-  return data.pipeline;
 }

@@ -26,7 +26,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
 
     // Create a new Chime meeting
     const attendeeResponse = await chime.createAttendee({
-      MeetingId: meetingId,
+      MeetingId: meetingId, // Meeting ID 
       ExternalUserId: externalUserId  // Unique ID for each attendee (host or listener)
     }).promise();
     

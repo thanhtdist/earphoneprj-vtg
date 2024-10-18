@@ -13,10 +13,22 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     console.log('Creating Send Channel Message with channelArn: ', channelArn,
       'type:', type, 'persistence:', persistence, 'clientRequestToken:', clientRequestToken, "chimeBearer:", chimeBearer);
     // Input validation
-    if (!channelArn || !persistence || !type || !clientRequestToken || !chimeBearer) {
+    if (!channelArn || !persistence || !type) {
       return {
         statusCode: 400,
-        body: JSON.stringify({ error: 'Invalid input: channelArn, persistence, type, clientRequestToken and chimeBearer are required.' }),
+        body: JSON.stringify({ error: 'Invalid input: channelArn, persistence, and type are required.' }),
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*', // Enable CORS if needed
+        },
+      };
+    }
+
+    // Token validation
+    if (!clientRequestToken || !chimeBearer) {
+      return {
+        statusCode: 403,
+        body: JSON.stringify({ error: 'clientRequestToken and chimeBearer are invalid.' }),
         headers: {
           'Content-Type': 'application/json',
           'Access-Control-Allow-Origin': '*', // Enable CORS if needed
@@ -26,11 +38,11 @@ export const handler: APIGatewayProxyHandler = async (event) => {
 
     // Create a new Chime Channel
     const sendChannelMessageResponse = await chime.sendChannelMessage({
-      ChannelArn: decodeURIComponent(channelArn),  // AppInstanceUserArn
-      Content: content,  // Must be a unique channel name
-      Type: type,  // RESTRICTED or UNRESTRICTED
-      Persistence: persistence,  // PUBLIC or PRIVATE
-      ClientRequestToken: clientRequestToken,  // Unique channel identifier
+      ChannelArn: decodeURIComponent(channelArn),  // Channel ARN
+      Content: content,  // Content of the message
+      Type: type,  // "STANDARD" or "CONTROL"
+      Persistence: persistence,  // "PERSISTENT" or "NON_PERSISTENT"
+      ClientRequestToken: clientRequestToken,  // Unique message identifier
       ChimeBearer: chimeBearer // chime Bearer
     }).promise();
 

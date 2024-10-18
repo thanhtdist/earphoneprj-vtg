@@ -6,7 +6,10 @@ import reportWebVitals from './reportWebVitals';
 import { Amplify } from "aws-amplify"
 import outputs from "./amplify_outputs.json";
 
+// Connect the Amplify backend resource from outputs file to the frontend
 Amplify.configure(outputs);
+
+// Connect the REST API to the frontend
 const existingConfig = Amplify.getConfig();
 Amplify.configure({
   ...existingConfig,

@@ -13,10 +13,21 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     console.log('Creating Channel Membership with channelArn: ', channelArn,
       'memberArn: ', memberArn, 'type:', memberArn, 'chimeBearer: ', chimeBearer);
     // Input validation
-    if (!channelArn || !memberArn || !type || !chimeBearer) {
+    if (!channelArn || !memberArn || !type) {
       return {
         statusCode: 400,
-        body: JSON.stringify({ error: 'Invalid input: channelArn, memberArn, type and chimeBearer are required.' }),
+        body: JSON.stringify({ error: 'Invalid input: channelArn, memberArn, and type are required.' }),
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*', // Enable CORS if needed
+        },
+      };
+    }
+    // Token validation
+    if (!chimeBearer) {
+      return {
+        statusCode: 403,
+        body: JSON.stringify({ error: 'ChimeBearer is invalid.' }),
         headers: {
           'Content-Type': 'application/json',
           'Access-Control-Allow-Origin': '*', // Enable CORS if needed
@@ -26,10 +37,10 @@ export const handler: APIGatewayProxyHandler = async (event) => {
 
     // Create a new Chime Channel
     const createChannelMembershipResponse = await chime.createChannelMembership({
-      ChannelArn: decodeURIComponent(channelArn),  // AppInstanceUserArn
-      MemberArn: memberArn,  // Must be a unique channel name
-      Type: type,  // RESTRICTED or UNRESTRICTED
-      ChimeBearer: chimeBearer // chime Bearer
+      ChannelArn: decodeURIComponent(channelArn),  // ChannelArn
+      MemberArn: memberArn,  // Member name
+      Type: type,  // "DEFAULT" or "HIDDEN"
+      ChimeBearer: chimeBearer // chime Bearer token as AppInstanceUserArn
     }).promise();
 
     console.log('Created Channel Membership Response: ', createChannelMembershipResponse);

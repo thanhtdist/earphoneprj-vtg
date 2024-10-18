@@ -14,10 +14,22 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       privacy, 'clientRequestToken: ', clientRequestToken, 'chimeBearer: ', chimeBearer);
 
     // Input validation
-    if (!appInstanceArn || !name || !mode || !privacy || !clientRequestToken || !chimeBearer || !expirationCriterion || !expirationDays) {
+    if (!appInstanceArn || !name || !mode || !privacy || !expirationCriterion || !expirationDays) {
       return {
         statusCode: 400,
-        body: JSON.stringify({ error: 'Invalid input: appInstanceArn, name, mode, privacy, clientRequestToken and chimeBearer are required.' }),
+        body: JSON.stringify({ error: 'Invalid input: appInstanceArn, name, mode, and privacy are required.' }),
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*', // Enable CORS if needed
+        },
+      };
+    }
+
+    // Token validation
+    if (!clientRequestToken || !chimeBearer) {
+      return {
+        statusCode: 403,
+        body: JSON.stringify({ error: 'clientRequestToken and chimeBearer are invalid.' }),
         headers: {
           'Content-Type': 'application/json',
           'Access-Control-Allow-Origin': '*', // Enable CORS if needed
@@ -28,14 +40,14 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     // Create a new Chime Channel
     const createChannelResponse = await chime.createChannel({
       AppInstanceArn: appInstanceArn,  // AppInstanceUserArn
-      Name: name,  // Must be a unique channel name
+      Name: name,  // Channel name
       Mode: mode,  // RESTRICTED or UNRESTRICTED
       Privacy: privacy,  // PUBLIC or PRIVATE
       ClientRequestToken: clientRequestToken,  // Unique channel identifier
       ChimeBearer: chimeBearer, // chime Bearer
       ExpirationSettings: {
-        ExpirationCriterion: expirationCriterion,
-        ExpirationDays: expirationDays
+        ExpirationCriterion: expirationCriterion, // Criteria for expiration
+        ExpirationDays: expirationDays // Number of days for expiration
       }
     }).promise();
 

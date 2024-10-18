@@ -1,3 +1,6 @@
+/**
+ * This file is used to define the backend resources for the Amplify project.
+ */
 import { defineBackend } from '@aws-amplify/backend';
 import { Stack } from "aws-cdk-lib";
 import {
@@ -14,22 +17,26 @@ import { addChannelMembership } from './functions/add-channel-membership/resourc
 import { sendChannelMessage } from './functions/send-channel-message/resource';
 
 /**
- * @see https://docs.amplify.aws/react/build-a-backend/ to add storage, functions, and more
+ * Define the backend resources 
+ * - List lambda functions for audio voice (metting session) and chat(message session)
  */
 const backend = defineBackend({
-  createMeeting,
-  getMeeting,
-  createAttendee,
-  createAppInstanceUser,
-  createChannel,
-  addChannelMembership,
-  sendChannelMessage,
+  createMeeting, // create meeting for audio voice by the host
+  getMeeting, // get meeting for audio voice by the participant
+  createAttendee, // add participants to the meeting
+  createAppInstanceUser, // create app instance user for chat by the participants
+  createChannel, // create channel (chat group) for chat by the host
+  addChannelMembership, // add participants to the channel (group chat)
+  sendChannelMessage, // send message to the channel (group chat) by the participants
 });
 
-// create a new API stack
+/**
+* Create a new API stack that include all APIs for audio voice and chat
+*/
 const apiStack = backend.createStack("api-stack");
 
-// create a new REST API
+// =============1. API Getway, Lambda function for VOICE ===============
+// create a new REST API for audio voice
 const meetingRestApi = new RestApi(apiStack, "MeetingVTGRestApi", {
   restApiName: "MeetingVTGRestApi",
   deploy: true,
@@ -43,41 +50,30 @@ const meetingRestApi = new RestApi(apiStack, "MeetingVTGRestApi", {
   },
 });
 
-// create a new Lambda integration
-const createMeetingLambdaIntegration = new LambdaIntegration(
+// create a new resource path(endpoint) for /meetings
+const meetingPath = meetingRestApi.root.addResource("meetings");
+// add POST method to create /meeting with createMeeting Lambda integration
+meetingPath.addMethod("POST", new LambdaIntegration(
   backend.createMeeting.resources.lambda
-);
-const getMeetingLambdaIntegration = new LambdaIntegration(
-  backend.getMeeting.resources.lambda
-);
-
-// create a new resource path with IAM authorization
-const meetingPath = meetingRestApi.root.addResource("meetings", {
-  defaultMethodOptions: {
-    //authorizationType: AuthorizationType.IAM,
-  },
-});
-
-// add methods you would like to create to the resource path
-meetingPath.addMethod("POST", createMeetingLambdaIntegration);
-
-// Add attendee API from meeting API
-// create a new Lambda integration for creating attendees
-const createAttendeeLambdaIntegration = new LambdaIntegration(
-  backend.createAttendee.resources.lambda
-);
+));
 
 // create a dynamic {MeetingID} resource under /meeting
 const meetingIdPath = meetingPath.addResource("{MeetingID}");
-meetingIdPath.addMethod("GET", getMeetingLambdaIntegration);
+// add GET method to /meeting/{MeetingID} with getMeeting Lambda integration
+meetingIdPath.addMethod("GET", new LambdaIntegration(
+  backend.getMeeting.resources.lambda
+));
 
-// create the 'attendees' resource under /meeting/{MeetingID}
+// create the 'attendees' resource under /meeting/{MeetingID}/attendees
 const attendeesPath = meetingIdPath.addResource("attendees");
+// add POST method to /meeting/{MeetingID}/attendees with createAttendee Lambda integration
+attendeesPath.addMethod("POST", new LambdaIntegration(
+  backend.createAttendee.resources.lambda
+));
 
-// add POST method to /meeting/{MeetingID}/attendees with Lambda integration
-attendeesPath.addMethod("POST", createAttendeeLambdaIntegration);
 
-// Add app instance user API
+// =============2. API Getway, Lambda function for CHAT ===============
+// 2.1. Add app instance user API
 const appInstanceUserRestApi = new RestApi(apiStack, "AppInstanceUserVTGRestApi", {
   restApiName: "AppInstanceUserVTGRestApi",
   deploy: true,
@@ -91,22 +87,15 @@ const appInstanceUserRestApi = new RestApi(apiStack, "AppInstanceUserVTGRestApi"
   },
 });
 
-// create a new Lambda integration
-const createAppInstanceUserVTGRestApiLambdaIntegration = new LambdaIntegration(
+// create a new resource path(endpoint) for /app-instance-users
+const appInstanceUserPath = appInstanceUserRestApi.root.addResource("app-instance-users");
+
+// add POST method to create /app-instance-users with createAppInstanceUser Lambda integration
+appInstanceUserPath.addMethod("POST", new LambdaIntegration(
   backend.createAppInstanceUser.resources.lambda
-);
+));
 
-// create a new resource path with IAM authorization
-const appInstanceUserPath = appInstanceUserRestApi.root.addResource("app-instance-users", {
-  defaultMethodOptions: {
-    //authorizationType: AuthorizationType.IAM,
-  },
-});
-
-// add methods you would like to create to the resource path
-appInstanceUserPath.addMethod("POST", createAppInstanceUserVTGRestApiLambdaIntegration);
-
-// Add channel API
+// 2.2. Add channel API
 const channelRestApi = new RestApi(apiStack, "ChannelVTGRestApi", {
   restApiName: "ChannelVTGRestApi",
   deploy: true,
@@ -114,53 +103,40 @@ const channelRestApi = new RestApi(apiStack, "ChannelVTGRestApi", {
     stageName: "prod",
   },
   defaultCorsPreflightOptions: {
-    allowOrigins: ['*'], // Restrict this to domains you trust
-    allowMethods: ["GET", "POST", "OPTIONS"], // Specify only the methods you need to allow
-    allowHeaders: ["*"], // Specify only the headers you need to allow
-    //allowHeaders: ['Content-Type'],  
+    allowOrigins: Cors.ALL_ORIGINS, // Restrict this to domains you trust
+    allowMethods: Cors.ALL_METHODS, // Specify only the methods you need to allow
+    allowHeaders: Cors.DEFAULT_HEADERS, // Specify only the headers you need to allow
   },
 });
 
-// create a new Lambda integration
-const channelLambdaIntegration = new LambdaIntegration(
+// create a new resource path(endpoint) for /channels
+const channelPath = channelRestApi.root.addResource("channels");
+
+// add POST methods to create /channels with createChannel Lambda integration
+channelPath.addMethod("POST", new LambdaIntegration(
   backend.createChannel.resources.lambda
-);
-
-const addChannelMembershipLambdaIntegration = new LambdaIntegration(
-  backend.addChannelMembership.resources.lambda
-);
-
-const sendChannelMessageLambdaIntegration = new LambdaIntegration(
-  backend.sendChannelMessage.resources.lambda
-);
-
-// create a new resource path with IAM authorization
-const channelPath = channelRestApi.root.addResource("channels", {
-  defaultMethodOptions: {
-    //authorizationType: AuthorizationType.IAM,
-  },
-});
-
-// add methods you would like to create to the resource path
-channelPath.addMethod("POST", channelLambdaIntegration);
+));
 
 // create a dynamic {channelArn} resource under /channels
 const channelArnPath = channelPath.addResource("{channelArn}");
-//channelArnPath.addMethod("GET", getMeetingLambdaIntegration);
 
 // create the 'memberships' resource under /channels/{channelArn}
 const membershipsPath = channelArnPath.addResource("memberships");
 
-// add POST method to /channels/{channelArn}/memberships with Lambda integration
-membershipsPath.addMethod("POST", addChannelMembershipLambdaIntegration);
+// add POST method to /channels/{channelArn}/memberships with addChannelMembership Lambda integration
+membershipsPath.addMethod("POST", new LambdaIntegration(
+  backend.addChannelMembership.resources.lambda
+));
 
-// create the 'attendees' resource under /channels/{channelArn}/messages
+// send the 'messages' resource under /channels/{channelArn}/messages
 const sendMessagesPath = channelArnPath.addResource("messages");
 
-// add POST method to /channels/{channelArn}/messages with Lambda integration
-sendMessagesPath.addMethod("POST", sendChannelMessageLambdaIntegration);
+// add POST method to /channels/{channelArn}/messages with sendChannelMessage Lambda integration
+sendMessagesPath.addMethod("POST", new LambdaIntegration(
+  backend.sendChannelMessage.resources.lambda
+));
 
-// add outputs to the configuration file
+// add outputs to the configuration file for calling APIs metadata in the frontend
 backend.addOutput({
   custom: {
     API: {

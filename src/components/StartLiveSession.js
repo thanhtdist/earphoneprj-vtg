@@ -21,6 +21,9 @@ import { QRCodeSVG } from 'qrcode.react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlay, faStop } from '@fortawesome/free-solid-svg-icons';
 
+/**
+ * Component to start a live session and manage the audio voice by the host
+ */
 function StartLiveSession() {
   const [channelArn, setChannelArn] = useState('');
   const [channelID, setChannelID] = useState('');
@@ -32,38 +35,30 @@ function StartLiveSession() {
   const [isMeetingActive, setIsMeetingActive] = useState(false); // State to track if meeting is active
   const [isLoading, setIsLoading] = useState(false); // State for loading
 
-  useEffect(() => {
-    const getAudioInputDevices = async () => {
-      if (meetingSession) {
-        const devices = await meetingSession.audioVideo.listAudioInputDevices();
-        setAudioInputDevices(devices);
-        if (devices.length > 0) {
-          setSelectedAudioInput(devices[0].deviceId);
-        }else {
-          alert("No audio input devices were found. Please check your device.");
-        }
-      }
-    };
-    getAudioInputDevices();
-  }, [meetingSession]);
-
+  // Function to start a new meeting
   const startMeeting = async () => {
     setIsLoading(true); // Set loading state to true
     try {
-      const userID = uuidv4(); // Generate a unique user ID
+      // Generate a unique user ID and name for the host
+      const userID = uuidv4(); 
       const userName = `admin-${Date.now()}`;
+
+      // Create a new AppInstanceUser, Channel, and add the user to the channel for chat messaging component
       const userArn = await createAppInstanceUsers(userID, userName);
       const channelArn = await createChannel(userArn);
       const channelID = channelArn.split('/').pop();
-
       await addChannelMembership(channelArn, userArn);
       setUserArn(userArn);
       setChannelArn(channelArn);
       setChannelID(channelID);
 
-      const meeting = await createMeeting(); // Create a new meeting
+      // Create a new meeting and attendee
+      const meeting = await createMeeting();
+      console.log('Meeting created:', meeting);
       setMeeting(meeting);
       const attendee = await createAttendee(meeting.MeetingId, userID);
+
+      // Initialize the meeting session
       initializeMeetingSession(meeting, attendee);
     } catch (error) {
       console.error('Error starting meeting:', error);
@@ -72,6 +67,7 @@ function StartLiveSession() {
     }
   };
 
+  // Function to initialize the meeting session
   const initializeMeetingSession = (meeting, attendee) => {
     const logger = new ConsoleLogger('ChimeMeetingLogs', LogLevel.INFO);
     const deviceController = new DefaultDeviceController(logger);
@@ -80,6 +76,7 @@ function StartLiveSession() {
     setMeetingSession(session);
   };
 
+  // Function to toggle the live session for start/stop audio voice
   const toggleLiveSession = async () => {
     if (isMeetingActive) {
       if (meetingSession) {
@@ -100,6 +97,22 @@ function StartLiveSession() {
       }
     }
   };
+
+  // Fetch audio input devices when the meeting session is available
+  useEffect(() => {
+    const getAudioInputDevices = async () => {
+      if (meetingSession) {
+        const devices = await meetingSession.audioVideo.listAudioInputDevices();
+        setAudioInputDevices(devices);
+        if (devices.length > 0) {
+          setSelectedAudioInput(devices[0].deviceId);
+        }else {
+          alert("No audio input devices were found. Please check your device.");
+        }
+      }
+    };
+    getAudioInputDevices();
+  }, [meetingSession]);
 
   return (
     <div className="container">
