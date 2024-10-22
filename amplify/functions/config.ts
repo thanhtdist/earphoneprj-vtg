@@ -1,9 +1,11 @@
-// Define the configuration for the AWS Lambda functions
+/**
+ * Configuration for the AWS Lambda functions
+ */
 export const Config = {
     // region for the AWS SDK
     region: 'us-east-1',
-    // content type for the API Gateway
-    contentType : 'application/json',
-    // Enable CORS for all methods
+    // The content type for API Gateway responses
+    contentType: 'application/json',
+    // Enable CORS for all methods by allowing any origin
     accessControlAllowOrigin: '*',
 };

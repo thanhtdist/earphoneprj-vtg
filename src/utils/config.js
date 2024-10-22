@@ -15,7 +15,7 @@ const Config = {
     accessKeyId: process.env.REACT_APP_MY_APP_AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.REACT_APP_MY_APP_AWS_SECRET_ACCESS_KEY,
     // URL for the web app for participants to join listen to audio
-    //AppURL: 'http://localhost:3000/viewer/',
-    AppURL: 'https://main.d1kjg68sgeplir.amplifyapp.com/viewer/',
+    //appURL: 'http://localhost:3000/viewer/',
+    appURL: 'https://main.d1kjg68sgeplir.amplifyapp.com/viewer/',
 };
 export default Config;

@@ -148,8 +148,8 @@ function StartLiveSession() {
           )}
           {meeting && channelArn && (
             <>
-              <QRCodeSVG value={`${Config.AppURL}?meetingId=${meeting.MeetingId}&channelId=${channelID}`} size={256} level="H" />
-              <a target="_blank" rel="noopener noreferrer" style={{ color: 'green' }} href={`${Config.AppURL}?meetingId=${meeting.MeetingId}&channelId=${channelID}`}>
+              <QRCodeSVG value={`${Config.appURL}?meetingId=${meeting.MeetingId}&channelId=${channelID}`} size={256} level="H" />
+              <a target="_blank" rel="noopener noreferrer" style={{ color: 'green' }} href={`${Config.appURL}?meetingId=${meeting.MeetingId}&channelId=${channelID}`}>
                 Join as Listener
               </a>
             </>

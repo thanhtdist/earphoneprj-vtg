@@ -18,7 +18,7 @@ import Config from '../utils/config';
  * @param {string} channelArn - The ARN of the channel
  * @param {string} sessionId - The session ID for the messaging session 
  */
-const ChatMessage = ({ userArn, channelArn, sessionId }) => {
+function ChatMessage({ userArn, channelArn, sessionId }) {
   // State variables to store messages and input message
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState('');

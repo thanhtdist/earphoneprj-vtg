@@ -10,7 +10,7 @@ import { Config } from '../config';
 export const handler: APIGatewayProxyHandler = async (event) => {
   // Create a new Chime SDK Meeting instance
   const chime = new AWS.ChimeSDKMeetings({ region: Config.region });
-  
+
   try {
     // Parse body from API Gateway event
     const meetingId = event.pathParameters ? event.pathParameters.MeetingID : null;
@@ -35,7 +35,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       MeetingId: meetingId, // Meeting ID 
       ExternalUserId: externalUserId  // Unique ID for each attendee (host or listener)
     }).promise();
-    
+
     console.log('Created Chime Attendee: ', attendeeResponse.Attendee?.AttendeeId);
 
     // Return successful response
