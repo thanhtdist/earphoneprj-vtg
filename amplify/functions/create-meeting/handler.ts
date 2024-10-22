@@ -48,7 +48,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       MediaRegion: Config.region, // Region for the meeting
       MeetingFeatures: {
         Audio: {
-          EchoReduction: "AVAILABLE" // remove echo from the meeting
+          EchoReduction: "AVAILABLE" // enable and reduce echo from the meeting
         },
         Video: {
           MaxResolution: "None" // No video for the meeting, audio only
