@@ -2,6 +2,11 @@ import type { APIGatewayProxyHandler } from 'aws-lambda';
 import AWS from 'aws-sdk';
 import { Config } from '../config';
 
+/**
+ * This function creates a new Chime App Instance User when adding a user to an App Instance for chat messaging
+ * @param event - Contains Request App Instance ARN, App Instance User ID, Client Request Token, Name, Expiration Criterion, and Expiration Days
+ * @returns App Instance User ARN Response if successful, error message if failed 
+ */
 export const handler: APIGatewayProxyHandler = async (event) => {
   // Create a new Chime SDK Identity instance
   const chime = new AWS.ChimeSDKIdentity({ region: Config.region });
@@ -68,6 +73,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     };
   } catch (error: any) {
     console.error('Error creating App Instance User: ', { error, event });
+    // Return error response
     return {
       statusCode: 500,
       body: JSON.stringify({ error: error.message || 'Internal Server Error' }),

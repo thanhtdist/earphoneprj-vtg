@@ -2,6 +2,11 @@ import type { APIGatewayProxyHandler } from 'aws-lambda';
 import AWS from 'aws-sdk';
 import { Config } from '../config';
 
+/**
+ * This function creates a new Chime channel membership when adding a member to a channel(group chat)
+ * @param event - Contains Request Channel ARN, Member ARN, Type, and Chime Bearer
+ * @returns Channel Membership Response if successful, error message if failed
+ */
 export const handler: APIGatewayProxyHandler = async (event) => {
   // Create a new Chime SDK Message instance
   const chime = new AWS.ChimeSDKMessaging({ region: Config.region });
@@ -59,6 +64,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     };
   } catch (error: any) {
     console.error('Error creating Channel Membership: ', { error, event });
+    // Return error response
     return {
       statusCode: 500,
       body: JSON.stringify({ error: error.message || 'Internal Server Error' }),
