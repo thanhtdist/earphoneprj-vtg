@@ -17,7 +17,7 @@ import ChatMessage from './ChatMessage';
 import Config from '../utils/config';
 import { v4 as uuidv4 } from 'uuid';
 import { useLocation } from 'react-router-dom';
-
+//import LocalStorageUtils from '../utils/localStorage';
 /**
  * Component to join a meeting as a viewer and listen to the audio
  */
@@ -77,7 +77,27 @@ function LiveViewer() {
 
       // Generate a unique user ID and name for the host
       const userID = uuidv4(); // Generate unique user ID
-      const userName = `user-${Date.now()}`;
+      //const channelInfo = JSON.parse(LocalStorageUtils.getWithExpiry("channelInfo"));
+      const channelInfo = JSON.parse(localStorage.getItem("channelInfo"));
+      let numberOfParticipants = 1;
+      console.log('channelInfo:', channelInfo);
+      if (channelInfo && channelInfo.channelId !== channelId) {
+        // remove the old channel info
+        //LocalStorageUtils.remove("channelInfo");
+        localStorage.removeItem("channelInfo"); // Remove if expired
+        localStorage.setItem("channelInfo", JSON.stringify({
+          channelId: channelId,
+          numberOfParticipants: numberOfParticipants,
+        }));
+      } else {
+        numberOfParticipants = channelInfo ? channelInfo.numberOfParticipants + 1 : 1;
+        localStorage.setItem("channelInfo", JSON.stringify({
+          channelId: channelId,
+          numberOfParticipants: numberOfParticipants,
+        }));
+      }
+
+      const userName = `User${numberOfParticipants}`;
 
       // Create userArn and join channel
       const userArn = await createAppInstanceUsers(userID, userName);
