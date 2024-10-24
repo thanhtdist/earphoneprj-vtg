@@ -10,8 +10,10 @@ import {
   PrefetchSortBy,
 } from 'amazon-chime-sdk-js';
 import { FiSend } from 'react-icons/fi';
+import { VscAccount } from "react-icons/vsc";
 import '../styles/ChatMessage.css';
 import Config from '../utils/config';
+
 /**
  * Component to display chat messages and send messages to a channel
  * @param {string} userArn - The ARN of the user
@@ -134,12 +136,15 @@ function ChatMessage({ userArn, channelArn, sessionId }) {
       {messages.length > 0 && (
         <div className="chat-window">
           {messages.map((message, index) => (
-            <div
-              key={index}
-              className={`message ${message.senderArn === userArn ? 'my-message' : 'other-message'}`}
-            >
-              <strong>{message.senderArn === userArn ? 'You' : message.senderName}</strong>: {message.content}
-              <div className="timestamp">{formatTimestamp(message.timestamp)}</div>
+            <div key={index} className="message">
+              <div className="message-header">
+                <VscAccount color={message.senderName === "Guide" ? "blue" : ""} size={24} />
+                <strong>{message.senderArn === userArn ? 'You' : message.senderName}</strong>
+              </div>
+              <div className={`message-content ${message.senderArn === userArn ? 'my-message' : 'other-message'}`}>
+                <span>{message.content}</span>
+                <div className="timestamp">{formatTimestamp(message.timestamp)}</div>
+              </div>
             </div>
           ))}
         </div>

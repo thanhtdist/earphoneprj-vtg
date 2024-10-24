@@ -41,7 +41,7 @@ function StartLiveSession() {
     try {
       // Generate a unique user ID and name for the host
       const userID = uuidv4(); 
-      const userName = `admin-${Date.now()}`;
+      const userName = `Guide`;
 
       // Create a new AppInstanceUser, Channel, and add the user to the channel for chat messaging component
       const userArn = await createAppInstanceUsers(userID, userName);

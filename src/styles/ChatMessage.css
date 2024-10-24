@@ -17,8 +17,52 @@
 
 .message {
     margin-bottom: 10px;
-    padding: 8px; /* Added padding for better readability */
+    padding: 8px;
     border-radius: 5px;
+    display: flex;
+    flex-direction: column; /* Stack the two lines vertically */
+}
+
+.message-header {
+    display: flex;
+    align-items: center; /* Align icon and name on the same line */
+    margin-bottom: 4px; /* Add some space between the two lines */
+}
+
+.message-header strong {
+    margin-left: 8px; /* Space between icon and name */
+}
+
+.message-content {
+    display: flex;
+    justify-content: space-between; /* Push the timestamp to the right */
+    font-size: 0.9em; /* Slightly smaller text for message content */
+}
+
+.message-content .timestamp {
+    font-size: 0.8em;
+    color: #888;
+    margin-left: 10px;
+}
+
+.my-message {
+    text-align: right;
+    background-color: #b3e5fc;
+    border-radius: 5px;
+    padding: 8px;
+}
+
+.other-message {
+    text-align: left;
+    background-color: #e1bee7;
+    border-radius: 5px;
+    padding: 8px;
+}
+
+.message-content .timestamp {
+    font-size: 0.8em;
+    color: #888;
+    margin-left: 10px;
 }
 
 .my-message {
