@@ -97,6 +97,33 @@ export async function addChannelMembership(channelArn, userArn) {
 }
 
 /**
+ * List participants of a channel (group chat)  
+ * @param {string} channelArn - The Arn of the channel.
+ * @param {string} userArn - The Arn of the user.
+ * @returns {Promise<any>} The response data from the API call.
+ * @throws {Error} Logs the error details if the POST call fails.
+ */
+export async function listChannelMembership(channelArn, userArn) {
+  try {
+    const restOperation = get({
+      apiName: 'ChannelVTGRestApi',  // The name of the API defined in backend.ts
+      path: 'channels/' + encodeURIComponent(channelArn) + '/memberships', // endpoint defined in backend.ts, channelArn is dynamically passed
+      options: {
+        headers: {
+          'x-amz-chime-bearer': userArn, // The Arn of the user to authenticate the chime SDK
+        },
+      }
+    });
+
+    const { body } = await restOperation.response;
+    const response = await body.json();
+    return response.data;
+  } catch (error) {
+    console.log('GET call listChannelMembership failed: ', JSON.parse(error.response.body));
+  }
+}
+
+/**
  * Send a message to a channel(group chat)
  * @param {string} channelArn - The Arn of the channel.
  * @param {string} userArn - The Arn of the user.

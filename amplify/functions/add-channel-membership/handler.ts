@@ -17,27 +17,25 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     const { memberArn, type, chimeBearer } = JSON.parse(event.body || '{}');
 
     console.log('Creating Channel Membership with channelArn: ', channelArn,
-      'memberArn: ', memberArn, 'type:', memberArn, 'chimeBearer: ', chimeBearer);
+      'memberArn: ', memberArn, 'type:', type, 'chimeBearer: ', chimeBearer);
     // Input validation
     if (!channelArn || !memberArn || !type) {
+      console.error('Invalid input: channelArn, memberArn, and type are required.', {
+        channelArn, memberArn, type
+      });
       return {
         statusCode: 400,
         body: JSON.stringify({ error: 'Invalid input: channelArn, memberArn, and type are required.' }),
-        headers: {
-          'Content-Type': Config.contentType, // json type
-          'Access-Control-Allow-Origin': Config.accessControlAllowOrigin, // Enable CORS
-        },
+        headers: Config.headers,
       };
     }
     // Token validation
     if (!chimeBearer) {
+      console.error('ChimeBearer is invalid.', { chimeBearer });
       return {
         statusCode: 403,
         body: JSON.stringify({ error: 'ChimeBearer is invalid.' }),
-        headers: {
-          'Content-Type': Config.contentType, // json type
-          'Access-Control-Allow-Origin': Config.accessControlAllowOrigin, // Enable CORS
-        },
+        headers: Config.headers,
       };
     }
 
@@ -57,21 +55,15 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       body: JSON.stringify({
         data: createChannelMembershipResponse,
       }),
-      headers: {
-        'Content-Type': Config.contentType, // json type
-        'Access-Control-Allow-Origin': Config.accessControlAllowOrigin, // Enable CORS
-      },
+      headers: Config.headers,
     };
   } catch (error: any) {
-    console.error('Error creating Channel Membership: ', { error, event });
+    console.error('Failed to Create Channel Membership: ', { error, event });
     // Return error response
     return {
       statusCode: 500,
       body: JSON.stringify({ error: error.message || 'Internal Server Error' }),
-      headers: {
-        'Content-Type': Config.contentType, // json type
-        'Access-Control-Allow-Origin': Config.accessControlAllowOrigin, // Enable CORS
-      },
+      headers: Config.headers,
     };
   }
 };

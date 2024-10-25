@@ -17,32 +17,33 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       chimeBearer, expirationCriterion, expirationDays } = JSON.parse(event.body || '{}');
 
     console.log('Creating channel with appInstanceArn: ', appInstanceArn,
-      'name: ', name, 'mode:', mode, 'privacy: ',
-      privacy, 'clientRequestToken: ', clientRequestToken, 'chimeBearer: ', chimeBearer);
+      'name: ', name, 'mode:', mode, 'privacy: ', privacy,
+      'clientRequestToken: ', clientRequestToken, 'chimeBearer: ', chimeBearer,
+      'expirationCriterion: ', expirationCriterion, 'expirationDays: ', expirationDays);
 
     // Input validation
     if (!appInstanceArn || !name || !mode || !privacy || !expirationCriterion || !expirationDays) {
+      console.error('Invalid input: appInstanceArn, name, mode, privacy, expirationCriterion, expirationDays are required.', {
+        appInstanceArn, name, mode, privacy, expirationCriterion, expirationDays
+      });
       return {
         statusCode: 400,
         body: JSON.stringify({
-          error: 'Invalid input: appInstanceArn, name, mode, and privacy are required.'
+          error: 'Invalid input: appInstanceArn, name, mode, privacy, expirationCriterion, expirationDays are required.'
         }),
-        headers: {
-          'Content-Type': Config.contentType, // json type
-          'Access-Control-Allow-Origin': Config.accessControlAllowOrigin, // Enable CORS
-        },
+        headers: Config.headers,
       };
     }
 
     // Token validation
     if (!clientRequestToken || !chimeBearer) {
+      console.error('clientRequestToken and chimeBearer are invalid.', {
+        clientRequestToken, chimeBearer
+      });
       return {
         statusCode: 403,
         body: JSON.stringify({ error: 'clientRequestToken and chimeBearer are invalid.' }),
-        headers: {
-          'Content-Type': Config.contentType, // json type
-          'Access-Control-Allow-Origin': Config.accessControlAllowOrigin, // Enable CORS
-        },
+        headers: Config.headers,
       };
     }
 
@@ -68,21 +69,15 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       body: JSON.stringify({
         data: createChannelResponse.ChannelArn,
       }),
-      headers: {
-        'Content-Type': Config.contentType, // json type
-        'Access-Control-Allow-Origin': Config.accessControlAllowOrigin, // Enable CORS
-      },
+      headers: Config.headers,
     };
   } catch (error: any) {
-    console.error('Error creating Channel: ', { error, event });
+    console.error('Failed to Create Channel: ', { error, event });
     // Return error response
     return {
       statusCode: 500,
       body: JSON.stringify({ error: error.message || 'Internal Server Error' }),
-      headers: {
-        'Content-Type': Config.contentType, // json type
-        'Access-Control-Allow-Origin': Config.accessControlAllowOrigin, // Enable CORS
-      },
+      headers: Config.headers,
     };
   }
 };

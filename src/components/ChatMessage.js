@@ -61,24 +61,27 @@ function ChatMessage({ userArn, channelArn, sessionId }) {
       messagingSessionDidStart: () => console.log('Messaging session started'),
       messagingSessionDidStartConnecting: (reconnecting) =>
         console.log(reconnecting ? 'Reconnecting...' : 'Connecting...'),
-      messagingSessionDidStop: (event) => console.log(`Session stopped: ${event.code} ${event.reason}`),
+      messagingSessionDidStop: (event) => {
+        console.log(`Session stopped event: ${event}`);
+        console.log(`Session stopped event code, reason: ${event.code} ${event.reason}`);
+        console.log('User left the chat', userArn);
+      },
       // Handle incoming messages
       messagingSessionDidReceiveMessage: (message) => {
         console.log('Received message:', message);
         if (!message.payload) return;
         const messageData = JSON.parse(message.payload);
+        console.log('Received messageData:', messageData);
 
-        if (messageData.Content) {
-          const newMessage = {
-            type: message.type,
-            content: messageData.Content,
-            senderArn: messageData?.Sender?.Arn,
-            senderName: messageData?.Sender?.Name,
-            timestamp: new Date().toISOString(),
-          };
-          setMessages((prevMessages) => [...prevMessages, newMessage]);
+
+        // count the number of participants in the channel
+        let numberOfParticipants = 0;
+        if(messageData.ChannelMemberships) {
+          console.log('Number of participants:', messageData.ChannelMemberships.length);
+          numberOfParticipants = messageData.ChannelMemberships.length;
         }
 
+        // when participants join the channel and show the message history
         if (messageData.ChannelMessages?.length) {
           const newMessages = messageData.ChannelMessages.reverse().map((msg) => ({
             type: msg.Type,
@@ -86,8 +89,22 @@ function ChatMessage({ userArn, channelArn, sessionId }) {
             senderArn: msg?.Sender?.Arn,
             senderName: msg?.Sender?.Name,
             timestamp: msg.CreatedTimestamp,
+            // userNameDisplay: `User${numberOfParticipants}`,
           }));
           setMessages((prevMessages) => [...prevMessages, ...newMessages]);
+        }
+
+        // when participants start the input message
+        if (messageData.Content) {
+          const newMessage = {
+            type: message.type,
+            content: messageData.Content,
+            senderArn: messageData?.Sender?.Arn,
+            senderName: messageData?.Sender?.Name,
+            timestamp: new Date().toISOString(),
+            userNameDisplay: `User${numberOfParticipants}`,
+          };
+          setMessages((prevMessages) => [...prevMessages, newMessage]);
         }
       },
     };

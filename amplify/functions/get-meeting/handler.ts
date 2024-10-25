@@ -14,17 +14,15 @@ export const handler: APIGatewayProxyHandler = async (event) => {
   try {
     // Retrieve meeting parameters from query string
     const meetingId = event.pathParameters ? event.pathParameters.MeetingID : null;
-    console.log('Creating meeting with meetingId: ', meetingId);
+    console.log('Getting meeting with meetingId: ', meetingId);
 
     // Input validation
     if (!meetingId) {
+      console.log('Invalid input: meetingId is required.', { meetingId });
       return {
         statusCode: 400,
-        body: JSON.stringify({ error: 'Invalid input: meetingId are required.' }),
-        headers: {
-          'Content-Type': Config.contentType, // json type
-          'Access-Control-Allow-Origin': Config.accessControlAllowOrigin, // Enable CORS
-        },
+        body: JSON.stringify({ error: 'Invalid input: meetingId is required.' }),
+        headers: Config.headers,
       };
     }
 
@@ -33,7 +31,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       MeetingId: meetingId // Meeting ID
     }).promise();
 
-    console.log('Created Chime meeting: ', meetingResponse.Meeting?.MeetingId);
+    console.log('Get Meeting Response: ', meetingResponse.Meeting?.MeetingId);
 
     // Return successful response
     return {
@@ -41,21 +39,15 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       body: JSON.stringify({
         data: meetingResponse.Meeting,
       }),
-      headers: {
-        'Content-Type': Config.contentType, // json type
-        'Access-Control-Allow-Origin': Config.accessControlAllowOrigin, // Enable CORS
-      },
+      headers: Config.headers,
     };
   } catch (error: any) {
-    console.error('Error creating meeting: ', { error, event });
+    console.error('Failed to Get Meeting: ', { error, event });
     // Return error response
     return {
       statusCode: 500,
       body: JSON.stringify({ error: error.message || 'Internal Server Error' }),
-      headers: {
-        'Content-Type': Config.contentType, // json type
-        'Access-Control-Allow-Origin': Config.accessControlAllowOrigin, // Enable CORS
-      },
+      headers: Config.headers,
     };
   }
 };

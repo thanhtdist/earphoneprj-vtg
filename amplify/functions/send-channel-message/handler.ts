@@ -16,29 +16,25 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     const channelArn = event.pathParameters ? event.pathParameters.channelArn : null;
     const { content, type, persistence, clientRequestToken, chimeBearer } = JSON.parse(event.body || '{}');
 
-    console.log('Creating Send Channel Message with channelArn: ', channelArn,
+    console.log('Send Channel Message with channelArn: ', channelArn,
       'type:', type, 'persistence:', persistence, 'clientRequestToken:', clientRequestToken, "chimeBearer:", chimeBearer);
     // Input validation
     if (!channelArn || !persistence || !type) {
+      console.error('Invalid input: channelArn, persistence, and type are required.', { channelArn, persistence, type });
       return {
         statusCode: 400,
         body: JSON.stringify({ error: 'Invalid input: channelArn, persistence, and type are required.' }),
-        headers: {
-          'Content-Type': Config.contentType, // json type
-          'Access-Control-Allow-Origin': Config.accessControlAllowOrigin, // Enable CORS
-        },
+        headers: Config.headers,
       };
     }
 
     // Token validation
     if (!clientRequestToken || !chimeBearer) {
+      console.error('clientRequestToken and chimeBearer are invalid.', { clientRequestToken, chimeBearer });
       return {
         statusCode: 403,
         body: JSON.stringify({ error: 'clientRequestToken and chimeBearer are invalid.' }),
-        headers: {
-          'Content-Type': Config.contentType, // json type
-          'Access-Control-Allow-Origin': Config.accessControlAllowOrigin, // Enable CORS
-        },
+        headers: Config.headers,
       };
     }
 
@@ -52,7 +48,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       ChimeBearer: chimeBearer // chime Bearer
     }).promise();
 
-    console.log('Created Send Channel Message Response: ', sendChannelMessageResponse);
+    console.log('Send Channel Message Response: ', sendChannelMessageResponse);
 
     // Return successful response
     return {
@@ -60,21 +56,15 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       body: JSON.stringify({
         data: sendChannelMessageResponse,
       }),
-      headers: {
-        'Content-Type': Config.contentType, // json type
-        'Access-Control-Allow-Origin': Config.accessControlAllowOrigin, // Enable CORS
-      },
+      headers: Config.headers,
     };
   } catch (error: any) {
-    console.error('Error creating Channel Membership: ', { error, event });
+    console.error('Failed to Send Message to Channel:', { error, event });
     // Return error response
     return {
       statusCode: 500,
       body: JSON.stringify({ error: error.message || 'Internal Server Error' }),
-      headers: {
-        'Content-Type': Config.contentType, // json type
-        'Access-Control-Allow-Origin': Config.accessControlAllowOrigin, // Enable CORS
-      },
+      headers: Config.headers,
     };
   }
 };

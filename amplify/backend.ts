@@ -15,7 +15,7 @@ import { createAppInstanceUser } from './functions/create-app-instance-user/reso
 import { createChannel } from './functions/create-channel/resource';
 import { addChannelMembership } from './functions/add-channel-membership/resource';
 import { sendChannelMessage } from './functions/send-channel-message/resource';
-
+import { listChannelMembership } from './functions/list-channel-membership/resource';
 /**
  * Define the backend resources 
  * - List lambda functions for audio voice (metting session) and chat(message session)
@@ -28,6 +28,7 @@ const backend = defineBackend({
   createChannel, // create channel (chat group) for chat by the host
   addChannelMembership, // add participants to the channel (group chat)
   sendChannelMessage, // send message to the channel (group chat) by the participants
+  listChannelMembership, // list all members in the channel (group chat)
 });
 
 /**
@@ -71,7 +72,6 @@ attendeesPath.addMethod("POST", new LambdaIntegration(
   backend.createAttendee.resources.lambda
 ));
 
-
 // =============2. API Getway, Lambda function for CHAT ===============
 // 2.1. Add app instance user API
 const appInstanceUserRestApi = new RestApi(apiStack, "AppInstanceUserVTGRestApi", {
@@ -105,7 +105,8 @@ const channelRestApi = new RestApi(apiStack, "ChannelVTGRestApi", {
   defaultCorsPreflightOptions: {
     allowOrigins: Cors.ALL_ORIGINS, // Restrict this to domains you trust
     allowMethods: Cors.ALL_METHODS, // Specify only the methods you need to allow
-    allowHeaders: Cors.DEFAULT_HEADERS, // Specify only the headers you need to allow
+    // allowHeaders: Cors.DEFAULT_HEADERS, // Specify only the headers you need to allow
+    allowHeaders: ['Content-Type', 'x-amz-chime-bearer'], // Specify only the headers you need to allow 
   },
 });
 
@@ -127,6 +128,12 @@ const membershipsPath = channelArnPath.addResource("memberships");
 membershipsPath.addMethod("POST", new LambdaIntegration(
   backend.addChannelMembership.resources.lambda
 ));
+
+// add GET method to /channels/{channelArn}/memberships with listChannelMembership Lambda integration
+membershipsPath.addMethod("GET", new LambdaIntegration(
+  backend.listChannelMembership.resources.lambda
+));
+
 
 // send the 'messages' resource under /channels/{channelArn}/messages
 const sendMessagesPath = channelArnPath.addResource("messages");

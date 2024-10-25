@@ -4,6 +4,7 @@ import {
   createAttendee,
   createAppInstanceUsers,
   addChannelMembership,
+  listChannelMembership,
 } from '../apis/api';
 import {
   DefaultDeviceController,
@@ -17,7 +18,6 @@ import ChatMessage from './ChatMessage';
 import Config from '../utils/config';
 import { v4 as uuidv4 } from 'uuid';
 import { useLocation } from 'react-router-dom';
-//import LocalStorageUtils from '../utils/localStorage';
 /**
  * Component to join a meeting as a viewer and listen to the audio
  */
@@ -25,8 +25,12 @@ function LiveViewer() {
   // Get the meeting ID and channel ID from the URL query parameters
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
+  // Use for audio voice
   const meetingId = queryParams.get('meetingId');
+  // Use for chat
   const channelId = queryParams.get('channelId');
+  // Use for list channel membership
+  const hostId = queryParams.get('hostId');
 
   // State variables to store the channel ARN and user ARN
   const [channelArn, setChannelArn] = useState('');
@@ -70,38 +74,31 @@ function LiveViewer() {
   // Function to join the meeting
   const joinMeeting = useCallback(async () => {
     try {
-      if (!meetingId || !channelId) {
-        alert('Meeting ID and Channel ID are required');
+      if (!meetingId || !channelId || !hostId) {
+        alert('Meeting ID, Channel ID, and hostId are required');
         return;
       }
 
+      // Get host user ID from the host ID
+      const hostUserArn = `${Config.appInstanceArn}/user/${hostId}`;
+      console.log('hostUserArn:', hostUserArn);
+
+      //Get the channel ARN from the channel ID
+      const channelArn = `${Config.appInstanceArn}/channel/${channelId}`;
+      console.log('channelArn:', hostUserArn);
+
+      // List the channel members to check if the user has already joined the channel
+      const channelMembersCount = await listChannelMembership(channelArn, hostUserArn);
+      console.log('channelMembersCount:', channelMembersCount);
+
       // Generate a unique user ID and name for the host
       const userID = uuidv4(); // Generate unique user ID
-      //const channelInfo = JSON.parse(LocalStorageUtils.getWithExpiry("channelInfo"));
-      const channelInfo = JSON.parse(localStorage.getItem("channelInfo"));
-      let numberOfParticipants = 1;
-      console.log('channelInfo:', channelInfo);
-      if (channelInfo && channelInfo.channelId !== channelId) {
-        // remove the old channel info
-        //LocalStorageUtils.remove("channelInfo");
-        localStorage.removeItem("channelInfo"); // Remove if expired
-        localStorage.setItem("channelInfo", JSON.stringify({
-          channelId: channelId,
-          numberOfParticipants: numberOfParticipants,
-        }));
-      } else {
-        numberOfParticipants = channelInfo ? channelInfo.numberOfParticipants + 1 : 1;
-        localStorage.setItem("channelInfo", JSON.stringify({
-          channelId: channelId,
-          numberOfParticipants: numberOfParticipants,
-        }));
-      }
-
-      const userName = `User${numberOfParticipants}`;
+      // Create a unique user name for the listener
+      // Always 1 member is the host, so listeners will start from the number of participants currently in the channel
+      const userName = `User${channelMembersCount}`;
 
       // Create userArn and join channel
       const userArn = await createAppInstanceUsers(userID, userName);
-      const channelArn = `${Config.appInstanceArn}/channel/${channelId}`;
       await addChannelMembership(channelArn, userArn);
       setUserArn(userArn);
       setChannelArn(channelArn);
@@ -113,14 +110,14 @@ function LiveViewer() {
     } catch (error) {
       console.error('Error joining the meeting:', error);
     }
-  }, [meetingId, channelId, initializeMeetingSession]);
+  }, [meetingId, channelId, hostId, initializeMeetingSession]);
 
   // Use effect to join the meeting
   useEffect(() => {
     if (meetingId && channelId) {
       joinMeeting();
     }
-  }, [joinMeeting, meetingId, channelId]);
+  }, [joinMeeting, meetingId, channelId, hostId]);
 
   return (
     <div className="live-viewer-container">

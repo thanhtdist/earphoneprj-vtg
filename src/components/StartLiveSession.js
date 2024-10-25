@@ -34,6 +34,7 @@ function StartLiveSession() {
   const [userArn, setUserArn] = useState('');
   const [isMeetingActive, setIsMeetingActive] = useState(false); // State to track if meeting is active
   const [isLoading, setIsLoading] = useState(false); // State for loading
+  const [userId, setUserId] = useState('');
 
   // Function to start a new meeting
   const startMeeting = async () => {
@@ -41,10 +42,12 @@ function StartLiveSession() {
     try {
       // Generate a unique user ID and name for the host
       const userID = uuidv4(); 
+      setUserId(userID);
       const userName = `Guide`;
 
       // Create a new AppInstanceUser, Channel, and add the user to the channel for chat messaging component
       const userArn = await createAppInstanceUsers(userID, userName);
+      console.log('Guide created:', userArn);
       const channelArn = await createChannel(userArn);
       const channelID = channelArn.split('/').pop();
       await addChannelMembership(channelArn, userArn);
@@ -148,8 +151,8 @@ function StartLiveSession() {
           )}
           {meeting && channelArn && (
             <>
-              <QRCodeSVG value={`${Config.appURL}?meetingId=${meeting.MeetingId}&channelId=${channelID}`} size={256} level="H" />
-              <a target="_blank" rel="noopener noreferrer" style={{ color: 'green' }} href={`${Config.appURL}?meetingId=${meeting.MeetingId}&channelId=${channelID}`}>
+              <QRCodeSVG value={`${Config.appURL}?meetingId=${meeting.MeetingId}&channelId=${channelID}&hostId=${userId}`} size={256} level="H" />
+              <a target="_blank" rel="noopener noreferrer" style={{ color: 'green' }} href={`${Config.appURL}?meetingId=${meeting.MeetingId}&channelId=${channelID}&hostId=${userId}`}>
                 Join as Listener
               </a>
             </>
