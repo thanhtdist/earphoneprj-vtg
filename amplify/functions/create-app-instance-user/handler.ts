@@ -16,33 +16,33 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     const { appInstanceArn, appInstanceUserId, clientRequestToken,
       name, expirationCriterion, expirationDays } = JSON.parse(event.body || '{}');
 
-    console.log('Creating App Instance User with appInstanceArn: ', appInstanceArn, 'appInstanceUserId: ',
-      appInstanceUserId, 'clientRequestToken: ', clientRequestToken, 'name: ', name);
+    console.log('Creating App Instance User with appInstanceArn: ', appInstanceArn,
+      'appInstanceUserId: ', appInstanceUserId,
+      'clientRequestToken: ', clientRequestToken, 'name: ', name,
+      'expirationCriterion: ', expirationCriterion, 'expirationDays: ', expirationDays);
 
     // Input validation
     if (!appInstanceArn || !appInstanceUserId || !name || !expirationCriterion || !expirationDays) {
+      console.error('Invalid input: appInstanceArn, appInstanceUserId, name, expirationCriterion, expirationDays are required.', {
+        appInstanceArn, appInstanceUserId, name, expirationCriterion, expirationDays
+      });
       return {
         statusCode: 400,
         body: JSON.stringify({
           error:
             'Invalid input: appInstanceArn, appInstanceUserId, name, expirationCriterion and expirationDays are required.'
         }),
-        headers: {
-          'Content-Type': Config.contentType, // json type
-          'Access-Control-Allow-Origin': Config.accessControlAllowOrigin, // Enable CORS
-        },
+        headers: Config.headers,
       };
     }
 
     // Token validation
     if (!clientRequestToken) {
+      console.error('clientRequestToken is invalid.', { clientRequestToken });
       return {
         statusCode: 403,
         body: JSON.stringify({ error: 'clientRequestToken is invalid.' }),
-        headers: {
-          'Content-Type': Config.contentType, // json type
-          'Access-Control-Allow-Origin': Config.accessControlAllowOrigin, // Enable CORS
-        },
+        headers: Config.headers,
       };
     }
 
@@ -58,7 +58,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       }
     }).promise();
 
-    console.log('Created App Instance User: ', createAppInstanceUserResponse.AppInstanceUserArn);
+    console.log('Created App Instance User Response: ', createAppInstanceUserResponse.AppInstanceUserArn);
 
     // Return successful response
     return {
@@ -66,21 +66,15 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       body: JSON.stringify({
         data: createAppInstanceUserResponse.AppInstanceUserArn,
       }),
-      headers: {
-        'Content-Type': Config.contentType, // json type
-        'Access-Control-Allow-Origin': Config.accessControlAllowOrigin, // Enable CORS
-      },
+      headers: Config.headers,
     };
   } catch (error: any) {
-    console.error('Error creating App Instance User: ', { error, event });
+    console.error('Failed to Create App Instance User: ', { error, event });
     // Return error response
     return {
       statusCode: 500,
       body: JSON.stringify({ error: error.message || 'Internal Server Error' }),
-      headers: {
-        'Content-Type': Config.contentType, // json type
-        'Access-Control-Allow-Origin': Config.accessControlAllowOrigin, // Enable CORS
-      },
+      headers: Config.headers,
     };
   }
 };

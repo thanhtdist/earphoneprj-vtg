@@ -20,13 +20,11 @@ export const handler: APIGatewayProxyHandler = async (event) => {
 
     // Input validation
     if (!meetingId || !externalUserId) {
+      console.error('Invalid input: meetingId and externalUserId are required.', { meetingId, externalUserId });
       return {
         statusCode: 400,
         body: JSON.stringify({ error: 'Invalid input: meetingId and externalUserId are required.' }),
-        headers: {
-          'Content-Type': Config.contentType, // json type
-          'Access-Control-Allow-Origin': Config.accessControlAllowOrigin, // Enable CORS
-        },
+        headers: Config.headers,
       };
     }
 
@@ -36,7 +34,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       ExternalUserId: externalUserId  // Unique ID for each attendee (host or listener)
     }).promise();
 
-    console.log('Created Chime Attendee: ', attendeeResponse.Attendee?.AttendeeId);
+    console.log('Created Attendee Response: ', attendeeResponse.Attendee?.AttendeeId);
 
     // Return successful response
     return {
@@ -44,21 +42,15 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       body: JSON.stringify({
         data: attendeeResponse.Attendee,
       }),
-      headers: {
-        'Content-Type': Config.contentType, // json type
-        'Access-Control-Allow-Origin': Config.accessControlAllowOrigin, // Enable CORS
-      },
+      headers: Config.headers,
     };
   } catch (error: any) {
-    console.error('Error creating meeting: ', { error, event });
+    console.error('Failed to Create Attendee: ', { error, event });
     // Return error response
     return {
       statusCode: 500,
       body: JSON.stringify({ error: error.message || 'Internal Server Error' }),
-      headers: {
-        'Content-Type': Config.contentType, // json type
-        'Access-Control-Allow-Origin': Config.accessControlAllowOrigin, // Enable CORS
-      },
+      headers: Config.headers,
     };
   }
 };

@@ -19,25 +19,21 @@ export const handler: APIGatewayProxyHandler = async (event) => {
 
     // Input validation
     if (!externalMeetingId) {
+      console.error('Invalid input: externalMeetingId is required.', { externalMeetingId });
       return {
         statusCode: 400,
         body: JSON.stringify({ error: 'Invalid input: externalMeetingId is required.' }),
-        headers: {
-          'Content-Type': Config.contentType, // json type
-          'Access-Control-Allow-Origin': Config.accessControlAllowOrigin, // Enable CORS
-        },
+        headers: Config.headers,
       };
     }
 
     // Token validation
     if (!clientRequestToken) {
+      console.error('clientRequestToken is invalid.', { clientRequestToken });
       return {
         statusCode: 403,
         body: JSON.stringify({ error: 'clientRequestToken is invalid.' }),
-        headers: {
-          'Content-Type': Config.contentType, // json type
-          'Access-Control-Allow-Origin': Config.accessControlAllowOrigin, // Enable CORS
-        },
+        headers: Config.headers,
       };
     }
 
@@ -59,7 +55,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       }
     }).promise();
 
-    console.log('Created Chime meeting: ', meetingResponse.Meeting?.MeetingId);
+    console.log('Created Meeting Response: ', meetingResponse.Meeting?.MeetingId);
 
     // Return successful response
     return {
@@ -67,21 +63,15 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       body: JSON.stringify({
         data: meetingResponse.Meeting,
       }),
-      headers: {
-        'Content-Type': Config.contentType, // json type
-        'Access-Control-Allow-Origin': Config.accessControlAllowOrigin, // Enable CORS
-      },
+      headers: Config.headers,
     };
   } catch (error: any) {
-    console.error('Error creating meeting: ', { error, event });
+    console.error('Failed to Create Meeting: ', { error, event });
     // Return error response
     return {
       statusCode: 500,
       body: JSON.stringify({ error: error.message || 'Internal Server Error' }),
-      headers: {
-        'Content-Type': Config.contentType, // json type
-        'Access-Control-Allow-Origin': Config.accessControlAllowOrigin, // Enable CORS
-      },
+      headers: Config.headers,
     };
   }
 };
