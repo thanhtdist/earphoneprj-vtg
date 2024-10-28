@@ -71,6 +71,14 @@ function StartLiveSession() {
     const meetingSessionConfiguration = new MeetingSessionConfiguration(meeting, attendee);
     const session = new DefaultMeetingSession(meetingSessionConfiguration, logger, deviceController);
     setMeetingSession(session);
+    // Bind audio element for the host to listen to the session
+    // const audioElement = document.getElementById('audioElementHost');
+    // if (audioElement) {
+    //   console.log('Audio element found');
+    //   session.audioVideo.bindAudioElement(audioElement);
+    // } else {
+    //   console.error('Audio element not found');
+    // }
   };
 
   const toggleLiveSession = async () => {
@@ -134,6 +142,7 @@ function StartLiveSession() {
         </>
       ) : (
         <>
+          {/* <audio id="audioElementHost" controls autoPlay className="audio-player" /> */}
           <h3>Select Audio Input Device (Microphone)</h3>
           <select value={selectedAudioInput} onChange={(e) => setSelectedAudioInput(e.target.value)}>
             {audioInputDevices.map((device) => (
@@ -161,8 +170,13 @@ function StartLiveSession() {
           </select>
           {meeting && channelArn && (
             <>
-              <QRCodeSVG value={`${Config.appURL}?meetingId=${meeting.MeetingId}&channelId=${channelID}&hostId=${userId}&chatSetting=${chatSetting}`} size={256} level="H" />
-              <a target="_blank" rel="noopener noreferrer" style={{ color: 'green' }} href={`${Config.appURL}?meetingId=${meeting.MeetingId}&channelId=${channelID}&hostId=${userId}&chatSetting=${chatSetting}`}>
+              <QRCodeSVG value={`${Config.appSubSpeakerURL}?meetingId=${meeting.MeetingId}&channelId=${channelID}&hostId=${userId}&chatSetting=${chatSetting}`} size={256} level="H" />
+              <a target="_blank" rel="noopener noreferrer" style={{ color: 'green' }} href={`${Config.appSubSpeakerURL}?meetingId=${meeting.MeetingId}&channelId=${channelID}&hostId=${userId}`}>
+                Join as Sub-Speaker
+              </a>
+              <br />
+              <QRCodeSVG value={`${Config.appViewerURL}?meetingId=${meeting.MeetingId}&channelId=${channelID}&hostId=${userId}&chatSetting=${chatSetting}`} size={256} level="H" />
+              <a target="_blank" rel="noopener noreferrer" style={{ color: 'green' }} href={`${Config.appViewerURL}?meetingId=${meeting.MeetingId}&channelId=${channelID}&hostId=${userId}&chatSetting=${chatSetting}`}>
                 Join as Listener
               </a>
             </>
