@@ -70,3 +70,48 @@
     }
   }
   
+  /* Chat Toggle Button Styling */
+.chat-toggle-button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  margin: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+}
+
+.chat-toggle-button svg {
+  color: #007bff; /* Set a primary color for the icons */
+  transition: transform 0.2s ease;
+}
+
+.chat-toggle-button:hover svg {
+  transform: scale(1.1);
+}
+
+/* Responsive adjustments for chat toggle button */
+@media (max-width: 768px) {
+  .chat-toggle-button {
+    font-size: 1rem;
+    padding: 6px;
+  }
+  
+  .chat-toggle-button svg {
+    font-size: 1.5rem; /* Adjust icon size */
+  }
+}
+
+@media (max-width: 480px) {
+  .chat-toggle-button {
+    font-size: 0.9rem;
+    padding: 5px;
+    margin: 5px;
+  }
+  
+  .chat-toggle-button svg {
+    font-size: 1.2rem;
+  }
+}
