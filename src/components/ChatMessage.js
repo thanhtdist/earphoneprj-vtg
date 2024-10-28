@@ -20,7 +20,7 @@ import Config from '../utils/config';
  * @param {string} channelArn - The ARN of the channel
  * @param {string} sessionId - The session ID for the messaging session 
  */
-function ChatMessage({ userArn, channelArn, sessionId }) {
+function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null }) {
   // State variables to store messages and input message
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState('');
@@ -76,7 +76,7 @@ function ChatMessage({ userArn, channelArn, sessionId }) {
 
         // count the number of participants in the channel
         let numberOfParticipants = 0;
-        if(messageData.ChannelMemberships) {
+        if (messageData.ChannelMemberships) {
           console.log('Number of participants:', messageData.ChannelMemberships.length);
           numberOfParticipants = messageData.ChannelMemberships.length;
         }
@@ -149,7 +149,7 @@ function ChatMessage({ userArn, channelArn, sessionId }) {
   }, [initializeMessagingSession, channelArn, userArn, sessionId]);
 
   return (
-    <div className="chat-container">
+    <div className="chat-container" style={{ display: chatSetting === 'guideOnly' && messages.length <= 0 ? 'none' : 'block' }}>
       {messages.length > 0 && (
         <div className="chat-window">
           {messages.map((message, index) => (
@@ -166,22 +166,25 @@ function ChatMessage({ userArn, channelArn, sessionId }) {
           ))}
         </div>
       )}
-      <div className="chat-input">
-        <input
-          type="text"
-          value={inputMessage}
-          onChange={handleInputChange}
-          placeholder="Type a message..."
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') {
-              sendMessageClick();
-            }
-          }}
-        />
-        <button className="send-button" onClick={sendMessageClick}>
-          <FiSend size={24} />
-        </button>
-      </div>
+      {/* Render chat input based on chatSetting */}
+      {chatSetting !== 'guideOnly' && (
+        <div className="chat-input">
+          <input
+            type="text"
+            value={inputMessage}
+            onChange={handleInputChange}
+            placeholder="Type a message..."
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                sendMessageClick();
+              }
+            }}
+          />
+          <button className="send-button" onClick={sendMessageClick}>
+            <FiSend size={24} />
+          </button>
+        </div>
+      )}
     </div>
   );
 };

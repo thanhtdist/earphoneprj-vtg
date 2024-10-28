@@ -13,17 +13,15 @@ import {
   LogLevel,
   MeetingSessionConfiguration,
 } from 'amazon-chime-sdk-js';
-import '../styles/StartLiveSession.css'; // Importing the CSS file for responsiveness
+import '../styles/StartLiveSession.css';
 import ChatMessage from './ChatMessage';
 import Config from '../utils/config';
 import { v4 as uuidv4 } from 'uuid';
 import { QRCodeSVG } from 'qrcode.react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlay, faStop } from '@fortawesome/free-solid-svg-icons';
+import { TbMessages, TbMessagesOff } from 'react-icons/tb'; // Import the chat toggle icons
 
-/**
- * Component to start a live session and manage the audio voice by the host
- */
 function StartLiveSession() {
   const [channelArn, setChannelArn] = useState('');
   const [channelID, setChannelID] = useState('');
@@ -32,20 +30,19 @@ function StartLiveSession() {
   const [selectedAudioInput, setSelectedAudioInput] = useState('');
   const [audioInputDevices, setAudioInputDevices] = useState([]);
   const [userArn, setUserArn] = useState('');
-  const [isMeetingActive, setIsMeetingActive] = useState(false); // State to track if meeting is active
-  const [isLoading, setIsLoading] = useState(false); // State for loading
+  const [isMeetingActive, setIsMeetingActive] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [userId, setUserId] = useState('');
+  const [isChatVisible, setIsChatVisible] = useState(false); // State to toggle chat visibility
+  const [chatSetting, setChatSetting] = useState('guideOnly'); // State to manage chat setting
 
-  // Function to start a new meeting
   const startMeeting = async () => {
-    setIsLoading(true); // Set loading state to true
+    setIsLoading(true);
     try {
-      // Generate a unique user ID and name for the host
-      const userID = uuidv4(); 
+      const userID = uuidv4();
       setUserId(userID);
       const userName = `Guide`;
 
-      // Create a new AppInstanceUser, Channel, and add the user to the channel for chat messaging component
       const userArn = await createAppInstanceUsers(userID, userName);
       console.log('Guide created:', userArn);
       const channelArn = await createChannel(userArn);
@@ -55,22 +52,19 @@ function StartLiveSession() {
       setChannelArn(channelArn);
       setChannelID(channelID);
 
-      // Create a new meeting and attendee
       const meeting = await createMeeting();
       console.log('Meeting created:', meeting);
       setMeeting(meeting);
       const attendee = await createAttendee(meeting.MeetingId, userID);
 
-      // Initialize the meeting session
       initializeMeetingSession(meeting, attendee);
     } catch (error) {
       console.error('Error starting meeting:', error);
     } finally {
-      setIsLoading(false); // Set loading state to false
+      setIsLoading(false);
     }
   };
 
-  // Function to initialize the meeting session
   const initializeMeetingSession = (meeting, attendee) => {
     const logger = new ConsoleLogger('ChimeMeetingLogs', LogLevel.INFO);
     const deviceController = new DefaultDeviceController(logger);
@@ -79,7 +73,6 @@ function StartLiveSession() {
     setMeetingSession(session);
   };
 
-  // Function to toggle the live session for start/stop audio voice
   const toggleLiveSession = async () => {
     if (isMeetingActive) {
       if (meetingSession) {
@@ -101,7 +94,6 @@ function StartLiveSession() {
     }
   };
 
-  // Fetch audio input devices when the meeting session is available
   useEffect(() => {
     const getAudioInputDevices = async () => {
       if (meetingSession) {
@@ -109,13 +101,23 @@ function StartLiveSession() {
         setAudioInputDevices(devices);
         if (devices.length > 0) {
           setSelectedAudioInput(devices[0].deviceId);
-        }else {
+        } else {
           alert("No audio input devices were found. Please check your device.");
         }
       }
     };
     getAudioInputDevices();
   }, [meetingSession]);
+
+  // Function to toggle chat visibility
+  const toggleChatVisibility = () => {
+    setIsChatVisible(!isChatVisible);
+  };
+
+  // Function to handle chat setting change
+  const handleChatSettingChange = (e) => {
+    setChatSetting(e.target.value);
+  };
 
   return (
     <div className="container">
@@ -125,7 +127,7 @@ function StartLiveSession() {
             <div className="loading">
               <div className="spinner"></div>
               <p>Please wait...</p>
-            </div> // Display loading message with animation
+            </div>
           ) : (
             <button onClick={startMeeting}>Start Live Session</button>
           )}
@@ -149,15 +151,31 @@ function StartLiveSession() {
               )}
             </button>
           )}
+          <h3>Chat Settings:</h3>
+          <select
+            value={chatSetting}
+            onChange={handleChatSettingChange}
+          >
+            <option value="guideOnly">Only the Guide chat</option>
+            <option value="allChat">All the Guide and Listener chat</option>
+          </select>
           {meeting && channelArn && (
             <>
-              <QRCodeSVG value={`${Config.appURL}?meetingId=${meeting.MeetingId}&channelId=${channelID}&hostId=${userId}`} size={256} level="H" />
-              <a target="_blank" rel="noopener noreferrer" style={{ color: 'green' }} href={`${Config.appURL}?meetingId=${meeting.MeetingId}&channelId=${channelID}&hostId=${userId}`}>
+              <QRCodeSVG value={`${Config.appURL}?meetingId=${meeting.MeetingId}&channelId=${channelID}&hostId=${userId}&chatSetting=${chatSetting}`} size={256} level="H" />
+              <a target="_blank" rel="noopener noreferrer" style={{ color: 'green' }} href={`${Config.appURL}?meetingId=${meeting.MeetingId}&channelId=${channelID}&hostId=${userId}&chatSetting=${chatSetting}`}>
                 Join as Listener
               </a>
             </>
           )}
-          <ChatMessage userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} />
+          {/* Toggle Chat Visibility Button */}
+          <button onClick={toggleChatVisibility} className="chat-toggle-button">
+            {isChatVisible ? <TbMessagesOff size={24} /> : <TbMessages size={24} />}
+          </button>
+
+          {/* Conditionally render ChatMessage based on isChatVisible */}
+          {isChatVisible && (
+            <ChatMessage userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} />
+          )}
         </>
       )}
     </div>

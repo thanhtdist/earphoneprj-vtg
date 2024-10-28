@@ -35,7 +35,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       // Call listChannelMemberships with pagination
       const createChannelMembershipResponse = await chime.listChannelMemberships({
         ChannelArn: decodeURIComponent(channelArn),
-        MaxResults: 2,
+        MaxResults: 50,
         ChimeBearer: chimeBearer,
         NextToken
       }).promise();

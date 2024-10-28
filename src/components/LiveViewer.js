@@ -32,6 +32,10 @@ function LiveViewer() {
   // Use for list channel membership
   const hostId = queryParams.get('hostId');
 
+  // Hidden chat input based on chatSetting with chatSetting = 'guideOnly'
+  const chatSetting = queryParams.get('chatSetting');
+
+
   // State variables to store the channel ARN and user ARN
   const [channelArn, setChannelArn] = useState('');
   const [userArn, setUserArn] = useState('');
@@ -123,7 +127,7 @@ function LiveViewer() {
     <div className="live-viewer-container">
       <audio id="audioElementListener" controls autoPlay className="audio-player" />
       <br />
-      {channelArn && <ChatMessage userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} />}
+      {channelArn && <ChatMessage userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} chatSetting={chatSetting}/>}
     </div>
   );
 }
