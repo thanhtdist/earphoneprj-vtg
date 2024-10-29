@@ -149,7 +149,7 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null }) {
   }, [initializeMessagingSession, channelArn, userArn, sessionId]);
 
   return (
-    <div className="chat-container" style={{ display: chatSetting === 'guideOnly' && messages.length <= 0 ? 'none' : 'block' }}>
+    <div className="chat-container" style={{ display: (chatSetting === 'guideOnly' || chatSetting === 'nochat') && messages.length <= 0 ? 'none' : 'block' }}>
       {messages.length > 0 && (
         <div className="chat-window">
           {messages.map((message, index) => (

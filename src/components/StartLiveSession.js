@@ -20,7 +20,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { QRCodeSVG } from 'qrcode.react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlay, faStop } from '@fortawesome/free-solid-svg-icons';
-import { TbMessages, TbMessagesOff } from 'react-icons/tb'; // Import the chat toggle icons
 
 function StartLiveSession() {
   const [channelArn, setChannelArn] = useState('');
@@ -33,8 +32,7 @@ function StartLiveSession() {
   const [isMeetingActive, setIsMeetingActive] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [userId, setUserId] = useState('');
-  const [isChatVisible, setIsChatVisible] = useState(false); // State to toggle chat visibility
-  const [chatSetting, setChatSetting] = useState('guideOnly'); // State to manage chat setting
+  const [chatSetting, setChatSetting] = useState('allChat'); // State to manage chat setting
 
   const startMeeting = async () => {
     setIsLoading(true);
@@ -72,13 +70,14 @@ function StartLiveSession() {
     const session = new DefaultMeetingSession(meetingSessionConfiguration, logger, deviceController);
     setMeetingSession(session);
     // Bind audio element for the host to listen to the session
-    // const audioElement = document.getElementById('audioElementHost');
-    // if (audioElement) {
-    //   console.log('Audio element found');
-    //   session.audioVideo.bindAudioElement(audioElement);
-    // } else {
-    //   console.error('Audio element not found');
-    // }
+    const audioElement = document.getElementById('audioElementHost');
+    if (audioElement) {
+      console.log('Audio element found');
+      session.audioVideo.bindAudioElement(audioElement);
+    } else {
+      console.error('Audio element not found');
+    }
+    session.audioVideo.start();
   };
 
   const toggleLiveSession = async () => {
@@ -117,11 +116,6 @@ function StartLiveSession() {
     getAudioInputDevices();
   }, [meetingSession]);
 
-  // Function to toggle chat visibility
-  const toggleChatVisibility = () => {
-    setIsChatVisible(!isChatVisible);
-  };
-
   // Function to handle chat setting change
   const handleChatSettingChange = (e) => {
     setChatSetting(e.target.value);
@@ -142,7 +136,7 @@ function StartLiveSession() {
         </>
       ) : (
         <>
-          {/* <audio id="audioElementHost" controls autoPlay className="audio-player" /> */}
+          <audio id="audioElementHost" controls autoPlay className="audio-player" />
           <h3>Select Audio Input Device (Microphone)</h3>
           <select value={selectedAudioInput} onChange={(e) => setSelectedAudioInput(e.target.value)}>
             {audioInputDevices.map((device) => (
@@ -165,8 +159,9 @@ function StartLiveSession() {
             value={chatSetting}
             onChange={handleChatSettingChange}
           >
-            <option value="guideOnly">Only the Guide chat</option>
             <option value="allChat">All the Guide and Listener chat</option>
+            <option value="guideOnly">Only the Guide chat</option>
+            <option value="nochat">No chat</option>
           </select>
           {meeting && channelArn && (
             <>
@@ -181,13 +176,9 @@ function StartLiveSession() {
               </a>
             </>
           )}
-          {/* Toggle Chat Visibility Button */}
-          <button onClick={toggleChatVisibility} className="chat-toggle-button">
-            {isChatVisible ? <TbMessagesOff size={24} /> : <TbMessages size={24} />}
-          </button>
 
-          {/* Conditionally render ChatMessage based on isChatVisible */}
-          {isChatVisible && (
+          {/* Conditionally render ChatMessage based on chatSetting */}
+          {chatSetting !== "nochat" && (
             <ChatMessage userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} />
           )}
         </>
