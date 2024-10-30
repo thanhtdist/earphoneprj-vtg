@@ -16,6 +16,7 @@ import {
 import '../styles/StartLiveSession.css';
 import ChatMessage from './ChatMessage';
 import Config from '../utils/config';
+import metricReport from '../utils/metricReport';
 import { v4 as uuidv4 } from 'uuid';
 import { QRCodeSVG } from 'qrcode.react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -78,9 +79,61 @@ function StartLiveSession() {
     } else {
       console.error('Audio element not found');
     }
-
+    console.log('Main Speaker - initializeMeetingSession--> Start');
+    //metricReport(meetingSession);
+    console.log('Main Speaker - initializeMeetingSession--> End');
+    // Start audio video session
     meetingSession.audioVideo.start();
+
   };
+
+  // const metricReport = (meetingSession) => {
+  //   const observer = {
+  //     metricsDidReceive: clientMetricReport => {
+  //       const metricReport = clientMetricReport.getObservableMetrics();
+
+  //       const {
+  //         videoPacketSentPerSecond,
+  //         videoUpstreamBitrate,
+  //         availableOutgoingBitrate,
+  //         availableIncomingBitrate,
+  //         audioSpeakerDelayMs,
+  //       } = metricReport;
+
+  //       console.log(
+  //         `Sending video bitrate in kilobits per second: ${videoUpstreamBitrate / 1000
+  //         } and sending packets per second: ${videoPacketSentPerSecond}`
+  //       );
+  //       console.log(
+  //         `Sending bandwidth is ${availableOutgoingBitrate / 1000}, and receiving bandwidth is ${availableIncomingBitrate / 1000
+  //         }`
+  //       );
+  //       console.log(`Audio speaker delay is ${audioSpeakerDelayMs}`);
+  //     },
+  //     connectionDidBecomePoor: () => {
+  //       console.log('Your connection is poor');
+  //     },
+  //     connectionDidSuggestStopVideo: () => {
+  //       console.log('Recommend turning off your video');
+  //     },
+  //     videoSendDidBecomeUnavailable: () => {
+  //       // Chime SDK allows a total of 25 simultaneous videos per meeting.
+  //       // If you try to share more video, this method will be called.
+  //       // See videoAvailabilityDidChange below to find out when it becomes available.
+  //       console.log('You cannot share your video');
+  //     },
+  //     videoAvailabilityDidChange: videoAvailability => {
+  //       // canStartLocalVideo will also be true if you are already sharing your video.
+  //       if (videoAvailability.canStartLocalVideo) {
+  //         console.log('You can share your video');
+  //       } else {
+  //         console.log('You cannot share your video');
+  //       }
+  //     },
+  //   };
+
+  //   meetingSession.audioVideo.addObserver(observer);
+  // };
 
   const selectSpeaker = async (meetingSession) => {
     const audioOutputDevices = await meetingSession.audioVideo.listAudioOutputDevices();
@@ -103,6 +156,9 @@ function StartLiveSession() {
       if (meetingSession) {
         try {
           await meetingSession.audioVideo.startAudioInput(selectedAudioInput);
+          console.log('Main Speaker - Start/ Stop Talking--> Start');
+          metricReport(meetingSession);
+          console.log('Main Speaker - Start/ Stop Talking Main Speaker--> End');
           meetingSession.audioVideo.start();
           console.log('Audio video session started');
           setIsMeetingActive(true);

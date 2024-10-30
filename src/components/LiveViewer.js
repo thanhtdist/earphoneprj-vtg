@@ -16,6 +16,7 @@ import {
 import '../styles/LiveViewer.css';
 import ChatMessage from './ChatMessage';
 import Config from '../utils/config';
+import metricReport from '../utils/metricReport';
 import { v4 as uuidv4 } from 'uuid';
 import { useLocation } from 'react-router-dom';
 /**
@@ -60,6 +61,10 @@ function LiveViewer() {
     } else {
       console.error('Audio element not found');
     }
+
+    console.log('Listeners - initializeMeetingSession--> Start');
+    metricReport(meetingSession);
+    console.log('Listeners - initializeMeetingSession--> End');
 
     meetingSession.audioVideo.start();
   }, []);

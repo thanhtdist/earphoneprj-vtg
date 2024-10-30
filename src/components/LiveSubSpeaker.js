@@ -16,6 +16,7 @@ import {
 import '../styles/LiveViewer.css';
 import ChatMessage from './ChatMessage';
 import Config from '../utils/config';
+import metricReport from '../utils/metricReport';
 import { v4 as uuidv4 } from 'uuid';
 import { useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -66,6 +67,10 @@ function LiveSubSpeaker() {
     } else {
       console.error('Audio element not found');
     }
+
+    console.log('Sub Speaker - initializeMeetingSession--> Start');
+    metricReport(meetingSession);
+    console.log('Sub Speaker - initializeMeetingSession--> End');
 
     meetingSession.audioVideo.start();
   }, []);
@@ -133,6 +138,9 @@ function LiveSubSpeaker() {
       if (meetingSession) {
         try {
           await meetingSession.audioVideo.startAudioInput(selectedAudioInput);
+          console.log('Sub Speaker - Start/ Stop Talking--> Start');
+          metricReport(meetingSession);
+          console.log('Sub Speaker - Start/ Stop Talking Main Speaker--> End');
           meetingSession.audioVideo.start();
           console.log('Audio video session started');
           setIsMeetingActive(true);
