@@ -33,6 +33,7 @@ function StartLiveSession() {
   const [isLoading, setIsLoading] = useState(false);
   const [userId, setUserId] = useState('');
   const [chatSetting, setChatSetting] = useState('allChat'); // State to manage chat setting
+  const [selectedQR, setSelectedQR] = useState('subSpeaker'); // State to manage selected QR type
 
   const startMeeting = async () => {
     setIsLoading(true);
@@ -81,7 +82,6 @@ function StartLiveSession() {
     meetingSession.audioVideo.start();
   };
 
-  // Async function to select audio output device
   const selectSpeaker = async (meetingSession) => {
     const audioOutputDevices = await meetingSession.audioVideo.listAudioOutputDevices();
 
@@ -128,9 +128,12 @@ function StartLiveSession() {
     getAudioInputDevices();
   }, [meetingSession]);
 
-  // Function to handle chat setting change
   const handleChatSettingChange = (e) => {
     setChatSetting(e.target.value);
+  };
+
+  const handleQRSelectionChange = (e) => {
+    setSelectedQR(e.target.value);
   };
 
   return (
@@ -167,29 +170,38 @@ function StartLiveSession() {
             </button>
           )}
           <h3>Chat Settings:</h3>
-          <select
-            value={chatSetting}
-            onChange={handleChatSettingChange}
-          >
+          <select value={chatSetting} onChange={handleChatSettingChange}>
             <option value="allChat">All the Guide and Listener chat</option>
             <option value="guideOnly">Only the Guide chat</option>
             <option value="nochat">No chat</option>
           </select>
+
+          <h3>Select QR Code:</h3>
+          <select value={selectedQR} onChange={handleQRSelectionChange}>
+            <option value="subSpeaker">QR for Sub-Guide</option>
+            <option value="listener">QR for Listener</option>
+          </select>
+
           {meeting && channelArn && (
             <>
-              <QRCodeSVG value={`${Config.appSubSpeakerURL}?meetingId=${meeting.MeetingId}&channelId=${channelID}&hostId=${userId}&chatSetting=${chatSetting}`} size={256} level="H" />
-              <a target="_blank" rel="noopener noreferrer" style={{ color: 'green' }} href={`${Config.appSubSpeakerURL}?meetingId=${meeting.MeetingId}&channelId=${channelID}&hostId=${userId}&chatSetting=${chatSetting}`}>
-                Join as Sub-Speaker
-              </a>
-              <br />
-              <QRCodeSVG value={`${Config.appViewerURL}?meetingId=${meeting.MeetingId}&channelId=${channelID}&hostId=${userId}&chatSetting=${chatSetting}`} size={256} level="H" />
-              <a target="_blank" rel="noopener noreferrer" style={{ color: 'green' }} href={`${Config.appViewerURL}?meetingId=${meeting.MeetingId}&channelId=${channelID}&hostId=${userId}&chatSetting=${chatSetting}`}>
-                Join as Listener
-              </a>
+              {selectedQR === 'subSpeaker' ? (
+                <>
+                  <QRCodeSVG value={`${Config.appSubSpeakerURL}?meetingId=${meeting.MeetingId}&channelId=${channelID}&hostId=${userId}&chatSetting=${chatSetting}`} size={256} level="H" />
+                  <a target="_blank" rel="noopener noreferrer" style={{ color: 'green' }} href={`${Config.appSubSpeakerURL}?meetingId=${meeting.MeetingId}&channelId=${channelID}&hostId=${userId}&chatSetting=${chatSetting}`}>
+                    Join as Sub-Guide
+                  </a>
+                </>
+              ) : (
+                <>
+                  <QRCodeSVG value={`${Config.appViewerURL}?meetingId=${meeting.MeetingId}&channelId=${channelID}&hostId=${userId}&chatSetting=${chatSetting}`} size={256} level="H" />
+                  <a target="_blank" rel="noopener noreferrer" style={{ color: 'green' }} href={`${Config.appViewerURL}?meetingId=${meeting.MeetingId}&channelId=${channelID}&hostId=${userId}&chatSetting=${chatSetting}`}>
+                    Join as Listener
+                  </a>
+                </>
+              )}
             </>
           )}
 
-          {/* Conditionally render ChatMessage based on chatSetting */}
           {chatSetting !== "nochat" && (
             <ChatMessage userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} />
           )}
