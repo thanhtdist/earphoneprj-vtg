@@ -67,17 +67,29 @@ function StartLiveSession() {
     const logger = new ConsoleLogger('ChimeMeetingLogs', LogLevel.INFO);
     const deviceController = new DefaultDeviceController(logger);
     const meetingSessionConfiguration = new MeetingSessionConfiguration(meeting, attendee);
-    const session = new DefaultMeetingSession(meetingSessionConfiguration, logger, deviceController);
-    setMeetingSession(session);
-    // Bind audio element for the host to listen to the session
+    const meetingSession = new DefaultMeetingSession(meetingSessionConfiguration, logger, deviceController);
+    setMeetingSession(meetingSession);
+    selectSpeaker(meetingSession);
+
     const audioElement = document.getElementById('audioElementHost');
     if (audioElement) {
-      console.log('Audio element found');
-      session.audioVideo.bindAudioElement(audioElement);
+      meetingSession.audioVideo.bindAudioElement(audioElement);
     } else {
       console.error('Audio element not found');
     }
-    session.audioVideo.start();
+
+    meetingSession.audioVideo.start();
+  };
+
+  // Async function to select audio output device
+  const selectSpeaker = async (meetingSession) => {
+    const audioOutputDevices = await meetingSession.audioVideo.listAudioOutputDevices();
+
+    if (audioOutputDevices.length > 0) {
+      await meetingSession.audioVideo.chooseAudioOutput(audioOutputDevices[0].deviceId);
+    } else {
+      console.log('No speaker devices found');
+    }
   };
 
   const toggleLiveSession = async () => {
