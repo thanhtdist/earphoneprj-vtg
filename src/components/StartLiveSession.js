@@ -80,7 +80,7 @@ function StartLiveSession() {
       console.error('Audio element not found');
     }
     console.log('Main Speaker - initializeMeetingSession--> Start');
-    //metricReport(meetingSession);
+    metricReport(meetingSession);
     console.log('Main Speaker - initializeMeetingSession--> End');
     // Start audio video session
     meetingSession.audioVideo.start();
