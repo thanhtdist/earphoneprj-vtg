@@ -11,12 +11,14 @@ import {
   DefaultMeetingSession,
   ConsoleLogger,
   LogLevel,
+  MultiLogger,
   MeetingSessionConfiguration,
 } from 'amazon-chime-sdk-js';
 import '../styles/StartLiveSession.css';
 import ChatMessage from './ChatMessage';
 import Config from '../utils/config';
 import metricReport from '../utils/metricReport';
+import { getPOSTLogger } from '../utils/MeetingLogger';
 import { v4 as uuidv4 } from 'uuid';
 import { QRCodeSVG } from 'qrcode.react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -33,8 +35,8 @@ function StartLiveSession() {
   const [isMeetingActive, setIsMeetingActive] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [userId, setUserId] = useState('');
-  const [chatSetting, setChatSetting] = useState('allChat'); // State to manage chat setting
-  const [selectedQR, setSelectedQR] = useState('subSpeaker'); // State to manage selected QR type
+  const [chatSetting, setChatSetting] = useState('guideOnly'); // State to manage chat setting
+  const [selectedQR, setSelectedQR] = useState('listener'); // State to manage selected QR type
 
   const startMeeting = async () => {
     setIsLoading(true);
@@ -66,9 +68,17 @@ function StartLiveSession() {
   };
 
   const initializeMeetingSession = (meeting, attendee) => {
-    const logger = new ConsoleLogger('ChimeMeetingLogs', LogLevel.INFO);
-    const deviceController = new DefaultDeviceController(logger);
+    const consoleLogger = new ConsoleLogger('ChimeMeetingLogs', LogLevel.INFO);
     const meetingSessionConfiguration = new MeetingSessionConfiguration(meeting, attendee);
+
+    const meetingSessionPOSTLogger = getPOSTLogger(meetingSessionConfiguration, 'SDK', `${Config.appBaseURL}logs`, LogLevel.INFO);
+    const logger = new MultiLogger(
+        consoleLogger,
+        meetingSessionPOSTLogger,
+    );
+    console.log('logger', logger);
+
+    const deviceController = new DefaultDeviceController(logger);
     const meetingSession = new DefaultMeetingSession(meetingSessionConfiguration, logger, deviceController);
     setMeetingSession(meetingSession);
     selectSpeaker(meetingSession);

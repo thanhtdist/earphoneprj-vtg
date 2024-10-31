@@ -17,7 +17,10 @@ const Config = {
     // URL for the web app for participants to join listen to audio
     // appSubSpeakerURL: 'http://localhost:3000/sub-speaker/',
     // appViewerURL: 'http://localhost:3000/viewer/',
+    appBaseURL: 'https://main.d1kjg68sgeplir.amplifyapp.com/',
     appSubSpeakerURL: 'https://main.d1kjg68sgeplir.amplifyapp.com/sub-speaker/',
     appViewerURL: 'https://main.d1kjg68sgeplir.amplifyapp.com/viewer/',
+    // S3 attchment bucket name
+    attachmentBucketName: 'vtg-chat-attachments',
 };
 export default Config;
