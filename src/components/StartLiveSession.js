@@ -22,7 +22,7 @@ import metricReport from '../utils/metricReport';
 import { v4 as uuidv4 } from 'uuid';
 import { QRCodeSVG } from 'qrcode.react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlay, faStop } from '@fortawesome/free-solid-svg-icons';
+import { faMicrophone, faMicrophoneSlash, faVolumeMute, faVolumeUp } from '@fortawesome/free-solid-svg-icons';
 
 function StartLiveSession() {
   const [channelArn, setChannelArn] = useState('');
@@ -32,13 +32,16 @@ function StartLiveSession() {
   const [selectedAudioInput, setSelectedAudioInput] = useState('');
   const [audioInputDevices, setAudioInputDevices] = useState([]);
   const [userArn, setUserArn] = useState('');
-  const [isMeetingActive, setIsMeetingActive] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [userId, setUserId] = useState('');
   const [chatSetting, setChatSetting] = useState('guideOnly'); // State to manage chat setting
   const [selectedQR, setSelectedQR] = useState('listener'); // State to manage selected QR type
+  const [isAudioMuted, setIsAudioMuted] = useState(false); // State for audio mute status
+  const [isMicOn, setIsMicOn] = useState(false); // State for microphone status
 
-  const startMeeting = async () => {
+  // Function to start a live audio session
+  // when clicked on the "Start Live Audio Session" button
+  const startLiveAduioSession = async () => {
     setIsLoading(true);
     try {
       const userID = uuidv4();
@@ -58,8 +61,9 @@ function StartLiveSession() {
       console.log('Meeting created:', meeting);
       setMeeting(meeting);
       const attendee = await createAttendee(meeting.MeetingId, userID);
-
+      // Initialize the meeting session such as meeting session
       initializeMeetingSession(meeting, attendee);
+
     } catch (error) {
       console.error('Error starting meeting:', error);
     } finally {
@@ -67,6 +71,7 @@ function StartLiveSession() {
     }
   };
 
+  // Function to initialize the meeting session from the meeting that the host has created
   const initializeMeetingSession = (meeting, attendee) => {
     const logger = new ConsoleLogger('ChimeMeetingLogs', LogLevel.INFO);
     const meetingSessionConfiguration = new MeetingSessionConfiguration(meeting, attendee);
@@ -82,69 +87,79 @@ function StartLiveSession() {
     const meetingSession = new DefaultMeetingSession(meetingSessionConfiguration, logger, deviceController);
     setMeetingSession(meetingSession);
     selectSpeaker(meetingSession);
+    // Allow audio listen
+    bindAudioListen(meetingSession, true);
 
-    const audioElement = document.getElementById('audioElementHost');
-    if (audioElement) {
-      meetingSession.audioVideo.bindAudioElement(audioElement);
-    } else {
-      console.error('Audio element not found');
-    }
     console.log('Main Speaker - initializeMeetingSession--> Start');
     metricReport(meetingSession);
     console.log('Main Speaker - initializeMeetingSession--> End');
+
     // Start audio video session
     meetingSession.audioVideo.start();
 
   };
 
-  // const metricReport = (meetingSession) => {
-  //   const observer = {
-  //     metricsDidReceive: clientMetricReport => {
-  //       const metricReport = clientMetricReport.getObservableMetrics();
+  // Set audio listen
+  const bindAudioListen = async (meetingSession, listen) => {
+    const audioElement = document.getElementById('audioElementMain');
+    if (listen) {
+      try {
+        const bindAudioElement = await meetingSession.audioVideo.bindAudioElement(audioElement);
+        console.log('BindAudioElement', bindAudioElement);
+      } catch (e) {
+        console.log('Failed to bindAudioElement', e);
+      }
+    } else {
+      const unbindAudioElement = meetingSession.audioVideo.unbindAudioElement();
+      console.log('UnbindAudioElement', unbindAudioElement);
+    }
+  };
 
-  //       const {
-  //         videoPacketSentPerSecond,
-  //         videoUpstreamBitrate,
-  //         availableOutgoingBitrate,
-  //         availableIncomingBitrate,
-  //         audioSpeakerDelayMs,
-  //       } = metricReport;
+  // Function to toggle mute/unmute audio
+  const toggleMuteAudio = async () => {
+    console.log('toggleMuteAudio', isAudioMuted);
+    console.log('toggleMuteAudio', meetingSession);
+    if (isAudioMuted) {
+      await bindAudioListen(meetingSession, true);
+    } else {
+      await bindAudioListen(meetingSession, false);
+    }
+    setIsAudioMuted(!isAudioMuted);
+  };
 
-  //       console.log(
-  //         `Sending video bitrate in kilobits per second: ${videoUpstreamBitrate / 1000
-  //         } and sending packets per second: ${videoPacketSentPerSecond}`
-  //       );
-  //       console.log(
-  //         `Sending bandwidth is ${availableOutgoingBitrate / 1000}, and receiving bandwidth is ${availableIncomingBitrate / 1000
-  //         }`
-  //       );
-  //       console.log(`Audio speaker delay is ${audioSpeakerDelayMs}`);
-  //     },
-  //     connectionDidBecomePoor: () => {
-  //       console.log('Your connection is poor');
-  //     },
-  //     connectionDidSuggestStopVideo: () => {
-  //       console.log('Recommend turning off your video');
-  //     },
-  //     videoSendDidBecomeUnavailable: () => {
-  //       // Chime SDK allows a total of 25 simultaneous videos per meeting.
-  //       // If you try to share more video, this method will be called.
-  //       // See videoAvailabilityDidChange below to find out when it becomes available.
-  //       console.log('You cannot share your video');
-  //     },
-  //     videoAvailabilityDidChange: videoAvailability => {
-  //       // canStartLocalVideo will also be true if you are already sharing your video.
-  //       if (videoAvailability.canStartLocalVideo) {
-  //         console.log('You can share your video');
-  //       } else {
-  //         console.log('You cannot share your video');
-  //       }
-  //     },
-  //   };
+  // Function to toggle microphone on/off
+  const toggleMicrophone = async () => {
+    console.log('Toggling Microphone', isMicOn);
 
-  //   meetingSession.audioVideo.addObserver(observer);
-  // };
+    if (meetingSession) {
+      try {
+        if (isMicOn) {
+          // Mute the microphone
+          const realtimeMuteLocalAudio = meetingSession.audioVideo.realtimeMuteLocalAudio();
+          console.log('Microphone is muted.', realtimeMuteLocalAudio);
+          const stopAudioInput = await meetingSession.audioVideo.stopAudioInput(); // Stops the audio input device
+          console.log('stopAudioInput', stopAudioInput);
 
+        } else {
+          // Start the audio input device
+          console.log('toggleMicrophone Audio Input:', selectedAudioInput);
+          const startAudioInput = await meetingSession.audioVideo.startAudioInput(selectedAudioInput);
+          console.log('startAudioInput', startAudioInput);
+          // Unmute the microphone
+          const realtimeUnmuteLocalAudio = meetingSession.audioVideo.realtimeUnmuteLocalAudio();
+          console.log('Microphone is unmuted.', realtimeUnmuteLocalAudio);
+        }
+
+        setIsMicOn(!isMicOn); // Toggle mic status
+
+      } catch (error) {
+        console.error('Failed to toggle microphone:', error);
+      }
+    }
+  };
+
+
+  // Async function to select audio output device
   const selectSpeaker = async (meetingSession) => {
     const audioOutputDevices = await meetingSession.audioVideo.listAudioOutputDevices();
 
@@ -152,33 +167,6 @@ function StartLiveSession() {
       await meetingSession.audioVideo.chooseAudioOutput(audioOutputDevices[0].deviceId);
     } else {
       console.log('No speaker devices found');
-    }
-  };
-
-  const toggleLiveSession = async () => {
-    if (isMeetingActive) {
-      if (meetingSession) {
-        //meetingSession.audioVideo.stop();
-        meetingSession.audioVideo.realtimeMuteLocalAudio();
-        console.log('User has stopped talking.');
-        setIsMeetingActive(false);
-      }
-    } else {
-      if (meetingSession) {
-        try {
-          await meetingSession.audioVideo.startAudioInput(selectedAudioInput);
-          console.log('Main Speaker - Start/ Stop Talking--> Start');
-          metricReport(meetingSession);
-          console.log('Main Speaker - Start/ Stop Talking Main Speaker--> End');
-          //meetingSession.audioVideo.start();
-          meetingSession.audioVideo.realtimeUnmuteLocalAudio();
-          //meetingSession.audioVideo.realtimeSubscribeToVolumeIndicator()
-          console.log('User can now talk.');
-          setIsMeetingActive(true);
-        } catch (error) {
-          console.error('Failed to start audio video session:', error);
-        }
-      }
     }
   };
 
@@ -215,12 +203,15 @@ function StartLiveSession() {
               <p>Please wait...</p>
             </div>
           ) : (
-            <button onClick={startMeeting}>Start Live Session</button>
+            <button onClick={startLiveAduioSession}>Start Live Audio Session</button>
           )}
         </>
       ) : (
         <>
-          <audio id="audioElementHost" controls autoPlay className="audio-player" />
+          <audio id="audioElementMain" className="audio-player" />
+          <button onClick={toggleMuteAudio} className="toggle-mute-button">
+            <FontAwesomeIcon icon={isAudioMuted ? faVolumeMute : faVolumeUp} size="2x" />
+          </button>
           <h3>Select Audio Input Device (Microphone)</h3>
           <select value={selectedAudioInput} onChange={(e) => setSelectedAudioInput(e.target.value)}>
             {audioInputDevices.map((device) => (
@@ -230,13 +221,11 @@ function StartLiveSession() {
             ))}
           </select>
           {selectedAudioInput && (
-            <button onClick={toggleLiveSession} className="toggle-button">
-              {isMeetingActive ? (
-                <FontAwesomeIcon icon={faStop} size="2x" color="red" />
-              ) : (
-                <FontAwesomeIcon icon={faPlay} size="2x" color="green" />
-              )}
-            </button>
+            <div className="controls">
+              <button onClick={toggleMicrophone} className="toggle-mic-button">
+                <FontAwesomeIcon icon={isMicOn ? faMicrophone : faMicrophoneSlash} size="2x" color={isMicOn ? "green" : "gray"} />
+              </button>
+            </div>
           )}
           <h3>Chat Settings:</h3>
           <select value={chatSetting} onChange={handleChatSettingChange}>
