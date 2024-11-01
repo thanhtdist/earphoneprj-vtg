@@ -131,7 +131,8 @@ export async function listChannelMembership(channelArn, userArn) {
  * @returns {Promise<any>} The response data from the API call.
  * @throws {Error} Logs the error details if the POST call fails.
  */
-export async function sendMessage(channelArn, userArn, inputMessage) {
+export async function sendMessage(channelArn, userArn, inputMessage, options) {
+  console.log('sendMessage options', options);
   try {
     const restOperation = post({
       apiName: 'ChannelVTGRestApi', // The name of the API defined in backend.ts
@@ -144,6 +145,7 @@ export async function sendMessage(channelArn, userArn, inputMessage) {
           persistence: 'PERSISTENT', // The persistence of the message: PERSISTENT or NON_PERSISTENT
           clientRequestToken: uuid(), // Token of the user, generated using uuid because ignored user management
           chimeBearer: userArn, // The Arn of the user to authenticate the chime SDK
+          metadata: options, // The metadata of the message
         }
       }
     });

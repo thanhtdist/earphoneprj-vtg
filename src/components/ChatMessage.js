@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { ChimeSDKMessagingClient } from '@aws-sdk/client-chime-sdk-messaging';
 import { sendMessage } from '../apis/api';
+import { uploadFileToS3 } from '../services/S3Service';
 import {
   ConsoleLogger,
   DefaultMessagingSession,
@@ -9,10 +10,11 @@ import {
   PrefetchOn,
   PrefetchSortBy,
 } from 'amazon-chime-sdk-js';
-import { FiSend } from 'react-icons/fi';
+import { FiSend, FiUpload, FiX } from 'react-icons/fi';
 import { VscAccount } from "react-icons/vsc";
 import '../styles/ChatMessage.css';
 import Config from '../utils/config';
+import ChatAttachment from './ChatAttachment';
 
 /**
  * Component to display chat messages and send messages to a channel
@@ -26,6 +28,8 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null }) {
   const [inputMessage, setInputMessage] = useState('');
   // Persist to the messaging session in the lifetime of the component chat message
   const messagingSessionRef = useRef(null);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const fileInputRef = useRef();
 
   // Function to format the timestamp from UTC to Tokyo timezone
   const formatTimestamp = (timestamp) => {
@@ -73,14 +77,6 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null }) {
         const messageData = JSON.parse(message.payload);
         console.log('Received messageData:', messageData);
 
-
-        // count the number of participants in the channel
-        let numberOfParticipants = 0;
-        if (messageData.ChannelMemberships) {
-          console.log('Number of participants:', messageData.ChannelMemberships.length);
-          numberOfParticipants = messageData.ChannelMemberships.length;
-        }
-
         // when participants join the channel and show the message history
         if (messageData.ChannelMessages?.length) {
           const newMessages = messageData.ChannelMessages.reverse().map((msg) => ({
@@ -89,7 +85,7 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null }) {
             senderArn: msg?.Sender?.Arn,
             senderName: msg?.Sender?.Name,
             timestamp: msg.CreatedTimestamp,
-            // userNameDisplay: `User${numberOfParticipants}`,
+            attachments: msg?.Metadata ? JSON.parse(msg.Metadata).attachments : null
           }));
           setMessages((prevMessages) => [...prevMessages, ...newMessages]);
         }
@@ -102,7 +98,7 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null }) {
             senderArn: messageData?.Sender?.Arn,
             senderName: messageData?.Sender?.Name,
             timestamp: new Date().toISOString(),
-            userNameDisplay: `User${numberOfParticipants}`,
+            attachments: messageData?.Metadata ? JSON.parse(messageData.Metadata).attachments : null
           };
           setMessages((prevMessages) => [...prevMessages, newMessage]);
         }
@@ -121,20 +117,82 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null }) {
 
   // Function to send a message to the channel
   const sendMessageClick = useCallback(async () => {
-    if (!inputMessage) return;
+    console.log('sendMessageClick:', inputMessage, selectedFile);
+    if (!inputMessage && !selectedFile) return;
 
-    try {
-      const response = await sendMessage(channelArn, userArn, inputMessage);
-      console.log('Message sent successfully:', response);
-      setInputMessage('');
-    } catch (error) {
-      console.error('Error sending message:', error);
+    let options = null;
+
+    if (selectedFile) {
+      console.log('Sending message inputMessage', inputMessage);
+      console.log('Sending message selectedFile:', selectedFile);
+      let inputMessageAttachment = inputMessage;
+      if (!inputMessage) inputMessageAttachment = ' ';
+
+      // store attachment into S3
+      const response = await uploadFileToS3(selectedFile);
+
+      console.log('File uploaded successfully:', response);
+
+      options = JSON.stringify({
+        attachments: [
+          {
+            fileKey: response.Key,
+            url: response.Location,
+            name: selectedFile.name,
+            size: selectedFile.size,
+            type: selectedFile.type,
+          },
+        ],
+      });
+      console.log('options:', options);
+      setSelectedFile(null);
+      try {
+        const response = await sendMessage(channelArn, userArn, inputMessageAttachment, options);
+        console.log('Message sent successfully:', response);
+        setInputMessage('');
+      } catch (error) {
+        console.error('Error sending message:', error);
+      }
+    } else {
+      try {
+        const response = await sendMessage(channelArn, userArn, inputMessage, options);
+        console.log('Message sent successfully:', response);
+        setInputMessage('');
+      } catch (error) {
+        console.error('Error sending message:', error);
+      }
     }
-  }, [inputMessage, channelArn, userArn]);
+
+
+  }, [inputMessage, channelArn, userArn, selectedFile]);
 
   // Function to handle input change
   const handleInputChange = (e) => {
     setInputMessage(e.target.value);
+  };
+
+  const handleInputKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      sendMessageClick();
+      e.preventDefault(); // Prevent newline on Enter
+    }
+  };
+
+  const handleFileUploadClick = () => {
+    fileInputRef.current.click();
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    //Files must be less than 200 MB in size
+    console.log('handleFileChange:', file);
+    if (file) {
+      setSelectedFile(file);
+    }
+  };
+
+  const clearFile = () => {
+    setSelectedFile(null);
   };
 
   // Effect to initialize the messaging session
@@ -158,10 +216,22 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null }) {
                 <VscAccount color={message.senderName === "Guide" ? "blue" : ""} size={24} />
                 <strong>{message.senderArn === userArn ? 'You' : message.senderName}</strong>
               </div>
-              <div className={`message-content ${message.senderArn === userArn ? 'my-message' : 'other-message'}`}>
-                <span>{message.content}</span>
-                <div className="timestamp">{formatTimestamp(message.timestamp)}</div>
-              </div>
+              <div className="timestamp">{formatTimestamp(message.timestamp)}</div>
+              {message.content !== ' ' && (
+                <div className={`message-content ${message.senderArn === userArn ? 'my-message' : 'other-message'}`}>
+                  <span>{message.content}</span>
+                </div>
+              )}
+              {message.attachments && message.attachments.length > 0 && (
+                <>
+                  <ChatAttachment
+                    url={message.attachments[0].url}
+                    fileKey={message.attachments[0].fileKey}
+                    name={message.attachments[0].name}
+                    type={message.attachments[0].type}
+                    size={message.attachments[0].size} />
+                </>
+              )}
             </div>
           ))}
         </div>
@@ -169,17 +239,36 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null }) {
       {/* Render chat input based on chatSetting */}
       {chatSetting !== 'guideOnly' && (
         <div className="chat-input">
-          <input
-            type="text"
-            value={inputMessage}
-            onChange={handleInputChange}
-            placeholder="Type a message..."
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                sendMessageClick();
-              }
-            }}
-          />
+          <div className="input-container">
+            <div
+              className="input-like-div"
+            >
+              <input
+                style={{ width: '100%', height: '100%', border: 'none', outline: 'none', fontSize: '1rem' }}
+                type="text"
+                value={inputMessage}
+                onChange={handleInputChange}
+                onKeyDown={handleInputKeyDown}
+                placeholder="Type a message..." />
+              {selectedFile && (
+                <>
+                  <br />
+                  <div className="file-attachment">
+                    <span className="file-name" title={selectedFile.name}>{selectedFile.name}</span>
+                    <FiX className="clear-file-icon" onClick={clearFile} />
+                  </div>
+                </>
+              )}
+            </div>
+            <FiUpload className="upload-icon" onClick={handleFileUploadClick} />
+            <input
+              type="file"
+              accept="image/*, .pdf"
+              ref={fileInputRef}
+              style={{ display: 'none' }}
+              onChange={handleFileChange}
+            />
+          </div>
           <button className="send-button" onClick={sendMessageClick}>
             <FiSend size={24} />
           </button>
