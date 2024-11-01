@@ -130,8 +130,9 @@ function LiveSubSpeaker() {
   const toggleLiveSession = async () => {
     if (isMeetingActive) {
       if (meetingSession) {
-        meetingSession.audioVideo.stop();
-        console.log('Audio video session stopped');
+        //meetingSession.audioVideo.stop();
+        meetingSession.audioVideo.realtimeMuteLocalAudio();
+        console.log('User has stopped talking.');
         setIsMeetingActive(false);
       }
     } else {
@@ -141,8 +142,10 @@ function LiveSubSpeaker() {
           console.log('Sub Speaker - Start/ Stop Talking--> Start');
           metricReport(meetingSession);
           console.log('Sub Speaker - Start/ Stop Talking Main Speaker--> End');
-          meetingSession.audioVideo.start();
-          console.log('Audio video session started');
+          //meetingSession.audioVideo.start();
+          meetingSession.audioVideo.realtimeUnmuteLocalAudio();
+          //meetingSession.audioVideo.realtimeSubscribeToVolumeIndicator()
+          console.log('User can now talk.');
           setIsMeetingActive(true);
         } catch (error) {
           console.error('Failed to start audio video session:', error);
@@ -177,24 +180,24 @@ function LiveSubSpeaker() {
     <div className="live-viewer-container">
       <audio id="audioElementListener" controls autoPlay className="audio-player" />
       <h3>Select Audio Input Device (Microphone)</h3>
-          <select value={selectedAudioInput} onChange={(e) => setSelectedAudioInput(e.target.value)}>
-            {audioInputDevices.map((device) => (
-              <option key={device.deviceId} value={device.deviceId}>
-                {device.label}
-              </option>
-            ))}
-          </select>
-          {selectedAudioInput && (
-            <button onClick={toggleLiveSession} className="toggle-button">
-              {isMeetingActive ? (
-                <FontAwesomeIcon icon={faStop} size="2x" color="red" />
-              ) : (
-                <FontAwesomeIcon icon={faPlay} size="2x" color="green" />
-              )}
-            </button>
+      <select value={selectedAudioInput} onChange={(e) => setSelectedAudioInput(e.target.value)}>
+        {audioInputDevices.map((device) => (
+          <option key={device.deviceId} value={device.deviceId}>
+            {device.label}
+          </option>
+        ))}
+      </select>
+      {selectedAudioInput && (
+        <button onClick={toggleLiveSession} className="toggle-button">
+          {isMeetingActive ? (
+            <FontAwesomeIcon icon={faStop} size="2x" color="red" />
+          ) : (
+            <FontAwesomeIcon icon={faPlay} size="2x" color="green" />
           )}
+        </button>
+      )}
       <br />
-      {channelArn && <ChatMessage userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} chatSetting={chatSetting}/>}
+      {channelArn && <ChatMessage userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} chatSetting={chatSetting} />}
     </div>
   );
 }

@@ -11,14 +11,14 @@ import {
   DefaultMeetingSession,
   ConsoleLogger,
   LogLevel,
-  MultiLogger,
+  //MultiLogger,
   MeetingSessionConfiguration,
 } from 'amazon-chime-sdk-js';
 import '../styles/StartLiveSession.css';
 import ChatMessage from './ChatMessage';
 import Config from '../utils/config';
 import metricReport from '../utils/metricReport';
-import { getPOSTLogger } from '../utils/MeetingLogger';
+//import { getPOSTLogger } from '../utils/MeetingLogger';
 import { v4 as uuidv4 } from 'uuid';
 import { QRCodeSVG } from 'qrcode.react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -68,15 +68,15 @@ function StartLiveSession() {
   };
 
   const initializeMeetingSession = (meeting, attendee) => {
-    const consoleLogger = new ConsoleLogger('ChimeMeetingLogs', LogLevel.INFO);
+    const logger = new ConsoleLogger('ChimeMeetingLogs', LogLevel.INFO);
     const meetingSessionConfiguration = new MeetingSessionConfiguration(meeting, attendee);
 
-    const meetingSessionPOSTLogger = getPOSTLogger(meetingSessionConfiguration, 'SDK', `${Config.appBaseURL}logs`, LogLevel.INFO);
-    const logger = new MultiLogger(
-        consoleLogger,
-        meetingSessionPOSTLogger,
-    );
-    console.log('logger', logger);
+    // const meetingSessionPOSTLogger = getPOSTLogger(meetingSessionConfiguration, 'SDK', `${Config.appBaseURL}logs`, LogLevel.INFO);
+    // const logger = new MultiLogger(
+    //     consoleLogger,
+    //     meetingSessionPOSTLogger,
+    // );
+    // console.log('logger', logger);
 
     const deviceController = new DefaultDeviceController(logger);
     const meetingSession = new DefaultMeetingSession(meetingSessionConfiguration, logger, deviceController);
@@ -158,8 +158,9 @@ function StartLiveSession() {
   const toggleLiveSession = async () => {
     if (isMeetingActive) {
       if (meetingSession) {
-        meetingSession.audioVideo.stop();
-        console.log('Audio video session stopped');
+        //meetingSession.audioVideo.stop();
+        meetingSession.audioVideo.realtimeMuteLocalAudio();
+        console.log('User has stopped talking.');
         setIsMeetingActive(false);
       }
     } else {
@@ -169,8 +170,10 @@ function StartLiveSession() {
           console.log('Main Speaker - Start/ Stop Talking--> Start');
           metricReport(meetingSession);
           console.log('Main Speaker - Start/ Stop Talking Main Speaker--> End');
-          meetingSession.audioVideo.start();
-          console.log('Audio video session started');
+          //meetingSession.audioVideo.start();
+          meetingSession.audioVideo.realtimeUnmuteLocalAudio();
+          //meetingSession.audioVideo.realtimeSubscribeToVolumeIndicator()
+          console.log('User can now talk.');
           setIsMeetingActive(true);
         } catch (error) {
           console.error('Failed to start audio video session:', error);
