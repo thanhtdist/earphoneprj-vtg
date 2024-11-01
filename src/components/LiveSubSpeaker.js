@@ -20,7 +20,7 @@ import metricReport from '../utils/metricReport';
 import { v4 as uuidv4 } from 'uuid';
 import { useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlay, faStop } from '@fortawesome/free-solid-svg-icons';
+import { faMicrophone, faMicrophoneSlash, faVolumeMute, faVolumeUp } from '@fortawesome/free-solid-svg-icons';
 /**
  * Component to join a meeting as a viewer and listen to the audio
  */
@@ -43,9 +43,10 @@ function LiveSubSpeaker() {
   const [meetingSession, setMeetingSession] = useState(null);
   const [selectedAudioInput, setSelectedAudioInput] = useState('');
   const [audioInputDevices, setAudioInputDevices] = useState([]);
-  const [isMeetingActive, setIsMeetingActive] = useState(false);
   const [channelArn, setChannelArn] = useState('');
   const [userArn, setUserArn] = useState('');
+  const [isAudioMuted, setIsAudioMuted] = useState(false); // State for audio mute status
+  const [isMicOn, setIsMicOn] = useState(false); // State for microphone status
 
   // Function to initialize the meeting session from the meeting that the host has created
   const initializeMeetingSession = useCallback((meeting, attendee) => {
@@ -61,18 +62,18 @@ function LiveSubSpeaker() {
     setMeetingSession(meetingSession);
     selectSpeaker(meetingSession);
 
-    const audioElement = document.getElementById('audioElementListener');
-    if (audioElement) {
-      meetingSession.audioVideo.bindAudioElement(audioElement);
-    } else {
-      console.error('Audio element not found');
-    }
+    // Allow audio listen
+    bindAudioListen(meetingSession, true);
 
     console.log('Sub Speaker - initializeMeetingSession--> Start');
     metricReport(meetingSession);
     console.log('Sub Speaker - initializeMeetingSession--> End');
 
+    // Start audio video session
     meetingSession.audioVideo.start();
+
+
+
   }, []);
 
   // Async function to select audio output device
@@ -127,29 +128,61 @@ function LiveSubSpeaker() {
     }
   }, [meetingId, channelId, hostId, initializeMeetingSession]);
 
-  const toggleLiveSession = async () => {
-    if (isMeetingActive) {
-      if (meetingSession) {
-        //meetingSession.audioVideo.stop();
-        meetingSession.audioVideo.realtimeMuteLocalAudio();
-        console.log('User has stopped talking.');
-        setIsMeetingActive(false);
+  // Set audio listen
+  const bindAudioListen = async (meetingSession, listen) => {
+    const audioElement = document.getElementById('audioElementSub');
+    if (listen) {
+      try {
+        const bindAudioElement = await meetingSession.audioVideo.bindAudioElement(audioElement);
+        console.log('BindAudioElement', bindAudioElement);
+      } catch (e) {
+        console.log('Failed to bindAudioElement', e);
       }
     } else {
-      if (meetingSession) {
-        try {
-          await meetingSession.audioVideo.startAudioInput(selectedAudioInput);
-          console.log('Sub Speaker - Start/ Stop Talking--> Start');
-          metricReport(meetingSession);
-          console.log('Sub Speaker - Start/ Stop Talking Main Speaker--> End');
-          //meetingSession.audioVideo.start();
-          meetingSession.audioVideo.realtimeUnmuteLocalAudio();
-          //meetingSession.audioVideo.realtimeSubscribeToVolumeIndicator()
-          console.log('User can now talk.');
-          setIsMeetingActive(true);
-        } catch (error) {
-          console.error('Failed to start audio video session:', error);
+      const unbindAudioElement = meetingSession.audioVideo.unbindAudioElement();
+      console.log('UnbindAudioElement', unbindAudioElement);
+    }
+  };
+
+  // Function to toggle mute/unmute audio
+  const toggleMuteAudio = async () => {
+    console.log('toggleMuteAudio', isAudioMuted);
+    console.log('toggleMuteAudio', meetingSession);
+    if (isAudioMuted) {
+      await bindAudioListen(meetingSession, true);
+    } else {
+      await bindAudioListen(meetingSession, false);
+    }
+    setIsAudioMuted(!isAudioMuted);
+  };
+
+  // Function to toggle microphone on/off
+  const toggleMicrophone = async () => {
+    console.log('Toggling Microphone', isMicOn);
+
+    if (meetingSession) {
+      try {
+        if (isMicOn) {
+          // Mute the microphone
+          const realtimeMuteLocalAudio = meetingSession.audioVideo.realtimeMuteLocalAudio();
+          console.log('Microphone is muted.', realtimeMuteLocalAudio);
+          const stopAudioInput = await meetingSession.audioVideo.stopAudioInput(); // Stops the audio input device
+          console.log('stopAudioInput', stopAudioInput);
+
+        } else {
+          // Start the audio input device
+          console.log('toggleMicrophone Audio Input:', selectedAudioInput);
+          const startAudioInput = await meetingSession.audioVideo.startAudioInput(selectedAudioInput);
+          console.log('startAudioInput', startAudioInput);
+          // Unmute the microphone
+          const realtimeUnmuteLocalAudio = meetingSession.audioVideo.realtimeUnmuteLocalAudio();
+          console.log('Microphone is unmuted.', realtimeUnmuteLocalAudio);
         }
+
+        setIsMicOn(!isMicOn); // Toggle mic status
+
+      } catch (error) {
+        console.error('Failed to toggle microphone:', error);
       }
     }
   };
@@ -178,7 +211,10 @@ function LiveSubSpeaker() {
 
   return (
     <div className="live-viewer-container">
-      <audio id="audioElementListener" controls autoPlay className="audio-player" />
+      <audio id="audioElementSub" className="audio-player" />
+      <button onClick={toggleMuteAudio} className="toggle-mute-button">
+        <FontAwesomeIcon icon={isAudioMuted ? faVolumeMute : faVolumeUp} size="2x" />
+      </button>
       <h3>Select Audio Input Device (Microphone)</h3>
       <select value={selectedAudioInput} onChange={(e) => setSelectedAudioInput(e.target.value)}>
         {audioInputDevices.map((device) => (
@@ -188,13 +224,11 @@ function LiveSubSpeaker() {
         ))}
       </select>
       {selectedAudioInput && (
-        <button onClick={toggleLiveSession} className="toggle-button">
-          {isMeetingActive ? (
-            <FontAwesomeIcon icon={faStop} size="2x" color="red" />
-          ) : (
-            <FontAwesomeIcon icon={faPlay} size="2x" color="green" />
-          )}
-        </button>
+        <div className="controls">
+          <button onClick={toggleMicrophone} className="toggle-mic-button">
+            <FontAwesomeIcon icon={isMicOn ? faMicrophone : faMicrophoneSlash} size="2x" color={isMicOn ? "green" : "gray"} />
+          </button>
+        </div>
       )}
       <br />
       {channelArn && <ChatMessage userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} chatSetting={chatSetting} />}
