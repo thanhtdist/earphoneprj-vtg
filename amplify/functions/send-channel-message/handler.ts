@@ -14,10 +14,10 @@ export const handler: APIGatewayProxyHandler = async (event) => {
   try {
     // Parse body from API Gateway event
     const channelArn = event.pathParameters ? event.pathParameters.channelArn : null;
-    const { content, type, persistence, clientRequestToken, chimeBearer } = JSON.parse(event.body || '{}');
+    const { content, type, persistence, clientRequestToken, chimeBearer, metadata } = JSON.parse(event.body || '{}');
 
     console.log('Send Channel Message with channelArn: ', channelArn,
-      'type:', type, 'persistence:', persistence, 'clientRequestToken:', clientRequestToken, "chimeBearer:", chimeBearer);
+      'type:', type, 'persistence:', persistence, 'clientRequestToken:', clientRequestToken, "chimeBearer:", chimeBearer, 'metadata:', metadata);
     // Input validation
     if (!channelArn || !persistence || !type) {
       console.error('Invalid input: channelArn, persistence, and type are required.', { channelArn, persistence, type });
@@ -38,15 +38,20 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       };
     }
 
-    // Create a new Chime Channel
-    const sendChannelMessageResponse = await chime.sendChannelMessage({
+    const params = {
       ChannelArn: decodeURIComponent(channelArn),  // Channel ARN
       Content: content,  // Content of the message
       Type: type,  // "STANDARD" or "CONTROL"
       Persistence: persistence,  // "PERSISTENT" or "NON_PERSISTENT"
       ClientRequestToken: clientRequestToken,  // Unique message identifier
-      ChimeBearer: chimeBearer // chime Bearer
-    }).promise();
+      ChimeBearer: chimeBearer, // chime Bearer
+      Metadata: metadata, // Metadata, such as containing a link to an attachment
+    };
+
+    console.log('Send Channel Message Params: ', params);
+
+    // Create a new Chime Channel
+    const sendChannelMessageResponse = await chime.sendChannelMessage(params).promise();
 
     console.log('Send Channel Message Response: ', sendChannelMessageResponse);
 

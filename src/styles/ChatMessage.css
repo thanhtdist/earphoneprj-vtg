@@ -117,3 +117,85 @@
         height: 250px; /* Reduced height for smaller screens */
     }
 }
+.input-container {
+    position: relative;
+    display: inline-block;
+    width: 300px;
+  }
+
+   /* Styled div to look like input */
+   .input-like-div {
+    border: 1px solid #ccc;
+    padding: 8px 12px;
+    font-size: 16px;
+    outline: none;
+    border-radius: 4px;
+    width: 100%;
+    box-sizing: border-box;
+    padding-right: 35px; /* Space for the icon */
+    cursor: text;
+    min-height: 20px;
+    white-space: pre-wrap; /* Allow line breaks */
+    overflow-wrap: break-word;
+  }
+
+ .input-like-div[contenteditable="true"]:empty:before {
+    content: attr(placeholder);
+    color: #aaa;
+}
+
+.input-like-div.focused {
+    border-color: #007bff; /* Change border color when focused */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Optional: Add shadow */
+}
+
+.input-without-outline {
+    border: none;
+    outline: none;
+    width: 100%;
+    font-size: 16px;
+    padding: 5px;
+}
+
+/* Optional: Change background or color on focus */
+.input-without-outline:focus {
+    background-color: #f9f9f9;
+}
+
+  /* Upload icon styling */
+  .upload-icon {
+    position: absolute;
+    right: 10px; /* Position inside the div */
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+    color: #aaa;
+    cursor: pointer;
+  }
+
+  .file-attachment {
+    display: flex;
+    align-items: center;
+    max-width: 200px; /* Adjust as needed */
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+.file-name {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0 8px;
+}
+
+.clear-file-icon {
+    color: red;
+    font-size: 1.2em;
+    cursor: pointer;
+    margin-left: 5px;
+}
+
+
+  
