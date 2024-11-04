@@ -2,200 +2,88 @@
     border: 1px solid #ccc;
     padding: 10px;
     margin-top: 20px;
-    max-width: 100%; /* Make the chat container responsive */
-    width: 400px; /* Set a default width */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Add some shadow for depth */
-}
-
-.chat-window {
-    height: 300px; /* Increased height for better usability */
-    overflow-y: auto; /* Allow scrolling */
-    border-bottom: 1px solid #ccc;
-    padding: 10px;
-    margin-bottom: 10px; /* Space between messages and input */
-}
-
-.message {
-    margin-bottom: 10px;
-    padding: 8px;
-    border-radius: 5px;
-    display: flex;
-    flex-direction: column; /* Stack the two lines vertically */
-}
-
-.message-header {
-    display: flex;
-    align-items: center; /* Align icon and name on the same line */
-    margin-bottom: 4px; /* Add some space between the two lines */
-}
-
-.message-header strong {
-    margin-left: 8px; /* Space between icon and name */
-}
-
-.message-content {
-    display: flex;
-    justify-content: space-between; /* Push the timestamp to the right */
-    font-size: 0.9em; /* Slightly smaller text for message content */
-}
-
-.message-content .timestamp {
-    font-size: 0.8em;
-    color: #888;
-    margin-left: 10px;
-}
-
-.my-message {
-    text-align: right;
-    background-color: #b3e5fc;
-    border-radius: 5px;
-    padding: 8px;
-}
-
-.other-message {
-    text-align: left;
-    background-color: #e1bee7;
-    border-radius: 5px;
-    padding: 8px;
-}
-
-.message-content .timestamp {
-    font-size: 0.8em;
-    color: #888;
-    margin-left: 10px;
-}
-
-.my-message {
-    text-align: right;
-    background-color: #b3e5fc;
-}
-
-.other-message {
-    text-align: left;
-    background-color: #e1bee7;
-}
-
-.timestamp {
-    font-size: 0.8em;
-    color: #888;
+    max-width: 100%;
+    width: 400px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .chat-input {
     display: flex;
-    align-items: center;
-    margin-top: 10px; /* Add space above the input field */
+    flex-direction: column; /* Stack items vertically */
+    align-items: stretch; /* Make children take full width */
+    gap: 10px;
+    margin-top: 10px;
+    width: 100%; /* Ensure it takes full width of the container */
 }
 
-.chat-input input {
-    flex-grow: 1;
-    padding: 10px; /* Increase padding for a better user experience */
-    border: 1px solid #ccc;
-    border-radius: 5px; /* Rounded corners */
-    margin-right: 10px; /* Space between input and button */
-}
-
-.send-button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: #1da1f2; /* Twitter-like blue */
-    display: flex;
-    align-items: center;
-}
-
-.send-button:hover {
-    color: #0d95e8; /* Slightly darker blue */
-}
-
-/* Responsive Styles */
-@media (max-width: 500px) {
-    .chat-container {
-        max-width: 100%; /* Full width on smaller screens */
-    }
-
-    .chat-window {
-        height: 250px; /* Reduced height for smaller screens */
-    }
-}
 .input-container {
-    position: relative;
-    display: inline-block;
-    width: 300px;
-  }
-
-   /* Styled div to look like input */
-   .input-like-div {
-    border: 1px solid #ccc;
-    padding: 8px 12px;
-    font-size: 16px;
-    outline: none;
-    border-radius: 4px;
-    width: 100%;
-    box-sizing: border-box;
-    padding-right: 35px; /* Space for the icon */
-    cursor: text;
-    min-height: 20px;
-    white-space: pre-wrap; /* Allow line breaks */
-    overflow-wrap: break-word;
-  }
-
- .input-like-div[contenteditable="true"]:empty:before {
-    content: attr(placeholder);
-    color: #aaa;
-}
-
-.input-like-div.focused {
-    border-color: #007bff; /* Change border color when focused */
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Optional: Add shadow */
-}
-
-.input-without-outline {
-    border: none;
-    outline: none;
-    width: 100%;
-    font-size: 16px;
-    padding: 5px;
-}
-
-/* Optional: Change background or color on focus */
-.input-without-outline:focus {
-    background-color: #f9f9f9;
-}
-
-  /* Upload icon styling */
-  .upload-icon {
-    position: absolute;
-    right: 10px; /* Position inside the div */
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 16px;
-    color: #aaa;
-    cursor: pointer;
-  }
-
-  .file-attachment {
     display: flex;
     align-items: center;
-    max-width: 200px; /* Adjust as needed */
-    padding: 5px;
+    flex-grow: 1;
     border: 1px solid #ccc;
-    border-radius: 8px;
+    border-radius: 5px;
+    padding: 8px;
+    background-color: #fff;
+    max-width: 100%;
+}
+
+.input-like-div {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.input-like-div input {
+    width: 100%;
+    border: none;
+    outline: none;
+    font-size: 1rem;
+}
+
+.file-attachment {
+    display: flex;
+    align-items: center;
+    margin-top: 5px;
+    padding: 5px;
+    border-radius: 5px;
+    background-color: #f1f1f1;
+    font-size: 0.9rem;
 }
 
 .file-name {
-    flex: 1;
+    flex-grow: 1;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    padding: 0 8px;
 }
 
 .clear-file-icon {
-    color: red;
-    font-size: 1.2em;
     cursor: pointer;
-    margin-left: 5px;
+    margin-left: 8px;
+    color: #d9534f;
 }
 
+.send-button {
+    padding: 10px 12px;
+    background-color: #28a745; /* Large green color for button */
+    border: none;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 1rem;
+    width: 100%; /* Full width */
+    max-width: 100%;
+}
 
-  
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .input-container {
+        padding: 8px; /* Maintain comfortable padding for tap targets */
+        font-size: 1rem;
+    }
+
+    .send-button {
+        padding: 12px; /* Slightly larger padding for easier tap targeting on small screens */
+        font-size: 1rem;
+    }
+}

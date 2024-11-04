@@ -240,19 +240,16 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null }) {
       {chatSetting !== 'guideOnly' && (
         <div className="chat-input">
           <div className="input-container">
-            <div
-              className="input-like-div"
-            >
+            <div className="input-like-div">
               <input
-                style={{ width: '100%', height: '100%', border: 'none', outline: 'none', fontSize: '1rem' }}
                 type="text"
                 value={inputMessage}
                 onChange={handleInputChange}
                 onKeyDown={handleInputKeyDown}
-                placeholder="Type a message..." />
+                placeholder="Type a message..."
+              />
               {selectedFile && (
                 <>
-                  <br />
                   <div className="file-attachment">
                     <span className="file-name" title={selectedFile.name}>{selectedFile.name}</span>
                     <FiX className="clear-file-icon" onClick={clearFile} />
@@ -273,6 +270,7 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null }) {
             <FiSend size={24} />
           </button>
         </div>
+
       )}
     </div>
   );
