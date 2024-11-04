@@ -128,10 +128,12 @@ function StartLiveSession() {
     console.log('Main Speaker - initializeMeetingSession--> Start');
     metricReport(meetingSession);
     console.log('Main Speaker - initializeMeetingSession--> End');
+    const audioElement = document.getElementById('audioElementMain');
+    await meetingSession.audioVideo.bindAudioElement(audioElement);
 
     // Start audio video session
     meetingSession.audioVideo.start();
-    toggleMuteAudio();
+    //toggleMuteAudio();
   };
 
   // Set audio listen
@@ -260,7 +262,7 @@ function StartLiveSession() {
         </>
       ) : (
         <>
-          <audio id="audioElementMain" className="audio-player" />
+          <audio id="audioElementMain" controls autoplay className="audio-player" />
           <button onClick={toggleMuteAudio} className="toggle-mute-button">
             <FontAwesomeIcon icon={isAudioMuted ? faVolumeMute : faVolumeUp} size="2x" />
           </button>
