@@ -37,7 +37,7 @@ function StartLiveSession() {
   const [userId, setUserId] = useState('');
   const [chatSetting, setChatSetting] = useState('guideOnly'); // State to manage chat setting
   const [selectedQR, setSelectedQR] = useState('listener'); // State to manage selected QR type
-  const [isAudioMuted, setIsAudioMuted] = useState(false); // State for audio mute status
+  const [isAudioMuted, setIsAudioMuted] = useState(true); // State for audio mute status
   const [isMicOn, setIsMicOn] = useState(false); // State for microphone status
   const [transformVFD, setTransformVFD] = useState(null);
   const logger = new ConsoleLogger('ChimeMeetingLogs', LogLevel.INFO);
@@ -70,7 +70,6 @@ function StartLiveSession() {
       console.log('isVoiceFocusSupported', isVoiceFocusSupported);
       // Initialize the meeting session such as meeting session
       initializeMeetingSession(meeting, attendee, isVoiceFocusSupported);
-      bindAudioListen(meetingSession, true);
 
     } catch (error) {
       console.error('Error starting meeting:', error);
@@ -132,6 +131,7 @@ function StartLiveSession() {
 
     // Start audio video session
     meetingSession.audioVideo.start();
+    toggleMuteAudio();
   };
 
   // Set audio listen
