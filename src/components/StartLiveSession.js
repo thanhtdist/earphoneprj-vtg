@@ -106,7 +106,7 @@ function StartLiveSession() {
   }
 
   // Function to initialize the meeting session from the meeting that the host has created
-  const initializeMeetingSession = (meeting, attendee, isVoiceFocusSupported) => {
+  const initializeMeetingSession = async (meeting, attendee, isVoiceFocusSupported) => {
     // const logger = new ConsoleLogger('ChimeMeetingLogs', LogLevel.INFO);
     const meetingSessionConfiguration = new MeetingSessionConfiguration(meeting, attendee);
 
@@ -125,7 +125,7 @@ function StartLiveSession() {
     selectSpeaker(meetingSession);
 
     // Allow audio listen
-    bindAudioListen(meetingSession, true);
+    await bindAudioListen(meetingSession, true);
 
     console.log('Main Speaker - initializeMeetingSession--> Start');
     metricReport(meetingSession);

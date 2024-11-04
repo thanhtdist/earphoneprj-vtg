@@ -96,7 +96,7 @@ function LiveSubSpeaker() {
     selectSpeaker(meetingSession);
 
     // Allow audio listen
-    bindAudioListen(meetingSession, true);
+    await bindAudioListen(meetingSession, true);
 
     console.log('Sub Speaker - initializeMeetingSession--> Start');
     metricReport(meetingSession);
