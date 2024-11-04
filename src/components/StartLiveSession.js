@@ -67,7 +67,8 @@ function StartLiveSession() {
 
       // const isVoiceFocusSupported = await VoiceFocusDeviceTransformer.isSupported();
       // console.log('isVoiceFocusSupported', isVoiceFocusSupported);
-      const isVoiceFocusSupported = await transformVoiceFocusDevice();
+      const isVoiceFocusSupported = await transformVoiceFocusDevice(meeting, attendee);
+      console.log('isVoiceFocusSupported', isVoiceFocusSupported);
       // Initialize the meeting session such as meeting session
       initializeMeetingSession(meeting, attendee, isVoiceFocusSupported);
 
@@ -78,21 +79,25 @@ function StartLiveSession() {
     }
   };
 
-  const transformVoiceFocusDevice = async () => {
+  // Function to transform the audio input device to Voice Focus Device/Echo Reduction
+  const transformVoiceFocusDevice = async (meeting, attendee) => {
     let transformer = null;
     let isVoiceFocusSupported = false;
     try {
       const spec = {
-        name: 'default',
+        name: 'ns_es',
       };
       const options = {
         preload: false,
         logger,
       };
-      transformer = await VoiceFocusDeviceTransformer.create(spec, options);
+      const config = await VoiceFocusDeviceTransformer.configure(spec, options);
+      console.log('transformVoiceFocusDevice config', config);
+      transformer = await VoiceFocusDeviceTransformer.create(spec, options, config, { Meeting: meeting }, { Attendee: attendee });
+      console.log('transformVoiceFocusDevice transformer', transformer);
       setTransformVFD(transformer);
       isVoiceFocusSupported = transformer.isSupported();
-      console.log('isVoiceFocusSupported', isVoiceFocusSupported);
+      console.log('transformVoiceFocusDevice isVoiceFocusSupported', isVoiceFocusSupported);
     } catch (e) {
       // Will only occur due to invalid input or transient errors (e.g., network).
       console.error('Failed to create VoiceFocusDeviceTransformer:', e);
@@ -174,27 +179,22 @@ function StartLiveSession() {
           console.log('stopAudioInput', stopAudioInput);
 
         } else {
-         // Start the audio input device
+          // Start the audio input device
           console.log('toggleMicrophone Audio Input:', selectedAudioInput);
           console.log('transformVFD:', transformVFD);
+          // Create a new transform device if Voice Focus is supported
           const vfDevice = await transformVFD.createTransformDevice(selectedAudioInput);
+          console.log('vfDevice:', vfDevice);
           // Enable Echo Reduction on this client
-          await vfDevice.observeMeetingAudio(meetingSession.audioVideo);
-          // const vfDevice = null;
-          // // Select the Echo Reduction model
-          // const spec = {
-          //   name: 'ns_es',
-          // };
-
-          // // Create the Voice Focus device
-          // const transformer = await VoiceFocusDeviceTransformer.create(spec, { logger });
-          // console.log('transformer', transformer);
+          const observeMeetingAudio = await vfDevice.observeMeetingAudio(meetingSession.audioVideo);
+          console.log('observeMeetingAudio:', observeMeetingAudio);
           const deviceToUse = vfDevice || selectedAudioInput;
+          console.log('deviceToUse:', deviceToUse);
           const startAudioInput = await meetingSession.audioVideo.startAudioInput(deviceToUse);
+          console.log('startAudioInput', startAudioInput);
           if (vfDevice) {
             console.log('Amazon Voice Focus enabled');
           }
-          console.log('startAudioInput', startAudioInput);
           // Unmute the microphone
           const realtimeUnmuteLocalAudio = meetingSession.audioVideo.realtimeUnmuteLocalAudio();
           console.log('Microphone is unmuted.', realtimeUnmuteLocalAudio);
