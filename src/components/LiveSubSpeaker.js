@@ -95,9 +95,6 @@ function LiveSubSpeaker() {
     setMeetingSession(meetingSession);
     selectSpeaker(meetingSession);
 
-    // Allow audio listen
-    await bindAudioListen(meetingSession, true);
-
     console.log('Sub Speaker - initializeMeetingSession--> Start');
     metricReport(meetingSession);
     console.log('Sub Speaker - initializeMeetingSession--> End');
@@ -154,6 +151,7 @@ function LiveSubSpeaker() {
       const meeting = await getMeeting(meetingId);
       const attendee = await createAttendee(meetingId, userID);
       initializeMeetingSession(meeting, attendee);
+      bindAudioListen(meetingSession, true);
     } catch (error) {
       console.error('Error joining the meeting:', error);
     }

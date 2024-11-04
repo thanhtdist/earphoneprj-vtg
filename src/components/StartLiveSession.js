@@ -70,6 +70,7 @@ function StartLiveSession() {
       console.log('isVoiceFocusSupported', isVoiceFocusSupported);
       // Initialize the meeting session such as meeting session
       initializeMeetingSession(meeting, attendee, isVoiceFocusSupported);
+      bindAudioListen(meetingSession, true);
 
     } catch (error) {
       console.error('Error starting meeting:', error);
@@ -124,8 +125,6 @@ function StartLiveSession() {
     setMeetingSession(meetingSession);
     selectSpeaker(meetingSession);
 
-    // Allow audio listen
-    await bindAudioListen(meetingSession, true);
 
     console.log('Main Speaker - initializeMeetingSession--> Start');
     metricReport(meetingSession);
@@ -133,20 +132,23 @@ function StartLiveSession() {
 
     // Start audio video session
     meetingSession.audioVideo.start();
-
   };
 
   // Set audio listen
   const bindAudioListen = async (meetingSession, listen) => {
     const audioElement = document.getElementById('audioElementMain');
+    console.log('AudioElement', audioElement);
     if (listen) {
       try {
+        console.log('listen', listen);
+        console.log('meetingSession.audioVideo', meetingSession.audioVideo);
         const bindAudioElement = await meetingSession.audioVideo.bindAudioElement(audioElement);
         console.log('BindAudioElement', bindAudioElement);
       } catch (e) {
         console.log('Failed to bindAudioElement', e);
       }
     } else {
+      console.log('listen', listen);
       const unbindAudioElement = meetingSession.audioVideo.unbindAudioElement();
       console.log('UnbindAudioElement', unbindAudioElement);
     }
