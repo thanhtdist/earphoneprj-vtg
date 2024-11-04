@@ -46,7 +46,7 @@ function LiveSubSpeaker() {
   const [audioInputDevices, setAudioInputDevices] = useState([]);
   const [channelArn, setChannelArn] = useState('');
   const [userArn, setUserArn] = useState('');
-  const [isAudioMuted, setIsAudioMuted] = useState(false); // State for audio mute status
+  const [isAudioMuted, setIsAudioMuted] = useState(true); // State for audio mute status
   const [isMicOn, setIsMicOn] = useState(false); // State for microphone status
   const [transformVFD, setTransformVFD] = useState(null);
 
@@ -77,6 +77,18 @@ function LiveSubSpeaker() {
     return isVoiceFocusSupported;
   }
 
+  // Function to toggle mute/unmute audio
+  const toggleMuteAudio = useCallback(async () => {
+    console.log('toggleMuteAudio', isAudioMuted);
+    console.log('toggleMuteAudio', meetingSession);
+    if (isAudioMuted) {
+      await bindAudioListen(meetingSession, true);
+    } else {
+      await bindAudioListen(meetingSession, false);
+    }
+    setIsAudioMuted(!isAudioMuted);
+  }, [isAudioMuted, meetingSession]);
+
   // Function to initialize the meeting session from the meeting that the host has created
   const initializeMeetingSession = useCallback(async (meeting, attendee) => {
     const logger = new ConsoleLogger('ChimeMeetingLogs', LogLevel.INFO);
@@ -101,8 +113,9 @@ function LiveSubSpeaker() {
 
     // Start audio video session
     meetingSession.audioVideo.start();
+    toggleMuteAudio();
 
-  }, []);
+  }, [toggleMuteAudio]);
 
   // Async function to select audio output device
   const selectSpeaker = async (meetingSession) => {
@@ -151,7 +164,6 @@ function LiveSubSpeaker() {
       const meeting = await getMeeting(meetingId);
       const attendee = await createAttendee(meetingId, userID);
       initializeMeetingSession(meeting, attendee);
-      bindAudioListen(meetingSession, true);
     } catch (error) {
       console.error('Error joining the meeting:', error);
     }
@@ -162,6 +174,8 @@ function LiveSubSpeaker() {
     const audioElement = document.getElementById('audioElementSub');
     if (listen) {
       try {
+        console.log('listen', listen);
+        console.log('meetingSession.audioVideo', meetingSession.audioVideo);
         const bindAudioElement = await meetingSession.audioVideo.bindAudioElement(audioElement);
         console.log('BindAudioElement', bindAudioElement);
       } catch (e) {
@@ -173,17 +187,7 @@ function LiveSubSpeaker() {
     }
   };
 
-  // Function to toggle mute/unmute audio
-  const toggleMuteAudio = async () => {
-    console.log('toggleMuteAudio', isAudioMuted);
-    console.log('toggleMuteAudio', meetingSession);
-    if (isAudioMuted) {
-      await bindAudioListen(meetingSession, true);
-    } else {
-      await bindAudioListen(meetingSession, false);
-    }
-    setIsAudioMuted(!isAudioMuted);
-  };
+
 
   // Function to toggle microphone on/off
   const toggleMicrophone = async () => {
