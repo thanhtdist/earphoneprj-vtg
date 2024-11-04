@@ -7,6 +7,79 @@
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
+.chat-window {
+    height: 300px; /* Increased height for better usability */
+    overflow-y: auto; /* Allow scrolling */
+    border-bottom: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px; /* Space between messages and input */
+}
+
+.message {
+    margin-bottom: 10px;
+    padding: 8px;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column; /* Stack the two lines vertically */
+}
+
+.message-header {
+    display: flex;
+    align-items: center; /* Align icon and name on the same line */
+    margin-bottom: 4px; /* Add some space between the two lines */
+}
+
+.message-header strong {
+    margin-left: 8px; /* Space between icon and name */
+}
+
+.message-content {
+    display: flex;
+    justify-content: space-between; /* Push the timestamp to the right */
+    font-size: 0.9em; /* Slightly smaller text for message content */
+}
+
+.message-content .timestamp {
+    font-size: 0.8em;
+    color: #888;
+    margin-left: 10px;
+}
+
+.my-message {
+    text-align: right;
+    background-color: #b3e5fc;
+    border-radius: 5px;
+    padding: 8px;
+}
+
+.other-message {
+    text-align: left;
+    background-color: #e1bee7;
+    border-radius: 5px;
+    padding: 8px;
+}
+
+.message-content .timestamp {
+    font-size: 0.8em;
+    color: #888;
+    margin-left: 10px;
+}
+
+.my-message {
+    text-align: right;
+    background-color: #b3e5fc;
+}
+
+.other-message {
+    text-align: left;
+    background-color: #e1bee7;
+}
+
+.timestamp {
+    font-size: 0.8em;
+    color: #888;
+}
+
 .chat-input {
     display: flex;
     flex-direction: column; /* Stack items vertically */
