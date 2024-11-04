@@ -12,6 +12,7 @@ import {
   ConsoleLogger,
   LogLevel,
   MeetingSessionConfiguration,
+  VoiceFocusDeviceTransformer,
 } from 'amazon-chime-sdk-js';
 import '../styles/LiveViewer.css';
 import ChatMessage from './ChatMessage';
@@ -47,16 +48,48 @@ function LiveSubSpeaker() {
   const [userArn, setUserArn] = useState('');
   const [isAudioMuted, setIsAudioMuted] = useState(false); // State for audio mute status
   const [isMicOn, setIsMicOn] = useState(false); // State for microphone status
+  const [transformVFD, setTransformVFD] = useState(null);
+
+  // Function to transform the audio input device to Voice Focus Device/Echo Reduction
+  const transformVoiceFocusDevice = async (logger, meeting, attendee) => {
+    let transformer = null;
+    let isVoiceFocusSupported = false;
+    try {
+      const spec = {
+        name: 'ns_es',
+      };
+      const options = {
+        preload: false,
+        logger,
+      };
+      const config = await VoiceFocusDeviceTransformer.configure(spec, options);
+      console.log('transformVoiceFocusDevice config', config);
+      transformer = await VoiceFocusDeviceTransformer.create(spec, options, config, { Meeting: meeting }, { Attendee: attendee });
+      console.log('transformVoiceFocusDevice transformer', transformer);
+      setTransformVFD(transformer);
+      isVoiceFocusSupported = transformer.isSupported();
+      console.log('transformVoiceFocusDevice isVoiceFocusSupported', isVoiceFocusSupported);
+    } catch (e) {
+      // Will only occur due to invalid input or transient errors (e.g., network).
+      console.error('Failed to create VoiceFocusDeviceTransformer:', e);
+      isVoiceFocusSupported = false;
+    }
+    return isVoiceFocusSupported;
+  }
 
   // Function to initialize the meeting session from the meeting that the host has created
-  const initializeMeetingSession = useCallback((meeting, attendee) => {
+  const initializeMeetingSession = useCallback(async (meeting, attendee) => {
+    const logger = new ConsoleLogger('ChimeMeetingLogs', LogLevel.INFO);
     if (!meeting || !attendee) {
       console.error('Invalid meeting or attendee information');
       return;
     }
-
-    const logger = new ConsoleLogger('ChimeMeetingLogs', LogLevel.INFO);
-    const deviceController = new DefaultDeviceController(logger);
+    // Check if the Voice Focus Device is supported on the client
+    const isVoiceFocusSupported = await transformVoiceFocusDevice(logger, meeting, attendee);
+    console.log('isVoiceFocusSupported', isVoiceFocusSupported);
+    // deviceController with Voice Focus Device
+    const deviceController = new DefaultDeviceController(logger, { enableWebAudio: isVoiceFocusSupported });
+    console.log('deviceController', deviceController);
     const meetingSessionConfig = new MeetingSessionConfiguration(meeting, attendee);
     const meetingSession = new DefaultMeetingSession(meetingSessionConfig, logger, deviceController);
     setMeetingSession(meetingSession);
@@ -71,8 +104,6 @@ function LiveSubSpeaker() {
 
     // Start audio video session
     meetingSession.audioVideo.start();
-
-
 
   }, []);
 
@@ -172,8 +203,20 @@ function LiveSubSpeaker() {
         } else {
           // Start the audio input device
           console.log('toggleMicrophone Audio Input:', selectedAudioInput);
-          const startAudioInput = await meetingSession.audioVideo.startAudioInput(selectedAudioInput);
+          console.log('transformVFD:', transformVFD);
+          // Create a new transform device if Voice Focus is supported
+          const vfDevice = await transformVFD.createTransformDevice(selectedAudioInput);
+          console.log('vfDevice:', vfDevice);
+          // Enable Echo Reduction on this client
+          const observeMeetingAudio = await vfDevice.observeMeetingAudio(meetingSession.audioVideo);
+          console.log('observeMeetingAudio:', observeMeetingAudio);
+          const deviceToUse = vfDevice || selectedAudioInput;
+          console.log('deviceToUse:', deviceToUse);
+          const startAudioInput = await meetingSession.audioVideo.startAudioInput(deviceToUse);
           console.log('startAudioInput', startAudioInput);
+          if (vfDevice) {
+            console.log('Amazon Voice Focus enabled');
+          }
           // Unmute the microphone
           const realtimeUnmuteLocalAudio = meetingSession.audioVideo.realtimeUnmuteLocalAudio();
           console.log('Microphone is unmuted.', realtimeUnmuteLocalAudio);

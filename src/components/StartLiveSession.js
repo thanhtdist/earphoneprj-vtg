@@ -65,8 +65,7 @@ function StartLiveSession() {
       setMeeting(meeting);
       const attendee = await createAttendee(meeting.MeetingId, userID);
 
-      // const isVoiceFocusSupported = await VoiceFocusDeviceTransformer.isSupported();
-      // console.log('isVoiceFocusSupported', isVoiceFocusSupported);
+      // Check if the Voice Focus Device is supported on the client
       const isVoiceFocusSupported = await transformVoiceFocusDevice(meeting, attendee);
       console.log('isVoiceFocusSupported', isVoiceFocusSupported);
       // Initialize the meeting session such as meeting session
