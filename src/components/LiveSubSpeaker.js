@@ -110,12 +110,14 @@ function LiveSubSpeaker() {
     console.log('Sub Speaker - initializeMeetingSession--> Start');
     metricReport(meetingSession);
     console.log('Sub Speaker - initializeMeetingSession--> End');
+    const audioElement = document.getElementById('audioElementSub');
+    await meetingSession.audioVideo.bindAudioElement(audioElement);
 
     // Start audio video session
     meetingSession.audioVideo.start();
-    toggleMuteAudio();
+    //toggleMuteAudio();
 
-  }, [toggleMuteAudio]);
+  }, []);
 
   // Async function to select audio output device
   const selectSpeaker = async (meetingSession) => {
@@ -256,7 +258,7 @@ function LiveSubSpeaker() {
 
   return (
     <div className="live-viewer-container">
-      <audio id="audioElementSub" className="audio-player" />
+      <audio id="audioElementSub" controls autoplay className="audio-player" />
       <button onClick={toggleMuteAudio} className="toggle-mute-button">
         <FontAwesomeIcon icon={isAudioMuted ? faVolumeMute : faVolumeUp} size="2x" />
       </button>
