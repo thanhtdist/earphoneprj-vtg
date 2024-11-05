@@ -128,6 +128,7 @@ export async function listChannelMembership(channelArn, userArn) {
  * @param {string} channelArn - The Arn of the channel.
  * @param {string} userArn - The Arn of the user.
  * @param {string} inputMessage - The message to be sent.
+ * @param {string} options - The metadata of the message.
  * @returns {Promise<any>} The response data from the API call.
  * @throws {Error} Logs the error details if the POST call fails.
  */
@@ -145,7 +146,7 @@ export async function sendMessage(channelArn, userArn, inputMessage, options) {
           persistence: 'PERSISTENT', // The persistence of the message: PERSISTENT or NON_PERSISTENT
           clientRequestToken: uuid(), // Token of the user, generated using uuid because ignored user management
           chimeBearer: userArn, // The Arn of the user to authenticate the chime SDK
-          metadata: options, // The metadata of the message
+          metadata: options, // The metadata of the message, such as attachments information
         }
       }
     });

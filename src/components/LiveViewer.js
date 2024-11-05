@@ -16,11 +16,11 @@ import {
 import '../styles/LiveViewer.css';
 import ChatMessage from './ChatMessage';
 import Config from '../utils/config';
-import metricReport from '../utils/metricReport';
+import metricReport from '../utils/MetricReport';
 import { v4 as uuidv4 } from 'uuid';
 import { useLocation } from 'react-router-dom';
 /**
- * Component to join a meeting as a viewer and listen to the audio
+ * Component to join a meeting as a viewer and listen to the audio from the main & sub-speakers
  */
 function LiveViewer() {
   // Get the meeting ID and channel ID from the URL query parameters

@@ -2,6 +2,15 @@ import React from 'react';
 import { GrDocumentPdf } from "react-icons/gr";
 import '../styles/ChatAttachment.css';
 
+/**
+ * Component to display the chat attachment
+ * @param {string} url - S3 URL of the attachment 
+ * @param {string} fileKey - S3 file key of the attachment
+ * @param {string} name - Name of the attachment
+ * @param {string} type - Type of the attachment
+ * @param {number} size - Size of the attachment
+ * @returns 
+ */
 export const ChatAttachment = ({ url, fileKey, name, type, size = 0 }) => {
     console.log('Attachment details:', { url, fileKey, name, type, size });
 
@@ -17,7 +26,6 @@ export const ChatAttachment = ({ url, fileKey, name, type, size = 0 }) => {
                         alt={name}
                         className="attachment-image"
                     />
-                    {/* <span className="attachment-name">{name}</span> */}
                 </a>
             )}
             {isPDF && (
