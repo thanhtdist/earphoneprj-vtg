@@ -122,6 +122,7 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null }) {
 
     let options = null;
 
+    // Store the attachment file in S3 and send the message with the attachment
     if (selectedFile) {
       console.log('Sending message inputMessage', inputMessage);
       console.log('Sending message selectedFile:', selectedFile);
@@ -133,6 +134,7 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null }) {
 
       console.log('File uploaded successfully:', response);
 
+      // Metadata for the attachment file to be sent with the message
       options = JSON.stringify({
         attachments: [
           {
@@ -154,6 +156,7 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null }) {
         console.error('Error sending message:', error);
       }
     } else {
+      // Send the message without the attachment
       try {
         const response = await sendMessage(channelArn, userArn, inputMessage, options);
         console.log('Message sent successfully:', response);
@@ -171,6 +174,7 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null }) {
     setInputMessage(e.target.value);
   };
 
+  // Function to handle input key down
   const handleInputKeyDown = (e) => {
     if (e.key === 'Enter') {
       sendMessageClick();
@@ -178,10 +182,12 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null }) {
     }
   };
 
+  // Function to handle file upload icon click
   const handleFileUploadClick = () => {
     fileInputRef.current.click();
   };
 
+  // Function to handle file change from the file input
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     //Files must be less than 200 MB in size
@@ -191,6 +197,7 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null }) {
     }
   };
 
+  // Function to clear the selected file
   const clearFile = () => {
     setSelectedFile(null);
   };
