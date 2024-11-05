@@ -49,6 +49,7 @@ function LiveSubSpeaker() {
   const [audioInputDevices, setAudioInputDevices] = useState([]);
   const [channelArn, setChannelArn] = useState('');
   const [userArn, setUserArn] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   // const [isAudioMuted, setIsAudioMuted] = useState(false); // State for audio mute status
   const [isMicOn, setIsMicOn] = useState(false); // State for microphone status
   const [transformVFD, setTransformVFD] = useState(null);
@@ -134,6 +135,7 @@ function LiveSubSpeaker() {
 
   // Function to join the meeting
   const joinMeeting = useCallback(async () => {
+    setIsLoading(true);
     try {
       if (!meetingId || !channelId || !hostId) {
         alert('Meeting ID, Channel ID, and hostId are required');
@@ -170,6 +172,8 @@ function LiveSubSpeaker() {
       initializeMeetingSession(meeting, attendee);
     } catch (error) {
       console.error('Error joining the meeting:', error);
+    } finally {
+      setIsLoading(false);
     }
   }, [meetingId, channelId, hostId, initializeMeetingSession]);
 
@@ -246,12 +250,15 @@ function LiveSubSpeaker() {
   useEffect(() => {
     const getAudioInputDevices = async () => {
       if (meetingSession) {
+        console.log('List Audio Input Devices:meetingSession', meetingSession);
         const devices = await meetingSession.audioVideo.listAudioInputDevices();
+        console.log('List Audio Input Devices:', devices);
         setAudioInputDevices(devices);
         if (devices.length > 0) {
           setSelectedAudioInput(devices[0].deviceId);
+          alert("Microphone found. Please click on the microphone icon to talk.");
         } else {
-          alert("No audio input devices were found. Please check your device.");
+          alert("No microphone was found. Please check your device and ensure a microphone is connected.");
         }
       }
     };
@@ -265,23 +272,38 @@ function LiveSubSpeaker() {
       {/* <button onClick={toggleMuteAudio} className="toggle-mute-button">
         <FontAwesomeIcon icon={isAudioMuted ? faVolumeMute : faVolumeUp} size="2x" />
       </button> */}
-      <h3>Select Audio Input Device (Microphone)</h3>
-      <select value={selectedAudioInput} onChange={(e) => setSelectedAudioInput(e.target.value)}>
-        {audioInputDevices.map((device) => (
-          <option key={device.deviceId} value={device.deviceId}>
-            {device.label}
-          </option>
-        ))}
-      </select>
-      {selectedAudioInput && (
-        <div className="controls">
-          <button onClick={toggleMicrophone} className="toggle-mic-button">
-            <FontAwesomeIcon icon={isMicOn ? faMicrophone : faMicrophoneSlash} size="2x" color={isMicOn ? "green" : "gray"} />
-          </button>
+      {(isLoading) ? (
+        <div className="loading">
+          <div className="spinner"></div>
+          <p>Please wait...</p>
         </div>
+      ) : (
+        <>
+
+          {(audioInputDevices.length <= 0) ? (<div className="loading">
+            <div className="spinner"></div>
+            <p>Checking for microphone... Please wait.</p>
+          </div>) : (
+            <>
+              <h3>Select Audio Input Device (Microphone)</h3>
+              <select value={selectedAudioInput} onChange={(e) => setSelectedAudioInput(e.target.value)}>
+                {audioInputDevices.map((device) => (
+                  <option key={device.deviceId} value={device.deviceId}>
+                    {device.label}
+                  </option>
+                ))}
+              </select>
+              <div className="controls">
+                <button onClick={toggleMicrophone} className="toggle-mic-button">
+                  <FontAwesomeIcon icon={isMicOn ? faMicrophone : faMicrophoneSlash} size="2x" color={isMicOn ? "green" : "gray"} />
+                </button>
+              </div>
+            </>
+          )}
+          <br />
+          {channelArn && <ChatMessage userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} chatSetting={chatSetting} />}
+        </>
       )}
-      <br />
-      {channelArn && <ChatMessage userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} chatSetting={chatSetting} />}
     </div>
   );
 }

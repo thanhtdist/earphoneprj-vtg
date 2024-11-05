@@ -232,8 +232,9 @@ function StartLiveSession() {
         setAudioInputDevices(devices);
         if (devices.length > 0) {
           setSelectedAudioInput(devices[0].deviceId);
+          alert("Microphone found. Please click on the microphone icon to talk.");
         } else {
-          alert("No audio input devices were found. Please check your device.");
+          alert("No microphone was found. Please check your device and ensure a microphone is connected.");
         }
       }
     };
@@ -252,7 +253,7 @@ function StartLiveSession() {
     <div className="container">
       {!meeting ? (
         <>
-          {isLoading ? (
+          {(isLoading) ? (
             <div className="loading">
               <div className="spinner"></div>
               <p>Please wait...</p>
@@ -268,20 +269,26 @@ function StartLiveSession() {
             <FontAwesomeIcon icon={isAudioMuted ? faVolumeMute : faVolumeUp} size="2x" />
           </button> */}
           {/* <button onClick={stopLiveAduioSession}>Stop Live Audio Session</button> */}
-          <h3>Select Audio Input Device (Microphone)</h3>
-          <select value={selectedAudioInput} onChange={(e) => setSelectedAudioInput(e.target.value)}>
-            {audioInputDevices.map((device) => (
-              <option key={device.deviceId} value={device.deviceId}>
-                {device.label}
-              </option>
-            ))}
-          </select>
-          {selectedAudioInput.length > 0 && (
-            <div className="controls">
-              <button onClick={toggleMicrophone} className="toggle-mic-button">
-                <FontAwesomeIcon icon={isMicOn ? faMicrophone : faMicrophoneSlash} size="2x" color={isMicOn ? "green" : "gray"} />
-              </button>
-            </div>
+
+          {(audioInputDevices.length <= 0) ? (<div className="loading">
+            <div className="spinner"></div>
+            <p>Checking for microphone... Please wait.</p>
+          </div>) : (
+            <>
+              <h3>Select Audio Input Device (Microphone)</h3>
+              <select value={selectedAudioInput} onChange={(e) => setSelectedAudioInput(e.target.value)}>
+                {audioInputDevices.map((device) => (
+                  <option key={device.deviceId} value={device.deviceId}>
+                    {device.label}
+                  </option>
+                ))}
+              </select>
+              <div className="controls">
+                <button onClick={toggleMicrophone} className="toggle-mic-button">
+                  <FontAwesomeIcon icon={isMicOn ? faMicrophone : faMicrophoneSlash} size="2x" color={isMicOn ? "green" : "gray"} />
+                </button>
+              </div>
+            </>
           )}
           <h3>Chat Settings:</h3>
           <select value={chatSetting} onChange={handleChatSettingChange}>
