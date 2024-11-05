@@ -23,7 +23,10 @@ import metricReport from '../utils/metricReport';
 import { v4 as uuidv4 } from 'uuid';
 import { QRCodeSVG } from 'qrcode.react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMicrophone, faMicrophoneSlash, faVolumeMute, faVolumeUp } from '@fortawesome/free-solid-svg-icons';
+import {
+  faMicrophone, faMicrophoneSlash,
+  //faVolumeMute, faVolumeUp 
+} from '@fortawesome/free-solid-svg-icons';
 
 function StartLiveSession() {
   const [channelArn, setChannelArn] = useState('');
@@ -37,7 +40,7 @@ function StartLiveSession() {
   const [userId, setUserId] = useState('');
   const [chatSetting, setChatSetting] = useState('guideOnly'); // State to manage chat setting
   const [selectedQR, setSelectedQR] = useState('listener'); // State to manage selected QR type
-  const [isAudioMuted, setIsAudioMuted] = useState(true); // State for audio mute status
+  // const [isAudioMuted, setIsAudioMuted] = useState(true); // State for audio mute status
   const [isMicOn, setIsMicOn] = useState(false); // State for microphone status
   const [transformVFD, setTransformVFD] = useState(null);
   const logger = new ConsoleLogger('ChimeMeetingLogs', LogLevel.INFO);
@@ -70,14 +73,12 @@ function StartLiveSession() {
       console.log('isVoiceFocusSupported', isVoiceFocusSupported);
       // Initialize the meeting session such as meeting session
       initializeMeetingSession(meeting, attendee, isVoiceFocusSupported);
-
     } catch (error) {
       console.error('Error starting meeting:', error);
     } finally {
       setIsLoading(false);
     }
   };
-
   // Function to transform the audio input device to Voice Focus Device/Echo Reduction
   const transformVoiceFocusDevice = async (meeting, attendee) => {
     let transformer = null;
@@ -137,36 +138,36 @@ function StartLiveSession() {
   };
 
   // Set audio listen
-  const bindAudioListen = async (meetingSession, listen) => {
-    const audioElement = document.getElementById('audioElementMain');
-    console.log('AudioElement', audioElement);
-    if (listen) {
-      try {
-        console.log('listen', listen);
-        console.log('meetingSession.audioVideo', meetingSession.audioVideo);
-        const bindAudioElement = await meetingSession.audioVideo.bindAudioElement(audioElement);
-        console.log('BindAudioElement', bindAudioElement);
-      } catch (e) {
-        console.log('Failed to bindAudioElement', e);
-      }
-    } else {
-      console.log('listen', listen);
-      const unbindAudioElement = meetingSession.audioVideo.unbindAudioElement();
-      console.log('UnbindAudioElement', unbindAudioElement);
-    }
-  };
+  // const bindAudioListen = async (meetingSession, listen) => {
+  //   const audioElement = document.getElementById('audioElementMain');
+  //   console.log('AudioElement', audioElement);
+  //   if (listen) {
+  //     try {
+  //       console.log('listen', listen);
+  //       console.log('meetingSession.audioVideo', meetingSession.audioVideo);
+  //       const bindAudioElement = await meetingSession.audioVideo.bindAudioElement(audioElement);
+  //       console.log('BindAudioElement', bindAudioElement);
+  //     } catch (e) {
+  //       console.log('Failed to bindAudioElement', e);
+  //     }
+  //   } else {
+  //     console.log('listen', listen);
+  //     const unbindAudioElement = meetingSession.audioVideo.unbindAudioElement();
+  //     console.log('UnbindAudioElement', unbindAudioElement);
+  //   }
+  // };
 
   // Function to toggle mute/unmute audio
-  const toggleMuteAudio = async () => {
-    console.log('toggleMuteAudio', isAudioMuted);
-    console.log('toggleMuteAudio', meetingSession);
-    if (isAudioMuted) {
-      await bindAudioListen(meetingSession, true);
-    } else {
-      await bindAudioListen(meetingSession, false);
-    }
-    setIsAudioMuted(!isAudioMuted);
-  };
+  // const toggleMuteAudio = async () => {
+  //   console.log('toggleMuteAudio', isAudioMuted);
+  //   console.log('toggleMuteAudio', meetingSession);
+  //   if (isAudioMuted) {
+  //     await bindAudioListen(meetingSession, true);
+  //   } else {
+  //     await bindAudioListen(meetingSession, false);
+  //   }
+  //   setIsAudioMuted(!isAudioMuted);
+  // };
 
   // Function to toggle microphone on/off
   const toggleMicrophone = async () => {
@@ -262,10 +263,11 @@ function StartLiveSession() {
         </>
       ) : (
         <>
-          <audio id="audioElementMain" controls autoplay className="audio-player" />
-          <button onClick={toggleMuteAudio} className="toggle-mute-button">
+          <audio id="audioElementMain" controls autoPlay className="audio-player" />
+          {/* <button onClick={toggleMuteAudio} className="toggle-mute-button">
             <FontAwesomeIcon icon={isAudioMuted ? faVolumeMute : faVolumeUp} size="2x" />
-          </button>
+          </button> */}
+          {/* <button onClick={stopLiveAduioSession}>Stop Live Audio Session</button> */}
           <h3>Select Audio Input Device (Microphone)</h3>
           <select value={selectedAudioInput} onChange={(e) => setSelectedAudioInput(e.target.value)}>
             {audioInputDevices.map((device) => (
