@@ -220,8 +220,8 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null }) {
           {messages.map((message, index) => (
             <div key={index} className="message">
               <div className="message-header">
-                <VscAccount color={message.senderName === "Guide" ? "blue" : ""} size={24} />
-                <strong>{message.senderArn === userArn ? 'You' : message.senderName}</strong>
+                <VscAccount color={!message.senderName.startsWith("User") ? "blue" : ""} size={24} />
+                <strong>{message.senderArn === userArn ? 'Me' : message.senderName}</strong>
               </div>
               <div className="timestamp">{formatTimestamp(message.timestamp)}</div>
               {message.content !== ' ' && (

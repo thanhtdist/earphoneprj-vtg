@@ -97,14 +97,19 @@ function LiveViewer() {
       console.log('channelArn:', hostUserArn);
 
       // List the channel members to check if the user has already joined the channel
-      const channelMembersCount = await listChannelMembership(channelArn, hostUserArn);
-      console.log('channelMembersCount:', channelMembersCount);
+      const channelMembersResponse = await listChannelMembership(channelArn, hostUserArn);
+      console.log('channelMembersResponse:', channelMembersResponse);
 
+      // Count members starting with "User"
+      const memberships = channelMembersResponse.memberships || [];
+      console.log('memberships:', memberships);
+      const userCount = memberships.filter(member => member.Member.Name && member.Member.Name.startsWith("User")).length || 0;
+      console.log('userCount:', userCount);
       // Generate a unique user ID and name for the host
       const userID = uuidv4(); // Generate unique user ID
       // Create a unique user name for the listener
       // Always 1 member is the host, so listeners will start from the number of participants currently in the channel
-      const userName = `User${channelMembersCount}`;
+      const userName = `User${userCount + 1}`;
 
       // Create userArn and join channel
       const userArn = await createAppInstanceUsers(userID, userName);
@@ -132,7 +137,7 @@ function LiveViewer() {
     <div className="live-viewer-container">
       <audio id="audioElementListener" controls autoPlay className="audio-player" />
       <br />
-      {channelArn && <ChatMessage userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} chatSetting={chatSetting}/>}
+      {channelArn && <ChatMessage userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} chatSetting={chatSetting} />}
     </div>
   );
 }
