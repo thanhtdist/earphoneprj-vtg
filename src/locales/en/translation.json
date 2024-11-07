@@ -1,0 +1,31 @@
+{
+  "webTitle": "Voice Tour Guide",
+  "startLiveBtn": "Start a Live Audio Session",
+  "loading": "Please wait...",
+  "microChecking": "Checking your microphone... Please wait.",
+  "noMicroMsg": "No microphone is found. Please check your device and ensure the microphone is turned on.",
+  "microSelectionLbl": "Select Input Microphone",
+  "chatSettingLbl": "Chat Settings",
+  "chatSettingOptions": {
+    "allChat": "Enable chat function for both Guide and Listener",
+    "onlyGuideChat": "Enable chat function for Guide only",
+    "noChat": "Disable chat function for all"
+  },
+  "generateQRCodeLbl": "Generate QR Code for",
+  "generateQRCodeOptions": {
+    "subGuide": "Sub-Guide",
+    "listener": "Listener"
+  },
+  "scanQRCodeTxt": {
+    "subGuide": "Scan me to join as Sub-Guide",
+    "listener": "Scan me to join as Listener"
+  },
+  "messagePlaceholder": "Type a message...",
+  "userNameDisplay": {
+    "mainGuide": "Guide",
+    "subGuide": "Sub-Guide",
+    "listener": "User",
+    "myself": "Me"
+  },
+  "languagesLbl": "Language"
+}

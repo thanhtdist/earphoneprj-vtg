@@ -5,7 +5,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { Amplify } from "aws-amplify"
 import outputs from "./amplify_outputs.json";
-
+import './i18n';
 // Connect the Amplify backend resource from outputs file to the frontend
 Amplify.configure(outputs);
 

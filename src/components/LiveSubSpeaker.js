@@ -24,6 +24,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faMicrophone, faMicrophoneSlash,
 } from '@fortawesome/free-solid-svg-icons';
+import { useTranslation } from 'react-i18next';
 /**
  *  Component to start a live audio session for the sub speaker
  * The sub speaker can talk & listen to the audio from the main speaker
@@ -52,6 +53,9 @@ function LiveSubSpeaker() {
   const [isLoading, setIsLoading] = useState(false);
   const [isMicOn, setIsMicOn] = useState(false); // State for microphone status
   const [transformVFD, setTransformVFD] = useState(null);
+  const { t, i18n } = useTranslation();
+  console.log('i18n', i18n);
+  console.log('t', t);
 
   // Function to transform the audio input device to Voice Focus Device/Echo Reduction
   const transformVoiceFocusDevice = async (logger, meeting, attendee) => {
@@ -227,12 +231,12 @@ function LiveSubSpeaker() {
         if (devices.length > 0) {
           setSelectedAudioInput(devices[0].deviceId);
         } else {
-          alert("No microphone was found. Please check your device and ensure a microphone is connected.");
+          alert(t('noMicroMsg'));
         }
       }
     };
     getAudioInputDevices();
-  }, [meetingSession]);
+  }, [meetingSession, t]);
 
   return (
     <div className="live-viewer-container">
@@ -240,16 +244,16 @@ function LiveSubSpeaker() {
       {(isLoading) ? (
         <div className="loading">
           <div className="spinner"></div>
-          <p>Please wait...</p>
+          <p>{t('loading')}</p>
         </div>
       ) : (
         <>
           {(audioInputDevices.length <= 0) ? (<div className="loading">
             <div className="spinner"></div>
-            <p>Checking for microphone... Please wait.</p>
+            <p>{t('microChecking')}</p>
           </div>) : (
             <>
-              <h3>Select Audio Input Device (Microphone)</h3>
+              <h3>{t('microSelectionLbl')}</h3>
               <select value={selectedAudioInput} onChange={(e) => setSelectedAudioInput(e.target.value)}>
                 {audioInputDevices.map((device) => (
                   <option key={device.deviceId} value={device.deviceId}>

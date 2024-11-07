@@ -1,0 +1,70 @@
+/* Base styles for desktop */
+.menu-container {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 1000;
+  }
+  
+  .menu-toggle {
+    font-size: 1.5rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #333;
+    outline: none;
+  }
+  
+  .menu-content {
+    display: none;
+    flex-direction: column;
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    position: absolute;
+    top: 40px;
+    right: 0;
+    width: 200px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .menu-content.open {
+    display: flex;
+  }
+  
+  .menu-content h1 {
+    margin-top: 0;
+  }
+  
+  .language-selector {
+    margin-top: 0.5rem;
+  }
+  
+  #language-select {
+    margin-top: 0.5rem;
+    padding: 0.5rem;
+    width: 100%;
+  }
+  
+  /* Responsive adjustments for smaller screens */
+  @media (max-width: 600px) {
+    .menu-content {
+      width: 150px;
+      padding: 0.75rem;
+    }
+  
+    .menu-toggle {
+      font-size: 1.25rem;
+    }
+  
+    .menu-content h1 {
+      font-size: 1rem;
+    }
+  
+    #language-select {
+      font-size: 0.9rem;
+    }
+  }
+  
+  

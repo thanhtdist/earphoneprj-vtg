@@ -15,6 +15,7 @@ import { VscAccount } from "react-icons/vsc";
 import '../styles/ChatMessage.css';
 import Config from '../utils/config';
 import ChatAttachment from './ChatAttachment';
+import { useTranslation } from 'react-i18next';
 
 /**
  * Component to display chat messages and send messages to a channel
@@ -30,6 +31,9 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null }) {
   const messagingSessionRef = useRef(null);
   const [selectedFile, setSelectedFile] = useState(null);
   const fileInputRef = useRef();
+  const { t, i18n } = useTranslation();
+  console.log('i18n', i18n);
+  console.log('t', t);
 
   // Function to format the timestamp from UTC to Tokyo timezone
   const formatTimestamp = (timestamp) => {
@@ -202,6 +206,17 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null }) {
     setSelectedFile(null);
   };
 
+  // Display user name based on multiple languages
+  const displayUserName = (userName) => {
+    console.log('userName:', userName);
+    if (userName.startsWith("User")) {
+      return userName.replace('User', t('userNameDisplay.listener'));
+    } else if (userName.startsWith("Sub-Guide")) {
+      return userName.replace('Sub-Guide', t('userNameDisplay.subGuide'));
+    }
+    return t('userNameDisplay.mainGuide');
+  };
+
   // Effect to initialize the messaging session
   useEffect(() => {
     initializeMessagingSession();
@@ -221,7 +236,7 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null }) {
             <div key={index} className="message">
               <div className="message-header">
                 <VscAccount color={!message.senderName.startsWith("User") ? "blue" : ""} size={24} />
-                <strong>{message.senderArn === userArn ? 'Me' : message.senderName}</strong>
+                <strong>{message.senderArn === userArn ? t('userNameDisplay.myself') : displayUserName(message.senderName)}</strong>
               </div>
               <div className="timestamp">{formatTimestamp(message.timestamp)}</div>
               {message.content !== ' ' && (
@@ -253,7 +268,7 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null }) {
                 value={inputMessage}
                 onChange={handleInputChange}
                 onKeyDown={handleInputKeyDown}
-                placeholder="Type a message..."
+                placeholder={t('messagePlaceholder')}
               />
               {selectedFile && (
                 <>
