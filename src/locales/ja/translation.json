@@ -1,0 +1,31 @@
+{
+  "webTitle": "音声ツアーガイド",
+  "startLiveBtn": "音声ガイドをスタート",
+  "loading": "お待ちください。。。",
+  "microChecking": "マイクを確認しています...しばらくお待ちください。",
+  "noMicroMsg": "マイクが見つかりませんでした。マイクが接続されていることを確認してください。",
+  "microSelectionLbl": "音声入力（マイク）を選択",
+  "chatSettingLbl": "チャット設定",
+  "chatSettingOptions": {
+    "allChat": "ガイドとリスナーがチャット可能",
+    "onlyGuideChat": "ガイドのみチャット可能",
+    "noChat": "チャット無効"
+  },
+  "generateQRCodeLbl": "QRコードを生成",
+  "generateQRCodeOptions": {
+    "subGuide": "サブガイド用QRコード",
+    "listener": "リスナー用QRコード"
+  },
+  "scanQRCodeTxt": {
+    "subGuide": "QRスキャンしてリスナーとして参加",
+    "listener": "QRスキャンしてサブガイドとして参加"
+  },
+  "messagePlaceholder": "メッセージを入力してください...",
+  "userNameDisplay": {
+    "mainGuide": "ガイド",
+    "subGuide": "サブガイド",
+    "listener": "ユーザー",
+    "myself": "自分"
+  },
+  "languagesLbl": "言語選択"
+}

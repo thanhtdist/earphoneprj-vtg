@@ -24,6 +24,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faMicrophone, faMicrophoneSlash,
 } from '@fortawesome/free-solid-svg-icons';
+import { useTranslation } from 'react-i18next';
+
 
 /**
  * Component to start a live audio session for the main speaker
@@ -46,6 +48,9 @@ function StartLiveSession() {
   const [isMicOn, setIsMicOn] = useState(false); // State for microphone status
   const [transformVFD, setTransformVFD] = useState(null);
   const logger = new ConsoleLogger('ChimeMeetingLogs', LogLevel.INFO);
+  const { t, i18n } = useTranslation();
+  console.log('i18n', i18n);
+  console.log('t', t);
 
   // Function to start a live audio session
   // when clicked on the "Start Live Audio Session" button
@@ -191,12 +196,12 @@ function StartLiveSession() {
         if (devices.length > 0) {
           setSelectedAudioInput(devices[0].deviceId);
         } else {
-          alert("No microphone was found. Please check your device and ensure a microphone is connected.");
+          alert(t('noMicroMsg'));
         }
       }
     };
     getAudioInputDevices();
-  }, [meetingSession]);
+  }, [meetingSession, t]);
 
   const handleChatSettingChange = (e) => {
     setChatSetting(e.target.value);
@@ -205,7 +210,6 @@ function StartLiveSession() {
   const handleQRSelectionChange = (e) => {
     setSelectedQR(e.target.value);
   };
-
   return (
     <div className="container">
       {!meeting ? (
@@ -213,10 +217,10 @@ function StartLiveSession() {
           {(isLoading) ? (
             <div className="loading">
               <div className="spinner"></div>
-              <p>Please wait...</p>
+              <p>{t('loading')}</p>
             </div>
           ) : (
-            <button onClick={startLiveAduioSession}>Start Live Audio Session</button>
+            <button onClick={startLiveAduioSession}>{t('startLiveBtn')}</button>
           )}
         </>
       ) : (
@@ -224,10 +228,10 @@ function StartLiveSession() {
           <audio id="audioElementMain" controls autoPlay className="audio-player" />
           {(audioInputDevices.length <= 0) ? (<div className="loading">
             <div className="spinner"></div>
-            <p>Checking for microphone... Please wait.</p>
+            <p>{t('microChecking')}</p>
           </div>) : (
             <>
-              <h3>Select Audio Input Device (Microphone)</h3>
+              <h3>{t('microSelectionLbl')}</h3>
               <select value={selectedAudioInput} onChange={(e) => setSelectedAudioInput(e.target.value)}>
                 {audioInputDevices.map((device) => (
                   <option key={device.deviceId} value={device.deviceId}>
@@ -242,17 +246,17 @@ function StartLiveSession() {
               </div>
             </>
           )}
-          <h3>Chat Settings:</h3>
+          <h3>{t('chatSettingLbl')}</h3>
           <select value={chatSetting} onChange={handleChatSettingChange}>
-            <option value="allChat">All the Guide and Listener chat</option>
-            <option value="guideOnly">Only the Guide chat</option>
-            <option value="nochat">No chat</option>
+            <option value="allChat">{t('chatSettingOptions.allChat')}</option>
+            <option value="guideOnly">{t('chatSettingOptions.onlyGuideChat')}</option>
+            <option value="nochat">{t('chatSettingOptions.noChat')}</option>
           </select>
 
-          <h3>Select QR Code:</h3>
+          <h3>{t('generateQRCodeLbl')}</h3>
           <select value={selectedQR} onChange={handleQRSelectionChange}>
-            <option value="subSpeaker">QR for Sub-Guide</option>
-            <option value="listener">QR for Listener</option>
+            <option value="subSpeaker">{t('generateQRCodeOptions.subGuide')}</option>
+            <option value="listener">{t('generateQRCodeOptions.listener')}</option>
           </select>
 
           {meeting && channelArn && (
@@ -261,14 +265,14 @@ function StartLiveSession() {
                 <>
                   <QRCodeSVG value={`${Config.appSubSpeakerURL}?meetingId=${meeting.MeetingId}&channelId=${channelID}&hostId=${userId}&chatSetting=${chatSetting}`} size={256} level="H" />
                   <a target="_blank" rel="noopener noreferrer" style={{ color: 'green' }} href={`${Config.appSubSpeakerURL}?meetingId=${meeting.MeetingId}&channelId=${channelID}&hostId=${userId}&chatSetting=${chatSetting}`}>
-                    Join as Sub-Guide
+                    {t('scanQRCodeTxt.subGuide')}
                   </a>
                 </>
               ) : (
                 <>
                   <QRCodeSVG value={`${Config.appViewerURL}?meetingId=${meeting.MeetingId}&channelId=${channelID}&hostId=${userId}&chatSetting=${chatSetting}`} size={256} level="H" />
                   <a target="_blank" rel="noopener noreferrer" style={{ color: 'green' }} href={`${Config.appViewerURL}?meetingId=${meeting.MeetingId}&channelId=${channelID}&hostId=${userId}&chatSetting=${chatSetting}`}>
-                    Join as Listener
+                  {t('scanQRCodeTxt.listener')}
                   </a>
                 </>
               )}
