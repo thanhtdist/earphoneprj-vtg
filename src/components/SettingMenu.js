@@ -33,6 +33,8 @@ function SettingMenu() {
   useEffect(() => {
     // Update the document title when the language changes
     document.title = t('webTitle');
+    // Update the <html> lang attribute whenever the language changes
+    document.documentElement.setAttribute('lang', i18n.language);
   }, [i18n.language, t]); // Re-run effect when language changes
 
 
