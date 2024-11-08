@@ -6,18 +6,18 @@ import '../styles/SettingMenu.css'; // Import the CSS file
 
 function SettingMenu() {
   const { t, i18n } = useTranslation();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false); // Track if menu is open
   const menuRef = useRef(null);
 
   // Toggle the menu open/close state
   const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
+    setIsMenuOpen(!isMenuOpen); // Toggle menu visibility
   };
 
   // Close the menu if clicked outside
   const closeMenuOutsideClick = (e) => {
     if (menuRef.current && !menuRef.current.contains(e.target)) {
-      setIsMenuOpen(false); // Close the menu
+      setIsMenuOpen(false); // Close the menu when clicked outside
     }
   };
 
@@ -35,13 +35,20 @@ function SettingMenu() {
     document.title = t('webTitle');
     // Update the <html> lang attribute whenever the language changes
     document.documentElement.setAttribute('lang', i18n.language);
-  }, [i18n.language, t]); // Re-run effect when language changes
+    // Display audio player with the selected language
+    const audioPlayer = document.querySelector('.audio-player'); // Selects the first element with the class "audioPlayer"
+    console.log("audioPlayer: ", audioPlayer);
+    if (audioPlayer) {
+      audioPlayer.setAttribute('lang', i18n.language);
+    }
 
+  }, [i18n.language, t]); // Re-run effect when language changes
 
   // Handle language selection change
   const handleLanguageChange = (e) => {
     const selectedLanguage = e.target.value;
-    i18n.changeLanguage(selectedLanguage);
+    i18n.changeLanguage(selectedLanguage); // Change the language
+    setIsMenuOpen(false); // Close the menu after language is selected
   };
 
   return (

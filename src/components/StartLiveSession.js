@@ -212,6 +212,7 @@ function StartLiveSession() {
   };
   return (
     <div className="container">
+      <audio id="audioElementMain" controls autoPlay className="audio-player" style={{display: meeting ? 'block' : 'none'}} />
       {!meeting ? (
         <>
           {(isLoading) ? (
@@ -225,7 +226,6 @@ function StartLiveSession() {
         </>
       ) : (
         <>
-          <audio id="audioElementMain" controls autoPlay className="audio-player" />
           {(audioInputDevices.length <= 0) ? (<div className="loading">
             <div className="spinner"></div>
             <p>{t('microChecking')}</p>
