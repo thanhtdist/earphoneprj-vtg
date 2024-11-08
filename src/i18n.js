@@ -9,7 +9,7 @@ i18n
   .use(initReactI18next) // If using with React
   .use(resourcesToBackend((language, namespace) => import(`./locales/${language}/${namespace}.json`)))
   .init({
-    lng: 'en', // default language
+    //lng: 'en', // default language instead of language detection by the browser
     fallbackLng: 'en', // fallback language if the selected one is not available
     ns: ['translation'], // namespace(s)
     defaultNS: 'translation', // default namespace
