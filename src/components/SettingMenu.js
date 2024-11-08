@@ -40,6 +40,14 @@ function SettingMenu() {
     console.log("audioPlayer: ", audioPlayer);
     if (audioPlayer) {
       audioPlayer.setAttribute('lang', i18n.language);
+      // Check if the status label exists for the audio player
+      const statusLabel = document.querySelector(".status-label");
+        console.log('statusLabel', statusLabel);
+        if (statusLabel) {
+            statusLabel.textContent = "Live Audio Session";  // Customize the label text
+        } else {
+            console.log("Status label not found.");
+        }
     }
 
   }, [i18n.language, t]); // Re-run effect when language changes
@@ -57,6 +65,12 @@ function SettingMenu() {
       <button className="menu-toggle" onClick={toggleMenu}>
         <GiHamburgerMenu size={24} />
       </button>
+
+      <div>
+        <div>
+          <div className="status-label">kkkkkkkkkk</div>
+        </div>
+      </div>
 
       {/* Collapsible Menu Content */}
       <div className={`menu-content ${isMenuOpen ? 'open' : ''}`}>
