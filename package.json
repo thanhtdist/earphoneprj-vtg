@@ -19,6 +19,7 @@
     "cors": "^2.8.5",
     "express": "^4.21.0",
     "i18next": "^23.16.4",
+    "i18next-browser-languagedetector": "^8.0.0",
     "i18next-http-backend": "^2.6.2",
     "i18next-resources-to-backend": "^1.2.1",
     "qrcode.react": "^4.0.1",

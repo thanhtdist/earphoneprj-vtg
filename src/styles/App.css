@@ -6,6 +6,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  padding-top: 40px; /* Adjust to prevent overlap with the sticky menu */
 }
 
 nav {
