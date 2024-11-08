@@ -3,7 +3,7 @@
   "startLiveBtn": "Start a Live Audio Session",
   "loading": "Please wait...",
   "microChecking": "Checking your microphone... Please wait.",
-  "noMicroMsg": "No microphone is found. Please check your device and ensure the microphone is turned on.",
+  "noMicroMsg": "No microphone is found. Please check your device, ensure the microphone is enabled, and click the icon below to refresh.",
   "microSelectionLbl": "Select Input Microphone",
   "chatSettingLbl": "Chat Settings",
   "chatSettingOptions": {
