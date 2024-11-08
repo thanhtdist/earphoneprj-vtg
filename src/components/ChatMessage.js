@@ -282,7 +282,7 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null }) {
             <FiUpload className="upload-icon" onClick={handleFileUploadClick} />
             <input
               type="file"
-              accept="image/*, .pdf"
+              accept=".jpg, .jpeg, .png, .gif, .pdf"
               ref={fileInputRef}
               style={{ display: 'none' }}
               onChange={handleFileChange}

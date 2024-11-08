@@ -21,6 +21,7 @@ import metricReport from '../utils/MetricReport';
 import { v4 as uuidv4 } from 'uuid';
 import { useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { MdRefresh } from "react-icons/md";
 import {
   faMicrophone, faMicrophoneSlash,
 } from '@fortawesome/free-solid-svg-icons';
@@ -53,6 +54,8 @@ function LiveSubSpeaker() {
   const [isLoading, setIsLoading] = useState(false);
   const [isMicOn, setIsMicOn] = useState(false); // State for microphone status
   const [transformVFD, setTransformVFD] = useState(null);
+  const [microChecking, setMicroChecking] = useState(null);
+  const [noMicoMsg, setNoMicoMsg] = useState(null);
   const { t, i18n } = useTranslation();
   console.log('i18n', i18n);
   console.log('t', t);
@@ -214,6 +217,25 @@ function LiveSubSpeaker() {
     }
   };
 
+  // Function to get the list of audio input devices
+  const getAudioInputDevices = useCallback(async () => {
+    if (meetingSession) {
+      const devices = await meetingSession.audioVideo.listAudioInputDevices();
+      console.log('List Audio Input Devices:', devices);
+      setAudioInputDevices(devices);
+      if (devices.length > 0) {
+        setSelectedAudioInput(devices[0].deviceId);
+      } else {
+        setMicroChecking(t('microChecking'));
+        setNoMicoMsg(null);
+        setTimeout(() => {
+          setMicroChecking(null);
+          setNoMicoMsg(t('noMicroMsg'));
+        }, 5000);
+      }
+    }
+  }, [meetingSession, t]);
+
   // Use effect to join the meeting
   useEffect(() => {
     if (meetingId && channelId) {
@@ -222,21 +244,14 @@ function LiveSubSpeaker() {
   }, [joinMeeting, meetingId, channelId, hostId]);
 
   useEffect(() => {
-    const getAudioInputDevices = async () => {
-      if (meetingSession) {
-        console.log('List Audio Input Devices:meetingSession', meetingSession);
-        const devices = await meetingSession.audioVideo.listAudioInputDevices();
-        console.log('List Audio Input Devices:', devices);
-        setAudioInputDevices(devices);
-        if (devices.length > 0) {
-          setSelectedAudioInput(devices[0].deviceId);
-        } else {
-          alert(t('noMicroMsg'));
-        }
-      }
-    };
     getAudioInputDevices();
-  }, [meetingSession, t]);
+  }, [getAudioInputDevices]);
+
+
+  // Function to refresh the audio input devices
+  const handleRefresh = () => {
+    getAudioInputDevices();
+  }
 
   return (
     <div className="live-viewer-container">
@@ -248,10 +263,18 @@ function LiveSubSpeaker() {
         </div>
       ) : (
         <>
-          {(audioInputDevices.length <= 0) ? (<div className="loading">
-            <div className="spinner"></div>
-            <p>{t('microChecking')}</p>
-          </div>) : (
+          {(audioInputDevices.length <= 0) ? (
+            <>
+              {noMicoMsg ? (
+                <p>{noMicoMsg} <button onClick={handleRefresh}><MdRefresh size={24} /></button></p>
+              ) : (
+                <div className="loading">
+                  <div className="spinner"></div>
+                  <p>{microChecking}</p>
+                </div>
+              )}
+            </>
+          ) : (
             <>
               <h3>{t('microSelectionLbl')}</h3>
               <select value={selectedAudioInput} onChange={(e) => setSelectedAudioInput(e.target.value)}>

@@ -3,7 +3,7 @@
   "startLiveBtn": "音声ガイドをスタート",
   "loading": "お待ちください。。。",
   "microChecking": "マイクを確認しています...しばらくお待ちください。",
-  "noMicroMsg": "マイクが見つかりませんでした。マイクが接続されていることを確認してください。",
+  "noMicroMsg": "マイクが見つかりませんでした。マイクが接続されていることを確認、更新のため下のボタンを押して下さい",
   "microSelectionLbl": "音声入力（マイク）を選択",
   "chatSettingLbl": "チャット設定",
   "chatSettingOptions": {

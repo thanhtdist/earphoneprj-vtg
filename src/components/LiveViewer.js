@@ -19,29 +19,19 @@ import Config from '../utils/config';
 import metricReport from '../utils/MetricReport';
 import { v4 as uuidv4 } from 'uuid';
 import { useLocation } from 'react-router-dom';
-/**
- * Component to join a meeting as a viewer and listen to the audio from the main & sub-speakers
- */
+
 function LiveViewer() {
-  // Get the meeting ID and channel ID from the URL query parameters
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  // Use for audio voice
   const meetingId = queryParams.get('meetingId');
-  // Use for chat
   const channelId = queryParams.get('channelId');
-  // Use for list channel membership
   const hostId = queryParams.get('hostId');
-
-  // Hidden chat input based on chatSetting with chatSetting = 'guideOnly'
   const chatSetting = queryParams.get('chatSetting');
 
-
-  // State variables to store the channel ARN and user ARN
   const [channelArn, setChannelArn] = useState('');
   const [userArn, setUserArn] = useState('');
+  const [statusMessage, setStatusMessage] = useState(''); // New state for status message
 
-  // Function to initialize the meeting session from the meeting that the host has created
   const initializeMeetingSession = useCallback((meeting, attendee) => {
     if (!meeting || !attendee) {
       console.error('Invalid meeting or attendee information');
@@ -69,10 +59,8 @@ function LiveViewer() {
     meetingSession.audioVideo.start();
   }, []);
 
-  // Async function to select audio output device
   const selectSpeaker = async (meetingSession) => {
     const audioOutputDevices = await meetingSession.audioVideo.listAudioOutputDevices();
-
     if (audioOutputDevices.length > 0) {
       await meetingSession.audioVideo.chooseAudioOutput(audioOutputDevices[0].deviceId);
     } else {
@@ -80,7 +68,6 @@ function LiveViewer() {
     }
   };
 
-  // Function to join the meeting
   const joinMeeting = useCallback(async () => {
     try {
       if (!meetingId || !channelId || !hostId) {
@@ -88,48 +75,41 @@ function LiveViewer() {
         return;
       }
 
-      // Get host user ID from the host ID
       const hostUserArn = `${Config.appInstanceArn}/user/${hostId}`;
-      console.log('hostUserArn:', hostUserArn);
-
-      //Get the channel ARN from the channel ID
       const channelArn = `${Config.appInstanceArn}/channel/${channelId}`;
-      console.log('channelArn:', hostUserArn);
 
-      // List the channel members to check if the user has already joined the channel
       const channelMembersResponse = await listChannelMembership(channelArn, hostUserArn);
-      console.log('channelMembersResponse:', channelMembersResponse);
-
-      // Count members starting with "User"
       const memberships = channelMembersResponse.memberships || [];
-      console.log('memberships:', memberships);
       const userCount = memberships.filter(member => member.Member.Name && member.Member.Name.startsWith("User")).length || 0;
-      console.log('userCount:', userCount);
-      // Generate a unique user ID and name for the host
-      const userID = uuidv4(); // Generate unique user ID
-      // Create a unique user name for the listener
-      // Always 1 member is the host, so listeners will start from the number of participants currently in the channel
+
+      const userID = uuidv4();
       const userName = `User${userCount + 1}`;
 
-      // Create userArn and join channel
       const userArn = await createAppInstanceUsers(userID, userName);
       await addChannelMembership(channelArn, userArn);
       setUserArn(userArn);
       setChannelArn(channelArn);
 
-      // Join the meeting from the meeting ID the host has created
       const meeting = await getMeeting(meetingId);
       const attendee = await createAttendee(meetingId, userID);
       initializeMeetingSession(meeting, attendee);
+
+      setStatusMessage("Join success"); // Display success message
+      setTimeout(() => setStatusMessage(""), 2000); // Clear success message after 2 seconds
     } catch (error) {
       console.error('Error joining the meeting:', error);
     }
   }, [meetingId, channelId, hostId, initializeMeetingSession]);
 
-  // Use effect to join the meeting
   useEffect(() => {
     if (meetingId && channelId) {
-      joinMeeting();
+      setStatusMessage("Please wait..."); // Initial message
+      const timer = setTimeout(() => {
+        setStatusMessage(""); // Clear "Please wait..." message
+        joinMeeting(); // Call joinMeeting after 10 seconds
+      }, 10000);
+
+      return () => clearTimeout(timer); // Clean up timer on component unmount
     }
   }, [joinMeeting, meetingId, channelId, hostId]);
 
@@ -137,6 +117,7 @@ function LiveViewer() {
     <div className="live-viewer-container">
       <audio id="audioElementListener" controls autoPlay className="audio-player" />
       <br />
+      {statusMessage && <div className="status-message">{statusMessage}</div>}
       {channelArn && <ChatMessage userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} chatSetting={chatSetting} />}
     </div>
   );

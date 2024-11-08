@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   createMeeting,
   createAttendee,
@@ -24,6 +24,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faMicrophone, faMicrophoneSlash,
 } from '@fortawesome/free-solid-svg-icons';
+import { MdRefresh } from "react-icons/md";
 import { useTranslation } from 'react-i18next';
 
 
@@ -34,6 +35,10 @@ import { useTranslation } from 'react-i18next';
  * The main speaker can also chat with the sub-speaker or listener
  */
 function StartLiveSession() {
+  const { t, i18n } = useTranslation();
+  console.log('i18n', i18n);
+  console.log('t', t);
+
   const [channelArn, setChannelArn] = useState('');
   const [channelID, setChannelID] = useState('');
   const [meetingSession, setMeetingSession] = useState(null);
@@ -47,11 +52,10 @@ function StartLiveSession() {
   const [selectedQR, setSelectedQR] = useState('listener'); // State to manage selected QR type
   const [isMicOn, setIsMicOn] = useState(false); // State for microphone status
   const [transformVFD, setTransformVFD] = useState(null);
+  const [microChecking, setMicroChecking] = useState(t('microChecking'));
+  const [noMicoMsg, setNoMicoMsg] = useState(null);
   const logger = new ConsoleLogger('ChimeMeetingLogs', LogLevel.INFO);
-  const { t, i18n } = useTranslation();
-  console.log('i18n', i18n);
-  console.log('t', t);
-
+  
   // Function to start a live audio session
   // when clicked on the "Start Live Audio Session" button
   const startLiveAduioSession = async () => {
@@ -187,32 +191,46 @@ function StartLiveSession() {
     }
   };
 
-  useEffect(() => {
-    const getAudioInputDevices = async () => {
-      if (meetingSession) {
-        const devices = await meetingSession.audioVideo.listAudioInputDevices();
-        console.log('List Audio Input Devices:', devices);
-        setAudioInputDevices(devices);
-        if (devices.length > 0) {
-          setSelectedAudioInput(devices[0].deviceId);
-        } else {
-          alert(t('noMicroMsg'));
-        }
+  // Function to get the list of audio input devices
+  const getAudioInputDevices = useCallback(async () => {
+    if (meetingSession) {
+      const devices = await meetingSession.audioVideo.listAudioInputDevices();
+      console.log('List Audio Input Devices:', devices);
+      setAudioInputDevices(devices);
+      if (devices.length > 0) {
+        setSelectedAudioInput(devices[0].deviceId);
+      } else {
+        setMicroChecking(t('microChecking'));
+        setNoMicoMsg(null);
+        setTimeout(() => {
+          setMicroChecking(null);
+          setNoMicoMsg(t('noMicroMsg'));
+        }, 5000);
       }
-    };
-    getAudioInputDevices();
+    }
   }, [meetingSession, t]);
 
+  useEffect(() => {
+    getAudioInputDevices();
+  }, [getAudioInputDevices]);
+
+  // Function to handle the chat setting change
   const handleChatSettingChange = (e) => {
     setChatSetting(e.target.value);
   };
 
+  // Function to handle the QR code generation selection
   const handleQRSelectionChange = (e) => {
     setSelectedQR(e.target.value);
   };
+
+  // Function to refresh the audio input devices
+  const handleRefresh = () => {
+    getAudioInputDevices();
+  }
   return (
     <div className="container">
-      <audio id="audioElementMain" controls autoPlay className="audio-player" style={{display: meeting ? 'block' : 'none'}} />
+      <audio id="audioElementMain" controls autoPlay className="audio-player" style={{ display: meeting ? 'block' : 'none' }} />
       {!meeting ? (
         <>
           {(isLoading) ? (
@@ -226,10 +244,18 @@ function StartLiveSession() {
         </>
       ) : (
         <>
-          {(audioInputDevices.length <= 0) ? (<div className="loading">
-            <div className="spinner"></div>
-            <p>{t('microChecking')}</p>
-          </div>) : (
+          {(audioInputDevices.length <= 0) ? (
+            <>
+              {noMicoMsg ? (
+                <p>{noMicoMsg} <button onClick={handleRefresh}><MdRefresh size={24} /></button></p>
+              ) : (
+                <div className="loading">
+                  <div className="spinner"></div>
+                  <p>{microChecking}</p>
+                </div>
+              )}
+            </>
+          ) : (
             <>
               <h3>{t('microSelectionLbl')}</h3>
               <select value={selectedAudioInput} onChange={(e) => setSelectedAudioInput(e.target.value)}>
@@ -272,7 +298,7 @@ function StartLiveSession() {
                 <>
                   <QRCodeSVG value={`${Config.appViewerURL}?meetingId=${meeting.MeetingId}&channelId=${channelID}&hostId=${userId}&chatSetting=${chatSetting}`} size={256} level="H" />
                   <a target="_blank" rel="noopener noreferrer" style={{ color: 'green' }} href={`${Config.appViewerURL}?meetingId=${meeting.MeetingId}&channelId=${channelID}&hostId=${userId}&chatSetting=${chatSetting}`}>
-                  {t('scanQRCodeTxt.listener')}
+                    {t('scanQRCodeTxt.listener')}
                   </a>
                 </>
               )}
