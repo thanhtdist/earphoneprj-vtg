@@ -44,7 +44,8 @@ function SettingMenu() {
       const statusLabel = document.querySelector(".status-label");
         console.log('statusLabel', statusLabel);
         if (statusLabel) {
-            statusLabel.textContent = "Live Audio Session";  // Customize the label text
+            //statusLabel.textContent = "Live Audio Session";  // Customize the label text
+            console.log("Status label found.", statusLabel.textContent);
         } else {
             console.log("Status label not found.");
         }
@@ -66,12 +67,6 @@ function SettingMenu() {
         <GiHamburgerMenu size={24} />
       </button>
 
-      <div>
-        <div>
-          <div className="status-label">kkkkkkkkkk</div>
-        </div>
-      </div>
-
       {/* Collapsible Menu Content */}
       <div className={`menu-content ${isMenuOpen ? 'open' : ''}`}>
         {/* Language Selector */}
@@ -81,7 +76,7 @@ function SettingMenu() {
             <select
               id="language-select"
               onChange={handleLanguageChange}
-              value={i18n.language}
+              value={i18n.language || 'en'} // Ensure fallback if i18n.language is undefined
             >
               <option value="ja">日本語</option>
               <option value="en">English</option>
