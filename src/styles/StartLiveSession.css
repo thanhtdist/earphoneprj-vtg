@@ -48,17 +48,18 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 20px; /* Thay đổi kích thước chữ nếu cần */
+    font-size: 1rem;
   }
   
   .loading .spinner {
     border: 4px solid rgba(0, 0, 0, 0.1);
-    border-left-color: #007bff; /* Màu của vòng tròn */
+    border-left-color: #007bff;
     border-radius: 50%;
-    width: 20px;
-    height: 20px;
-    animation: spin 1s linear infinite; /* Chạy vòng tròn quay */
-    margin-right: 10px; /* Khoảng cách giữa vòng tròn và chữ */
+    width: 15px;
+    height: 15px;
+    border-width: 3px;
+    animation: spin 1s linear infinite; 
+    margin-right: 10px; 
   }
   
   @keyframes spin {
