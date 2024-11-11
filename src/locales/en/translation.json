@@ -7,18 +7,18 @@
   "microSelectionLbl": "Select Input Microphone",
   "chatSettingLbl": "Chat Settings",
   "chatSettingOptions": {
-    "allChat": "Enable chat function for both Guide and Listener",
+    "allChat": "Enable chat function for both Guide and User",
     "onlyGuideChat": "Enable chat function for Guide only",
     "noChat": "Disable chat function for all"
   },
   "generateQRCodeLbl": "Generate QR Code for",
   "generateQRCodeOptions": {
     "subGuide": "Sub-Guide",
-    "listener": "Listener"
+    "listener": "User"
   },
   "scanQRCodeTxt": {
     "subGuide": "Scan me to join as Sub-Guide",
-    "listener": "Scan me to join as Listener"
+    "listener": "Scan me to join as User"
   },
   "messagePlaceholder": "Type a message...",
   "userNameDisplay": {
