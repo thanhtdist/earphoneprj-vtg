@@ -232,3 +232,23 @@ export async function createAttendee(meetingId, externalUserId) {
     console.log('POST call createAttendee failed: ', JSON.parse(error.response.body));
   }
 }
+
+/**
+ * Get a meeting by the participants to join the meeting
+ * @param {string} meetingId - The ID of the meeting.
+ * @returns {Promise<any>} The response data from the API call.
+ * @throws {Error} Logs the error details if the POST call fails.
+ */
+export async function listAttendee(meetingId) {
+  try {
+    const restOperation = get({
+      apiName: 'MeetingVTGRestApi', // The name of the API defined in backend.ts
+      path: 'meetings/' + meetingId + '/attendees', // endpoint defined in backend.ts, meetingId is dynamically passed
+    });
+    const { body } = await restOperation.response;
+    const response = await body.json();
+    return response.data;
+  } catch (error) {
+    console.log('GET call listAttendee failed: ', JSON.parse(error.response.body));
+  }
+}

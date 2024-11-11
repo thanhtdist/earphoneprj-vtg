@@ -23,6 +23,8 @@ import { useTranslation } from 'react-i18next';
  * @param {string} sessionId - The session ID for the messaging session 
  */
 function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null }) {
+  const subGuideCount = localStorage.getItem('subGuideJoinCount') || 0;
+  console.log('subGuideJoinCount:', subGuideCount);
   // State variables to store messages and input message
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState('');

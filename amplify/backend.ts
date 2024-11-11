@@ -16,6 +16,7 @@ import { createChannel } from './functions/create-channel/resource';
 import { addChannelMembership } from './functions/add-channel-membership/resource';
 import { sendChannelMessage } from './functions/send-channel-message/resource';
 import { listChannelMembership } from './functions/list-channel-membership/resource';
+import { listAttendee } from './functions/list-attendee/resource';
 /**
  * Define the backend resources 
  * - List lambda functions for audio voice (metting session) and chat(message session)
@@ -29,6 +30,7 @@ const backend = defineBackend({
   addChannelMembership, // add participants to the channel (group chat)
   sendChannelMessage, // send message to the channel (group chat) by the participants
   listChannelMembership, // list all members in the channel (group chat)
+  listAttendee, // list all attendees in the meeting
 });
 
 /**
@@ -70,6 +72,11 @@ const attendeesPath = meetingIdPath.addResource("attendees");
 // add POST method to /meeting/{MeetingID}/attendees with createAttendee Lambda integration
 attendeesPath.addMethod("POST", new LambdaIntegration(
   backend.createAttendee.resources.lambda
+));
+
+// add GET method to /meeting/{MeetingID}/attendees with listAttendee Lambda integration
+attendeesPath.addMethod("GET", new LambdaIntegration(
+  backend.listAttendee.resources.lambda
 ));
 
 // =============2. API Getway, Lambda function for CHAT ===============
