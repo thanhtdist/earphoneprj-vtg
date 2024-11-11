@@ -1,5 +1,12 @@
 const metricReport = (meetingSession) => {
     const observer = {
+      attendeePresenceReceived: (attendeeId, present) => {
+        if (present) {
+          console.log(`attendeePresenceReceived ${attendeeId} has joined the meeting.`);
+        } else {
+          console.log(`attendeePresenceReceived ${attendeeId} has left the meeting.`);
+        }
+      },
       metricsDidReceive: clientMetricReport => {
         const metricReport = clientMetricReport.getObservableMetrics();
 

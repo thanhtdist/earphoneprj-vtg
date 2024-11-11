@@ -5,6 +5,7 @@ import {
   createAppInstanceUsers,
   createChannel,
   addChannelMembership,
+  listAttendee,
 } from '../apis/api';
 import {
   DefaultDeviceController,
@@ -26,7 +27,6 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { MdRefresh } from "react-icons/md";
 import { useTranslation } from 'react-i18next';
-
 
 /**
  * Component to start a live audio session for the main speaker
@@ -58,7 +58,7 @@ function StartLiveSession() {
   const [microChecking, setMicroChecking] = useState(t('microChecking'));
   const [noMicroMsg, setNoMicoMsg] = useState(null);
   const logger = new ConsoleLogger('ChimeMeetingLogs', LogLevel.INFO);
-  
+
   // Function to start a live audio session
   // when clicked on the "Start Live Audio Session" button
   const startLiveAduioSession = async () => {
@@ -66,21 +66,12 @@ function StartLiveSession() {
     try {
       const userID = uuidv4();
       setUserId(userID);
+      const userType = `Guide`;
       const userName = `Guide`;
-
-      const userArn = await createAppInstanceUsers(userID, userName);
-      console.log('Guide created:', userArn);
-      const channelArn = await createChannel(userArn);
-      const channelID = channelArn.split('/').pop();
-      await addChannelMembership(channelArn, userArn);
-      setUserArn(userArn);
-      setChannelArn(channelArn);
-      setChannelID(channelID);
-
       const meeting = await createMeeting();
       console.log('Meeting created:', meeting);
       setMetting(meeting);
-      const attendee = await createAttendee(meeting.MeetingId, userID);
+      const attendee = await createAttendee(meeting.MeetingId, `${userType}-${userID}`);
       console.log('Attendee created:', attendee);
       setAttendee(attendee);
       // Check if the Voice Focus Device is supported on the client
@@ -88,12 +79,28 @@ function StartLiveSession() {
       console.log('isVoiceFocusSupported', isVoiceFocusSupported);
       // Initialize the meeting session such as meeting session
       initializeMeetingSession(meeting, attendee, isVoiceFocusSupported);
+
+      // Create App User and Channel for chat
+      const listAttendeeResponse = await listAttendee(meeting.MeetingId);
+      console.log('listAttendeeResponse:', listAttendeeResponse);
+      createAppUserAndChannel(userID, userName);
     } catch (error) {
       console.error('Error starting meeting:', error);
     } finally {
       setIsLoading(false);
     }
   };
+
+  const createAppUserAndChannel = async (userID, userName) => {
+    const userArn = await createAppInstanceUsers(userID, userName);
+    console.log('Guide created:', userArn);
+    const channelArn = await createChannel(userArn);
+    const channelID = channelArn.split('/').pop();
+    await addChannelMembership(channelArn, userArn);
+    setUserArn(userArn);
+    setChannelArn(channelArn);
+    setChannelID(channelID);
+  }
 
   // Function to transform the audio input device to Voice Focus Device/Echo Reduction
   const transformVoiceFocusDevice = async (meeting, attendee) => {
@@ -222,6 +229,34 @@ function StartLiveSession() {
     getAudioInputDevices();
   }, [getAudioInputDevices]);
 
+
+  // useEffect(() => {
+
+  //   if (!meetingSession) {
+  //     return;
+  //   }
+  //   const subGuideSet = new Set(); // List of sub-guides
+  //   const userSet = new Set(); // List of listeners
+  //   const callback = (presentAttendeeId, present, externalUserId) => {
+  //     console.log(`Attendee ID: ${presentAttendeeId} Present: ${present} externalUserId: ${externalUserId}`);
+  //     console.log('subGuideJoinCountLocalStorage', localStorage.getItem('subGuideJoinCount'));
+  //     if (present) {
+  //       if(externalUserId.startsWith('Sub-Guide')) {
+  //         subGuideSet.add(presentAttendeeId);
+  //       }
+  //       if(externalUserId.startsWith('User')) {
+  //         userSet.add(presentAttendeeId);
+  //       }
+  //     }
+
+  //     // Update the attendee count in the state
+  //     localStorage.setItem('subGuideJoinCount', subGuideSet.size);
+  //     localStorage.setItem('userJoinCount', userSet.size);
+  //   };
+
+  //   meetingSession.audioVideo.realtimeSubscribeToAttendeeIdPresence(callback);
+  // }, [meetingSession]);
+
   // Function to handle the chat setting change
   const handleChatSettingChange = (e) => {
     setChatSetting(e.target.value);
@@ -239,7 +274,7 @@ function StartLiveSession() {
   return (
     <div className="container">
       <audio id="audioElementMain" controls autoPlay className="audio-player" style={{ display: (meeting && attendee) ? 'block' : 'none' }} />
-      { (!meeting && !attendee) ? (
+      {(!meeting && !attendee) ? (
         <>
           {(isLoading) ? (
             <div className="loading">
