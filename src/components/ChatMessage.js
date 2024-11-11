@@ -11,12 +11,11 @@ import {
   PrefetchSortBy,
 } from 'amazon-chime-sdk-js';
 import { FiSend, FiUpload, FiX } from 'react-icons/fi';
-import { VscAccount } from "react-icons/vsc";
+// import { VscAccount } from "react-icons/vsc";
 import '../styles/ChatMessage.css';
 import Config from '../utils/config';
 import ChatAttachment from './ChatAttachment';
 import { useTranslation } from 'react-i18next';
-
 /**
  * Component to display chat messages and send messages to a channel
  * @param {string} userArn - The ARN of the user
@@ -235,7 +234,28 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null }) {
           {messages.map((message, index) => (
             <div key={index} className="message">
               <div className="message-header">
-                <VscAccount color={!message.senderName.startsWith("User") ? "blue" : ""} size={24} />
+                {/* <VscAccount color={!message.senderName.startsWith("User") ? "blue" : ""} size={24}/> */}
+                {message.senderName.startsWith("Guide") && (
+                  <img
+                    src={`${process.env.PUBLIC_URL}/images/main-speaker.png`}
+                    alt="Guide"
+                    style={{ width: '24px', height: '24px' }} // Icon size
+                  />
+                )}
+                {message.senderName.startsWith("Sub-Guide") && (
+                  <img
+                    src={`${process.env.PUBLIC_URL}/images/sub-speaker.png`}
+                    alt="Sub-Guide"
+                    style={{ width: '24px', height: '24px' }} // Icon size
+                  />
+                )}
+                {message.senderName.startsWith("User") && (
+                  <img
+                    src={`${process.env.PUBLIC_URL}/images/user.png`}
+                    alt="User"
+                    style={{ width: '24px', height: '24px' }} // Icon size
+                  />
+                )}
                 <strong>{message.senderArn === userArn ? t('userNameDisplay.myself') : displayUserName(message.senderName)}</strong>
               </div>
               <div className="timestamp">{formatTimestamp(message.timestamp)}</div>

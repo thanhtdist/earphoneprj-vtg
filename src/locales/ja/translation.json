@@ -7,18 +7,18 @@
   "microSelectionLbl": "音声入力（マイク）を選択",
   "chatSettingLbl": "チャット設定",
   "chatSettingOptions": {
-    "allChat": "ガイドとリスナーがチャット可能",
+    "allChat": "ガイドとユーザーがチャット可能",
     "onlyGuideChat": "ガイドのみチャット可能",
     "noChat": "チャット無効"
   },
   "generateQRCodeLbl": "QRコードを生成",
   "generateQRCodeOptions": {
     "subGuide": "サブガイド用QRコード",
-    "listener": "リスナー用QRコード"
+    "listener": "ユーザー用QRコード"
   },
   "scanQRCodeTxt": {
-    "subGuide": "QRスキャンしてリスナーとして参加",
-    "listener": "QRスキャンしてサブガイドとして参加"
+    "subGuide": "QRスキャンしてサブガイドとして参加",
+    "listener": " QRスキャンしてユーザーとして参加"
   },
   "messagePlaceholder": "メッセージを入力してください...",
   "userNameDisplay": {
