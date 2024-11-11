@@ -35,14 +35,17 @@ import { useTranslation } from 'react-i18next';
  * The main speaker can also chat with the sub-speaker or listener
  */
 function StartLiveSession() {
+  // Use translation
   const { t, i18n } = useTranslation();
   console.log('i18n', i18n);
   console.log('t', t);
 
+  // States to manage the meeting session
   const [channelArn, setChannelArn] = useState('');
   const [channelID, setChannelID] = useState('');
   const [meetingSession, setMeetingSession] = useState(null);
-  const [meeting, setMeeting] = useState(null);
+  const [meeting, setMetting] = useState(null);
+  const [attendee, setAttendee] = useState(null);
   const [selectedAudioInput, setSelectedAudioInput] = useState('');
   const [audioInputDevices, setAudioInputDevices] = useState([]);
   const [userArn, setUserArn] = useState('');
@@ -53,7 +56,7 @@ function StartLiveSession() {
   const [isMicOn, setIsMicOn] = useState(false); // State for microphone status
   const [transformVFD, setTransformVFD] = useState(null);
   const [microChecking, setMicroChecking] = useState(t('microChecking'));
-  const [noMicoMsg, setNoMicoMsg] = useState(null);
+  const [noMicroMsg, setNoMicoMsg] = useState(null);
   const logger = new ConsoleLogger('ChimeMeetingLogs', LogLevel.INFO);
   
   // Function to start a live audio session
@@ -76,9 +79,10 @@ function StartLiveSession() {
 
       const meeting = await createMeeting();
       console.log('Meeting created:', meeting);
-      setMeeting(meeting);
+      setMetting(meeting);
       const attendee = await createAttendee(meeting.MeetingId, userID);
-
+      console.log('Attendee created:', attendee);
+      setAttendee(attendee);
       // Check if the Voice Focus Device is supported on the client
       const isVoiceFocusSupported = await transformVoiceFocusDevice(meeting, attendee);
       console.log('isVoiceFocusSupported', isVoiceFocusSupported);
@@ -132,7 +136,11 @@ function StartLiveSession() {
     console.log('Main Speaker - initializeMeetingSession--> End');
     // Bind the audio element to the meeting session
     const audioElement = document.getElementById('audioElementMain');
-    await meetingSession.audioVideo.bindAudioElement(audioElement);
+    if (audioElement) {
+      await meetingSession.audioVideo.bindAudioElement(audioElement);
+    } else {
+      console.error('Audio element not found');
+    }
     // Start audio video session
     meetingSession.audioVideo.start();
   };
@@ -200,15 +208,15 @@ function StartLiveSession() {
       if (devices.length > 0) {
         setSelectedAudioInput(devices[0].deviceId);
       } else {
-        setMicroChecking(t('microChecking'));
+        setMicroChecking('microChecking');
         setNoMicoMsg(null);
         setTimeout(() => {
           setMicroChecking(null);
-          setNoMicoMsg(t('noMicroMsg'));
+          setNoMicoMsg('noMicroMsg');
         }, 5000);
       }
     }
-  }, [meetingSession, t]);
+  }, [meetingSession]);
 
   useEffect(() => {
     getAudioInputDevices();
@@ -230,8 +238,8 @@ function StartLiveSession() {
   }
   return (
     <div className="container">
-      <audio id="audioElementMain" controls autoPlay className="audio-player" style={{ display: meeting ? 'block' : 'none' }} />
-      {!meeting ? (
+      <audio id="audioElementMain" controls autoPlay className="audio-player" style={{ display: (meeting && attendee) ? 'block' : 'none' }} />
+      { (!meeting && !attendee) ? (
         <>
           {(isLoading) ? (
             <div className="loading">
@@ -246,12 +254,12 @@ function StartLiveSession() {
         <>
           {(audioInputDevices.length <= 0) ? (
             <>
-              {noMicoMsg ? (
-                <p>{noMicoMsg} <button onClick={handleRefresh}><MdRefresh size={24} /></button></p>
+              {noMicroMsg ? (
+                <p>{t('noMicroMsg')} <button onClick={handleRefresh}><MdRefresh size={24} /></button></p>
               ) : (
                 <div className="loading">
                   <div className="spinner"></div>
-                  <p>{microChecking}</p>
+                  {microChecking && <p>{t('microChecking')}</p>}
                 </div>
               )}
             </>
