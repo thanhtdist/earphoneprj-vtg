@@ -17,6 +17,8 @@ import { addChannelMembership } from './functions/add-channel-membership/resourc
 import { sendChannelMessage } from './functions/send-channel-message/resource';
 import { listChannelMembership } from './functions/list-channel-membership/resource';
 import { listAttendee } from './functions/list-attendee/resource';
+// import { listAppInstanceUser } from './functions/list-app-instance-user/resource';
+import { addCloudWatchLogs } from './functions/add-cloud-watch-logs/resource';
 /**
  * Define the backend resources 
  * - List lambda functions for audio voice (metting session) and chat(message session)
@@ -31,6 +33,8 @@ const backend = defineBackend({
   sendChannelMessage, // send message to the channel (group chat) by the participants
   listChannelMembership, // list all members in the channel (group chat)
   listAttendee, // list all attendees in the meeting
+  //listAppInstanceUser, // list app instance user for chat by the participants
+  addCloudWatchLogs, // send logs to cloud watch
 });
 
 /**
@@ -97,6 +101,10 @@ const appInstanceUserRestApi = new RestApi(apiStack, "AppInstanceUserVTGRestApi"
 // create a new resource path(endpoint) for /app-instance-users
 const appInstanceUserPath = appInstanceUserRestApi.root.addResource("app-instance-users");
 
+// // add GET method to create /app-instance-users?appInstanceArn=appInstanceArn with listAppInstanceUser Lambda integration
+// appInstanceUserPath.addMethod("GET", new LambdaIntegration(
+//   backend.listAppInstanceUser.resources.lambda
+// ));
 // add POST method to create /app-instance-users with createAppInstanceUser Lambda integration
 appInstanceUserPath.addMethod("POST", new LambdaIntegration(
   backend.createAppInstanceUser.resources.lambda
@@ -150,6 +158,28 @@ sendMessagesPath.addMethod("POST", new LambdaIntegration(
   backend.sendChannelMessage.resources.lambda
 ));
 
+// 2.1. Add app instance user API
+const cloudWatchLogRestApi = new RestApi(apiStack, "CloudWatchLogRestApiVTGRestApi", {
+  restApiName: "CloudWatchLogRestApiVTGRestApi",
+  deploy: true,
+  deployOptions: {
+    stageName: "prod",
+  },
+  defaultCorsPreflightOptions: {
+    allowOrigins: Cors.ALL_ORIGINS, // Restrict this to domains you trust
+    allowMethods: Cors.ALL_METHODS, // Specify only the methods you need to allow
+    allowHeaders: Cors.DEFAULT_HEADERS, // Specify only the headers you need to allow
+  },
+});
+
+// create a new resource path(endpoint) for /app-instance-users
+const cloudWatchPath = cloudWatchLogRestApi.root.addResource("cloud-watch-logs");
+
+// add POST method to create /app-instance-users with createAppInstanceUser Lambda integration
+cloudWatchPath.addMethod("POST", new LambdaIntegration(
+  backend.addCloudWatchLogs.resources.lambda
+));
+
 // add outputs to the configuration file for calling APIs metadata in the frontend
 backend.addOutput({
   custom: {
@@ -168,6 +198,11 @@ backend.addOutput({
         endpoint: channelRestApi.url,
         region: Stack.of(channelRestApi).region,
         apiName: channelRestApi.restApiName,
+      },
+      [cloudWatchLogRestApi.restApiName]: {
+        endpoint: cloudWatchLogRestApi.url,
+        region: Stack.of(cloudWatchLogRestApi).region,
+        apiName: cloudWatchLogRestApi.restApiName,
       },
     },
   },

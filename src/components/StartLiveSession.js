@@ -11,6 +11,7 @@ import {
   DefaultDeviceController,
   DefaultMeetingSession,
   ConsoleLogger,
+  MultiLogger,
   LogLevel,
   MeetingSessionConfiguration,
   VoiceFocusDeviceTransformer,
@@ -19,6 +20,7 @@ import '../styles/StartLiveSession.css';
 import ChatMessage from './ChatMessage';
 import Config from '../utils/config';
 import metricReport from '../utils/MetricReport';
+import { getPOSTLogger } from '../utils/MeetingLogger';
 import { v4 as uuidv4 } from 'uuid';
 import { QRCodeSVG } from 'qrcode.react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -57,8 +59,7 @@ function StartLiveSession() {
   const [transformVFD, setTransformVFD] = useState(null);
   const [microChecking, setMicroChecking] = useState(t('microChecking'));
   const [noMicroMsg, setNoMicoMsg] = useState(null);
-  const logger = new ConsoleLogger('ChimeMeetingLogs', LogLevel.INFO);
-
+  const [logger, setLogger] = useState(null);
   // Function to start a live audio session
   // when clicked on the "Start Live Audio Session" button
   const startLiveAduioSession = async () => {
@@ -71,7 +72,7 @@ function StartLiveSession() {
       const meeting = await createMeeting();
       console.log('Meeting created:', meeting);
       setMetting(meeting);
-      const attendee = await createAttendee(meeting.MeetingId, `${userType}-${userID}`);
+      const attendee = await createAttendee(meeting.MeetingId, `${userType}|${Date.now()}`);
       console.log('Attendee created:', attendee);
       setAttendee(attendee);
       // Check if the Voice Focus Device is supported on the client
@@ -83,6 +84,7 @@ function StartLiveSession() {
       // Create App User and Channel for chat
       const listAttendeeResponse = await listAttendee(meeting.MeetingId);
       console.log('listAttendeeResponse:', listAttendeeResponse);
+      
       createAppUserAndChannel(userID, userName);
     } catch (error) {
       console.error('Error starting meeting:', error);
@@ -112,10 +114,10 @@ function StartLiveSession() {
       };
       const options = {
         preload: false,
-        logger,
+        //logger,
       };
       const config = await VoiceFocusDeviceTransformer.configure(spec, options);
-      console.log('transformVoiceFocusDevice config', config);
+      //logger.info('transformVoiceFocusDevice config', JSON.stringify(config));
       transformer = await VoiceFocusDeviceTransformer.create(spec, options, config, { Meeting: meeting }, { Attendee: attendee });
       console.log('transformVoiceFocusDevice transformer', transformer);
       setTransformVFD(transformer);
@@ -131,10 +133,21 @@ function StartLiveSession() {
 
   // Function to initialize the meeting session from the meeting that the host has created
   const initializeMeetingSession = async (meeting, attendee, isVoiceFocusSupported) => {
-    // const logger = new ConsoleLogger('ChimeMeetingLogs', LogLevel.INFO);
+    const consoleLogger = new ConsoleLogger('ChimeMeetingLogs', LogLevel.INFO);
+
     const meetingSessionConfiguration = new MeetingSessionConfiguration(meeting, attendee);
+
+    const meetingSessionPOSTLogger = getPOSTLogger(meetingSessionConfiguration, 'SDK', `${Config.cloudWatchLogRestApiVTGRestApi}cloud-watch-logs`, LogLevel.INFO);
+    console.log('meetingSessionPOSTLogger', meetingSessionPOSTLogger);
+    const logger = new MultiLogger(
+        consoleLogger,
+        meetingSessionPOSTLogger,
+    );
+    setLogger(logger);
+    logger.info('loggerZZZZZ' + JSON.stringify(logger));
     const deviceController = new DefaultDeviceController(logger, { enableWebAudio: isVoiceFocusSupported });
-    console.log('deviceController', deviceController);
+    logger.info('deviceControllerXXXXXXXXXX' + JSON.stringify(deviceController));
+    console.log('testyyyyyyyy');
     const meetingSession = new DefaultMeetingSession(meetingSessionConfiguration, logger, deviceController);
     setMeetingSession(meetingSession);
     selectSpeaker(meetingSession);
@@ -155,7 +168,7 @@ function StartLiveSession() {
   // Function to toggle microphone on/off
   const toggleMicrophone = async () => {
     console.log('Toggling Microphone', isMicOn);
-
+    logger.info('Toggling Microphone' + isMicOn);
     if (meetingSession) {
       try {
         if (isMicOn) {
@@ -210,7 +223,12 @@ function StartLiveSession() {
   const getAudioInputDevices = useCallback(async () => {
     if (meetingSession) {
       const devices = await meetingSession.audioVideo.listAudioInputDevices();
+      devices.forEach(device => console.log(`Device: ${device.label}, ID: ${device.deviceId}`));
       console.log('List Audio Input Devices:', devices);
+      logger.info('List Audio Input Devices:ZZZZZ' + JSON.stringify(devices));
+      const isMuted = meetingSession.audioVideo.realtimeIsLocalAudioMuted();
+      console.log("Microphone muted:", isMuted);
+      setAudioInputDevices(null);
       setAudioInputDevices(devices);
       if (devices.length > 0) {
         setSelectedAudioInput(devices[0].deviceId);
@@ -223,7 +241,7 @@ function StartLiveSession() {
         }, 5000);
       }
     }
-  }, [meetingSession]);
+  }, [meetingSession, logger]);
 
   useEffect(() => {
     getAudioInputDevices();
@@ -301,13 +319,15 @@ function StartLiveSession() {
           ) : (
             <>
               <h3>{t('microSelectionLbl')}</h3>
-              <select value={selectedAudioInput} onChange={(e) => setSelectedAudioInput(e.target.value)}>
-                {audioInputDevices.map((device) => (
-                  <option key={device.deviceId} value={device.deviceId}>
-                    {device.label}
-                  </option>
-                ))}
-              </select>
+              {(audioInputDevices && audioInputDevices.length > 0) && (
+                <select value={selectedAudioInput} onChange={(e) => setSelectedAudioInput(e.target.value)}>
+                  {audioInputDevices.map((device) => (
+                    <option key={device.deviceId} value={device.deviceId}>
+                      {device.label}
+                    </option>
+                  ))}
+                </select>
+              )}
               <div className="controls">
                 <button onClick={toggleMicrophone} className="toggle-mic-button">
                   <FontAwesomeIcon icon={isMicOn ? faMicrophone : faMicrophoneSlash} size="2x" color={isMicOn ? "green" : "gray"} />

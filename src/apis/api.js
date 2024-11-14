@@ -234,7 +234,7 @@ export async function createAttendee(meetingId, externalUserId) {
 }
 
 /**
- * Get a meeting by the participants to join the meeting
+ * List the participants to join the meeting
  * @param {string} meetingId - The ID of the meeting.
  * @returns {Promise<any>} The response data from the API call.
  * @throws {Error} Logs the error details if the POST call fails.
@@ -250,5 +250,25 @@ export async function listAttendee(meetingId) {
     return response.data;
   } catch (error) {
     console.log('GET call listAttendee failed: ', JSON.parse(error.response.body));
+  }
+}
+
+/**
+ * List the app instance users to join the group chat
+ * @param {string} appInstanceArn - The Arn of the app instance.
+ * @returns {Promise<any>} The response data from the API call.
+ * @throws {Error} Logs the error details if the POST call fails.
+ */
+export async function listAppInstanceUser(appInstanceArn) {
+  try {
+    const restOperation = get({
+      apiName: 'AppInstanceUserVTGRestApi', // The name of the API defined in backend.ts
+      path: 'app-instance-users/?appInstanceArn=' + encodeURIComponent(appInstanceArn) , // endpoint defined in backend.ts, appInstanceArn is dynamically passed
+    });
+    const { body } = await restOperation.response;
+    const response = await body.json();
+    return response.data;
+  } catch (error) {
+    console.log('GET call listAppInstanceUser failed: ', JSON.parse(error.response.body));
   }
 }

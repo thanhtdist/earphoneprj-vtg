@@ -4,7 +4,7 @@ import {
   createAttendee,
   createAppInstanceUsers,
   addChannelMembership,
-  // listChannelMembership,
+  //listChannelMembership,
   listAttendee,
 } from '../apis/api';
 import {
@@ -96,6 +96,18 @@ function LiveSubSpeaker() {
   // Function to initialize the meeting session from the meeting that the host has created
   const initializeMeetingSession = useCallback(async (meeting, attendee) => {
     const logger = new ConsoleLogger('ChimeMeetingLogs', LogLevel.INFO);
+    // const consoleLogger = new ConsoleLogger('ChimeMeetingLogs', LogLevel.INFO);
+
+    // const meetingSessionConfiguration = new MeetingSessionConfiguration(meeting, attendee);
+
+    // const meetingSessionPOSTLogger = getPOSTLogger(meetingSessionConfiguration, 'SDK', `${Config.cloudWatchLogRestApiVTGRestApi}cloud-watch-logs`, LogLevel.INFO);
+    // console.log('meetingSessionPOSTLogger', meetingSessionPOSTLogger);
+    // const logger = new MultiLogger(
+    //     consoleLogger,
+    //     meetingSessionPOSTLogger,
+    // );
+
+
     if (!meeting || !attendee) {
       console.error('Invalid meeting or attendee information');
       return;
@@ -134,6 +146,78 @@ function LiveSubSpeaker() {
       console.log('No speaker devices found');
     }
   };
+
+  // Function to check if the user name already exists in the channel
+  // const checkUserNameExists = useCallback(async (hostUserArn, channelArn, userName) => {
+  //   const channelMembersResponse = await listChannelMembership(channelArn, hostUserArn);
+  //   console.log('channelMembersResponse:', channelMembersResponse);
+
+  //   //Count members starting with "User"
+  //   const memberships = channelMembersResponse.memberships || [];
+  //   console.log('memberships:', memberships);
+  //   const userExists = memberships?.some(member => member.Member.Name === userName) || false;
+  //   console.log('userExists:', userExists);
+  //   return userExists || false;
+  // }, []);
+
+  // Function to create a new user and channel
+  const createAppUserAndJoinChannel = useCallback(async (meetingId, attendeeId, userID, userType, channelId) => {
+
+    //Get the channel ARN from the channel ID
+    const channelArn = `${Config.appInstanceArn}/channel/${channelId}`;
+    console.log('channelArn:', channelArn);
+
+    // Create a new user and join the channel
+    const listAttendeeResponse = await listAttendee(meetingId);
+    console.log('listAttendeeResponse:', listAttendeeResponse);
+
+    // Count members starting with "Sub-Guide"
+    const attendees = listAttendeeResponse.attendees || [];
+    console.log('attendees:', attendees);
+    const subGuideList = attendees.filter(member => member.ExternalUserId && member.ExternalUserId.startsWith(userType));
+    console.log('subGuide List:', subGuideList);
+
+    // Sorting the attendees by the Created Date in ascending order
+    subGuideList.sort((a, b) => {
+      // Extract the Created Date from the ExternalUserId and convert it to integer (timestamp)
+      const dateA = parseInt(a.ExternalUserId.split('|')[1]);
+      const dateB = parseInt(b.ExternalUserId.split('|')[1]);
+
+      // Compare the timestamps
+      return dateA - dateB;
+    });
+
+    console.log('subGuide sort date:', subGuideList);
+    console.log('subGuide attendee ID:', attendeeId);
+
+    const subGuideCount = subGuideList.length || 0;
+    console.log('subGuide count:', subGuideCount);
+
+    const index = subGuideList.findIndex(attendee => attendee.AttendeeId === attendeeId);
+
+    console.log('subGuide attendee index:', index);
+
+    // Create a unique user name for the listener
+    // Always 1 member is the host, so listeners will start from the number of participants currently in the channel
+    let userName = `${userType}${index + 1}`;
+    // console.log('userName:', userName);
+    // let suffix = subGuideCount;
+    // while (await checkUserNameExists(hostUserArn, channelArn, userName)) {
+    //   userName = `${userType}${suffix}`;
+    //   suffix++;
+    // }
+
+    console.log('subGuide username:', userName);
+    // Create userArn and join channel
+
+    const userArn = await createAppInstanceUsers(userID, userName);
+    await addChannelMembership(channelArn, userArn);
+
+    return {
+      channelArn,
+      userArn,
+    };
+  }, []);
 
   // Function to join the meeting
   const joinMeeting = useCallback(async () => {
@@ -175,46 +259,21 @@ function LiveSubSpeaker() {
       console.log('Meeting:', meeting);
       setMetting(meeting);
       //const attendee = await createAttendee(meetingId, userID);
-      const attendee = await createAttendee(meeting.MeetingId, `${userType}-${userID}`);
+      const attendee = await createAttendee(meeting.MeetingId, `${userType}|${Date.now()}`);
       console.log('Attendee created:', attendee);
       setAttendee(attendee);
       initializeMeetingSession(meeting, attendee);
-      createAppUserAndJoinChannel(meeting.MeetingId, userID, userType, channelId);
+      const createAppUserAndJoinChannelResponse = await createAppUserAndJoinChannel(meeting.MeetingId, attendee.AttendeeId, userID, userType, channelId);
+      console.log('createAppUserAndJoinChannelResponse:', createAppUserAndJoinChannelResponse);
+      setChannelArn(createAppUserAndJoinChannelResponse.channelArn);
+      setUserArn(createAppUserAndJoinChannelResponse.userArn);
 
     } catch (error) {
       console.error('Error joining the meeting:', error);
     } finally {
       setIsLoading(false);
     }
-  }, [meetingId, channelId, hostId, initializeMeetingSession]);
-
-  // Function to create a new user and channel
-  const createAppUserAndJoinChannel = async (meetingId, userID, userType, channelId) => {
-
-    // Create a new user and join the channel
-    const listAttendeeResponse = await listAttendee(meetingId);
-    console.log('listAttendeeResponse:', listAttendeeResponse);
-
-    // Count members starting with "Sub-Guide"
-    const attendees = listAttendeeResponse.attendees || [];
-    console.log('attendees:', attendees);
-    const subGuideCount = attendees.filter(member => member.ExternalUserId && member.ExternalUserId.startsWith("Sub-Guide")).length || 0;
-    console.log('createAppUserAndJoinChannel-subGuideCount:', subGuideCount);
-
-    // Create a unique user name for the listener
-    // Always 1 member is the host, so listeners will start from the number of participants currently in the channel
-    const userName = `${userType}${subGuideCount}`;
-
-    //Get the channel ARN from the channel ID
-    const channelArn = `${Config.appInstanceArn}/channel/${channelId}`;
-    console.log('channelArn:', channelArn);
-
-    // Create userArn and join channel
-    const userArn = await createAppInstanceUsers(userID, userName);
-    await addChannelMembership(channelArn, userArn);
-    setUserArn(userArn);
-    setChannelArn(channelArn);
-  }
+  }, [meetingId, channelId, hostId, initializeMeetingSession, createAppUserAndJoinChannel]);
 
 
   // Function to toggle microphone on/off
@@ -265,6 +324,7 @@ function LiveSubSpeaker() {
     if (meetingSession) {
       const devices = await meetingSession.audioVideo.listAudioInputDevices();
       console.log('List Audio Input Devices:', devices);
+      setAudioInputDevices(null);
       setAudioInputDevices(devices);
       if (devices.length > 0) {
         setSelectedAudioInput(devices[0].deviceId);

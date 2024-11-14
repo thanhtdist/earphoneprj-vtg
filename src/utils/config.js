@@ -10,16 +10,18 @@ const Config = {
     // Session ID for the chat messaging
     sessionId: 'sessionChatVTG',
     // Access key and secret key of the AWS account to authenticate with the Amazon Chime SDK for chat messaging
-    //accessKeyId: '',
-    //secretAccessKey: '',
+    // accessKeyId: '',
+    // secretAccessKey: '',
     accessKeyId: process.env.REACT_APP_MY_APP_AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.REACT_APP_MY_APP_AWS_SECRET_ACCESS_KEY,
     // URL for the web app for participants to join listen to audio
-    //appSubSpeakerURL: 'http://localhost:3000/sub-speaker/',
-    //appViewerURL: 'http://localhost:3000/viewer/',
+    // appSubSpeakerURL: 'http://localhost:3000/sub-speaker/',
+    // appViewerURL: 'http://localhost:3000/viewer/',
     appSubSpeakerURL: 'https://main.d1kjg68sgeplir.amplifyapp.com/sub-speaker/',
     appViewerURL: 'https://main.d1kjg68sgeplir.amplifyapp.com/viewer/',
     // S3 attchment bucket name
     attachmentBucketName: 'vtg-chat-attachments',
+    // Write logs from client side to CloudWatch using API Gateway      
+    cloudWatchLogRestApiVTGRestApi: 'https://h6vwbk7am3.execute-api.us-east-1.amazonaws.com/prod/'
 };
 export default Config;
