@@ -33,14 +33,15 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null }) {
   console.log('messageSession:', messageSession);
   const messagingSessionRef = useRef(null);
   const [selectedFile, setSelectedFile] = useState(null);
+  const [sending, setSending] = useState(false);
   const fileInputRef = useRef();
   const inputRef = useRef(null);
 
   useEffect(() => {
-    if(!inputMessage) {
+    if (chatSetting !== 'guideOnly') {
       inputRef.current.focus();
     }
-  }, [inputMessage]);
+  }, [chatSetting]);
   const { t, i18n } = useTranslation();
   console.log('i18n', i18n);
   console.log('t', t);
@@ -135,53 +136,48 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null }) {
     console.log('sendMessageClick:', inputMessage, selectedFile);
     if (!inputMessage && !selectedFile) return;
 
-    let options = null;
+    try {
 
-    // Store the attachment file in S3 and send the message with the attachment
-    if (selectedFile) {
-      console.log('Sending message inputMessage', inputMessage);
-      console.log('Sending message selectedFile:', selectedFile);
-      let inputMessageAttachment = inputMessage;
-      if (!inputMessage) inputMessageAttachment = ' ';
+      // Disable the button by setting sending to true
+      setSending(true);
 
-      // store attachment into S3
-      const response = await uploadFileToS3(selectedFile);
+      let options = null;
 
-      console.log('File uploaded successfully:', response);
+      // Store the attachment file in S3 and send the message with the attachment
+      if (selectedFile) {
 
-      // Metadata for the attachment file to be sent with the message
-      options = JSON.stringify({
-        attachments: [
-          {
-            fileKey: response.Key,
-            url: response.Location,
-            name: selectedFile.name,
-            size: selectedFile.size,
-            type: selectedFile.type,
-          },
-        ],
-      });
-      console.log('options:', options);
+        // store attachment into S3
+        const uploadFileToS3Response = await uploadFileToS3(selectedFile);
+        console.log('File uploaded successfully:', uploadFileToS3Response);
+
+        // Metadata for the attachment file to be sent with the message
+        options = JSON.stringify({
+          attachments: [
+            {
+              fileKey: uploadFileToS3Response.Key,
+              url: uploadFileToS3Response.Location,
+              name: selectedFile.name,
+              size: selectedFile.size,
+              type: selectedFile.type,
+            },
+          ],
+        });
+        const sendMessageResponse = await sendMessage(channelArn, userArn, inputMessage || ' ', options);
+        console.log('Message sent successfully:', sendMessageResponse);
+
+      } else {
+        // Send the message without the attachment
+        const sendMessageResponse = await sendMessage(channelArn, userArn, inputMessage, options);
+        console.log('Message sent successfully:', sendMessageResponse);
+      }
+
+    } catch (error) {
+      console.error('Error sending message:', error);
+    } finally {
+      setInputMessage('');
       setSelectedFile(null);
-      try {
-        const response = await sendMessage(channelArn, userArn, inputMessageAttachment, options);
-        console.log('Message sent successfully:', response);
-        setInputMessage('');
-      } catch (error) {
-        console.error('Error sending message:', error);
-      }
-    } else {
-      // Send the message without the attachment
-      try {
-        const response = await sendMessage(channelArn, userArn, inputMessage, options);
-        console.log('Message sent successfully:', response);
-        setInputMessage('');
-      } catch (error) {
-        console.error('Error sending message:', error);
-      }
+      setSending(false);
     }
-
-
   }, [inputMessage, channelArn, userArn, selectedFile]);
 
   // Function to handle input change
@@ -276,7 +272,7 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null }) {
                   <span>{message.content}</span>
                 </div>
               )}
-              {message.attachments && message.attachments.length > 0 && (
+              {/* {message.attachments && message.attachments.length > 0 && (
                 <>
                   <ChatAttachment
                     url={message.attachments[0].url}
@@ -285,7 +281,8 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null }) {
                     type={message.attachments[0].type}
                     size={message.attachments[0].size} />
                 </>
-              )}
+              )} */}
+              {message.attachments?.length > 0 && <ChatAttachment {...message.attachments[0]} />}
             </div>
           ))}
         </div>
@@ -324,12 +321,12 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null }) {
           <button
             className="send-button"
             onClick={sendMessageClick}
-            disabled={!inputMessage && !selectedFile}
+            disabled={sending || (!inputMessage && !selectedFile)}
             style={{
-              backgroundColor: (!inputMessage && !selectedFile) ? '#d3d3d3' : '#4CAF50', // Adjust colors as needed
+              backgroundColor: (sending || (!inputMessage && !selectedFile)) ? '#d3d3d3' : '#4CAF50', // Adjust colors as needed
               color: 'white',
-              cursor: (!inputMessage && !selectedFile) ? 'not-allowed' : 'pointer',
-              opacity: (!inputMessage && !selectedFile) ? 0.6 : 1,
+              cursor: (sending || (!inputMessage && !selectedFile)) ? 'not-allowed' : 'pointer',
+              opacity: (sending || (!inputMessage && !selectedFile)) ? 0.6 : 1,
             }}>
             <FiSend size={24} />
           </button>
