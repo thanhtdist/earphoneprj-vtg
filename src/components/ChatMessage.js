@@ -29,9 +29,18 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null }) {
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState('');
   // Persist to the messaging session in the lifetime of the component chat message
+  const [messageSession, setMessageSession] = useState(null);
+  console.log('messageSession:', messageSession);
   const messagingSessionRef = useRef(null);
   const [selectedFile, setSelectedFile] = useState(null);
   const fileInputRef = useRef();
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    if(!inputMessage) {
+      inputRef.current.focus();
+    }
+  }, [inputMessage]);
   const { t, i18n } = useTranslation();
   console.log('i18n', i18n);
   console.log('t', t);
@@ -62,8 +71,9 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null }) {
     configuration.prefetchSortBy = PrefetchSortBy.Unread;
 
     // Create a new messaging session
-    const session = new DefaultMessagingSession(configuration, logger);
-    messagingSessionRef.current = session;
+    const messagingSession = new DefaultMessagingSession(configuration, logger);
+    setMessageSession(messagingSession);
+    messagingSessionRef.current = messagingSession;
 
     // Observer to handle messaging session events
     const observer = {
@@ -110,11 +120,11 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null }) {
       },
     };
 
-    session.addObserver(observer);
+    messagingSession.addObserver(observer);
 
     try {
       // Start the messaging session
-      await session.start();
+      await messagingSession.start();
     } catch (error) {
       console.log('Error starting session:', error);
     }
@@ -286,6 +296,7 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null }) {
           <div className="input-container">
             <div className="input-like-div">
               <input
+                ref={inputRef}
                 type="text"
                 value={inputMessage}
                 onChange={handleInputChange}
@@ -310,7 +321,16 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null }) {
               onChange={handleFileChange}
             />
           </div>
-          <button className="send-button" onClick={sendMessageClick}>
+          <button
+            className="send-button"
+            onClick={sendMessageClick}
+            disabled={!inputMessage && !selectedFile}
+            style={{
+              backgroundColor: (!inputMessage && !selectedFile) ? '#d3d3d3' : '#4CAF50', // Adjust colors as needed
+              color: 'white',
+              cursor: (!inputMessage && !selectedFile) ? 'not-allowed' : 'pointer',
+              opacity: (!inputMessage && !selectedFile) ? 0.6 : 1,
+            }}>
             <FiSend size={24} />
           </button>
         </div>
