@@ -12,8 +12,8 @@ export const handler: APIGatewayProxyHandler = async (event) => {
   const cloudwatchlogs = new AWS.CloudWatchLogs();
 
   try {
-    const logGroupName = 'YourLogGroupName';
-    const logStreamName = 'YourLogStreamName';
+    const logGroupName = 'VTGLogGroup';
+    const logStreamName = 'VTGLogStream';
     console.log('Send CloudWatch event: ', { event });
     const { logs } = JSON.parse(event.body || '{}');
     console.log('Send CloudWatch Logs: ', { logs });
