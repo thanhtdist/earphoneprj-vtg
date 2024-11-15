@@ -11,6 +11,7 @@ import {
   DefaultDeviceController,
   DefaultMeetingSession,
   ConsoleLogger,
+  MultiLogger,
   LogLevel,
   MeetingSessionConfiguration,
   VoiceFocusDeviceTransformer,
@@ -19,6 +20,7 @@ import '../styles/LiveViewer.css';
 import ChatMessage from './ChatMessage';
 import Config from '../utils/config';
 import metricReport from '../utils/MetricReport';
+import { getPOSTLogger } from '../utils/MeetingLogger';
 import { v4 as uuidv4 } from 'uuid';
 import { useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -64,10 +66,10 @@ function LiveSubSpeaker() {
   const [transformVFD, setTransformVFD] = useState(null);
   const [microChecking, setMicroChecking] = useState(t('microChecking'));
   const [noMicroMsg, setNoMicoMsg] = useState(null);
-
+  const [logger, setLogger] = useState(null);
 
   // Function to transform the audio input device to Voice Focus Device/Echo Reduction
-  const transformVoiceFocusDevice = async (logger, meeting, attendee) => {
+  const transformVoiceFocusDevice = async (meeting, attendee, logger) => {
     let transformer = null;
     let isVoiceFocusSupported = false;
     try {
@@ -95,37 +97,35 @@ function LiveSubSpeaker() {
 
   // Function to initialize the meeting session from the meeting that the host has created
   const initializeMeetingSession = useCallback(async (meeting, attendee) => {
-    const logger = new ConsoleLogger('ChimeMeetingLogs', LogLevel.INFO);
-    // const consoleLogger = new ConsoleLogger('ChimeMeetingLogs', LogLevel.INFO);
-
-    // const meetingSessionConfiguration = new MeetingSessionConfiguration(meeting, attendee);
-
-    // const meetingSessionPOSTLogger = getPOSTLogger(meetingSessionConfiguration, 'SDK', `${Config.cloudWatchLogRestApiVTGRestApi}cloud-watch-logs`, LogLevel.INFO);
-    // console.log('meetingSessionPOSTLogger', meetingSessionPOSTLogger);
-    // const logger = new MultiLogger(
-    //     consoleLogger,
-    //     meetingSessionPOSTLogger,
-    // );
-
-
     if (!meeting || !attendee) {
       console.error('Invalid meeting or attendee information');
       return;
     }
+
+    const consoleLogger = new ConsoleLogger('ChimeMeetingLogs', LogLevel.INFO);
+
+    const meetingSessionConfiguration = new MeetingSessionConfiguration(meeting, attendee);
+
+    const meetingSessionPOSTLogger = getPOSTLogger(meetingSessionConfiguration, 'SDK', `${Config.cloudWatchLogRestApiVTGRestApi}cloud-watch-logs`, LogLevel.INFO);
+    console.log('meetingSessionPOSTLogger', meetingSessionPOSTLogger);
+    const logger = new MultiLogger(
+      consoleLogger,
+      meetingSessionPOSTLogger,
+    );
+    setLogger(logger);
     // Check if the Voice Focus Device is supported on the client
-    const isVoiceFocusSupported = await transformVoiceFocusDevice(logger, meeting, attendee);
-    console.log('isVoiceFocusSupported', isVoiceFocusSupported);
-    // deviceController with Voice Focus Device
+    const isVoiceFocusSupported = await transformVoiceFocusDevice(meeting, attendee, logger);
+    logger.info('Sub-Guide deviceController isVoiceFocusSupported' + isVoiceFocusSupported);
+    // Initialize the meeting session
     const deviceController = new DefaultDeviceController(logger, { enableWebAudio: isVoiceFocusSupported });
-    console.log('deviceController', deviceController);
-    const meetingSessionConfig = new MeetingSessionConfiguration(meeting, attendee);
-    const meetingSession = new DefaultMeetingSession(meetingSessionConfig, logger, deviceController);
+    logger.info('Sub-Guide deviceController' + JSON.stringify(deviceController));
+    const meetingSession = new DefaultMeetingSession(meetingSessionConfiguration, logger, deviceController);
     setMeetingSession(meetingSession);
     selectSpeaker(meetingSession);
     console.log('Sub Speaker - initializeMeetingSession--> Start');
     metricReport(meetingSession);
     console.log('Sub Speaker - initializeMeetingSession--> End');
-    // Bind the audio element to the audio session
+    // Bind the audio element to the meeting session
     const audioElement = document.getElementById('audioElementSub');
     if (audioElement) {
       await meetingSession.audioVideo.bindAudioElement(audioElement);
@@ -146,19 +146,6 @@ function LiveSubSpeaker() {
       console.log('No speaker devices found');
     }
   };
-
-  // Function to check if the user name already exists in the channel
-  // const checkUserNameExists = useCallback(async (hostUserArn, channelArn, userName) => {
-  //   const channelMembersResponse = await listChannelMembership(channelArn, hostUserArn);
-  //   console.log('channelMembersResponse:', channelMembersResponse);
-
-  //   //Count members starting with "User"
-  //   const memberships = channelMembersResponse.memberships || [];
-  //   console.log('memberships:', memberships);
-  //   const userExists = memberships?.some(member => member.Member.Name === userName) || false;
-  //   console.log('userExists:', userExists);
-  //   return userExists || false;
-  // }, []);
 
   // Function to create a new user and channel
   const createAppUserAndJoinChannel = useCallback(async (meetingId, attendeeId, userID, userType, channelId) => {
@@ -278,43 +265,39 @@ function LiveSubSpeaker() {
 
   // Function to toggle microphone on/off
   const toggleMicrophone = async () => {
-    console.log('Toggling Microphone', isMicOn);
-
     if (meetingSession) {
       try {
         if (isMicOn) {
           // Mute the microphone
           const realtimeMuteLocalAudio = meetingSession.audioVideo.realtimeMuteLocalAudio();
-          console.log('Microphone is muted.', realtimeMuteLocalAudio);
+          logger.info('Sub-Guide toggleMicrophone realtimeMuteLocalAudio ' + JSON.stringify(realtimeMuteLocalAudio));
           const stopAudioInput = await meetingSession.audioVideo.stopAudioInput(); // Stops the audio input device
-          console.log('stopAudioInput', stopAudioInput);
+          logger.info('Sub-Guide toggleMicrophone stopAudioInput ' + JSON.stringify(stopAudioInput));
 
         } else {
           // Start the audio input device
-          console.log('toggleMicrophone Audio Input:', selectedAudioInput);
-          console.log('transformVFD:', transformVFD);
           // Create a new transform device if Voice Focus is supported
           const vfDevice = await transformVFD.createTransformDevice(selectedAudioInput);
-          console.log('vfDevice:', vfDevice);
+          logger.info('Sub-Guide toggleMicrophone vfDevice ' + JSON.stringify(vfDevice));
           // Enable Echo Reduction on this client
           const observeMeetingAudio = await vfDevice.observeMeetingAudio(meetingSession.audioVideo);
-          console.log('observeMeetingAudio:', observeMeetingAudio);
+          logger.info('Sub-Guide toggleMicrophone Echo Reduction ' + JSON.stringify(observeMeetingAudio));
           const deviceToUse = vfDevice || selectedAudioInput;
-          console.log('deviceToUse:', deviceToUse);
+          logger.info('Sub-Guide toggleMicrophone deviceToUse ' + JSON.stringify(deviceToUse));
           const startAudioInput = await meetingSession.audioVideo.startAudioInput(deviceToUse);
-          console.log('startAudioInput', startAudioInput);
+          logger.info('Sub-Guide toggleMicrophone startAudioInput ' + JSON.stringify(startAudioInput));
           if (vfDevice) {
-            console.log('Amazon Voice Focus enabled');
+            logger.info('Sub-Guide Amazon Voice Focus enabled ');
           }
           // Unmute the microphone
           const realtimeUnmuteLocalAudio = meetingSession.audioVideo.realtimeUnmuteLocalAudio();
-          console.log('Microphone is unmuted.', realtimeUnmuteLocalAudio);
+          logger.info('Sub-Guide toggleMicrophone realtimeUnmuteLocalAudio ' + JSON.stringify(realtimeUnmuteLocalAudio));
         }
 
         setIsMicOn(!isMicOn); // Toggle mic status
 
       } catch (error) {
-        console.error('Failed to toggle microphone:', error);
+        logger.error('Sub-Guide toggleMicrophone error' + JSON.stringify(error));
       }
     }
   };
@@ -322,7 +305,8 @@ function LiveSubSpeaker() {
   // Function to get the list of audio input devices
   const getAudioInputDevices = useCallback(async () => {
     if (meetingSession) {
-      const devices = await meetingSession.audioVideo.listAudioInputDevices();
+      // const devices = await meetingSession.audioVideo.listAudioInputDevices();
+      const devices = await meetingSession.audioVideo.listAudioInputDevices(true);
       console.log('List Audio Input Devices:', devices);
       setAudioInputDevices(null);
       setAudioInputDevices(devices);

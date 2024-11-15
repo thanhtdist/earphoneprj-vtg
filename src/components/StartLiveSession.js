@@ -69,23 +69,22 @@ function StartLiveSession() {
       setUserId(userID);
       const userType = `Guide`;
       const userName = `Guide`;
+      createAppUserAndChannel(userID, userName);
       const meeting = await createMeeting();
       console.log('Meeting created:', meeting);
       setMetting(meeting);
       const attendee = await createAttendee(meeting.MeetingId, `${userType}|${Date.now()}`);
       console.log('Attendee created:', attendee);
       setAttendee(attendee);
-      // Check if the Voice Focus Device is supported on the client
-      const isVoiceFocusSupported = await transformVoiceFocusDevice(meeting, attendee);
-      console.log('isVoiceFocusSupported', isVoiceFocusSupported);
+
       // Initialize the meeting session such as meeting session
-      initializeMeetingSession(meeting, attendee, isVoiceFocusSupported);
+      initializeMeetingSession(meeting, attendee);
 
       // Create App User and Channel for chat
       const listAttendeeResponse = await listAttendee(meeting.MeetingId);
       console.log('listAttendeeResponse:', listAttendeeResponse);
-      
-      createAppUserAndChannel(userID, userName);
+
+
     } catch (error) {
       console.error('Error starting meeting:', error);
     } finally {
@@ -105,7 +104,7 @@ function StartLiveSession() {
   }
 
   // Function to transform the audio input device to Voice Focus Device/Echo Reduction
-  const transformVoiceFocusDevice = async (meeting, attendee) => {
+  const transformVoiceFocusDevice = async (meeting, attendee, logger) => {
     let transformer = null;
     let isVoiceFocusSupported = false;
     try {
@@ -114,7 +113,7 @@ function StartLiveSession() {
       };
       const options = {
         preload: false,
-        //logger,
+        logger,
       };
       const config = await VoiceFocusDeviceTransformer.configure(spec, options);
       //logger.info('transformVoiceFocusDevice config', JSON.stringify(config));
@@ -132,7 +131,12 @@ function StartLiveSession() {
   }
 
   // Function to initialize the meeting session from the meeting that the host has created
-  const initializeMeetingSession = async (meeting, attendee, isVoiceFocusSupported) => {
+  const initializeMeetingSession = async (meeting, attendee) => {
+    if (!meeting || !attendee) {
+      console.error('Invalid meeting or attendee information');
+      return;
+    }
+
     const consoleLogger = new ConsoleLogger('ChimeMeetingLogs', LogLevel.INFO);
 
     const meetingSessionConfiguration = new MeetingSessionConfiguration(meeting, attendee);
@@ -140,14 +144,16 @@ function StartLiveSession() {
     const meetingSessionPOSTLogger = getPOSTLogger(meetingSessionConfiguration, 'SDK', `${Config.cloudWatchLogRestApiVTGRestApi}cloud-watch-logs`, LogLevel.INFO);
     console.log('meetingSessionPOSTLogger', meetingSessionPOSTLogger);
     const logger = new MultiLogger(
-        consoleLogger,
-        meetingSessionPOSTLogger,
+      consoleLogger,
+      meetingSessionPOSTLogger,
     );
     setLogger(logger);
-    logger.info('loggerZZZZZ' + JSON.stringify(logger));
+    // Check if the Voice Focus Device is supported on the client
+    const isVoiceFocusSupported = await transformVoiceFocusDevice(meeting, attendee, logger);
+    logger.info('deviceController isVoiceFocusSupported' + isVoiceFocusSupported);
+    // Initialize the meeting session
     const deviceController = new DefaultDeviceController(logger, { enableWebAudio: isVoiceFocusSupported });
-    logger.info('deviceControllerXXXXXXXXXX' + JSON.stringify(deviceController));
-    console.log('testyyyyyyyy');
+    logger.info('deviceController' + JSON.stringify(deviceController));
     const meetingSession = new DefaultMeetingSession(meetingSessionConfiguration, logger, deviceController);
     setMeetingSession(meetingSession);
     selectSpeaker(meetingSession);
@@ -167,43 +173,39 @@ function StartLiveSession() {
 
   // Function to toggle microphone on/off
   const toggleMicrophone = async () => {
-    console.log('Toggling Microphone', isMicOn);
-    logger.info('Toggling Microphone' + isMicOn);
     if (meetingSession) {
       try {
         if (isMicOn) {
           // Mute the microphone
           const realtimeMuteLocalAudio = meetingSession.audioVideo.realtimeMuteLocalAudio();
-          console.log('Microphone is muted.', realtimeMuteLocalAudio);
+          logger.info('toggleMicrophone realtimeMuteLocalAudio ' + JSON.stringify(realtimeMuteLocalAudio));
           const stopAudioInput = await meetingSession.audioVideo.stopAudioInput(); // Stops the audio input device
-          console.log('stopAudioInput', stopAudioInput);
+          logger.info('toggleMicrophone stopAudioInput ' + JSON.stringify(stopAudioInput));
 
         } else {
           // Start the audio input device
-          console.log('toggleMicrophone Audio Input:', selectedAudioInput);
-          console.log('transformVFD:', transformVFD);
           // Create a new transform device if Voice Focus is supported
           const vfDevice = await transformVFD.createTransformDevice(selectedAudioInput);
-          console.log('vfDevice:', vfDevice);
+          logger.info('toggleMicrophone vfDevice ' + JSON.stringify(vfDevice));
           // Enable Echo Reduction on this client
           const observeMeetingAudio = await vfDevice.observeMeetingAudio(meetingSession.audioVideo);
-          console.log('observeMeetingAudio:', observeMeetingAudio);
+          logger.info('toggleMicrophone Echo Reduction ' + JSON.stringify(observeMeetingAudio));
           const deviceToUse = vfDevice || selectedAudioInput;
-          console.log('deviceToUse:', deviceToUse);
+          logger.info('toggleMicrophone deviceToUse ' + JSON.stringify(deviceToUse));
           const startAudioInput = await meetingSession.audioVideo.startAudioInput(deviceToUse);
-          console.log('startAudioInput', startAudioInput);
+          logger.info('toggleMicrophone startAudioInput ' + JSON.stringify(startAudioInput));
           if (vfDevice) {
-            console.log('Amazon Voice Focus enabled');
+            logger.info('Amazon Voice Focus enabled ');
           }
           // Unmute the microphone
           const realtimeUnmuteLocalAudio = meetingSession.audioVideo.realtimeUnmuteLocalAudio();
-          console.log('Microphone is unmuted.', realtimeUnmuteLocalAudio);
+          logger.info('toggleMicrophone realtimeUnmuteLocalAudio ' + JSON.stringify(realtimeUnmuteLocalAudio));
         }
 
         setIsMicOn(!isMicOn); // Toggle mic status
 
       } catch (error) {
-        console.error('Failed to toggle microphone:', error);
+        logger.error('toggleMicrophone error ' + JSON.stringify(error));
       }
     }
   };
@@ -222,7 +224,7 @@ function StartLiveSession() {
   // Function to get the list of audio input devices
   const getAudioInputDevices = useCallback(async () => {
     if (meetingSession) {
-      const devices = await meetingSession.audioVideo.listAudioInputDevices();
+      const devices = await meetingSession.audioVideo.listAudioInputDevices(true);
       devices.forEach(device => console.log(`Device: ${device.label}, ID: ${device.deviceId}`));
       console.log('List Audio Input Devices:', devices);
       logger.info('List Audio Input Devices:ZZZZZ' + JSON.stringify(devices));
