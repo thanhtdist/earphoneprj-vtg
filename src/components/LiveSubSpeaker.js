@@ -297,7 +297,8 @@ function LiveSubSpeaker() {
         setIsMicOn(!isMicOn); // Toggle mic status
 
       } catch (error) {
-        logger.error('Sub-Guide toggleMicrophone error' + JSON.stringify(error));
+        //logger.error('Sub-Guide toggleMicrophone error' + error);
+        console.error('Sub-Guide toggleMicrophone error', error);
       }
     }
   };

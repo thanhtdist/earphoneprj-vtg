@@ -147,13 +147,14 @@ function StartLiveSession() {
       consoleLogger,
       meetingSessionPOSTLogger,
     );
+    console.log('logger', logger);
     setLogger(logger);
     // Check if the Voice Focus Device is supported on the client
     const isVoiceFocusSupported = await transformVoiceFocusDevice(meeting, attendee, logger);
-    logger.info('deviceController isVoiceFocusSupported' + isVoiceFocusSupported);
+    //logger.info('deviceController isVoiceFocusSupported' + isVoiceFocusSupported);
     // Initialize the meeting session
     const deviceController = new DefaultDeviceController(logger, { enableWebAudio: isVoiceFocusSupported });
-    logger.info('deviceController' + JSON.stringify(deviceController));
+    //logger.info('deviceController' + JSON.stringify(deviceController));
     const meetingSession = new DefaultMeetingSession(meetingSessionConfiguration, logger, deviceController);
     setMeetingSession(meetingSession);
     selectSpeaker(meetingSession);
@@ -178,34 +179,43 @@ function StartLiveSession() {
         if (isMicOn) {
           // Mute the microphone
           const realtimeMuteLocalAudio = meetingSession.audioVideo.realtimeMuteLocalAudio();
-          logger.info('toggleMicrophone realtimeMuteLocalAudio ' + JSON.stringify(realtimeMuteLocalAudio));
+          //logger.info('toggleMicrophone realtimeMuteLocalAudio ' + JSON.stringify(realtimeMuteLocalAudio));
+          console.log('toggleMicrophone realtimeMuteLocalAudio', realtimeMuteLocalAudio);
           const stopAudioInput = await meetingSession.audioVideo.stopAudioInput(); // Stops the audio input device
-          logger.info('toggleMicrophone stopAudioInput ' + JSON.stringify(stopAudioInput));
+          //logger.info('toggleMicrophone stopAudioInput ' + JSON.stringify(stopAudioInput));
+          console.log('toggleMicrophone stopAudioInput', stopAudioInput);
 
         } else {
           // Start the audio input device
           // Create a new transform device if Voice Focus is supported
           const vfDevice = await transformVFD.createTransformDevice(selectedAudioInput);
-          logger.info('toggleMicrophone vfDevice ' + JSON.stringify(vfDevice));
+          //logger.info('toggleMicrophone vfDevice ' + JSON.stringify(vfDevice));
+          console.log('toggleMicrophone vfDevice', vfDevice);
           // Enable Echo Reduction on this client
           const observeMeetingAudio = await vfDevice.observeMeetingAudio(meetingSession.audioVideo);
-          logger.info('toggleMicrophone Echo Reduction ' + JSON.stringify(observeMeetingAudio));
+          //logger.info('toggleMicrophone Echo Reduction ' + JSON.stringify(observeMeetingAudio));
+          console.log('toggleMicrophone Echo Reduction', observeMeetingAudio);
           const deviceToUse = vfDevice || selectedAudioInput;
-          logger.info('toggleMicrophone deviceToUse ' + JSON.stringify(deviceToUse));
+          //logger.info('toggleMicrophone deviceToUse ' + JSON.stringify(deviceToUse));
+          console.log('toggleMicrophone deviceToUse', deviceToUse);
           const startAudioInput = await meetingSession.audioVideo.startAudioInput(deviceToUse);
-          logger.info('toggleMicrophone startAudioInput ' + JSON.stringify(startAudioInput));
+          //logger.info('toggleMicrophone startAudioInput ' + JSON.stringify(startAudioInput));
+          console.log('toggleMicrophone startAudioInput', startAudioInput);
           if (vfDevice) {
-            logger.info('Amazon Voice Focus enabled ');
+           // logger.info('Amazon Voice Focus enabled ');
+           console.log('Amazon Voice Focus enabled ');
           }
           // Unmute the microphone
           const realtimeUnmuteLocalAudio = meetingSession.audioVideo.realtimeUnmuteLocalAudio();
-          logger.info('toggleMicrophone realtimeUnmuteLocalAudio ' + JSON.stringify(realtimeUnmuteLocalAudio));
+          //logger.info('toggleMicrophone realtimeUnmuteLocalAudio ' + JSON.stringify(realtimeUnmuteLocalAudio));
+          console.log('toggleMicrophone realtimeUnmuteLocalAudio', realtimeUnmuteLocalAudio);
         }
 
         setIsMicOn(!isMicOn); // Toggle mic status
 
       } catch (error) {
-        logger.error('toggleMicrophone error ' + JSON.stringify(error));
+        //logger.error('toggleMicrophone error ' + error);
+        console.error('toggleMicrophone error', error);
       }
     }
   };
@@ -224,6 +234,7 @@ function StartLiveSession() {
   // Function to get the list of audio input devices
   const getAudioInputDevices = useCallback(async () => {
     if (meetingSession) {
+      //const devices = await meetingSession.audioVideo.listAudioInputDevices();
       const devices = await meetingSession.audioVideo.listAudioInputDevices(true);
       devices.forEach(device => console.log(`Device: ${device.label}, ID: ${device.deviceId}`));
       console.log('List Audio Input Devices:', devices);
