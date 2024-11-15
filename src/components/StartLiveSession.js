@@ -168,6 +168,32 @@ function StartLiveSession() {
     } else {
       console.error('Audio element not found');
     }
+
+    const observer = {
+      audioInputsChanged: freshAudioInputDeviceList => {
+        // An array of MediaDeviceInfo objects
+        freshAudioInputDeviceList.forEach(mediaDeviceInfo => {
+          console.log(`Device ID xxx: ${mediaDeviceInfo.deviceId} Microphone: ${mediaDeviceInfo.label}`);
+        });
+      },
+    
+      audioOutputsChanged: freshAudioOutputDeviceList => {
+        console.log('Audio outputs updated xxx: ', freshAudioOutputDeviceList);
+      },
+    
+      videoInputsChanged: freshVideoInputDeviceList => {
+        console.log('Video inputs updated xxx: ', freshVideoInputDeviceList);
+      },
+    
+      audioInputMuteStateChanged: (device, muted) => {
+        // console.log('Device xxx', device, muted ? 'is muted in hardware' : 'is not muted');
+        console.log('Device yyy:', device);
+        console.log('Status yyy:', muted ? 'is muted in hardware' : 'is not muted');
+      },
+    };
+    
+    meetingSession.audioVideo.addDeviceChangeObserver(observer);
+
     // Start audio video session
     meetingSession.audioVideo.start();
   };
@@ -215,7 +241,7 @@ function StartLiveSession() {
 
       } catch (error) {
         //logger.error('toggleMicrophone error ' + error);
-        console.error('toggleMicrophone error', error);
+        logger.error('toggleMicrophone error xxx', error);
       }
     }
   };
@@ -235,10 +261,10 @@ function StartLiveSession() {
   const getAudioInputDevices = useCallback(async () => {
     if (meetingSession) {
       //const devices = await meetingSession.audioVideo.listAudioInputDevices();
-      const devices = await meetingSession.audioVideo.listAudioInputDevices(true);
+      const devices = await meetingSession.audioVideo.listAudioInputDevices();
       devices.forEach(device => console.log(`Device: ${device.label}, ID: ${device.deviceId}`));
       console.log('List Audio Input Devices:', devices);
-      logger.info('List Audio Input Devices:ZZZZZ' + JSON.stringify(devices));
+      logger.info('List Audio Input Devices' + JSON.stringify(devices));
       const isMuted = meetingSession.audioVideo.realtimeIsLocalAudioMuted();
       console.log("Microphone muted:", isMuted);
       setAudioInputDevices(null);

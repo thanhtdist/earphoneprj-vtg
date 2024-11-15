@@ -270,35 +270,43 @@ function LiveSubSpeaker() {
         if (isMicOn) {
           // Mute the microphone
           const realtimeMuteLocalAudio = meetingSession.audioVideo.realtimeMuteLocalAudio();
-          logger.info('Sub-Guide toggleMicrophone realtimeMuteLocalAudio ' + JSON.stringify(realtimeMuteLocalAudio));
+          // logger.info('Sub-Guide toggleMicrophone realtimeMuteLocalAudio ' + JSON.stringify(realtimeMuteLocalAudio));
+          console.log('Sub-Guide toggleMicrophone realtimeMuteLocalAudio', realtimeMuteLocalAudio);
           const stopAudioInput = await meetingSession.audioVideo.stopAudioInput(); // Stops the audio input device
-          logger.info('Sub-Guide toggleMicrophone stopAudioInput ' + JSON.stringify(stopAudioInput));
+          //logger.info('Sub-Guide toggleMicrophone stopAudioInput ' + JSON.stringify(stopAudioInput));
+          console.log('Sub-Guide toggleMicrophone stopAudioInput', stopAudioInput);
 
         } else {
           // Start the audio input device
           // Create a new transform device if Voice Focus is supported
           const vfDevice = await transformVFD.createTransformDevice(selectedAudioInput);
-          logger.info('Sub-Guide toggleMicrophone vfDevice ' + JSON.stringify(vfDevice));
+          //logger.info('Sub-Guide toggleMicrophone vfDevice ' + JSON.stringify(vfDevice));
+          console.log('Sub-Guide toggleMicrophone vfDevice', vfDevice);
           // Enable Echo Reduction on this client
           const observeMeetingAudio = await vfDevice.observeMeetingAudio(meetingSession.audioVideo);
-          logger.info('Sub-Guide toggleMicrophone Echo Reduction ' + JSON.stringify(observeMeetingAudio));
+          //logger.info('Sub-Guide toggleMicrophone Echo Reduction ' + JSON.stringify(observeMeetingAudio));
+          console.log('Sub-Guide toggleMicrophone Echo Reduction', observeMeetingAudio);
           const deviceToUse = vfDevice || selectedAudioInput;
-          logger.info('Sub-Guide toggleMicrophone deviceToUse ' + JSON.stringify(deviceToUse));
+          //logger.info('Sub-Guide toggleMicrophone deviceToUse ' + JSON.stringify(deviceToUse));
+          console.log('Sub-Guide toggleMicrophone deviceToUse', deviceToUse);
           const startAudioInput = await meetingSession.audioVideo.startAudioInput(deviceToUse);
-          logger.info('Sub-Guide toggleMicrophone startAudioInput ' + JSON.stringify(startAudioInput));
+          //logger.info('Sub-Guide toggleMicrophone startAudioInput ' + JSON.stringify(startAudioInput));
+          console.log('Sub-Guide toggleMicrophone startAudioInput', startAudioInput);
           if (vfDevice) {
-            logger.info('Sub-Guide Amazon Voice Focus enabled ');
+            //logger.info('Sub-Guide Amazon Voice Focus enabled ');
+            console.log('Sub-Guide Amazon Voice Focus enabled');
           }
           // Unmute the microphone
           const realtimeUnmuteLocalAudio = meetingSession.audioVideo.realtimeUnmuteLocalAudio();
-          logger.info('Sub-Guide toggleMicrophone realtimeUnmuteLocalAudio ' + JSON.stringify(realtimeUnmuteLocalAudio));
+          //logger.info('Sub-Guide toggleMicrophone realtimeUnmuteLocalAudio ' + JSON.stringify(realtimeUnmuteLocalAudio));
+          console.log('Sub-Guide toggleMicrophone realtimeUnmuteLocalAudio', realtimeUnmuteLocalAudio);
         }
 
         setIsMicOn(!isMicOn); // Toggle mic status
 
       } catch (error) {
-        //logger.error('Sub-Guide toggleMicrophone error' + error);
-        console.error('Sub-Guide toggleMicrophone error', error);
+        //console.error('Sub-Guide toggleMicrophone error', error);
+        logger.error('Sub-Guide toggleMicrophone error' + error);
       }
     }
   };
@@ -307,8 +315,9 @@ function LiveSubSpeaker() {
   const getAudioInputDevices = useCallback(async () => {
     if (meetingSession) {
       // const devices = await meetingSession.audioVideo.listAudioInputDevices();
-      const devices = await meetingSession.audioVideo.listAudioInputDevices(true);
+      const devices = await meetingSession.audioVideo.listAudioInputDevices();
       console.log('List Audio Input Devices:', devices);
+      logger.info('Sub-Guide List Audio Input Devices' + JSON.stringify(devices));
       setAudioInputDevices(null);
       setAudioInputDevices(devices);
       if (devices.length > 0) {
@@ -322,7 +331,7 @@ function LiveSubSpeaker() {
         }, 5000);
       }
     }
-  }, [meetingSession]);
+  }, [meetingSession, logger]);
 
   // Use effect to join the meeting
   useEffect(() => {
