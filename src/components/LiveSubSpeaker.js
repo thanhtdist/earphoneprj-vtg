@@ -306,7 +306,19 @@ function LiveSubSpeaker() {
 
       } catch (error) {
         //console.error('Sub-Guide toggleMicrophone error', error);
-        logger.error('Sub-Guide toggleMicrophone error' + error);
+        //logger.error('Sub-Guide toggleMicrophone error' + error);
+        //logger.error('toggleMicrophone error ' + error);
+        console.error('toggleMicrophone error', error);
+        if (error.name === "NotAllowedError" || error.name === "PermissionDeniedError") {
+          // Handle permission denial
+          alert(error);
+          console.error("Permission denied by browser. Please allow access to continue.");
+          //alert("Permission denied by browser. Please allow access to continue.");
+        } else {
+          // Handle other errors
+          alert(error);
+          console.error("Error accessing media devices:", error);
+        }
       }
     }
   };

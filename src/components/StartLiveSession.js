@@ -60,9 +60,11 @@ function StartLiveSession() {
   const [microChecking, setMicroChecking] = useState(t('microChecking'));
   const [noMicroMsg, setNoMicoMsg] = useState(null);
   const [logger, setLogger] = useState(null);
+  const [participantsCount, setParticipantsCount] = useState(0);
   // Function to start a live audio session
   // when clicked on the "Start Live Audio Session" button
   const startLiveAduioSession = async () => {
+    localStorage.setItem('participantsCount', 0);
     setIsLoading(true);
     try {
       const userID = uuidv4();
@@ -176,22 +178,22 @@ function StartLiveSession() {
           console.log(`Device ID xxx: ${mediaDeviceInfo.deviceId} Microphone: ${mediaDeviceInfo.label}`);
         });
       },
-    
+
       audioOutputsChanged: freshAudioOutputDeviceList => {
         console.log('Audio outputs updated xxx: ', freshAudioOutputDeviceList);
       },
-    
+
       videoInputsChanged: freshVideoInputDeviceList => {
         console.log('Video inputs updated xxx: ', freshVideoInputDeviceList);
       },
-    
+
       audioInputMuteStateChanged: (device, muted) => {
         // console.log('Device xxx', device, muted ? 'is muted in hardware' : 'is not muted');
         console.log('Device yyy:', device);
         console.log('Status yyy:', muted ? 'is muted in hardware' : 'is not muted');
       },
     };
-    
+
     meetingSession.audioVideo.addDeviceChangeObserver(observer);
 
     // Start audio video session
@@ -228,8 +230,8 @@ function StartLiveSession() {
           //logger.info('toggleMicrophone startAudioInput ' + JSON.stringify(startAudioInput));
           console.log('toggleMicrophone startAudioInput', startAudioInput);
           if (vfDevice) {
-           // logger.info('Amazon Voice Focus enabled ');
-           console.log('Amazon Voice Focus enabled ');
+            // logger.info('Amazon Voice Focus enabled ');
+            console.log('Amazon Voice Focus enabled ');
           }
           // Unmute the microphone
           const realtimeUnmuteLocalAudio = meetingSession.audioVideo.realtimeUnmuteLocalAudio();
@@ -241,7 +243,17 @@ function StartLiveSession() {
 
       } catch (error) {
         //logger.error('toggleMicrophone error ' + error);
-        logger.error('toggleMicrophone error xxx', error);
+        console.error('toggleMicrophone error', error);
+        if (error.name === "NotAllowedError" || error.name === "PermissionDeniedError") {
+          // Handle permission denial
+          alert(error);
+          console.error("Permission denied by browser. Please allow access to continue.");
+          //alert("Permission denied by browser. Please allow access to continue.");
+        } else {
+          // Handle other errors
+          alert(error);
+          console.error("Error accessing media devices:", error);
+        }
       }
     }
   };
@@ -287,32 +299,26 @@ function StartLiveSession() {
   }, [getAudioInputDevices]);
 
 
-  // useEffect(() => {
+  useEffect(() => {
 
-  //   if (!meetingSession) {
-  //     return;
-  //   }
-  //   const subGuideSet = new Set(); // List of sub-guides
-  //   const userSet = new Set(); // List of listeners
-  //   const callback = (presentAttendeeId, present, externalUserId) => {
-  //     console.log(`Attendee ID: ${presentAttendeeId} Present: ${present} externalUserId: ${externalUserId}`);
-  //     console.log('subGuideJoinCountLocalStorage', localStorage.getItem('subGuideJoinCount'));
-  //     if (present) {
-  //       if(externalUserId.startsWith('Sub-Guide')) {
-  //         subGuideSet.add(presentAttendeeId);
-  //       }
-  //       if(externalUserId.startsWith('User')) {
-  //         userSet.add(presentAttendeeId);
-  //       }
-  //     }
+    if (!meetingSession) {
+      return;
+    }
+    const attendeeSet = new Set(); // List of sub-guides, listeners
+    const callback = (presentAttendeeId, present, externalUserId) => {
+      console.log(`Attendee ID: ${presentAttendeeId} Present: ${present} externalUserId: ${externalUserId}`);
+      if (present) {
+        attendeeSet.add(presentAttendeeId);
+      } else {
+        attendeeSet.delete(presentAttendeeId);
+      }
 
-  //     // Update the attendee count in the state
-  //     localStorage.setItem('subGuideJoinCount', subGuideSet.size);
-  //     localStorage.setItem('userJoinCount', userSet.size);
-  //   };
+      // Update the attendee count in the state
+      setParticipantsCount(attendeeSet.size);
+    };
 
-  //   meetingSession.audioVideo.realtimeSubscribeToAttendeeIdPresence(callback);
-  // }, [meetingSession]);
+    meetingSession.audioVideo.realtimeSubscribeToAttendeeIdPresence(callback);
+  }, [meetingSession]);
 
   // Function to handle the chat setting change
   const handleChatSettingChange = (e) => {
@@ -330,6 +336,7 @@ function StartLiveSession() {
   }
   return (
     <div className="container">
+      <span style={{ display: (meeting && attendee) ? 'block' : 'none' }}>Participants:{participantsCount}</span>
       <audio id="audioElementMain" controls autoPlay className="audio-player" style={{ display: (meeting && attendee) ? 'block' : 'none' }} />
       {(!meeting && !attendee) ? (
         <>
