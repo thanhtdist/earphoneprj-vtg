@@ -18,6 +18,7 @@ import {
 } from 'amazon-chime-sdk-js';
 import '../styles/StartLiveSession.css';
 import ChatMessage from './ChatMessage';
+import Participants from './Participants';
 import Config from '../utils/config';
 import metricReport from '../utils/MetricReport';
 import { getPOSTLogger } from '../utils/MeetingLogger';
@@ -65,7 +66,6 @@ function StartLiveSession() {
   // Function to start a live audio session
   // when clicked on the "Start Live Audio Session" button
   const startLiveAduioSession = async () => {
-    localStorage.setItem('participantsCount', 0);
     setIsLoading(true);
     try {
       const userID = uuidv4();
@@ -256,32 +256,32 @@ function StartLiveSession() {
     }
   }, [transformVFD, meetingSession, selectedAudioInput]);
 
-    // Function to get the list of audio input devices
-    const getAudioInputDevices = useCallback(async () => {
-      if (meetingSession) {
-        //const devices = await meetingSession.audioVideo.listAudioInputDevices();
-        const devices = await meetingSession.audioVideo.listAudioInputDevices(true);
-        devices.forEach(device => console.log(`Device: ${device.label}, ID: ${device.deviceId}`));
-        console.log('List Audio Input Devices:', devices);
-        logger.info('List Audio Input Devices' + JSON.stringify(devices));
-        const isMuted = meetingSession.audioVideo.realtimeIsLocalAudioMuted();
-        console.log("Microphone muted:", isMuted);
-        setAudioInputDevices(null);
-        setAudioInputDevices(devices);
-        if (devices.length > 0) {
-          checkStatusMicrophone(devices[0].deviceId);
-          setSelectedAudioInput(devices[0].deviceId);
-        } else {
-          // setMicroChecking('microChecking');
-          // setNoMicoMsg(null);
-          // setTimeout(() => {
-          //   setMicroChecking(null);
-          //   setNoMicoMsg('noMicroMsg');
-          // }, 5000);
-          console.log('No microphone devices found');
-        }
+  // Function to get the list of audio input devices
+  const getAudioInputDevices = useCallback(async () => {
+    if (meetingSession) {
+      //const devices = await meetingSession.audioVideo.listAudioInputDevices();
+      const devices = await meetingSession.audioVideo.listAudioInputDevices(true);
+      devices.forEach(device => console.log(`Device: ${device.label}, ID: ${device.deviceId}`));
+      console.log('List Audio Input Devices:', devices);
+      logger.info('List Audio Input Devices' + JSON.stringify(devices));
+      const isMuted = meetingSession.audioVideo.realtimeIsLocalAudioMuted();
+      console.log("Microphone muted:", isMuted);
+      setAudioInputDevices(null);
+      setAudioInputDevices(devices);
+      if (devices.length > 0) {
+        checkStatusMicrophone(devices[0].deviceId);
+        setSelectedAudioInput(devices[0].deviceId);
+      } else {
+        // setMicroChecking('microChecking');
+        // setNoMicoMsg(null);
+        // setTimeout(() => {
+        //   setMicroChecking(null);
+        //   setNoMicoMsg('noMicroMsg');
+        // }, 5000);
+        console.log('No microphone devices found');
       }
-    }, [meetingSession, logger, checkStatusMicrophone]);
+    }
+  }, [meetingSession, logger, checkStatusMicrophone]);
 
   // Function to toggle microphone on/off
   const toggleMicrophone = async () => {
@@ -363,94 +363,97 @@ function StartLiveSession() {
     console.log('handleRefresh end');
   }
   return (
-    <div className="container">
-      <span style={{ display: (meeting && attendee) ? 'block' : 'none' }}>Participants:{participantsCount}</span>
-      <audio id="audioElementMain" controls autoPlay className="audio-player" style={{ display: (meeting && attendee) ? 'block' : 'none' }} />
-      {(!meeting && !attendee) ? (
-        <>
-          {(isLoading) ? (
-            <div className="loading">
-              <div className="spinner"></div>
-              <p>{t('loading')}</p>
-            </div>
-          ) : (
-            <button onClick={startLiveAduioSession}>{t('startLiveBtn')}</button>
-          )}
-        </>
-      ) : (
-        <>
-          {(microChecking) ? (
-            <div className="loading">
-              <div className="spinner"></div>
-              <p>{t('microChecking')}</p>
-            </div>
-          ) : (
-            <>
-              <h3>{t('microSelectionLbl')}</h3>
-              {(audioInputDevices && audioInputDevices.length > 0) && (
-                <select value={selectedAudioInput} onChange={(e) => setSelectedAudioInput(e.target.value)}>
-                  {audioInputDevices.map((device) => (
-                    <option key={device.deviceId} value={device.deviceId}>
-                      {device.label}
-                    </option>
-                  ))}
-                </select>
-              )}
-              {
-                microPermissionDeniedError ? (
-                  <p style={{ color: 'red' }}>
-                    {microPermissionDeniedError}
-                    <button onClick={handleRefresh}><MdRefresh size={24} /></button>
-                  </p>) : (
-                  <div className="controls">
-                    <button onClick={toggleMicrophone} className="toggle-mic-button">
-                      <FontAwesomeIcon icon={isMicOn ? faMicrophone : faMicrophoneSlash} size="2x" color={isMicOn ? "green" : "gray"} />
-                    </button>
-                  </div>
-                )
-              }
-            </>
-          )}
+    <>
+      <Participants count={participantsCount} />
+      <div className="container">
+        {/* <span style={{ display: (meeting && attendee) ? 'block' : 'none' }}>Participants:{participantsCount}</span> */}
+        <audio id="audioElementMain" controls autoPlay className="audio-player" style={{ display: (meeting && attendee) ? 'block' : 'none' }} />
+        {(!meeting && !attendee) ? (
+          <>
+            {(isLoading) ? (
+              <div className="loading">
+                <div className="spinner"></div>
+                <p>{t('loading')}</p>
+              </div>
+            ) : (
+              <button onClick={startLiveAduioSession}>{t('startLiveBtn')}</button>
+            )}
+          </>
+        ) : (
+          <>
+            {(microChecking) ? (
+              <div className="loading">
+                <div className="spinner"></div>
+                <p>{t('microChecking')}</p>
+              </div>
+            ) : (
+              <>
+                <h3>{t('microSelectionLbl')}</h3>
+                {(audioInputDevices && audioInputDevices.length > 0) && (
+                  <select value={selectedAudioInput} onChange={(e) => setSelectedAudioInput(e.target.value)}>
+                    {audioInputDevices.map((device) => (
+                      <option key={device.deviceId} value={device.deviceId}>
+                        {device.label}
+                      </option>
+                    ))}
+                  </select>
+                )}
+                {
+                  microPermissionDeniedError ? (
+                    <p style={{ color: 'red' }}>
+                      {microPermissionDeniedError}
+                      <button onClick={handleRefresh}><MdRefresh size={24} /></button>
+                    </p>) : (
+                    <div className="controls">
+                      <button onClick={toggleMicrophone} className="toggle-mic-button">
+                        <FontAwesomeIcon icon={isMicOn ? faMicrophone : faMicrophoneSlash} size="2x" color={isMicOn ? "green" : "gray"} />
+                      </button>
+                    </div>
+                  )
+                }
+              </>
+            )}
 
-          <h3>{t('chatSettingLbl')}</h3>
-          <select value={chatSetting} onChange={handleChatSettingChange}>
-            <option value="allChat">{t('chatSettingOptions.allChat')}</option>
-            <option value="guideOnly">{t('chatSettingOptions.onlyGuideChat')}</option>
-            <option value="nochat">{t('chatSettingOptions.noChat')}</option>
-          </select>
+            <h3>{t('chatSettingLbl')}</h3>
+            <select value={chatSetting} onChange={handleChatSettingChange}>
+              <option value="allChat">{t('chatSettingOptions.allChat')}</option>
+              <option value="guideOnly">{t('chatSettingOptions.onlyGuideChat')}</option>
+              <option value="nochat">{t('chatSettingOptions.noChat')}</option>
+            </select>
 
-          <h3>{t('generateQRCodeLbl')}</h3>
-          <select value={selectedQR} onChange={handleQRSelectionChange}>
-            <option value="subSpeaker">{t('generateQRCodeOptions.subGuide')}</option>
-            <option value="listener">{t('generateQRCodeOptions.listener')}</option>
-          </select>
+            <h3>{t('generateQRCodeLbl')}</h3>
+            <select value={selectedQR} onChange={handleQRSelectionChange}>
+              <option value="subSpeaker">{t('generateQRCodeOptions.subGuide')}</option>
+              <option value="listener">{t('generateQRCodeOptions.listener')}</option>
+            </select>
 
-          {meeting && channelArn && (
-            <>
-              {selectedQR === 'subSpeaker' ? (
-                <>
-                  <QRCodeSVG value={`${Config.appSubSpeakerURL}?meetingId=${meeting.MeetingId}&channelId=${channelID}&hostId=${userId}&chatSetting=${chatSetting}`} size={256} level="H" />
-                  <a target="_blank" rel="noopener noreferrer" style={{ color: 'green' }} href={`${Config.appSubSpeakerURL}?meetingId=${meeting.MeetingId}&channelId=${channelID}&hostId=${userId}&chatSetting=${chatSetting}`}>
-                    {t('scanQRCodeTxt.subGuide')}
-                  </a>
-                </>
-              ) : (
-                <>
-                  <QRCodeSVG value={`${Config.appViewerURL}?meetingId=${meeting.MeetingId}&channelId=${channelID}&hostId=${userId}&chatSetting=${chatSetting}`} size={256} level="H" />
-                  <a target="_blank" rel="noopener noreferrer" style={{ color: 'green' }} href={`${Config.appViewerURL}?meetingId=${meeting.MeetingId}&channelId=${channelID}&hostId=${userId}&chatSetting=${chatSetting}`}>
-                    {t('scanQRCodeTxt.listener')}
-                  </a>
-                </>
-              )}
-            </>
-          )}
+            {meeting && channelArn && (
+              <>
+                {selectedQR === 'subSpeaker' ? (
+                  <>
+                    <QRCodeSVG value={`${Config.appSubSpeakerURL}?meetingId=${meeting.MeetingId}&channelId=${channelID}&hostId=${userId}&chatSetting=${chatSetting}`} size={256} level="H" />
+                    <a target="_blank" rel="noopener noreferrer" style={{ color: 'green' }} href={`${Config.appSubSpeakerURL}?meetingId=${meeting.MeetingId}&channelId=${channelID}&hostId=${userId}&chatSetting=${chatSetting}`}>
+                      {t('scanQRCodeTxt.subGuide')}
+                    </a>
+                  </>
+                ) : (
+                  <>
+                    <QRCodeSVG value={`${Config.appViewerURL}?meetingId=${meeting.MeetingId}&channelId=${channelID}&hostId=${userId}&chatSetting=${chatSetting}`} size={256} level="H" />
+                    <a target="_blank" rel="noopener noreferrer" style={{ color: 'green' }} href={`${Config.appViewerURL}?meetingId=${meeting.MeetingId}&channelId=${channelID}&hostId=${userId}&chatSetting=${chatSetting}`}>
+                      {t('scanQRCodeTxt.listener')}
+                    </a>
+                  </>
+                )}
+              </>
+            )}
 
-          {chatSetting !== "nochat" && (
-            <ChatMessage userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} />
-          )}
-        </>
-      )}
-    </div>
+            {chatSetting !== "nochat" && (
+              <ChatMessage userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} />
+            )}
+          </>
+        )}
+      </div>
+    </>
   );
 }
 

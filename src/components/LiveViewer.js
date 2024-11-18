@@ -16,6 +16,7 @@ import {
 } from 'amazon-chime-sdk-js';
 import '../styles/LiveViewer.css';
 import ChatMessage from './ChatMessage';
+import Participants from './Participants';
 import Config from '../utils/config';
 import metricReport from '../utils/MetricReport';
 import { v4 as uuidv4 } from 'uuid';
@@ -50,6 +51,7 @@ function LiveViewer() {
   const [channelArn, setChannelArn] = useState('');
   const [userArn, setUserArn] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [participantsCount, setParticipantsCount] = useState(0);
 
   // Function to initialize the meeting session from the meeting that the host has created
   const initializeMeetingSession = useCallback(async (meeting, attendee) => {
@@ -238,54 +240,41 @@ function LiveViewer() {
     if (!meetingSession) {
       return;
     }
-    //const subGuideSet = new Set(); // List of sub-guides
-    const orderedElements = [];
-    //const userSet = new Set(); // List of listeners
+    const attendeeSet = new Set(); // List of sub-guides, listeners
     const callback = (presentAttendeeId, present, externalUserId) => {
-      console.log('Attendee:', attendee);
       console.log(`Attendee ID: ${presentAttendeeId} Present: ${present} externalUserId: ${externalUserId}`);
       if (present) {
-        // if(externalUserId.startsWith('Sub-Guide')) {
-        //   subGuideSet.add(presentAttendeeId);
-        // }
-        if (externalUserId.startsWith('User')) {
-          orderedElements.push(presentAttendeeId);
-          //   if (!userSet.has(presentAttendeeId)) {
-          //     orderedElements.push(presentAttendeeId); 
-          //     userSet.add(presentAttendeeId);        
-          // }
-
-          // userSet.add(presentAttendeeId);
-        }
+        attendeeSet.add(presentAttendeeId);
+      } else {
+        attendeeSet.delete(presentAttendeeId);
       }
 
       // Update the attendee count in the state
-      // localStorage.setItem('subGuideJoinCount', subGuideSet.size);
-      // localStorage.setItem('userJoinCount', userSet.size);
+      setParticipantsCount(attendeeSet.size);
     };
 
     meetingSession.audioVideo.realtimeSubscribeToAttendeeIdPresence(callback);
-    console.log('Listener is present orderedElements', orderedElements);
-    // console.log('Listener is present', userSet);
-    // console.log('Listener is present count', userSet.size);
-    //console.log('Listener is present count', userSet);
-  }, [meetingSession, attendee]);
+  }, [meetingSession]);
 
   return (
-    <div className="live-viewer-container">
-      <audio id="audioElementListener" controls autoPlay className="audio-player" style={{ display: (meeting && attendee) ? 'block' : 'none' }} />
-      {(isLoading) ? (
-        <div className="loading">
-          <div className="spinner"></div>
-          <p>{t('loading')}</p>
-        </div>
-      ) : (
-        <>
-          <br />
-          {channelArn && <ChatMessage userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} chatSetting={chatSetting} />}
-        </>
-      )}
-    </div>
+    <>
+      <Participants count={participantsCount} />
+      <div className="live-viewer-container">
+        <audio id="audioElementListener" controls autoPlay className="audio-player" style={{ display: (meeting && attendee) ? 'block' : 'none' }} />
+        {(isLoading) ? (
+          <div className="loading">
+            <div className="spinner"></div>
+            <p>{t('loading')}</p>
+          </div>
+        ) : (
+          <>
+            <br />
+            {channelArn && <ChatMessage userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} chatSetting={chatSetting} />}
+          </>
+        )}
+      </div>
+    </>
+
   );
 }
 

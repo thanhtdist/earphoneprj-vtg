@@ -1,0 +1,11 @@
+
+/* Add this CSS to your App.css or any other relevant CSS file */
+.participantsCount {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px; /* Adjust spacing between icon and text */
+  }

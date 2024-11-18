@@ -18,6 +18,7 @@ import {
 } from 'amazon-chime-sdk-js';
 import '../styles/LiveViewer.css';
 import ChatMessage from './ChatMessage';
+import Participants from './Participants';
 import Config from '../utils/config';
 import metricReport from '../utils/MetricReport';
 import { getPOSTLogger } from '../utils/MeetingLogger';
@@ -67,6 +68,7 @@ function LiveSubSpeaker() {
   const [microChecking, setMicroChecking] = useState(t('microChecking'));
   const [noMicroMsg, setNoMicoMsg] = useState(null);
   const [logger, setLogger] = useState(null);
+  const [participantsCount, setParticipantsCount] = useState(0);
 
   // Function to transform the audio input device to Voice Focus Device/Echo Reduction
   const transformVoiceFocusDevice = async (meeting, attendee, logger) => {
@@ -356,6 +358,26 @@ function LiveSubSpeaker() {
     getAudioInputDevices();
   }, [getAudioInputDevices]);
 
+  useEffect(() => {
+
+    if (!meetingSession) {
+      return;
+    }
+    const attendeeSet = new Set(); // List of sub-guides, listeners
+    const callback = (presentAttendeeId, present, externalUserId) => {
+      console.log(`Attendee ID: ${presentAttendeeId} Present: ${present} externalUserId: ${externalUserId}`);
+      if (present) {
+        attendeeSet.add(presentAttendeeId);
+      } else {
+        attendeeSet.delete(presentAttendeeId);
+      }
+
+      // Update the attendee count in the state
+      setParticipantsCount(attendeeSet.size);
+    };
+
+    meetingSession.audioVideo.realtimeSubscribeToAttendeeIdPresence(callback);
+  }, [meetingSession]);
 
   // Function to refresh the audio input devices
   const handleRefresh = () => {
@@ -363,48 +385,51 @@ function LiveSubSpeaker() {
   }
 
   return (
-    <div className="live-viewer-container">
-      <audio id="audioElementSub" controls autoPlay className="audio-player" style={{ display: (meeting && attendee) ? 'block' : 'none' }} />
-      {(isLoading) ? (
-        <div className="loading">
-          <div className="spinner"></div>
-          <p>{t('loading')}</p>
-        </div>
-      ) : (
-        <>
-          {(audioInputDevices.length <= 0) ? (
-            <>
-              {noMicroMsg ? (
-                <p>{t('noMicroMsg')} <button onClick={handleRefresh}><MdRefresh size={24} /></button></p>
-              ) : (
-                <div className="loading">
-                  <div className="spinner"></div>
-                  {microChecking && <p>{t('microChecking')}</p>}
+    <>
+      <Participants count={participantsCount} />
+      <div className="live-viewer-container">
+        <audio id="audioElementSub" controls autoPlay className="audio-player" style={{ display: (meeting && attendee) ? 'block' : 'none' }} />
+        {(isLoading) ? (
+          <div className="loading">
+            <div className="spinner"></div>
+            <p>{t('loading')}</p>
+          </div>
+        ) : (
+          <>
+            {(audioInputDevices.length <= 0) ? (
+              <>
+                {noMicroMsg ? (
+                  <p>{t('noMicroMsg')} <button onClick={handleRefresh}><MdRefresh size={24} /></button></p>
+                ) : (
+                  <div className="loading">
+                    <div className="spinner"></div>
+                    {microChecking && <p>{t('microChecking')}</p>}
+                  </div>
+                )}
+              </>
+            ) : (
+              <>
+                <h3>{t('microSelectionLbl')}</h3>
+                <select value={selectedAudioInput} onChange={(e) => setSelectedAudioInput(e.target.value)}>
+                  {audioInputDevices.map((device) => (
+                    <option key={device.deviceId} value={device.deviceId}>
+                      {device.label}
+                    </option>
+                  ))}
+                </select>
+                <div className="controls">
+                  <button onClick={toggleMicrophone} className="toggle-mic-button">
+                    <FontAwesomeIcon icon={isMicOn ? faMicrophone : faMicrophoneSlash} size="2x" color={isMicOn ? "green" : "gray"} />
+                  </button>
                 </div>
-              )}
-            </>
-          ) : (
-            <>
-              <h3>{t('microSelectionLbl')}</h3>
-              <select value={selectedAudioInput} onChange={(e) => setSelectedAudioInput(e.target.value)}>
-                {audioInputDevices.map((device) => (
-                  <option key={device.deviceId} value={device.deviceId}>
-                    {device.label}
-                  </option>
-                ))}
-              </select>
-              <div className="controls">
-                <button onClick={toggleMicrophone} className="toggle-mic-button">
-                  <FontAwesomeIcon icon={isMicOn ? faMicrophone : faMicrophoneSlash} size="2x" color={isMicOn ? "green" : "gray"} />
-                </button>
-              </div>
-            </>
-          )}
-          <br />
-          {channelArn && <ChatMessage userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} chatSetting={chatSetting} />}
-        </>
-      )}
-    </div>
+              </>
+            )}
+            <br />
+            {channelArn && <ChatMessage userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} chatSetting={chatSetting} />}
+          </>
+        )}
+      </div>
+    </>
   );
 }
 
