@@ -213,10 +213,11 @@ function StartLiveSession() {
   };
 
   // Function to check the status of the microphone
-  const checkStatusMicrophone = useCallback(async (transformVFD, meetingSession) => {
+  const checkStatusMicrophone = useCallback(async () => {
     console.log('checkStatusMicrophone');
     console.log('transformVFD', transformVFD);
     console.log('meetingSession', meetingSession);
+    console.log('selectedAudioInput', selectedAudioInput);
     try {
       // Start the audio input device
       // Create a new transform device if Voice Focus is supported
@@ -253,7 +254,7 @@ function StartLiveSession() {
     } finally {
       setMicroChecking(null);
     }
-  }, [selectedAudioInput]);
+  }, [transformVFD, meetingSession, selectedAudioInput]);
 
     // Function to get the list of audio input devices
     const getAudioInputDevices = useCallback(async () => {
@@ -268,7 +269,7 @@ function StartLiveSession() {
         setAudioInputDevices(null);
         setAudioInputDevices(devices);
         if (devices.length > 0) {
-          checkStatusMicrophone(transformVFD, meetingSession);
+          checkStatusMicrophone(devices[0].deviceId);
           setSelectedAudioInput(devices[0].deviceId);
         } else {
           // setMicroChecking('microChecking');
@@ -280,7 +281,7 @@ function StartLiveSession() {
           console.log('No microphone devices found');
         }
       }
-    }, [meetingSession, logger, checkStatusMicrophone, transformVFD]);
+    }, [meetingSession, logger, checkStatusMicrophone]);
 
   // Function to toggle microphone on/off
   const toggleMicrophone = async () => {
@@ -337,12 +338,12 @@ function StartLiveSession() {
   }, [meetingSession]);
 
   useEffect(() => {
-
+    console.log('selectedAudioInput xxx', selectedAudioInput);
     if (selectedAudioInput) {
-      checkStatusMicrophone(transformVFD, meetingSession);
+      checkStatusMicrophone(selectedAudioInput);
     }
 
-  }, [selectedAudioInput, transformVFD, meetingSession, checkStatusMicrophone]);
+  }, [selectedAudioInput, checkStatusMicrophone]);
 
   // Function to handle the chat setting change
   const handleChatSettingChange = (e) => {
@@ -358,7 +359,7 @@ function StartLiveSession() {
   const handleRefresh = () => {
     console.log('handleRefresh start');
     setMicroChecking("checking microphone");
-    checkStatusMicrophone(transformVFD, meetingSession);
+    checkStatusMicrophone(selectedAudioInput);
     console.log('handleRefresh end');
   }
   return (
