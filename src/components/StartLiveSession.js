@@ -58,7 +58,8 @@ function StartLiveSession() {
   const [isMicOn, setIsMicOn] = useState(false); // State for microphone status
   const [transformVFD, setTransformVFD] = useState(null);
   const [microChecking, setMicroChecking] = useState(t('microChecking'));
-  const [noMicroMsg, setNoMicoMsg] = useState(null);
+  const [microPermissionDeniedError, setMicroPermissionDeniedError] = useState(null);
+  //const [noMicroMsg, setNoMicoMsg] = useState(null);
   const [logger, setLogger] = useState(null);
   const [participantsCount, setParticipantsCount] = useState(0);
   // Function to start a live audio session
@@ -200,6 +201,87 @@ function StartLiveSession() {
     meetingSession.audioVideo.start();
   };
 
+  // Async function to select audio output device
+  const selectSpeaker = async (meetingSession) => {
+    const audioOutputDevices = await meetingSession.audioVideo.listAudioOutputDevices();
+
+    if (audioOutputDevices.length > 0) {
+      await meetingSession.audioVideo.chooseAudioOutput(audioOutputDevices[0].deviceId);
+    } else {
+      console.log('No speaker devices found');
+    }
+  };
+
+  // Function to check the status of the microphone
+  const checkStatusMicrophone = useCallback(async (transformVFD, meetingSession) => {
+    console.log('checkStatusMicrophone');
+    console.log('transformVFD', transformVFD);
+    console.log('meetingSession', meetingSession);
+    try {
+      // Start the audio input device
+      // Create a new transform device if Voice Focus is supported
+      const vfDevice = await transformVFD.createTransformDevice(selectedAudioInput);
+      //logger.info('toggleMicrophone vfDevice ' + JSON.stringify(vfDevice));
+      console.log('toggleMicrophone vfDevice', vfDevice);
+      // Enable Echo Reduction on this client
+      const observeMeetingAudio = await vfDevice.observeMeetingAudio(meetingSession.audioVideo);
+      //logger.info('toggleMicrophone Echo Reduction ' + JSON.stringify(observeMeetingAudio));
+      console.log('toggleMicrophone Echo Reduction', observeMeetingAudio);
+      const deviceToUse = vfDevice || selectedAudioInput;
+      //logger.info('toggleMicrophone deviceToUse ' + JSON.stringify(deviceToUse));
+      console.log('toggleMicrophone deviceToUse', deviceToUse);
+      const startAudioInput = await meetingSession.audioVideo.startAudioInput(deviceToUse);
+      //logger.info('toggleMicrophone startAudioInput ' + JSON.stringify(startAudioInput));
+      console.log('toggleMicrophone startAudioInput', startAudioInput);
+      if (vfDevice) {
+        // logger.info('Amazon Voice Focus enabled ');
+        console.log('Amazon Voice Focus enabled ');
+      }
+      setMicroPermissionDeniedError(null);
+    }
+    catch (error) {
+      //logger.error('toggleMicrophone error ' + error);
+      console.error('toggleMicrophone error', error);
+      if (error.name === "NotAllowedError" || error.name === "PermissionDeniedError") {
+        // Handle permission denial
+        setMicroPermissionDeniedError('Microphone Access Denied. Please allow microphone access in your browser settings.');
+        //alert("Permission denied by browser. Please allow access to continue.");
+      } else {
+        // Handle other errors
+        console.error("Error accessing media devices:", error);
+      }
+    } finally {
+      setMicroChecking(null);
+    }
+  }, [selectedAudioInput]);
+
+    // Function to get the list of audio input devices
+    const getAudioInputDevices = useCallback(async () => {
+      if (meetingSession) {
+        //const devices = await meetingSession.audioVideo.listAudioInputDevices();
+        const devices = await meetingSession.audioVideo.listAudioInputDevices();
+        devices.forEach(device => console.log(`Device: ${device.label}, ID: ${device.deviceId}`));
+        console.log('List Audio Input Devices:', devices);
+        logger.info('List Audio Input Devices' + JSON.stringify(devices));
+        const isMuted = meetingSession.audioVideo.realtimeIsLocalAudioMuted();
+        console.log("Microphone muted:", isMuted);
+        setAudioInputDevices(null);
+        setAudioInputDevices(devices);
+        if (devices.length > 0) {
+          checkStatusMicrophone(transformVFD, meetingSession);
+          setSelectedAudioInput(devices[0].deviceId);
+        } else {
+          // setMicroChecking('microChecking');
+          // setNoMicoMsg(null);
+          // setTimeout(() => {
+          //   setMicroChecking(null);
+          //   setNoMicoMsg('noMicroMsg');
+          // }, 5000);
+          console.log('No microphone devices found');
+        }
+      }
+    }, [meetingSession, logger, checkStatusMicrophone, transformVFD]);
+
   // Function to toggle microphone on/off
   const toggleMicrophone = async () => {
     if (meetingSession) {
@@ -214,25 +296,6 @@ function StartLiveSession() {
           console.log('toggleMicrophone stopAudioInput', stopAudioInput);
 
         } else {
-          // Start the audio input device
-          // Create a new transform device if Voice Focus is supported
-          const vfDevice = await transformVFD.createTransformDevice(selectedAudioInput);
-          //logger.info('toggleMicrophone vfDevice ' + JSON.stringify(vfDevice));
-          console.log('toggleMicrophone vfDevice', vfDevice);
-          // Enable Echo Reduction on this client
-          const observeMeetingAudio = await vfDevice.observeMeetingAudio(meetingSession.audioVideo);
-          //logger.info('toggleMicrophone Echo Reduction ' + JSON.stringify(observeMeetingAudio));
-          console.log('toggleMicrophone Echo Reduction', observeMeetingAudio);
-          const deviceToUse = vfDevice || selectedAudioInput;
-          //logger.info('toggleMicrophone deviceToUse ' + JSON.stringify(deviceToUse));
-          console.log('toggleMicrophone deviceToUse', deviceToUse);
-          const startAudioInput = await meetingSession.audioVideo.startAudioInput(deviceToUse);
-          //logger.info('toggleMicrophone startAudioInput ' + JSON.stringify(startAudioInput));
-          console.log('toggleMicrophone startAudioInput', startAudioInput);
-          if (vfDevice) {
-            // logger.info('Amazon Voice Focus enabled ');
-            console.log('Amazon Voice Focus enabled ');
-          }
           // Unmute the microphone
           const realtimeUnmuteLocalAudio = meetingSession.audioVideo.realtimeUnmuteLocalAudio();
           //logger.info('toggleMicrophone realtimeUnmuteLocalAudio ' + JSON.stringify(realtimeUnmuteLocalAudio));
@@ -242,57 +305,10 @@ function StartLiveSession() {
         setIsMicOn(!isMicOn); // Toggle mic status
 
       } catch (error) {
-        //logger.error('toggleMicrophone error ' + error);
-        console.error('toggleMicrophone error', error);
-        if (error.name === "NotAllowedError" || error.name === "PermissionDeniedError") {
-          // Handle permission denial
-          alert(error);
-          console.error("Permission denied by browser. Please allow access to continue.");
-          //alert("Permission denied by browser. Please allow access to continue.");
-        } else {
-          // Handle other errors
-          alert(error);
-          console.error("Error accessing media devices:", error);
-        }
+        console.error("Error accessing media devices:", error);
       }
     }
   };
-
-  // Async function to select audio output device
-  const selectSpeaker = async (meetingSession) => {
-    const audioOutputDevices = await meetingSession.audioVideo.listAudioOutputDevices();
-
-    if (audioOutputDevices.length > 0) {
-      await meetingSession.audioVideo.chooseAudioOutput(audioOutputDevices[0].deviceId);
-    } else {
-      console.log('No speaker devices found');
-    }
-  };
-
-  // Function to get the list of audio input devices
-  const getAudioInputDevices = useCallback(async () => {
-    if (meetingSession) {
-      //const devices = await meetingSession.audioVideo.listAudioInputDevices();
-      const devices = await meetingSession.audioVideo.listAudioInputDevices();
-      devices.forEach(device => console.log(`Device: ${device.label}, ID: ${device.deviceId}`));
-      console.log('List Audio Input Devices:', devices);
-      logger.info('List Audio Input Devices' + JSON.stringify(devices));
-      const isMuted = meetingSession.audioVideo.realtimeIsLocalAudioMuted();
-      console.log("Microphone muted:", isMuted);
-      setAudioInputDevices(null);
-      setAudioInputDevices(devices);
-      if (devices.length > 0) {
-        setSelectedAudioInput(devices[0].deviceId);
-      } else {
-        setMicroChecking('microChecking');
-        setNoMicoMsg(null);
-        setTimeout(() => {
-          setMicroChecking(null);
-          setNoMicoMsg('noMicroMsg');
-        }, 5000);
-      }
-    }
-  }, [meetingSession, logger]);
 
   useEffect(() => {
     getAudioInputDevices();
@@ -320,6 +336,14 @@ function StartLiveSession() {
     meetingSession.audioVideo.realtimeSubscribeToAttendeeIdPresence(callback);
   }, [meetingSession]);
 
+  useEffect(() => {
+
+    if (selectedAudioInput) {
+      checkStatusMicrophone(transformVFD, meetingSession);
+    }
+
+  }, [selectedAudioInput, transformVFD, meetingSession, checkStatusMicrophone]);
+
   // Function to handle the chat setting change
   const handleChatSettingChange = (e) => {
     setChatSetting(e.target.value);
@@ -332,7 +356,10 @@ function StartLiveSession() {
 
   // Function to refresh the audio input devices
   const handleRefresh = () => {
-    getAudioInputDevices();
+    console.log('handleRefresh start');
+    setMicroChecking("checking microphone");
+    checkStatusMicrophone(transformVFD, meetingSession);
+    console.log('handleRefresh end');
   }
   return (
     <div className="container">
@@ -351,17 +378,11 @@ function StartLiveSession() {
         </>
       ) : (
         <>
-          {(audioInputDevices.length <= 0) ? (
-            <>
-              {noMicroMsg ? (
-                <p>{t('noMicroMsg')} <button onClick={handleRefresh}><MdRefresh size={24} /></button></p>
-              ) : (
-                <div className="loading">
-                  <div className="spinner"></div>
-                  {microChecking && <p>{t('microChecking')}</p>}
-                </div>
-              )}
-            </>
+          {(microChecking) ? (
+            <div className="loading">
+              <div className="spinner"></div>
+              <p>{t('microChecking')}</p>
+            </div>
           ) : (
             <>
               <h3>{t('microSelectionLbl')}</h3>
@@ -374,13 +395,22 @@ function StartLiveSession() {
                   ))}
                 </select>
               )}
-              <div className="controls">
-                <button onClick={toggleMicrophone} className="toggle-mic-button">
-                  <FontAwesomeIcon icon={isMicOn ? faMicrophone : faMicrophoneSlash} size="2x" color={isMicOn ? "green" : "gray"} />
-                </button>
-              </div>
+              {
+                microPermissionDeniedError ? (
+                  <p style={{ color: 'red' }}>
+                    {microPermissionDeniedError}
+                    <button onClick={handleRefresh}><MdRefresh size={24} /></button>
+                  </p>) : (
+                  <div className="controls">
+                    <button onClick={toggleMicrophone} className="toggle-mic-button">
+                      <FontAwesomeIcon icon={isMicOn ? faMicrophone : faMicrophoneSlash} size="2x" color={isMicOn ? "green" : "gray"} />
+                    </button>
+                  </div>
+                )
+              }
             </>
           )}
+
           <h3>{t('chatSettingLbl')}</h3>
           <select value={chatSetting} onChange={handleChatSettingChange}>
             <option value="allChat">{t('chatSettingOptions.allChat')}</option>
