@@ -244,7 +244,7 @@ function StartLiveSession() {
       console.error('toggleMicrophone error', error);
       if (error.name === "NotAllowedError" || error.name === "PermissionDeniedError") {
         // Handle permission denial
-        setMicroPermissionDeniedError('Microphone Access Denied. Please allow microphone access in your browser settings.');
+        setMicroPermissionDeniedError('Your microphone is blocked. Please allow access in your browser settings to continue.');
         //alert("Permission denied by browser. Please allow access to continue.");
       } else {
         // Handle other errors
@@ -259,7 +259,7 @@ function StartLiveSession() {
     const getAudioInputDevices = useCallback(async () => {
       if (meetingSession) {
         //const devices = await meetingSession.audioVideo.listAudioInputDevices();
-        const devices = await meetingSession.audioVideo.listAudioInputDevices();
+        const devices = await meetingSession.audioVideo.listAudioInputDevices(true);
         devices.forEach(device => console.log(`Device: ${device.label}, ID: ${device.deviceId}`));
         console.log('List Audio Input Devices:', devices);
         logger.info('List Audio Input Devices' + JSON.stringify(devices));
