@@ -329,7 +329,7 @@ function LiveSubSpeaker() {
   const getAudioInputDevices = useCallback(async () => {
     if (meetingSession) {
       // const devices = await meetingSession.audioVideo.listAudioInputDevices();
-      const devices = await meetingSession.audioVideo.listAudioInputDevices();
+      const devices = await meetingSession.audioVideo.listAudioInputDevices(true);
       console.log('List Audio Input Devices:', devices);
       logger.info('Sub-Guide List Audio Input Devices' + JSON.stringify(devices));
       setAudioInputDevices(null);
