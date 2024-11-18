@@ -246,10 +246,12 @@ function StartLiveSession() {
       if (error.name === "NotAllowedError" || error.name === "PermissionDeniedError") {
         // Handle permission denial
         setMicroPermissionDeniedError('Your microphone is blocked. Please allow access in your browser settings to continue.');
+        alert("Your microphone is blocked " + error);
         //alert("Permission denied by browser. Please allow access to continue.");
       } else {
         // Handle other errors
         console.error("Error accessing media devices:", error);
+        alert("Other " + error);
       }
     } finally {
       setMicroChecking(null);
