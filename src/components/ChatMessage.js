@@ -188,8 +188,8 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null }) {
   // Function to handle input key down
   const handleInputKeyDown = (e) => {
     if (e.key === 'Enter') {
-      sendMessageClick();
       e.preventDefault(); // Prevent newline on Enter
+      sendMessageClick();
     }
   };
 
