@@ -67,7 +67,7 @@ function LiveSubSpeaker() {
   const [transformVFD, setTransformVFD] = useState(null);
   const [microChecking, setMicroChecking] = useState(t('microChecking'));
   const [noMicroMsg, setNoMicoMsg] = useState(null);
-  const [logger, setLogger] = useState(null);
+  //const [logger, setLogger] = useState(null);
   const [participantsCount, setParticipantsCount] = useState(0);
 
   // Function to transform the audio input device to Voice Focus Device/Echo Reduction
@@ -114,7 +114,7 @@ function LiveSubSpeaker() {
       consoleLogger,
       meetingSessionPOSTLogger,
     );
-    setLogger(logger);
+    //setLogger(logger);
     // Check if the Voice Focus Device is supported on the client
     const isVoiceFocusSupported = await transformVoiceFocusDevice(meeting, attendee, logger);
     logger.info('Sub-Guide deviceController isVoiceFocusSupported' + isVoiceFocusSupported);
@@ -328,24 +328,27 @@ function LiveSubSpeaker() {
   // Function to get the list of audio input devices
   const getAudioInputDevices = useCallback(async () => {
     if (meetingSession) {
-      // const devices = await meetingSession.audioVideo.listAudioInputDevices();
-      const devices = await meetingSession.audioVideo.listAudioInputDevices(true);
-      console.log('List Audio Input Devices:', devices);
-      logger.info('Sub-Guide List Audio Input Devices' + JSON.stringify(devices));
-      setAudioInputDevices(null);
-      setAudioInputDevices(devices);
-      if (devices.length > 0) {
-        setSelectedAudioInput(devices[0].deviceId);
-      } else {
-        setMicroChecking('microChecking');
-        setNoMicoMsg(null);
-        setTimeout(() => {
-          setMicroChecking(null);
-          setNoMicoMsg('noMicroMsg');
-        }, 5000);
-      }
+        const devices = await meetingSession.audioVideo.listAudioInputDevices(true);
+        console.log('List Audio Input Devices:', devices);
+        setAudioInputDevices(null);
+        setAudioInputDevices(devices);
+
+        // Check if there are no devices or if any device label is empty
+        if (devices.length === 0 || devices.some(device => !device.label.trim())) {
+            setMicroChecking('microChecking');
+            setNoMicoMsg(null);
+
+            // Display a message after 5 seconds
+            setTimeout(() => {
+                setMicroChecking(null);
+                setNoMicoMsg('noMicroMsg');
+            }, 5000);
+        } else {
+            // If devices are available, select the first device as the default
+            setSelectedAudioInput(devices[0].deviceId);
+        }
     }
-  }, [meetingSession, logger]);
+}, [meetingSession]);
 
   // Use effect to join the meeting
   useEffect(() => {
