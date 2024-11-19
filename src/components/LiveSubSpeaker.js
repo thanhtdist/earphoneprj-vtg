@@ -4,7 +4,6 @@ import {
   createAttendee,
   createAppInstanceUsers,
   addChannelMembership,
-  //listChannelMembership,
   listAttendee,
 } from '../apis/api';
 import {
@@ -22,6 +21,7 @@ import Participants from './Participants';
 import Config from '../utils/config';
 import metricReport from '../utils/MetricReport';
 import { getPOSTLogger } from '../utils/MeetingLogger';
+import JSONCookieUtils from '../utils/JSONCookieUtils';
 import { v4 as uuidv4 } from 'uuid';
 import { useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -188,13 +188,6 @@ function LiveSubSpeaker() {
     // Create a unique user name for the listener
     // Always 1 member is the host, so listeners will start from the number of participants currently in the channel
     let userName = `${userType}${index + 1}`;
-    // console.log('userName:', userName);
-    // let suffix = subGuideCount;
-    // while (await checkUserNameExists(hostUserArn, channelArn, userName)) {
-    //   userName = `${userType}${suffix}`;
-    //   suffix++;
-    // }
-
     console.log('subGuide username:', userName);
     // Create userArn and join channel
 
@@ -220,24 +213,6 @@ function LiveSubSpeaker() {
       const hostUserArn = `${Config.appInstanceArn}/user/${hostId}`;
       console.log('hostUserArn:', hostUserArn);
 
-      // //Get the channel ARN from the channel ID
-      // const channelArn = `${Config.appInstanceArn}/channel/${channelId}`;
-      // console.log('channelArn:', hostUserArn);
-
-      // // List the channel members to check if the user has already joined the channel
-      // const channelMembersResponse = await listChannelMembership(channelArn, hostUserArn);
-      // console.log('channelMembersResponse:', channelMembersResponse);
-
-      // // Count members starting with "Sub-Guide"
-      // const memberships = channelMembersResponse.memberships || [];
-      // console.log('memberships:', memberships);
-      // const subGuideCount = memberships.filter(member => member.Member.Name && member.Member.Name.startsWith("Sub-Guide")).length || 0;
-      // console.log('subGuideCount:', subGuideCount);
-
-      // // Create a unique user name for the listener
-      // // Always 1 member is the host, so listeners will start from the number of participants currently in the channel
-      // const userName = `Sub-Guide${subGuideCount + 1}`;
-
       // Generate a unique user ID and name for the host
       const userID = uuidv4(); // Generate unique user ID
       const userType = 'Sub-Guide'; // User type
@@ -245,16 +220,28 @@ function LiveSubSpeaker() {
       // Join the meeting from the meeting ID the host has created
       const meeting = await getMeeting(meetingId);
       console.log('Meeting:', meeting);
-      setMetting(meeting);
-      //const attendee = await createAttendee(meetingId, userID);
       const attendee = await createAttendee(meeting.MeetingId, `${userType}|${Date.now()}`);
       console.log('Attendee created:', attendee);
-      setAttendee(attendee);
       initializeMeetingSession(meeting, attendee);
       const createAppUserAndJoinChannelResponse = await createAppUserAndJoinChannel(meeting.MeetingId, attendee.AttendeeId, userID, userType, channelId);
       console.log('createAppUserAndJoinChannelResponse:', createAppUserAndJoinChannelResponse);
+      setMetting(meeting);
+      setAttendee(attendee);
       setChannelArn(createAppUserAndJoinChannelResponse.channelArn);
       setUserArn(createAppUserAndJoinChannelResponse.userArn);
+
+      // Storage the Sub-Guide information in the cookies
+      // Define your data
+      const subGuide = {
+        meeting: meeting,
+        attendee: attendee,
+        userArn: createAppUserAndJoinChannelResponse.userArn,
+        channelArn: createAppUserAndJoinChannelResponse.channelArn,
+      };
+
+      // Set the JSON cookie for 1 day
+      JSONCookieUtils.setJSONCookie("Sub-Guide", subGuide, 1);
+      console.log("Cookie set for 1 day!");
 
     } catch (error) {
       console.error('Error joining the meeting:', error);
@@ -327,34 +314,52 @@ function LiveSubSpeaker() {
   // Function to get the list of audio input devices
   const getAudioInputDevices = useCallback(async () => {
     if (meetingSession) {
-        const devices = await meetingSession.audioVideo.listAudioInputDevices(true);
-        console.log('List Audio Input Devices:', devices);
-        setAudioInputDevices(null);
-        setAudioInputDevices(devices);
-        setMicroChecking('microChecking');
+      const devices = await meetingSession.audioVideo.listAudioInputDevices(true);
+      console.log('List Audio Input Devices:', devices);
+      setAudioInputDevices(null);
+      setAudioInputDevices(devices);
+      setMicroChecking('microChecking');
 
-        // Check if there are no devices or if any device label is empty
-        if (devices.length === 0 || devices.some(device => !device.label.trim())) {
-          console.log('No audio input devices found');
-            // Display a message after 5 seconds
-            setTimeout(() => {
-                setMicroChecking(null);
-                setNoMicoMsg('noMicroMsg');
-            }, 5000);
-        } else {
-            // If devices are available, select the first device as the default
-            setSelectedAudioInput(devices[0].deviceId);
-            setNoMicoMsg(null);
-        }
+      // Check if there are no devices or if any device label is empty
+      if (devices.length === 0 || devices.some(device => !device.label.trim())) {
+        console.log('No audio input devices found');
+        // Display a message after 5 seconds
+        setTimeout(() => {
+          setMicroChecking(null);
+          setNoMicoMsg('noMicroMsg');
+        }, 5000);
+      } else {
+        // If devices are available, select the first device as the default
+        setSelectedAudioInput(devices[0].deviceId);
+        setNoMicoMsg(null);
+      }
     }
-}, [meetingSession]);
+  }, [meetingSession]);
+
+  // Function to get the meeting and attendee information from the cookies
+  const getMeetingAttendeeInfoFromCookies = useCallback((retrievedSubGuide) => {
+    setIsLoading(true);
+    console.log("Retrieved cookie:", retrievedSubGuide);
+    initializeMeetingSession(retrievedSubGuide.meeting, retrievedSubGuide.attendee);
+    setMetting(retrievedSubGuide.meeting);
+    setAttendee(retrievedSubGuide.attendee);
+    setUserArn(retrievedSubGuide.userArn);
+    setChannelArn(retrievedSubGuide.channelArn);
+    setIsLoading(false);
+  }, [initializeMeetingSession]);
 
   // Use effect to join the meeting
   useEffect(() => {
     if (meetingId && channelId) {
-      joinMeeting();
+      const retrievedSubGuide = JSONCookieUtils.getJSONCookie("Sub-Guide");
+      console.log("Retrieved cookie:", retrievedSubGuide);
+      if (retrievedSubGuide) {
+        getMeetingAttendeeInfoFromCookies(retrievedSubGuide);
+      } else {
+        joinMeeting();
+      }
     }
-  }, [joinMeeting, meetingId, channelId, hostId]);
+  }, [joinMeeting, meetingId, channelId, hostId, getMeetingAttendeeInfoFromCookies]);
 
   useEffect(() => {
     getAudioInputDevices();
@@ -396,7 +401,7 @@ function LiveSubSpeaker() {
             {(noMicroMsg) ? (
               <>
                 {!microChecking ? (
-                  <p style={{color: "red"}}>{t('noMicroMsg')}</p>
+                  <p style={{ color: "red" }}>{t('noMicroMsg')}</p>
                 ) : (
                   <div className="loading">
                     <div className="spinner"></div>

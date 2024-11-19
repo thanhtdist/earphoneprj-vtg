@@ -4,7 +4,6 @@ import {
   createAttendee,
   createAppInstanceUsers,
   addChannelMembership,
-  //listChannelMembership,
   listAttendee,
 } from '../apis/api';
 import {
@@ -19,6 +18,7 @@ import ChatMessage from './ChatMessage';
 import Participants from './Participants';
 import Config from '../utils/config';
 import metricReport from '../utils/MetricReport';
+import JSONCookieUtils from '../utils/JSONCookieUtils';
 import { v4 as uuidv4 } from 'uuid';
 import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -93,20 +93,6 @@ function LiveViewer() {
     }
   };
 
-  // // Function to check if the user name already exists in the channel
-  // const checkUserNameExists = useCallback(async (hostUserArn, channelArn, userName) => {
-  //   const channelMembersResponse = await listChannelMembership(channelArn, hostUserArn);
-  //   console.log('channelMembersResponse:', channelMembersResponse);
-
-  //   //Count members starting with "User"
-  //   const memberships = channelMembersResponse.memberships || [];
-  //   console.log('memberships:', memberships);
-  //   const userExists = memberships?.some(member => member.Member.Name === userName) || false;
-  //   console.log('userExists:', userExists);
-  //   return userExists || false;
-  // }, []);
-
-
   // Function to create a new user and channel
   const createAppUserAndJoinChannel = useCallback(async (meetingId, attendeeId, userID, userType, channelId) => {
 
@@ -147,13 +133,6 @@ function LiveViewer() {
     // Create a unique user name for the listener
     // Always 1 member is the host, so listeners will start from the number of participants currently in the channel
     let userName = `${userType}${index + 1}`;
-    // console.log('userName:', userName);
-    // let suffix = subGuideCount;
-    // while (await checkUserNameExists(hostUserArn, channelArn, userName)) {
-    //   userName = `${userType}${suffix}`;
-    //   suffix++;
-    // }
-
     console.log('user username:', userName);
     // Create userArn and join channel
 
@@ -166,6 +145,18 @@ function LiveViewer() {
     };
   }, []);
 
+  // Function to get the meeting and attendee information from the cookies
+  const getMeetingAttendeeInfoFromCookies = useCallback((retrievedUser) => {
+    setIsLoading(true);
+    console.log("Retrieved cookie:", retrievedUser);
+    initializeMeetingSession(retrievedUser.meeting, retrievedUser.attendee);
+    setMetting(retrievedUser.meeting);
+    setAttendee(retrievedUser.attendee);
+    setUserArn(retrievedUser.userArn);
+    setChannelArn(retrievedUser.channelArn);
+    setIsLoading(false);
+  }, [initializeMeetingSession]);
+
   // Function to join the meeting
   const joinMeeting = useCallback(async () => {
     setIsLoading(true);
@@ -174,52 +165,37 @@ function LiveViewer() {
         alert('Meeting ID, Channel ID, and hostId are required');
         return;
       }
-
       // Get host user ID from the host ID
       const hostUserArn = `${Config.appInstanceArn}/user/${hostId}`;
       console.log('hostUserArn:', hostUserArn);
-
-      //Get the channel ARN from the channel ID
-      // const channelArn = `${Config.appInstanceArn}/channel/${channelId}`;
-      // console.log('channelArn:', hostUserArn);
-
-      // List the channel members to check if the user has already joined the channel
-      // const channelMembersResponse = await listChannelMembership(channelArn, hostUserArn);
-      // console.log('channelMembersResponse:', channelMembersResponse);
-
-      // Count members starting with "User"
-      // const memberships = channelMembersResponse.memberships || [];
-      // console.log('memberships:', memberships);
-      // const userCount = memberships.filter(member => member.Member.Name && member.Member.Name.startsWith("User")).length || 0;
-      // console.log('userCount:', userCount);
       // Generate a unique user ID and name for the host
       const userID = uuidv4(); // Generate unique user ID
       const userType = 'User';
-      // Create a unique user name for the listener
-      // Always 1 member is the host, so listeners will start from the number of participants currently in the channel
-      // const userName = `User${userCount + 1}`;
-
-      // // Create userArn and join channel
-      // const userArn = await createAppInstanceUsers(userID, userName);
-      // await addChannelMembership(channelArn, userArn);
-      // setUserArn(userArn);
-      // setChannelArn(channelArn);
-
       // Join the meeting from the meeting ID the host has created
       const meeting = await getMeeting(meetingId);
       console.log('Meeting:', meeting);
-      setMetting(meeting);
-      //const attendee = await createAttendee(meetingId, userID);
       const attendee = await createAttendee(meeting.MeetingId, `${userType}|${Date.now()}`);
       console.log('Attendee:', attendee);
-
-      setAttendee(attendee);
       initializeMeetingSession(meeting, attendee);
       // Create a new user and join the channel
       const createAppUserAndJoinChannelResponse = await createAppUserAndJoinChannel(meeting.MeetingId, attendee.AttendeeId, userID, userType, channelId);
       console.log('createAppUserAndJoinChannelResponse:', createAppUserAndJoinChannelResponse);
+      setMetting(meeting);
+      setAttendee(attendee);
       setChannelArn(createAppUserAndJoinChannelResponse.channelArn);
       setUserArn(createAppUserAndJoinChannelResponse.userArn);
+      // Storage the User information in the cookies
+      // Define your data
+      const user = {
+        meeting: meeting,
+        attendee: attendee,
+        userArn: createAppUserAndJoinChannelResponse.userArn,
+        channelArn: createAppUserAndJoinChannelResponse.channelArn,
+      };
+
+      // Set the JSON cookie for 1 day
+      JSONCookieUtils.setJSONCookie("User", user, 1);
+      console.log("Cookie set for 1 day!");
     } catch (error) {
       console.error('Error joining the meeting:', error);
     } finally {
@@ -230,9 +206,15 @@ function LiveViewer() {
   // Use effect to join the meeting
   useEffect(() => {
     if (meetingId && channelId) {
-      joinMeeting();
+      const retrievedUser = JSONCookieUtils.getJSONCookie("User");
+      console.log("Retrieved cookie:", retrievedUser);
+      if (retrievedUser) {
+        getMeetingAttendeeInfoFromCookies(retrievedUser);
+      } else {
+        joinMeeting();
+      }
     }
-  }, [joinMeeting, meetingId, channelId, hostId]);
+  }, [joinMeeting, meetingId, channelId, hostId, getMeetingAttendeeInfoFromCookies]);
 
 
   useEffect(() => {
