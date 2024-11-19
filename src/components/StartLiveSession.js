@@ -59,7 +59,7 @@ function StartLiveSession() {
   const [isMicOn, setIsMicOn] = useState(false); // State for microphone status
   const [transformVFD, setTransformVFD] = useState(null);
   const [microChecking, setMicroChecking] = useState(t('microChecking'));
-  const [noMicroMsg, setNoMicoMsg] = useState(null);
+  const [noMicroMsg, setNoMicoMsg] = useState(t('noMicroMsg'));
   //const [logger, setLogger] = useState(null);
   const [participantsCount, setParticipantsCount] = useState(0);
   // Function to start a live audio session
@@ -294,19 +294,18 @@ function StartLiveSession() {
   //     }
   //   }
   // }, [meetingSession, logger]);
-
+  // Function to get the list of audio input devices
   const getAudioInputDevices = useCallback(async () => {
     if (meetingSession) {
         const devices = await meetingSession.audioVideo.listAudioInputDevices(true);
         console.log('List Audio Input Devices:', devices);
         setAudioInputDevices(null);
         setAudioInputDevices(devices);
+        setMicroChecking('microChecking');
 
         // Check if there are no devices or if any device label is empty
         if (devices.length === 0 || devices.some(device => !device.label.trim())) {
-            setMicroChecking('microChecking');
-            setNoMicoMsg(null);
-
+          console.log('No audio input devices found');
             // Display a message after 5 seconds
             setTimeout(() => {
                 setMicroChecking(null);
@@ -315,6 +314,7 @@ function StartLiveSession() {
         } else {
             // If devices are available, select the first device as the default
             setSelectedAudioInput(devices[0].deviceId);
+            setNoMicoMsg(null);
         }
     }
 }, [meetingSession]);
@@ -386,15 +386,15 @@ function StartLiveSession() {
         </>
       ) : (
         <>
-          {(audioInputDevices.length <= 0) ? (
+          {(noMicroMsg) ? (
             <>
-              {noMicroMsg ? (
-                <p>{t('noMicroMsg')} <button onClick={handleRefresh}><MdRefresh size={24} /></button></p>
+              {!microChecking ? (
+                <p style={{color: "red"}}>{t('noMicroMsg')}</p>
               ) : (
                 <div className="loading">
                   <div className="spinner"></div>
                   {microChecking && <p>{t('microChecking')}</p>}
-                </div>
+                </div> 
               )}
             </>
           ) : (

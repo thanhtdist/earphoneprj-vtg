@@ -66,7 +66,7 @@ function LiveSubSpeaker() {
   const [isMicOn, setIsMicOn] = useState(false); // State for microphone status
   const [transformVFD, setTransformVFD] = useState(null);
   const [microChecking, setMicroChecking] = useState(t('microChecking'));
-  const [noMicroMsg, setNoMicoMsg] = useState(null);
+  const [noMicroMsg, setNoMicoMsg] = useState(t('noMicroMsg'));
   //const [logger, setLogger] = useState(null);
   const [participantsCount, setParticipantsCount] = useState(0);
 
@@ -332,12 +332,11 @@ function LiveSubSpeaker() {
         console.log('List Audio Input Devices:', devices);
         setAudioInputDevices(null);
         setAudioInputDevices(devices);
+        setMicroChecking('microChecking');
 
         // Check if there are no devices or if any device label is empty
         if (devices.length === 0 || devices.some(device => !device.label.trim())) {
-            setMicroChecking('microChecking');
-            setNoMicoMsg(null);
-
+          console.log('No audio input devices found');
             // Display a message after 5 seconds
             setTimeout(() => {
                 setMicroChecking(null);
@@ -346,6 +345,7 @@ function LiveSubSpeaker() {
         } else {
             // If devices are available, select the first device as the default
             setSelectedAudioInput(devices[0].deviceId);
+            setNoMicoMsg(null);
         }
     }
 }, [meetingSession]);
@@ -399,10 +399,10 @@ function LiveSubSpeaker() {
           </div>
         ) : (
           <>
-            {(audioInputDevices.length <= 0) ? (
+            {(noMicroMsg) ? (
               <>
-                {noMicroMsg ? (
-                  <p>{t('noMicroMsg')} <button onClick={handleRefresh}><MdRefresh size={24} /></button></p>
+                {!microChecking ? (
+                  <p style={{color: "red"}}>{t('noMicroMsg')}</p>
                 ) : (
                   <div className="loading">
                     <div className="spinner"></div>
@@ -413,13 +413,15 @@ function LiveSubSpeaker() {
             ) : (
               <>
                 <h3>{t('microSelectionLbl')}</h3>
-                <select value={selectedAudioInput} onChange={(e) => setSelectedAudioInput(e.target.value)}>
-                  {audioInputDevices.map((device) => (
-                    <option key={device.deviceId} value={device.deviceId}>
-                      {device.label}
-                    </option>
-                  ))}
-                </select>
+                {(audioInputDevices && audioInputDevices.length > 0) && (
+                  <select value={selectedAudioInput} onChange={(e) => setSelectedAudioInput(e.target.value)}>
+                    {audioInputDevices.map((device) => (
+                      <option key={device.deviceId} value={device.deviceId}>
+                        {device.label}
+                      </option>
+                    ))}
+                  </select>
+                )}
                 <div className="controls">
                   <button onClick={toggleMicrophone} className="toggle-mic-button">
                     <FontAwesomeIcon icon={isMicOn ? faMicrophone : faMicrophoneSlash} size="2x" color={isMicOn ? "green" : "gray"} />
