@@ -3,7 +3,7 @@
   "startLiveBtn": "音声ガイドをスタート",
   "loading": "お待ちください。。。",
   "microChecking": "マイクを確認しています...しばらくお待ちください。",
-  "noMicroMsg": "Your microphone is currently blocked. Please enable microphone access in your browser settings or on this site to proceed.",
+  "noMicroMsg": "現在、マイクがブロックされています。続行するには、ブラウザの設定またはこのサイトでマイクのアクセスを有効にし下さい。",
   "microSelectionLbl": "音声入力（マイク）を選択",
   "chatSettingLbl": "チャット設定",
   "chatSettingOptions": {
