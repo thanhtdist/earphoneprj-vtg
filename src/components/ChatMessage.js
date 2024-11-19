@@ -186,12 +186,29 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null }) {
   };
 
   // Function to handle input key down
+  // let debounceTimeout; // Declare debounceTimeout in a higher scope for reuse
+  // const handleInputKeyDown = (e) => {
+  //   if (e.key === 'Enter') {
+  //     e.preventDefault(); // Prevent newline on Enter
+  //     clearTimeout(debounceTimeout); // Clear previous timeout if any
+  //     debounceTimeout = setTimeout(() => {
+  //       sendMessageClick();
+  //     }, 300); // Adjust delay as needed
+  //   }
+  // };
+
   const handleInputKeyDown = (e) => {
     if (e.key === 'Enter') {
-      e.preventDefault(); // Prevent newline on Enter
+      e.preventDefault();
+      if (e.target.disabled) return; // Prevent additional execution if input is disabled
       sendMessageClick();
+      e.target.disabled = true; // Disable the input temporarily
+      setTimeout(() => {
+        e.target.disabled = false; // Re-enable after delay
+      }, 300); // Adjust delay
     }
   };
+  
 
   // Function to handle file upload icon click
   const handleFileUploadClick = () => {

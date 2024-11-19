@@ -28,7 +28,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faMicrophone, faMicrophoneSlash,
 } from '@fortawesome/free-solid-svg-icons';
-import { MdRefresh } from "react-icons/md";
 import { useTranslation } from 'react-i18next';
 
 /**
@@ -364,10 +363,6 @@ function StartLiveSession() {
     setSelectedQR(e.target.value);
   };
 
-  // Function to refresh the audio input devices
-  const handleRefresh = () => {
-    getAudioInputDevices();
-  }
   return (
     <>
     <Participants count={participantsCount} />

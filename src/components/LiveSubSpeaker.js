@@ -25,7 +25,6 @@ import { getPOSTLogger } from '../utils/MeetingLogger';
 import { v4 as uuidv4 } from 'uuid';
 import { useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { MdRefresh } from "react-icons/md";
 import {
   faMicrophone, faMicrophoneSlash,
 } from '@fortawesome/free-solid-svg-icons';
@@ -381,11 +380,6 @@ function LiveSubSpeaker() {
 
     meetingSession.audioVideo.realtimeSubscribeToAttendeeIdPresence(callback);
   }, [meetingSession]);
-
-  // Function to refresh the audio input devices
-  const handleRefresh = () => {
-    getAudioInputDevices();
-  }
 
   return (
     <>
