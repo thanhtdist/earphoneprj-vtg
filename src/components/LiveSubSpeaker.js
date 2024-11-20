@@ -349,17 +349,49 @@ function LiveSubSpeaker() {
   }, [initializeMeetingSession]);
 
   // Use effect to join the meeting
+  // useEffect(() => {
+  //   if (meetingId && channelId) {
+  //     const retrievedSubGuide = JSONCookieUtils.getJSONCookie("Sub-Guide");
+  //     console.log("Meeting IDxxx:", meetingId);
+  //     console.log("Channel IDxxx:", channelId);
+  //     console.log("Retrieved cookie:", retrievedSubGuide);
+
+  //     if (retrievedSubGuide) {
+  //       getMeetingAttendeeInfoFromCookies(retrievedSubGuide);
+  //     } else {
+  //       joinMeeting();
+  //     }
+  //   }
+  // }, [joinMeeting, meetingId, channelId, hostId, getMeetingAttendeeInfoFromCookies]);
   useEffect(() => {
-    if (meetingId && channelId) {
-      const retrievedSubGuide = JSONCookieUtils.getJSONCookie("Sub-Guide");
-      console.log("Retrieved cookie:", retrievedSubGuide);
-      if (retrievedSubGuide) {
+    // Retrieve and parse the "Sub-Guide" cookie
+    const retrievedSubGuide = JSONCookieUtils.getJSONCookie("Sub-Guide");
+    console.log("retrievedSubGuide:", retrievedSubGuide);
+    console.log("Debug Info:", {
+      meetingId,
+      channelId,
+      retrievedSubGuide,
+    });
+  
+    try {
+      // Validate the retrieved cookie structure
+      const { meeting, channelArn } = retrievedSubGuide || {};
+      const isMeetingMatched = meeting?.MeetingId === meetingId;
+      const isChannelMatched = channelArn === `${Config.appInstanceArn}/channel/${channelId}`;
+  
+      if (isMeetingMatched && isChannelMatched) {
+        console.log("Sub-Guide cookie matched the current meeting and channel");
         getMeetingAttendeeInfoFromCookies(retrievedSubGuide);
       } else {
+        console.log("Sub-Guide cookie did not match the current meeting and channel");
         joinMeeting();
       }
+    } catch (error) {
+      console.error("Error processing the Sub-Guide cookie:", error);
+      joinMeeting();
     }
   }, [joinMeeting, meetingId, channelId, hostId, getMeetingAttendeeInfoFromCookies]);
+  
 
   useEffect(() => {
     getAudioInputDevices();

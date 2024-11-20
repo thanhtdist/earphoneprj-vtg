@@ -204,18 +204,45 @@ function LiveViewer() {
   }, [meetingId, channelId, hostId, initializeMeetingSession, createAppUserAndJoinChannel]);
 
   // Use effect to join the meeting
+  // useEffect(() => {
+  //   if (meetingId && channelId) {
+  //     const retrievedUser = JSONCookieUtils.getJSONCookie("User");
+  //     console.log("Retrieved cookie:", retrievedUser);
+  //     if (retrievedUser) {
+  //       getMeetingAttendeeInfoFromCookies(retrievedUser);
+  //     } else {
+  //       joinMeeting();
+  //     }
+  //   }
+  // }, [joinMeeting, meetingId, channelId, hostId, getMeetingAttendeeInfoFromCookies]);
   useEffect(() => {
-    if (meetingId && channelId) {
-      const retrievedUser = JSONCookieUtils.getJSONCookie("User");
-      console.log("Retrieved cookie:", retrievedUser);
-      if (retrievedUser) {
+    // Retrieve and parse the "Sub-Guide" cookie
+    const retrievedUser = JSONCookieUtils.getJSONCookie("User");
+    console.log("retrievedUser:", retrievedUser);
+    console.log("Debug Info:", {
+      meetingId,
+      channelId,
+      retrievedUser,
+    });
+  
+    try {
+      // Validate the retrieved cookie structure
+      const { meeting, channelArn } = retrievedUser || {};
+      const isMeetingMatched = meeting?.MeetingId === meetingId;
+      const isChannelMatched = channelArn === `${Config.appInstanceArn}/channel/${channelId}`;
+  
+      if (isMeetingMatched && isChannelMatched) {
+        console.log("User cookie matched the current meeting and channel");
         getMeetingAttendeeInfoFromCookies(retrievedUser);
       } else {
+        console.log("User cookie did not match the current meeting and channel");
         joinMeeting();
       }
+    } catch (error) {
+      console.error("Error processing the User cookie:", error);
+      joinMeeting();
     }
   }, [joinMeeting, meetingId, channelId, hostId, getMeetingAttendeeInfoFromCookies]);
-
 
   useEffect(() => {
 
