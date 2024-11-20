@@ -409,8 +409,8 @@ function StartLiveSession() {
     // store attachment into S3
     const uploadFileToS3Response = await uploadFileToS3(file);
     console.log('Voice file uploaded successfully:', uploadFileToS3Response);
-    //const fileUrl = URL.createObjectURL(file);
-    const fileUrl = uploadFileToS3Response.Location;
+    const fileUrl = URL.createObjectURL(file);
+    //const fileUrl = uploadFileToS3Response.Location;
     console.log('File URL:', fileUrl);
     // Create an audio element to play the MP3 file
     const audioElement = new Audio(fileUrl);
