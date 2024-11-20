@@ -61,9 +61,6 @@ function StartLiveSession() {
   const [noMicroMsg, setNoMicoMsg] = useState(t('noMicroMsg'));
   //const [logger, setLogger] = useState(null);
   const [participantsCount, setParticipantsCount] = useState(0);
-
-
-
   // Function to start a live audio session
   const startLiveAduioSession = async () => {
     setIsLoading(true);
@@ -324,6 +321,7 @@ function StartLiveSession() {
     setMetting(retrievedMainGuide.meeting);
     setAttendee(retrievedMainGuide.attendee);
     setUserArn(retrievedMainGuide.userArn);
+    setUserId(retrievedMainGuide.userArn.split('/').pop());
     setChannelArn(retrievedMainGuide.channelArn);
     setChannelID(retrievedMainGuide.channelArn.split('/').pop());
     setIsLoading(false);
@@ -377,6 +375,8 @@ function StartLiveSession() {
   const handleQRSelectionChange = (e) => {
     setSelectedQR(e.target.value);
   };
+
+  console.log('Main Speaker - userId', userId);
 
   return (
     <>
@@ -458,7 +458,6 @@ function StartLiveSession() {
                 )}
               </>
             )}
-
             {chatSetting !== "nochat" && (
               <ChatMessage userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} />
             )}
