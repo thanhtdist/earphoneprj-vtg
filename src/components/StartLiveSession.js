@@ -29,6 +29,7 @@ import {
   faMicrophone, faMicrophoneSlash,
 } from '@fortawesome/free-solid-svg-icons';
 import { useTranslation } from 'react-i18next';
+import { uploadFileToS3 } from '../services/S3Service';
 
 /**
  * Component to start a live audio session for the main speaker
@@ -405,7 +406,11 @@ function StartLiveSession() {
 
     const file = fileInput.files[0];
     console.log('Selected MP3 file:', file);
-    const fileUrl = URL.createObjectURL(file);
+    // store attachment into S3
+    const uploadFileToS3Response = await uploadFileToS3(file);
+    console.log('Voice file uploaded successfully:', uploadFileToS3Response);
+    //const fileUrl = URL.createObjectURL(file);
+    const fileUrl = uploadFileToS3Response.Location;
     console.log('File URL:', fileUrl);
     // Create an audio element to play the MP3 file
     const audioElement = new Audio(fileUrl);
@@ -458,9 +463,10 @@ function StartLiveSession() {
           </>
         ) : (
           <>
+            <h3>Play the voice file</h3>
             <div>
               <input type="file" id="mp3File" accept="audio/*" />
-              <button id="playVoiceAudio" onClick={playVoiceAudioClick}>Play Voice Audio</button>
+              <button id="playVoiceAudio" onClick={playVoiceAudioClick}>Play</button>
             </div>
             {(noMicroMsg) ? (
               <>
