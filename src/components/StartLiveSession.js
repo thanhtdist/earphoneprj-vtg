@@ -472,7 +472,7 @@ function StartLiveSession() {
           </>
         ) : (
           <>
-            <AudioUploadBox />
+            {meetingSession && (<AudioUploadBox meetingSession={meetingSession} />)}
             <div>
               <input type="file" id="mp3File" accept="audio/*" />
               <button id="playVoiceAudio" onClick={playVoiceAudioClick}>Play</button>

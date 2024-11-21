@@ -3,8 +3,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 120px;
-    width: 120px;
+    height: 100px;
+    width: 100px;
     border: 2px dashed #ccc;
     border-radius: 10px;
     position: relative;
@@ -27,47 +27,43 @@
     display: none;
   }
   
-  /* Audio Box (when file is uploaded) */
   .audio-box {
-    display: flex;
-    flex-direction: column; /* Arrange icons in a column */
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    width: 100%;
     position: relative;
-  }
-  
-  /* Icon Wrapper (Remove File Icon) */
-  .icon-wrapper {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    cursor: pointer;
-    color: #ff0000;
-    z-index: 10; /* Ensure it stays above other content */
-  }
-  
-  /* Audio Content: Audio File Icon and Play/Pause Icons Container */
-  .audio-content {
+    display: inline-block;
+    width: 100px;
+    height: 100px;
+    text-align: center;
+}
+
+.audio-content {
+    position: relative;
     display: flex;
-    flex-direction: column; /* Stack the audio icon and play/pause icon vertically */
     justify-content: center;
     align-items: center;
     width: 100%;
     height: 100%;
-  }
-  
-  /* Audio Icon (FaFileAudio) */
-  .audio-icon {
-    z-index: 1; /* Keep the audio icon in the background */
-  }
-  
-  /* Play/Pause Icon (Positioned below the Audio Icon) */
-  .play-pause-icon {
-    color: #007bff; /* Color the play/pause icon white or as needed */
-    cursor: pointer;
-    z-index: 2; /* Ensure the play/pause icon is on top */
-    margin-top: 10px; /* Add space between the audio icon and play/pause icons */
-  }
-  
+}
+
+.play-pause-icon {
+    position: absolute;
+    top: 56%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10; /* Ensure it is above the FaFile icon */
+    color: #007bff;
+}
+
+.audio-icon {
+    z-index: 5; /* Lower z-index for the FaFile icon */
+}
+
+/* Icon Wrapper (Remove File Icon) */
+.icon-wrapper {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  color: #ff0000;
+  z-index: 20; /* Ensure it stays above other content */
+}
+
