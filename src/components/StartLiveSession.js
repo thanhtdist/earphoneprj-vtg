@@ -314,13 +314,13 @@ function StartLiveSession() {
 
   // Function to get the meeting and attendee information from the cookies
   const getMeetingAttendeeInfoFromCookies = useCallback(async () => {
+    setIsLoading(true);
     const retrievedMainGuide = JSONCookieUtils.getJSONCookie("Main-Guide");
     console.log("Retrieved cookie:", retrievedMainGuide);
     if (!retrievedMainGuide) return;
     const meeting = await checkAvailableMeeting(retrievedMainGuide.meeting.MeetingId, "Main-Guide");
     console.log('getMeetingResponse:', meeting);
     if (!meeting) return;
-    setIsLoading(true);
     console.log("Retrieved cookie:", retrievedMainGuide);
     initializeMeetingSession(retrievedMainGuide.meeting, retrievedMainGuide.attendee);
     setMetting(retrievedMainGuide.meeting);
