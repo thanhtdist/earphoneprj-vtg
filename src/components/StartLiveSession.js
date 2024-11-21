@@ -62,7 +62,7 @@ function StartLiveSession() {
   const [transformVFD, setTransformVFD] = useState(null);
   const [microChecking, setMicroChecking] = useState(t('microChecking'));
   const [noMicroMsg, setNoMicoMsg] = useState(t('noMicroMsg'));
-  //const [logger, setLogger] = useState(null);
+  const [logger, setLogger] = useState(null);
   const [participantsCount, setParticipantsCount] = useState(0);
   // Function to start a live audio session
   const startLiveAduioSession = async () => {
@@ -168,7 +168,7 @@ function StartLiveSession() {
       meetingSessionPOSTLogger,
     );
     console.log('logger', logger);
-    //setLogger(logger);
+    setLogger(logger);
     // Check if the Voice Focus Device is supported on the client
     const isVoiceFocusSupported = await transformVoiceFocusDevice(meeting, attendee, logger);
     //logger.info('deviceController isVoiceFocusSupported' + isVoiceFocusSupported);
@@ -472,7 +472,7 @@ function StartLiveSession() {
           </>
         ) : (
           <>
-            {meetingSession && (<AudioUploadBox meetingSession={meetingSession} />)}
+            {meetingSession && (<AudioUploadBox meetingSession={meetingSession} logger={logger}/>)}
             <div>
               <input type="file" id="mp3File" accept="audio/*" />
               <button id="playVoiceAudio" onClick={playVoiceAudioClick}>Play</button>

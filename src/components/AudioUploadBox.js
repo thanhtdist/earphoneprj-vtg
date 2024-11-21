@@ -3,8 +3,9 @@ import { FaUpload, FaPlay, FaPause, FaTimes, FaFile } from "react-icons/fa";
 import "../styles/AudioUploadBox.css";
 import { uploadFileToS3 } from '../services/S3Service';
 
-const AudioUploadBox = ({ meetingSession }) => {
+const AudioUploadBox = ({ meetingSession, logger }) => {
     console.log('meetingSession zzz:', meetingSession);
+    console.log('logger zzz:', logger);
     const [voiceFileType, setVoiceFileType] = useState("instruction"); // Tracks the current voice type
     const [uploading, setUploading] = useState(false); // Tracks upload state
     const [audioFiles, setAudioFiles] = useState({
@@ -64,35 +65,41 @@ const AudioUploadBox = ({ meetingSession }) => {
     };
 
     const playVoiceAudio = async (fileUrl) => {
-        if (!audioElementRef.current) {
-            // Create and configure the audio element
-            const audioElement = new Audio(fileUrl);
-            audioElement.crossOrigin = "anonymous";
+        try {
+            if (!audioElementRef.current) {
+                // Create and configure the audio element
+                const audioElement = new Audio(fileUrl);
+                audioElement.crossOrigin = "anonymous";
 
-            // Apply transformations
-            applyAudioTransformations(audioElement);
+                // Apply transformations
+                applyAudioTransformations(audioElement);
 
-            // Assign to ref
-            audioElementRef.current = audioElement;
+                // Assign to ref
+                audioElementRef.current = audioElement;
+            }
+
+            // Create AudioContext and connect to media element source
+            const audioContext = new AudioContext();
+            const mediaElementSource = audioContext.createMediaElementSource(audioElementRef.current);
+            const destination = audioContext.createMediaStreamDestination();
+            mediaElementSource.connect(destination);
+
+            const mp3Stream = destination.stream;
+            console.log("MP3 stream: ", mp3Stream);
+            logger.info("MP3 stream: "+ JSON.stringify(mp3Stream));
+
+            // Apply transformations (e.g., gain, filters) to the MP3 stream
+            applyAudioTransformations(audioElementRef.current);
+
+            // Start broadcasting the MP3 file to the Chime meeting
+            await meetingSession.audioVideo.startAudioInput(mp3Stream);
+
+            // Play the audio for the users to hear
+            await audioElementRef.current.play();
+        } catch (error) {
+            console.error("Error playing voice audio:", error);
+            logger.error("Error playing voice audio:", JSON.stringify(error));
         }
-
-        // Create AudioContext and connect to media element source
-        const audioContext = new AudioContext();
-        const mediaElementSource = audioContext.createMediaElementSource(audioElementRef.current);
-        const destination = audioContext.createMediaStreamDestination();
-        mediaElementSource.connect(destination);
-
-        const mp3Stream = destination.stream;
-
-        // Apply transformations (e.g., gain, filters) to the MP3 stream
-        applyAudioTransformations(audioElementRef.current);
-
-        // Start broadcasting the MP3 file to the Chime meeting
-        await meetingSession.audioVideo.startAudioInput(mp3Stream);
-
-        // Play the audio for the users to hear
-        await audioElementRef.current.play();
-        setIsPlaying(true);
     };
 
 
@@ -106,6 +113,7 @@ const AudioUploadBox = ({ meetingSession }) => {
             } else {
                 // Play the audio
                 await playVoiceAudio(currentAudioFile.url);
+                setIsPlaying(true);
             }
         }
     };
@@ -150,7 +158,7 @@ const AudioUploadBox = ({ meetingSession }) => {
                             <FaTimes size={16} />
                         </div>
                         <div className="audio-content">
-                            <FaFile size={50} className="audio-icon" />
+                            <FaFile size={60} className="audio-icon" />
                             <div
                                 className="play-pause-icon"
                                 onClick={handlePlayPause}
@@ -162,10 +170,10 @@ const AudioUploadBox = ({ meetingSession }) => {
                     </div>
                 ) : (
                     <label className="upload-box">
-                        <FaUpload size={50} />
+                        <FaUpload size={60} />
                         <input
                             type="file"
-                            accept="audio/mp3, audio/*" 
+                            accept="audio/mp3, audio/*"
                             onChange={handleFileUpload}
                             className="hidden-input"
                         />
