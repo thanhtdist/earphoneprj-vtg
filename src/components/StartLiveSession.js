@@ -18,6 +18,7 @@ import {
 import '../styles/StartLiveSession.css';
 import ChatMessage from './ChatMessage';
 import Participants from './Participants';
+import AudioUploadBox from './AudioUploadBox';
 import Config from '../utils/config';
 import metricReport from '../utils/MetricReport';
 import { getPOSTLogger } from '../utils/MeetingLogger';
@@ -30,7 +31,7 @@ import {
   faMicrophone, faMicrophoneSlash,
 } from '@fortawesome/free-solid-svg-icons';
 import { useTranslation } from 'react-i18next';
-import { uploadFileToS3 } from '../services/S3Service';
+// import { uploadFileToS3 } from '../services/S3Service';
 
 /**
  * Component to start a live audio session for the main speaker
@@ -53,7 +54,7 @@ function StartLiveSession() {
   const [selectedAudioInput, setSelectedAudioInput] = useState('');
   const [audioInputDevices, setAudioInputDevices] = useState([]);
   const [userArn, setUserArn] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [userId, setUserId] = useState('');
   const [chatSetting, setChatSetting] = useState('guideOnly'); // State to manage chat setting
   const [selectedQR, setSelectedQR] = useState('listener'); // State to manage selected QR type
@@ -312,30 +313,30 @@ function StartLiveSession() {
     }
   }, [meetingSession]);
 
-  // Function to get the meeting and attendee information from the cookies
-  const getMeetingAttendeeInfoFromCookies = useCallback(async () => {
-    setIsLoading(true);
-    const retrievedMainGuide = JSONCookieUtils.getJSONCookie("Main-Guide");
-    console.log("Retrieved cookie:", retrievedMainGuide);
-    if (!retrievedMainGuide) return;
-    const meeting = await checkAvailableMeeting(retrievedMainGuide.meeting.MeetingId, "Main-Guide");
-    console.log('getMeetingResponse:', meeting);
-    if (!meeting) return;
-    console.log("Retrieved cookie:", retrievedMainGuide);
-    initializeMeetingSession(retrievedMainGuide.meeting, retrievedMainGuide.attendee);
-    setMetting(retrievedMainGuide.meeting);
-    setAttendee(retrievedMainGuide.attendee);
-    setUserArn(retrievedMainGuide.userArn);
-    setUserId(retrievedMainGuide.userArn.split('/').pop());
-    setChannelArn(retrievedMainGuide.channelArn);
-    setChannelID(retrievedMainGuide.channelArn.split('/').pop());
-    setIsLoading(false);
-  }, [initializeMeetingSession]);
-
   // Get meeting, attendee, and user information from the cookies
   useEffect(() => {
+    const getMeetingAttendeeInfoFromCookies = async () => {
+      const retrievedMainGuide = JSONCookieUtils.getJSONCookie("Main-Guide");
+      console.log("Retrieved cookie:", retrievedMainGuide);
+      if (!retrievedMainGuide) {
+        setIsLoading(false);
+        return;
+      }
+      const meeting = await checkAvailableMeeting(retrievedMainGuide.meeting.MeetingId, "Main-Guide");
+      console.log('getMeetingResponse:', meeting);
+      if (!meeting) return;
+      console.log("Retrieved cookie:", retrievedMainGuide);
+      initializeMeetingSession(retrievedMainGuide.meeting, retrievedMainGuide.attendee);
+      setMetting(retrievedMainGuide.meeting);
+      setAttendee(retrievedMainGuide.attendee);
+      setUserArn(retrievedMainGuide.userArn);
+      setUserId(retrievedMainGuide.userArn.split('/').pop());
+      setChannelArn(retrievedMainGuide.channelArn);
+      setChannelID(retrievedMainGuide.channelArn.split('/').pop());
+      setIsLoading(false);
+    }
     getMeetingAttendeeInfoFromCookies();
-  }, [getMeetingAttendeeInfoFromCookies]);
+  }, [initializeMeetingSession]);
 
   useEffect(() => {
     getAudioInputDevices();
@@ -411,8 +412,8 @@ function StartLiveSession() {
     const file = fileInput.files[0];
     console.log('Selected MP3 file:', file);
     // store attachment into S3
-    const uploadFileToS3Response = await uploadFileToS3(file);
-    console.log('Voice file uploaded successfully:', uploadFileToS3Response);
+    // const uploadFileToS3Response = await uploadFileToS3(file);
+    // console.log('Voice file uploaded successfully:', uploadFileToS3Response);
     const fileUrl = URL.createObjectURL(file);
     //const fileUrl = uploadFileToS3Response.Location;
     console.log('File URL:', fileUrl);
@@ -449,6 +450,10 @@ function StartLiveSession() {
     // });
   }
 
+  console.log('Main Speaker', meeting);
+  console.log('Main Speaker', attendee);
+  console.log('Main Speaker', isLoading);
+
   return (
     <>
       <Participants count={participantsCount} />
@@ -467,7 +472,7 @@ function StartLiveSession() {
           </>
         ) : (
           <>
-            <h3>Play the voice file</h3>
+            <AudioUploadBox />
             <div>
               <input type="file" id="mp3File" accept="audio/*" />
               <button id="playVoiceAudio" onClick={playVoiceAudioClick}>Play</button>
