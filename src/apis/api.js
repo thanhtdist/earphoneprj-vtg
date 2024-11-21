@@ -202,7 +202,10 @@ export async function getMeeting(meetingId) {
     const response = await body.json();
     return response.data;
   } catch (error) {
-    console.log('GET call getMeeting failed: ', JSON.parse(error.response.body));
+    // const errorResponse = JSON.parse(error.response.body);
+    // console.log('GET call getMeeting failed: ', errorResponse);
+    // throw new Error('GET call getMeeting failed: ', JSON.parse(error.response.body));
+    throw error.response.body;
   }
 }
 

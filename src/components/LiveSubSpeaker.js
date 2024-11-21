@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import {
-  getMeeting,
   createAttendee,
   createAppInstanceUsers,
   addChannelMembership,
@@ -21,6 +20,7 @@ import Participants from './Participants';
 import Config from '../utils/config';
 import metricReport from '../utils/MetricReport';
 import { getPOSTLogger } from '../utils/MeetingLogger';
+import { checkAvailableMeeting } from '../utils/MeetingUtils';
 import JSONCookieUtils from '../utils/JSONCookieUtils';
 import { v4 as uuidv4 } from 'uuid';
 import { useLocation } from 'react-router-dom';
@@ -218,7 +218,9 @@ function LiveSubSpeaker() {
       const userType = 'Sub-Guide'; // User type
 
       // Join the meeting from the meeting ID the host has created
-      const meeting = await getMeeting(meetingId);
+      //const meeting = await getMeeting(meetingId);
+      const meeting = await checkAvailableMeeting(meetingId, "Sub-Guide");
+      if (!meeting) return;
       console.log('Meeting:', meeting);
       const attendee = await createAttendee(meeting.MeetingId, `${userType}|${Date.now()}`);
       console.log('Attendee created:', attendee);
@@ -364,34 +366,41 @@ function LiveSubSpeaker() {
   //   }
   // }, [joinMeeting, meetingId, channelId, hostId, getMeetingAttendeeInfoFromCookies]);
   useEffect(() => {
-    // Retrieve and parse the "Sub-Guide" cookie
-    const retrievedSubGuide = JSONCookieUtils.getJSONCookie("Sub-Guide");
-    console.log("retrievedSubGuide:", retrievedSubGuide);
-    console.log("Debug Info:", {
-      meetingId,
-      channelId,
-      retrievedSubGuide,
-    });
-  
-    try {
-      // Validate the retrieved cookie structure
-      const { meeting, channelArn } = retrievedSubGuide || {};
-      const isMeetingMatched = meeting?.MeetingId === meetingId;
-      const isChannelMatched = channelArn === `${Config.appInstanceArn}/channel/${channelId}`;
-  
-      if (isMeetingMatched && isChannelMatched) {
-        console.log("Sub-Guide cookie matched the current meeting and channel");
-        getMeetingAttendeeInfoFromCookies(retrievedSubGuide);
-      } else {
-        console.log("Sub-Guide cookie did not match the current meeting and channel");
-        joinMeeting();
+    const checkMatch = async () => {
+      try {
+        // Retrieve and parse the "Sub-Guide" cookie
+        const retrievedSubGuide = JSONCookieUtils.getJSONCookie("Sub-Guide");
+        console.log("Retrieved cookie:", retrievedSubGuide);
+        if (!retrievedSubGuide) {
+          console.log("Sub-Guide cookie not found");
+          joinMeeting();
+          return;
+        }
+        // Call checkMatchedMeeting only once and store the result
+        const meeting = await checkAvailableMeeting(retrievedSubGuide.meeting.MeetingId, "Sub-Guide");
+        console.log('getMeetingResponse:', meeting);
+        if (!meeting) return;
+        // Validate the retrieved cookie structure
+        const isMeetingMatched = meeting?.MeetingId === meetingId;
+        const isChannelMatched = retrievedSubGuide.channelArn === `${Config.appInstanceArn}/channel/${channelId}`;
+
+        const isMatched = isMeetingMatched && isChannelMatched;
+
+        if (isMatched) {
+          console.log("Sub-Guide cookie matched the current meeting and channel");
+          getMeetingAttendeeInfoFromCookies(retrievedSubGuide);
+        } else {
+          console.log("Sub-Guide cookie did not match the current meeting and channel");
+          joinMeeting();
+        }
+      } catch (error) {
+        console.error("Error processing the Sub-Guide cookie:", error);
       }
-    } catch (error) {
-      console.error("Error processing the Sub-Guide cookie:", error);
-      joinMeeting();
-    }
-  }, [joinMeeting, meetingId, channelId, hostId, getMeetingAttendeeInfoFromCookies]);
-  
+    };
+
+    checkMatch(); // Execute the async function
+  }, [joinMeeting, hostId, meetingId, channelId, getMeetingAttendeeInfoFromCookies]);
+
 
   useEffect(() => {
     getAudioInputDevices();

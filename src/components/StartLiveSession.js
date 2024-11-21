@@ -21,6 +21,7 @@ import Participants from './Participants';
 import Config from '../utils/config';
 import metricReport from '../utils/MetricReport';
 import { getPOSTLogger } from '../utils/MeetingLogger';
+import { checkAvailableMeeting } from '../utils/MeetingUtils';
 import JSONCookieUtils from '../utils/JSONCookieUtils';
 import { v4 as uuidv4 } from 'uuid';
 import { QRCodeSVG } from 'qrcode.react';
@@ -312,10 +313,13 @@ function StartLiveSession() {
   }, [meetingSession]);
 
   // Function to get the meeting and attendee information from the cookies
-  const getMeetingAttendeeInfoFromCookies = useCallback(() => {
+  const getMeetingAttendeeInfoFromCookies = useCallback(async () => {
     const retrievedMainGuide = JSONCookieUtils.getJSONCookie("Main-Guide");
     console.log("Retrieved cookie:", retrievedMainGuide);
     if (!retrievedMainGuide) return;
+    const meeting = await checkAvailableMeeting(retrievedMainGuide.meeting.MeetingId, "Main-Guide");
+    console.log('getMeetingResponse:', meeting);
+    if (!meeting) return;
     setIsLoading(true);
     console.log("Retrieved cookie:", retrievedMainGuide);
     initializeMeetingSession(retrievedMainGuide.meeting, retrievedMainGuide.attendee);

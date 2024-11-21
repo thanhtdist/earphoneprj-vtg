@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import {
-  getMeeting,
   createAttendee,
   createAppInstanceUsers,
   addChannelMembership,
@@ -19,6 +18,7 @@ import Participants from './Participants';
 import Config from '../utils/config';
 import metricReport from '../utils/MetricReport';
 import JSONCookieUtils from '../utils/JSONCookieUtils';
+import { checkAvailableMeeting } from '../utils/MeetingUtils';
 import { v4 as uuidv4 } from 'uuid';
 import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -104,7 +104,7 @@ function LiveViewer() {
     const listAttendeeResponse = await listAttendee(meetingId);
     console.log('listAttendeeResponse:', listAttendeeResponse);
 
-    // Count members starting with "Sub-Guide"
+    // Count members starting with "User"
     const attendees = listAttendeeResponse.attendees || [];
     console.log('attendees:', attendees);
     const subGuideList = attendees.filter(member => member.ExternalUserId && member.ExternalUserId.startsWith(userType)) || [];
@@ -172,7 +172,9 @@ function LiveViewer() {
       const userID = uuidv4(); // Generate unique user ID
       const userType = 'User';
       // Join the meeting from the meeting ID the host has created
-      const meeting = await getMeeting(meetingId);
+      //const meeting = await getMeeting(meetingId);
+      const meeting = await checkAvailableMeeting(meetingId, "User");
+      if (!meeting) return;
       console.log('Meeting:', meeting);
       const attendee = await createAttendee(meeting.MeetingId, `${userType}|${Date.now()}`);
       console.log('Attendee:', attendee);
@@ -216,33 +218,40 @@ function LiveViewer() {
   //   }
   // }, [joinMeeting, meetingId, channelId, hostId, getMeetingAttendeeInfoFromCookies]);
   useEffect(() => {
-    // Retrieve and parse the "Sub-Guide" cookie
-    const retrievedUser = JSONCookieUtils.getJSONCookie("User");
-    console.log("retrievedUser:", retrievedUser);
-    console.log("Debug Info:", {
-      meetingId,
-      channelId,
-      retrievedUser,
-    });
-  
-    try {
-      // Validate the retrieved cookie structure
-      const { meeting, channelArn } = retrievedUser || {};
-      const isMeetingMatched = meeting?.MeetingId === meetingId;
-      const isChannelMatched = channelArn === `${Config.appInstanceArn}/channel/${channelId}`;
-  
-      if (isMeetingMatched && isChannelMatched) {
-        console.log("User cookie matched the current meeting and channel");
-        getMeetingAttendeeInfoFromCookies(retrievedUser);
-      } else {
-        console.log("User cookie did not match the current meeting and channel");
-        joinMeeting();
+    const checkMatch = async () => {
+      try {
+        // Retrieve and parse the "User" cookie
+        const retrievedSubGuide = JSONCookieUtils.getJSONCookie("User");
+        console.log("Retrieved cookie:", retrievedSubGuide);
+        if (!retrievedSubGuide) {
+          console.log("User cookie not found");
+          joinMeeting();
+          return;
+        }
+        // Call checkMatchedMeeting only once and store the result
+        const meeting = await checkAvailableMeeting(retrievedSubGuide.meeting.MeetingId, "User");
+        console.log('getMeetingResponse:', meeting);
+        if (!meeting) return;
+        // Validate the retrieved cookie structure
+        const isMeetingMatched = meeting?.MeetingId === meetingId;
+        const isChannelMatched = retrievedSubGuide.channelArn === `${Config.appInstanceArn}/channel/${channelId}`;
+
+        const isMatched = isMeetingMatched && isChannelMatched;
+
+        if (isMatched) {
+          console.log("User cookie matched the current meeting and channel");
+          getMeetingAttendeeInfoFromCookies(retrievedSubGuide);
+        } else {
+          console.log("User cookie did not match the current meeting and channel");
+          joinMeeting();
+        }
+      } catch (error) {
+        console.error("Error processing the User cookie:", error);
       }
-    } catch (error) {
-      console.error("Error processing the User cookie:", error);
-      joinMeeting();
-    }
-  }, [joinMeeting, meetingId, channelId, hostId, getMeetingAttendeeInfoFromCookies]);
+    };
+
+    checkMatch(); // Execute the async function
+  }, [joinMeeting, hostId, meetingId, channelId, getMeetingAttendeeInfoFromCookies]);
 
   useEffect(() => {
 
