@@ -376,19 +376,18 @@ function LiveSubSpeaker() {
           joinMeeting();
           return;
         }
-        // Call checkMatchedMeeting only once and store the result
-        const meeting = await checkAvailableMeeting(retrievedSubGuide.meeting.MeetingId, "Sub-Guide");
-        console.log('getMeetingResponse:', meeting);
-        if (!meeting) return;
         // Validate the retrieved cookie structure
-        const isMeetingMatched = meeting?.MeetingId === meetingId;
+        const isMeetingMatched = retrievedSubGuide.meeting.MeetingId === meetingId;
         const isChannelMatched = retrievedSubGuide.channelArn === `${Config.appInstanceArn}/channel/${channelId}`;
-
         const isMatched = isMeetingMatched && isChannelMatched;
-
         if (isMatched) {
           console.log("Sub-Guide cookie matched the current meeting and channel");
+          // Call checkMatchedMeeting only once and store the result
+          const meeting = await checkAvailableMeeting(retrievedSubGuide.meeting.MeetingId, "Sub-Guide");
+          console.log('getMeetingResponse:', meeting);
+          if (!meeting) return;
           getMeetingAttendeeInfoFromCookies(retrievedSubGuide);
+
         } else {
           console.log("Sub-Guide cookie did not match the current meeting and channel");
           joinMeeting();

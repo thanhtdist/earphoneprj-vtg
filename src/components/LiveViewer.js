@@ -221,26 +221,25 @@ function LiveViewer() {
     const checkMatch = async () => {
       try {
         // Retrieve and parse the "User" cookie
-        const retrievedSubGuide = JSONCookieUtils.getJSONCookie("User");
-        console.log("Retrieved cookie:", retrievedSubGuide);
-        if (!retrievedSubGuide) {
+        const retrievedUser = JSONCookieUtils.getJSONCookie("User");
+        console.log("Retrieved cookie:", retrievedUser);
+        if (!retrievedUser) {
           console.log("User cookie not found");
           joinMeeting();
           return;
         }
-        // Call checkMatchedMeeting only once and store the result
-        const meeting = await checkAvailableMeeting(retrievedSubGuide.meeting.MeetingId, "User");
-        console.log('getMeetingResponse:', meeting);
-        if (!meeting) return;
         // Validate the retrieved cookie structure
-        const isMeetingMatched = meeting?.MeetingId === meetingId;
-        const isChannelMatched = retrievedSubGuide.channelArn === `${Config.appInstanceArn}/channel/${channelId}`;
-
+        const isMeetingMatched = retrievedUser.meeting.MeetingId === meetingId;
+        const isChannelMatched = retrievedUser.channelArn === `${Config.appInstanceArn}/channel/${channelId}`;
         const isMatched = isMeetingMatched && isChannelMatched;
 
         if (isMatched) {
           console.log("User cookie matched the current meeting and channel");
-          getMeetingAttendeeInfoFromCookies(retrievedSubGuide);
+          // Call checkMatchedMeeting only once and store the result
+          const meeting = await checkAvailableMeeting(retrievedUser.meeting.MeetingId, "User");
+          console.log('getMeetingResponse:', meeting);
+          if (!meeting) return;
+          getMeetingAttendeeInfoFromCookies(retrievedUser);
         } else {
           console.log("User cookie did not match the current meeting and channel");
           joinMeeting();
