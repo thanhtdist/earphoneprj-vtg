@@ -12,10 +12,12 @@ const AudioUploadBox = ({ meetingSession, logger }) => {
         instruction: null,
         closingSpeech: null,
     }); // Tracks the audio file for each type
+    const [errorMessage, setErrorMessage] = useState("");
     const [isPlaying, setIsPlaying] = useState(false);
     const audioElementRef = useRef(null);
     const audioContextRef = useRef(null);
     const mediaElementSourceRef = useRef(null);
+    const MAX_FILE_SIZE_MB = 20; // Maximum file size limit in MB
 
     const handleVoiceFileTypeChange = (e) => {
         setVoiceFileType(e.target.value);
@@ -26,8 +28,20 @@ const AudioUploadBox = ({ meetingSession, logger }) => {
     };
 
     const handleFileUpload = async (event) => {
+        setErrorMessage(""); // Reset error message 
         const file = event.target.files[0];
-        if (file && file.type.startsWith("audio")) {
+        console.log('Current file:', file);
+        logger.info('Current file:' + JSON.stringify(file));
+        if (file) {
+            if (!file.type.startsWith("audio")) {
+                setErrorMessage(`Unsupported file type ${file.type}. Please upload an audio file.`);
+                return;
+            }
+
+            if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
+                setErrorMessage(`File size exceeds ${MAX_FILE_SIZE_MB} MB. Please upload a smaller file.`);
+                return;
+            }
             setUploading(true); // Start uploading
             // const fileURL = URL.createObjectURL(file);
             try {
@@ -39,12 +53,13 @@ const AudioUploadBox = ({ meetingSession, logger }) => {
                     ...prevState,
                     [voiceFileType]: { name: file.name, url: uploadFileToS3Response.Location },
                 }));
-                setUploading(false); // Stop uploading
             } catch (error) {
-                console.error('Error uploading voice file:', error);
-                setUploading(false); // Stop uploading
+                console.error('An error occurred during the upload: ' + JSON.stringify(error));
+                logger.error('An error occurred during the upload: ' + JSON.stringify(error));
+                setErrorMessage("An error occurred during the upload. Please try again.");
+            } finally {
+                setUploading(false);
             }
-
         }
     };
 
@@ -111,7 +126,7 @@ const AudioUploadBox = ({ meetingSession, logger }) => {
             await audioElementRef.current.play();
         } catch (error) {
             console.error("Error playing voice audio:", error);
-            logger.error("Error playing voice audio:", JSON.stringify(error));
+            logger.error("Error playing voice audio:" + JSON.stringify(error));
         }
     };
 
@@ -186,13 +201,15 @@ const AudioUploadBox = ({ meetingSession, logger }) => {
                         <FaUpload size={60} />
                         <input
                             type="file"
-                            accept="audio/mp3, audio/*"
+                            //accept=".mp3, .mp4, .m4a, .aac, .wav"
+                            accept="audio/*"
                             onChange={handleFileUpload}
                             className="hidden-input"
                         />
                     </label>
                 )}
             </div>
+            {errorMessage && <p className="error-message">{errorMessage}</p>}
             {currentAudioFile && (<p><a target="_blank" rel="noopener noreferrer" href={currentAudioFile.url} style={{ color: "green" }}>{currentAudioFile.name}</a></p>)}
         </>
     );

@@ -67,3 +67,8 @@
   z-index: 20; /* Ensure it stays above other content */
 }
 
+/* Error Message */
+.error-message {
+  color: red;
+  margin-top: 8px;
+}

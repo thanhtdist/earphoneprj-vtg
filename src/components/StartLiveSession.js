@@ -381,75 +381,7 @@ function StartLiveSession() {
   const handleQRSelectionChange = (e) => {
     setSelectedQR(e.target.value);
   };
-
-  // Function to apply Web Audio API transformations
-  const applyAudioTransformations = (mp3Stream) => {
-    const audioContext = new AudioContext();
-
-    // Create a media element source node from the MP3 file
-    const mediaElementSource = audioContext.createMediaElementSource(mp3Stream);
-
-    // Apply gain (volume adjustment)
-    const gainNode = audioContext.createGain();
-    gainNode.gain.value = 1.2;  // Increase volume by 20%
-
-    // Connect the nodes (source -> gain -> destination)
-    mediaElementSource.connect(gainNode).connect(audioContext.destination);
-
-    console.log('Audio transformations applied:', gainNode);
-
-    return gainNode;
-  }
-
-  // Function to start broadcasting MP3
-  const playVoiceAudioClick = async () => {
-    const fileInput = document.getElementById('mp3File');
-    if (fileInput.files.length === 0) {
-      alert('Please upload an MP3 file.');
-      return;
-    }
-
-    const file = fileInput.files[0];
-    console.log('Selected MP3 file:', file);
-    // store attachment into S3
-    // const uploadFileToS3Response = await uploadFileToS3(file);
-    // console.log('Voice file uploaded successfully:', uploadFileToS3Response);
-    const fileUrl = URL.createObjectURL(file);
-    //const fileUrl = uploadFileToS3Response.Location;
-    console.log('File URL:', fileUrl);
-    // Create an audio element to play the MP3 file
-    const audioElement = new Audio(fileUrl);
-    audioElement.crossOrigin = 'anonymous';
-    console.log('Audio element:', audioElement);
-    // Create a MediaStream from the audio element
-    const audioContext = new AudioContext();
-    console.log('Audio context:', audioContext);
-    const mediaElementSource = audioContext.createMediaElementSource(audioElement);
-    console.log('Media element source:', mediaElementSource);
-    const destination = audioContext.createMediaStreamDestination();
-    console.log('Destination:', destination);
-    mediaElementSource.connect(destination);
-
-    const mp3Stream = destination.stream;
-    console.log('MP3 stream:', mp3Stream);
-
-    // Apply transformations (e.g., gain, filters) to the MP3 stream
-    applyAudioTransformations(audioElement);
-
-    // Start broadcasting the MP3 file to the Chime meeting
-    await meetingSession.audioVideo.startAudioInput(mp3Stream);
-    audioElement.play(); // Play the audio for users to hear
-
-    // When MP3 playback ends, switch to live microphone
-    // audioElement.addEventListener('ended', async () => {
-    //   console.log('MP3 finished. Switching to microphone...');
-
-    //   // Start broadcasting live audio from the host's microphone
-    //   const microphoneDevice = await meetingSession.audioVideo.chooseAudioInputDevice(null); // Choose default microphone
-    //   await meetingSession.audioVideo.startAudioInput(microphoneDevice);
-    // });
-  }
-
+  
   console.log('Main Speaker', meeting);
   console.log('Main Speaker', attendee);
   console.log('Main Speaker', isLoading);
@@ -473,10 +405,6 @@ function StartLiveSession() {
         ) : (
           <>
             {meetingSession && (<AudioUploadBox meetingSession={meetingSession} logger={logger}/>)}
-            <div>
-              <input type="file" id="mp3File" accept="audio/*" />
-              <button id="playVoiceAudio" onClick={playVoiceAudioClick}>Play</button>
-            </div>
             {(noMicroMsg) ? (
               <>
                 {!microChecking ? (
