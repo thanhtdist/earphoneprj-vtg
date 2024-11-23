@@ -201,8 +201,8 @@ const AudioUploadBox = ({ meetingSession, logger }) => {
                         <FaUpload size={60} />
                         <input
                             type="file"
-                            //accept=".mp3, .mp4, .m4a, .aac, .wav"
-                            accept="audio/*"
+                            accept=".mp3, .mp4, .m4a, .aac, .wav"
+                            //accept="audio/*"
                             onChange={handleFileUpload}
                             className="hidden-input"
                         />
