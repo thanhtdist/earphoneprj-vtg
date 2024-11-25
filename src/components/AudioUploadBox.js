@@ -93,6 +93,16 @@ const AudioUploadBox = ({ meetingSession, logger }) => {
 
                 // Assign to ref
                 audioElementRef.current = audioElement;
+                // Add event listener for when the audio ends
+                // Add event listener for when the audio ends
+                // audioElementRef.current.onended = () => {
+                //     console.log("Audio playback finished."); // Debug log
+                //     setIsPlaying(false);
+                // };
+                audioElement.onended = () => {
+                    console.log("Audio playback finished."); // Debug log
+                    setIsPlaying(false);
+                };
                 // Create AudioContext and connect to media element source
                 //const audioContext = new AudioContext();
                 if (!audioContextRef.current) {
