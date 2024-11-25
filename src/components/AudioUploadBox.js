@@ -18,24 +18,40 @@ const AudioUploadBox = ({ meetingSession, logger }) => {
     const mediaElementSourceRef = useRef(null);
     const MAX_FILE_SIZE_MB = 20; // Maximum file size limit in MB
 
+    const cleanupAudioResources = () => {
+        // Stop audio element
+        if (audioElementRef.current) {
+            audioElementRef.current.pause();
+            audioElementRef.current.src = ''; // Clear source
+            audioElementRef.current = null;
+        }
+
+        // Disconnect MediaElementSource
+        if (mediaElementSourceRef.current) {
+            mediaElementSourceRef.current.disconnect();
+            mediaElementSourceRef.current = null;
+        }
+
+        // Close AudioContext
+        if (audioContextRef.current) {
+            audioContextRef.current.close();
+            audioContextRef.current = null;
+        }
+    };
+
     useEffect(() => {
-        return () => {
-            // Clean up the audio context when the component unmounts
-            console.log("AudioUploadBox unmounted"); // Debug log
-            if (audioContextRef.current) {
-                audioContextRef.current.close();
-                audioContextRef.current = null;
-            }
-            if (mediaElementSourceRef.current) {
-                mediaElementSourceRef.current.disconnect();
-                mediaElementSourceRef.current = null;
-            }
-            if (audioElementRef.current) {
-                audioElementRef.current.pause();
-                audioElementRef.current = null;
-            }
+        // Add event listener for page unload/refresh
+        const handleBeforeUnload = () => {
+            cleanupAudioResources();
         };
-    }, [meetingSession]);
+        window.addEventListener('beforeunload', handleBeforeUnload);
+
+        // Cleanup on component unmount and beforeunload
+        return () => {
+            cleanupAudioResources();
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+        };
+    }, []);
 
     const handleVoiceFileTypeChange = (e) => {
         setVoiceFileType(e.target.value);
@@ -129,21 +145,21 @@ const AudioUploadBox = ({ meetingSession, logger }) => {
                 if (!mediaElementSourceRef.current) {
 
                     mediaElementSourceRef.current = audioContextRef.current.createMediaElementSource(audioElement);
-                    logger.info("mediaElementSource:" + JSON.stringify(mediaElementSourceRef.current));
+                    console.log("MP3 mediaElementSource:", mediaElementSourceRef.current.mediaElement);
+                    logger.info("MP3 mediaElementSource:" + JSON.stringify(mediaElementSourceRef.current));
                     const destination = audioContextRef.current.createMediaStreamDestination();
-                    logger.info("destination:" + JSON.stringify(destination));
                     const connect = mediaElementSourceRef.current.connect(destination);
-                    console.log("connect:", connect);
-                    logger.info("connect:" + JSON.stringify(connect));
+                    console.log("MP3 connect:", connect);
+                    logger.info(`MP3 connect destination:" ${connect.channelCount}`);
 
                     // Apply transformations (e.g., gain, filters) to the MP3 stream
                     // Apply gain (volume adjustment)
                     const gainNode = audioContextRef.current.createGain();
-                    gainNode.gain.value = 1.2; // Increase volume by 20%
+                    gainNode.gain.value = 5; // Increase volume by 20%
                     // Connect the nodes: source -> gain -> destination
                     const connectVolume = mediaElementSourceRef.current.connect(gainNode).connect(audioContextRef.current.destination);
-                    console.log("connectVolume:", connectVolume);
-                    logger.info("connectVolume:" + JSON.stringify(connectVolume));
+                    console.log("MP3 connectVolume:", connectVolume);
+                    logger.info(`MP3 connectVolume:" ${connectVolume.channelCount}`);
 
                     // Get the MP3 stream
                     const mp3Stream = destination.stream;
@@ -152,8 +168,8 @@ const AudioUploadBox = ({ meetingSession, logger }) => {
 
                     // Start broadcasting the MP3 file to the Chime meeting
                     const startAudioInputResponse = await meetingSession.audioVideo.startAudioInput(mp3Stream);
-                    console.log("startAudioInputResponse:", startAudioInputResponse);
-                    logger.info("startAudioInputResponse:" + JSON.stringify(startAudioInputResponse));
+                    console.log("MP3 startAudioInputResponse:", startAudioInputResponse);
+                    logger.info(`MP3 startAudioInputResponse ID: ${startAudioInputResponse.id}, Active: ${startAudioInputResponse.active}`);
                 }
 
             }
@@ -176,9 +192,9 @@ const AudioUploadBox = ({ meetingSession, logger }) => {
                 setIsPlaying(false);
             } else {
                 // Play the audio
-                console.log('playVoiceAudio audioElementRef:', audioElementRef);
-                console.log('playVoiceAudio audioContextRef:', audioContextRef);
-                console.log('playVoiceAudio mediaElementSourceRef:', mediaElementSourceRef);
+                console.log('MP3 audioElementRef:', audioElementRef.current);
+                console.log('MP3 audioContextRef:', audioContextRef.current);
+                console.log('MP3 mediaElementSourceRef:', mediaElementSourceRef.current);
                 await playVoiceAudio(currentAudioFile.url);
                 setIsPlaying(true);
             }
