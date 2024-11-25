@@ -1,11 +1,10 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { FaUpload, FaPlay, FaPause, FaTimes, FaFile } from "react-icons/fa";
 import "../styles/AudioUploadBox.css";
 import { uploadFileToS3 } from '../services/S3Service';
 
 const AudioUploadBox = ({ meetingSession, logger }) => {
-    console.log('meetingSession zzz:', meetingSession);
-    console.log('logger zzz:', logger);
+    console.log('meetingSession zzzyyy:', meetingSession);
     const [voiceFileType, setVoiceFileType] = useState("instruction"); // Tracks the current voice type
     const [uploading, setUploading] = useState(false); // Tracks upload state
     const [audioFiles, setAudioFiles] = useState({
@@ -18,6 +17,39 @@ const AudioUploadBox = ({ meetingSession, logger }) => {
     const audioContextRef = useRef(null);
     const mediaElementSourceRef = useRef(null);
     const MAX_FILE_SIZE_MB = 20; // Maximum file size limit in MB
+
+    useEffect(() => {
+        // return () => {
+        //     // Clean up the audio context when the component unmounts
+        //     console.log("AudioUploadBox unmounted"); // Debug log
+        //     if (audioContextRef.current) {
+        //         audioContextRef.current.close();
+        //         audioContextRef.current = null;
+        //     }
+        //     if (mediaElementSourceRef.current) {
+        //         mediaElementSourceRef.current.disconnect();
+        //         mediaElementSourceRef.current = null;
+        //     }
+        //     if (audioElementRef.current) {
+        //         audioElementRef.current.pause();
+        //         audioElementRef.current = null;
+        //     }
+        // };
+        // Clean up the audio context when the component unmounts
+        console.log("AudioUploadBox unmounted"); // Debug log
+        if (audioContextRef.current) {
+            audioContextRef.current.close();
+            audioContextRef.current = null;
+        }
+        if (mediaElementSourceRef.current) {
+            mediaElementSourceRef.current.disconnect();
+            mediaElementSourceRef.current = null;
+        }
+        if (audioElementRef.current) {
+            audioElementRef.current.pause();
+            audioElementRef.current = null;
+        }
+    }, [meetingSession]);
 
     const handleVoiceFileTypeChange = (e) => {
         setVoiceFileType(e.target.value);
