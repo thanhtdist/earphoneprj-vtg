@@ -19,36 +19,22 @@ const AudioUploadBox = ({ meetingSession, logger }) => {
     const MAX_FILE_SIZE_MB = 20; // Maximum file size limit in MB
 
     useEffect(() => {
-        // return () => {
-        //     // Clean up the audio context when the component unmounts
-        //     console.log("AudioUploadBox unmounted"); // Debug log
-        //     if (audioContextRef.current) {
-        //         audioContextRef.current.close();
-        //         audioContextRef.current = null;
-        //     }
-        //     if (mediaElementSourceRef.current) {
-        //         mediaElementSourceRef.current.disconnect();
-        //         mediaElementSourceRef.current = null;
-        //     }
-        //     if (audioElementRef.current) {
-        //         audioElementRef.current.pause();
-        //         audioElementRef.current = null;
-        //     }
-        // };
-        // Clean up the audio context when the component unmounts
-        console.log("AudioUploadBox unmounted"); // Debug log
-        if (audioContextRef.current) {
-            audioContextRef.current.close();
-            audioContextRef.current = null;
-        }
-        if (mediaElementSourceRef.current) {
-            mediaElementSourceRef.current.disconnect();
-            mediaElementSourceRef.current = null;
-        }
-        if (audioElementRef.current) {
-            audioElementRef.current.pause();
-            audioElementRef.current = null;
-        }
+        return () => {
+            // Clean up the audio context when the component unmounts
+            console.log("AudioUploadBox unmounted"); // Debug log
+            if (audioContextRef.current) {
+                audioContextRef.current.close();
+                audioContextRef.current = null;
+            }
+            if (mediaElementSourceRef.current) {
+                mediaElementSourceRef.current.disconnect();
+                mediaElementSourceRef.current = null;
+            }
+            if (audioElementRef.current) {
+                audioElementRef.current.pause();
+                audioElementRef.current = null;
+            }
+        };
     }, [meetingSession]);
 
     const handleVoiceFileTypeChange = (e) => {
