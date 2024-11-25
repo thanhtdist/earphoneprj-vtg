@@ -154,6 +154,16 @@ const AudioUploadBox = ({ meetingSession, logger }) => {
             audioElementRef.current = null;
         }
 
+        if (mediaElementSourceRef.current) {
+            mediaElementSourceRef.current.disconnect();
+            mediaElementSourceRef.current = null;
+        }
+
+        if (audioContextRef.current) { // Close the audio context
+            audioContextRef.current.close();
+            audioContextRef.current = null;
+        }
+
         // Reset the audio files state for the current voice type
         setAudioFiles((prevState) => ({
             ...prevState,
