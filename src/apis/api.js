@@ -275,3 +275,23 @@ export async function listAppInstanceUser(appInstanceArn) {
     console.log('GET call listAppInstanceUser failed: ', JSON.parse(error.response.body));
   }
 }
+
+export async function startMeetingTranscription(meetingId, languageCode) {
+  try {
+    const restOperation = post({
+      apiName: 'MeetingVTGRestApi', // The name of the API defined in backend.ts
+      path: 'meetings/' + meetingId + '/transcription', // endpoint defined in backend.ts, meetingId is dynamically passed
+      options: {
+        body: {
+          languageCode: languageCode, // The external ID of the user, it is userId of participant joined the meeting
+        }
+      }
+    });
+
+    const { body } = await restOperation.response;
+    const response = await body.json();
+    return response.data;
+  } catch (error) {
+    console.log('POST call startMeetingTranscription failed: ', JSON.parse(error.response.body));
+  }
+}

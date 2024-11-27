@@ -19,6 +19,7 @@ import { listChannelMembership } from './functions/list-channel-membership/resou
 import { listAttendee } from './functions/list-attendee/resource';
 // import { listAppInstanceUser } from './functions/list-app-instance-user/resource';
 import { addCloudWatchLogs } from './functions/add-cloud-watch-logs/resource';
+import { startMeetingTranscription } from './functions/start-meeting-transcription/resource';
 /**
  * Define the backend resources 
  * - List lambda functions for audio voice (metting session) and chat(message session)
@@ -35,6 +36,7 @@ const backend = defineBackend({
   listAttendee, // list all attendees in the meeting
   //listAppInstanceUser, // list app instance user for chat by the participants
   addCloudWatchLogs, // send logs to cloud watch
+  startMeetingTranscription, // start meeting transcription
 });
 
 /**
@@ -81,6 +83,11 @@ attendeesPath.addMethod("POST", new LambdaIntegration(
 // add GET method to /meeting/{MeetingID}/attendees with listAttendee Lambda integration
 attendeesPath.addMethod("GET", new LambdaIntegration(
   backend.listAttendee.resources.lambda
+));
+
+// add POST method to /meeting/{MeetingID}/transcription with startMeetingTranscription Lambda integration
+meetingIdPath.addResource("transcription").addMethod("POST", new LambdaIntegration(
+  backend.startMeetingTranscription.resources.lambda
 ));
 
 // =============2. API Getway, Lambda function for CHAT ===============

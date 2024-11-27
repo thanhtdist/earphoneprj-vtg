@@ -5,6 +5,7 @@ import {
   createAppInstanceUsers,
   createChannel,
   addChannelMembership,
+  startMeetingTranscription,
 } from '../apis/api';
 import {
   DefaultDeviceController,
@@ -64,6 +65,7 @@ function StartLiveSession() {
   const [noMicroMsg, setNoMicoMsg] = useState(t('noMicroMsg'));
   const [logger, setLogger] = useState(null);
   const [participantsCount, setParticipantsCount] = useState(0);
+  const [transcriptions, setTranscriptions] = useState([]);
   // Function to start a live audio session
   const startLiveAduioSession = async () => {
     setIsLoading(true);
@@ -298,7 +300,8 @@ function StartLiveSession() {
       setMicroChecking('microChecking');
 
       // Check if there are no devices or if any device label is empty
-      if (devices.length === 0 || devices.some(device => !device.label.trim())) {
+      //if (devices.length === 0 || devices.some(device => !device.label.trim())) {
+      if (devices.length === 0) {
         console.log('No audio input devices found');
         // Display a message after 5 seconds
         setTimeout(() => {
@@ -365,11 +368,35 @@ function StartLiveSession() {
         attendeeSet.delete(presentAttendeeId);
       }
 
-      // Update the attendee count in the state
+      // Update the attendee count in the states
       setParticipantsCount(attendeeSet.size);
     };
 
     meetingSession.audioVideo.realtimeSubscribeToAttendeeIdPresence(callback);
+
+    if (meetingSession) {
+      console.log("enableLiveTranscription meetingId", meetingSession.configuration.meetingId);
+      // Enable live transcription
+      const enableLiveTranscription = async () => {
+        // startMeetingTranscription(meetingId, languageCode)
+        const startMeetingTranscriptionResponse = await startMeetingTranscription(meetingSession.configuration.meetingId, 'en-US');
+        console.log("enableLiveTranscription startMeetingTranscriptionResponse",startMeetingTranscriptionResponse);
+      };
+
+      enableLiveTranscription();
+      console.log("enableLiveTranscription audioVideo", meetingSession.audioVideo);
+      // Subscribe to transcription events
+      meetingSession.audioVideo.realtimeSubscribeToReceiveDataMessage(
+        'transcription',
+        (data) => {
+
+          console.log("enableLiveTranscription Received data message:", data);
+          const transcription = JSON.parse(data.text());
+          setTranscriptions((prev) => [...prev, transcription]);
+        }
+      );
+    }
+
   }, [meetingSession]);
 
   // Function to handle the chat setting change
@@ -381,7 +408,7 @@ function StartLiveSession() {
   const handleQRSelectionChange = (e) => {
     setSelectedQR(e.target.value);
   };
-  
+
   console.log('Main Speaker', meeting);
   console.log('Main Speaker', attendee);
   console.log('Main Speaker', isLoading);
@@ -404,7 +431,7 @@ function StartLiveSession() {
           </>
         ) : (
           <>
-            {meetingSession && (<AudioUploadBox meetingSession={meetingSession} logger={logger}/>)}
+            {meetingSession && (<AudioUploadBox meetingSession={meetingSession} logger={logger} />)}
             {(noMicroMsg) ? (
               <>
                 {!microChecking ? (
@@ -435,6 +462,13 @@ function StartLiveSession() {
                 </div>
               </>
             )}
+            <div>
+              {transcriptions.map((t, idx) => (
+                <p key={idx}>
+                  <strong>{t.attendeeName}:</strong> {t.transcriptionText}
+                </p>
+              ))}
+            </div>
             <h3>{t('chatSettingLbl')}</h3>
             <select value={chatSetting} onChange={handleChatSettingChange}>
               <option value="allChat">{t('chatSettingOptions.allChat')}</option>

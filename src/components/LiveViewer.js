@@ -52,6 +52,7 @@ function LiveViewer() {
   const [userArn, setUserArn] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [participantsCount, setParticipantsCount] = useState(0);
+  const [transcriptions, setTranscriptions] = useState([]);
 
   // Function to initialize the meeting session from the meeting that the host has created
   const initializeMeetingSession = useCallback(async (meeting, attendee) => {
@@ -271,8 +272,20 @@ function LiveViewer() {
     };
 
     meetingSession.audioVideo.realtimeSubscribeToAttendeeIdPresence(callback);
-  }, [meetingSession]);
 
+    if (meetingSession) {
+      // Subscribe to transcription data messages
+      meetingSession.audioVideo.realtimeSubscribeToReceiveDataMessage(
+        'AmazonChimeVoiceFocusTranscriptionMessage',
+        (data) => {
+          const transcription = JSON.parse(data.text());
+          setTranscriptions((prev) => [...prev, transcription]);
+        }
+      );
+    }
+
+  }, [meetingSession]);
+  console.log('enableLiveTranscription transcription', transcriptions);
   return (
     <>
       <Participants count={participantsCount} />
@@ -285,6 +298,13 @@ function LiveViewer() {
           </div>
         ) : (
           <>
+            <div>
+              {transcriptions.map((t, idx) => (
+                <p key={idx}>
+                  <strong>{t.attendeeName}:</strong> {t.transcriptionText}
+                </p>
+              ))}
+            </div>
             <br />
             {channelArn && <ChatMessage userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} chatSetting={chatSetting} />}
           </>
