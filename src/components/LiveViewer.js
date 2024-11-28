@@ -56,7 +56,7 @@ function LiveViewer() {
   const [transcripts, setTranscriptions] = useState([]);
   const [lines, setLine] = useState(null);
   const [translatedText, setTranslatedText] = useState(null); 
-  //const [sourceLanguageCode, setSourceLanguageCode] = useState(null);
+  const [sourceLanguageCode, setSourceLanguageCode] = useState(null);
   //const [audioUrl, setAudioUrl] = useState(null);
 
   // Function to initialize the meeting session from the meeting that the host has created
@@ -296,11 +296,11 @@ function LiveViewer() {
 
   useEffect(() => {
     if (transcripts) {
-      // if (transcripts.type === "started") {
-      //   const transcriptionConfiguration = JSON.parse(transcripts.transcriptionConfiguration)
-      //   console.log('transcriptionConfiguration:', transcriptionConfiguration);
-      //   setSourceLanguageCode(transcriptionConfiguration.EngineTranscribeSettings.LanguageCode);
-      // }
+      if (transcripts.type === "started") {
+        const transcriptionConfiguration = JSON.parse(transcripts.transcriptionConfiguration)
+        console.log('transcriptionConfiguration:', transcriptionConfiguration);
+        setSourceLanguageCode(transcriptionConfiguration.EngineTranscribeSettings.LanguageCode);
+      }
       if (transcripts.results !== undefined) {
         if (!transcripts.results[0].isPartial) {
           if (transcripts.results[0].alternatives[0].items[0].confidence > 0.5) {
@@ -320,7 +320,7 @@ function LiveViewer() {
       try {
         if (!lines) return;
         // Translate the text to speech
-        const sourceLanguageCode = 'en-US';
+        //const sourceLanguageCode = 'en-US';
         console.log('translateTextSpeechData sourceLanguageCode:', sourceLanguageCode);
         const targetLanguageCode = localStorage.getItem('i18nextLng');
         console.log('translateTextSpeechData targetLanguageCode:', targetLanguageCode);
@@ -356,7 +356,7 @@ function LiveViewer() {
     };
     translateTextSpeechData();
 
-  }, [lines]);
+  }, [lines, sourceLanguageCode]);
   console.log('transcriptions', transcripts);
   console.log('lines', lines);
   return (

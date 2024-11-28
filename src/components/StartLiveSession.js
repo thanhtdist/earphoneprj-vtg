@@ -222,7 +222,7 @@ function StartLiveSession() {
     console.log("enableLiveTranscription meetingId", meetingSession.configuration.meetingId);
     const language = localStorage.getItem('i18nextLng');
     console.log("enableLiveTranscription language", language);
-    const startMeetingTranscriptionResponse = await startMeetingTranscription(meetingSession.configuration.meetingId,  language === 'ja' ? "ja-JP" : "en-US");
+    const startMeetingTranscriptionResponse = await startMeetingTranscription(meetingSession.configuration.meetingId, language === 'ja' ? "ja-JP" : "en-US");
     console.log("enableLiveTranscription startMeetingTranscriptionResponse", startMeetingTranscriptionResponse);
     // meetingSession.audioVideo.realtimeSendDataMessage(
     //   'TranscriptEvent',
@@ -311,8 +311,8 @@ function StartLiveSession() {
       setMicroChecking('microChecking');
 
       // Check if there are no devices or if any device label is empty
-      //if (devices.length === 0 || devices.some(device => !device.label.trim())) {
-      if (devices.length === 0) {
+      if (devices.length === 0 || devices.some(device => !device.label.trim())) {
+        //if (devices.length === 0) {
         console.log('No audio input devices found');
         // Display a message after 5 seconds
         setTimeout(() => {
