@@ -11,7 +11,7 @@ import {
   DefaultDeviceController,
   DefaultMeetingSession,
   ConsoleLogger,
-  MultiLogger,
+  //MultiLogger,
   LogLevel,
   MeetingSessionConfiguration,
   VoiceFocusDeviceTransformer,
@@ -22,7 +22,7 @@ import Participants from './Participants';
 import AudioUploadBox from './AudioUploadBox';
 import Config from '../utils/config';
 import metricReport from '../utils/MetricReport';
-import { getPOSTLogger } from '../utils/MeetingLogger';
+//import { getPOSTLogger } from '../utils/MeetingLogger';
 import { checkAvailableMeeting } from '../utils/MeetingUtils';
 import JSONCookieUtils from '../utils/JSONCookieUtils';
 import { v4 as uuidv4 } from 'uuid';
@@ -65,7 +65,7 @@ function StartLiveSession() {
   const [noMicroMsg, setNoMicoMsg] = useState(t('noMicroMsg'));
   const [logger, setLogger] = useState(null);
   const [participantsCount, setParticipantsCount] = useState(0);
-  const [transcriptions, setTranscriptions] = useState([]);
+
   // Function to start a live audio session
   const startLiveAduioSession = async () => {
     setIsLoading(true);
@@ -163,12 +163,13 @@ function StartLiveSession() {
 
     const meetingSessionConfiguration = new MeetingSessionConfiguration(meeting, attendee);
 
-    const meetingSessionPOSTLogger = getPOSTLogger(meetingSessionConfiguration, 'SDK', `${Config.cloudWatchLogRestApiVTGRestApi}cloud-watch-logs`, LogLevel.INFO);
-    console.log('meetingSessionPOSTLogger', meetingSessionPOSTLogger);
-    const logger = new MultiLogger(
-      consoleLogger,
-      meetingSessionPOSTLogger,
-    );
+    // const meetingSessionPOSTLogger = getPOSTLogger(meetingSessionConfiguration, 'SDK', `${Config.cloudWatchLogRestApiVTGRestApi}cloud-watch-logs`, LogLevel.INFO);
+    // console.log('meetingSessionPOSTLogger', meetingSessionPOSTLogger);
+    // const logger = new MultiLogger(
+    //   consoleLogger,
+    //   meetingSessionPOSTLogger,
+    // );
+    const logger = consoleLogger;
     console.log('logger', logger);
     setLogger(logger);
     // Check if the Voice Focus Device is supported on the client
@@ -218,6 +219,16 @@ function StartLiveSession() {
 
     // Start audio video session
     meetingSession.audioVideo.start();
+    console.log("enableLiveTranscription meetingId", meetingSession.configuration.meetingId);
+    const language = localStorage.getItem('i18nextLng');
+    console.log("enableLiveTranscription language", language);
+    const startMeetingTranscriptionResponse = await startMeetingTranscription(meetingSession.configuration.meetingId,  language === 'ja' ? "ja-JP" : "en-US");
+    console.log("enableLiveTranscription startMeetingTranscriptionResponse", startMeetingTranscriptionResponse);
+    // meetingSession.audioVideo.realtimeSendDataMessage(
+    //   'TranscriptEvent',
+    //   { message: "World" },
+    //   30000,
+    // );
   }, []);
 
   // Function to toggle microphone on/off
@@ -375,26 +386,32 @@ function StartLiveSession() {
     meetingSession.audioVideo.realtimeSubscribeToAttendeeIdPresence(callback);
 
     if (meetingSession) {
-      console.log("enableLiveTranscription meetingId", meetingSession.configuration.meetingId);
-      // Enable live transcription
-      const enableLiveTranscription = async () => {
-        // startMeetingTranscription(meetingId, languageCode)
-        const startMeetingTranscriptionResponse = await startMeetingTranscription(meetingSession.configuration.meetingId, 'en-US');
-        console.log("enableLiveTranscription startMeetingTranscriptionResponse",startMeetingTranscriptionResponse);
-      };
+      // console.log("enableLiveTranscription meetingId", meetingSession.configuration.meetingId);
+      // // Enable live transcription
+      // const enableLiveTranscription = async () => {
+      //   // startMeetingTranscription(meetingId, languageCode)
+      //   const startMeetingTranscriptionResponse = await startMeetingTranscription(meetingSession.configuration.meetingId, 'en-US');
+      //   console.log("enableLiveTranscription startMeetingTranscriptionResponse",startMeetingTranscriptionResponse);
+      // };
 
-      enableLiveTranscription();
-      console.log("enableLiveTranscription audioVideo", meetingSession.audioVideo);
+      // enableLiveTranscription();
+      // console.log("enableLiveTranscription audioVideo", meetingSession.audioVideo);
       // Subscribe to transcription events
-      meetingSession.audioVideo.realtimeSubscribeToReceiveDataMessage(
-        'transcription',
-        (data) => {
+      // meetingSession.audioVideo.realtimeSubscribeToReceiveDataMessage(
+      //   'transcription',//'transcription',
+      //   (data) => {
+      //     console.log('enableLiveTranscription Received transcription:');
+      //     try {
+      //       const transcription = JSON.parse(data.text());
+      //       setTranscriptions((prev) => [...prev, transcription]);
 
-          console.log("enableLiveTranscription Received data message:", data);
-          const transcription = JSON.parse(data.text());
-          setTranscriptions((prev) => [...prev, transcription]);
-        }
-      );
+      //       // Display transcription or do something with it
+      //     } catch (error) {
+      //       console.error('enableLiveTranscription Error processing transcription data:', error);
+      //     }
+      //   }
+      // );
+
     }
 
   }, [meetingSession]);
@@ -408,10 +425,6 @@ function StartLiveSession() {
   const handleQRSelectionChange = (e) => {
     setSelectedQR(e.target.value);
   };
-
-  console.log('Main Speaker', meeting);
-  console.log('Main Speaker', attendee);
-  console.log('Main Speaker', isLoading);
 
   return (
     <>
@@ -462,13 +475,13 @@ function StartLiveSession() {
                 </div>
               </>
             )}
-            <div>
+            {/* <div>
               {transcriptions.map((t, idx) => (
                 <p key={idx}>
                   <strong>{t.attendeeName}:</strong> {t.transcriptionText}
                 </p>
               ))}
-            </div>
+            </div> */}
             <h3>{t('chatSettingLbl')}</h3>
             <select value={chatSetting} onChange={handleChatSettingChange}>
               <option value="allChat">{t('chatSettingOptions.allChat')}</option>

@@ -266,7 +266,7 @@ export async function listAppInstanceUser(appInstanceArn) {
   try {
     const restOperation = get({
       apiName: 'AppInstanceUserVTGRestApi', // The name of the API defined in backend.ts
-      path: 'app-instance-users/?appInstanceArn=' + encodeURIComponent(appInstanceArn) , // endpoint defined in backend.ts, appInstanceArn is dynamically passed
+      path: 'app-instance-users/?appInstanceArn=' + encodeURIComponent(appInstanceArn), // endpoint defined in backend.ts, appInstanceArn is dynamically passed
     });
     const { body } = await restOperation.response;
     const response = await body.json();
@@ -293,5 +293,27 @@ export async function startMeetingTranscription(meetingId, languageCode) {
     return response.data;
   } catch (error) {
     console.log('POST call startMeetingTranscription failed: ', JSON.parse(error.response.body));
+  }
+}
+
+export async function translateTextSpeech(inputText, sourceLanguageCode, targetLanguageCode) {
+  try {
+    const restOperation = post({
+      apiName: 'TranslateVTGRestApi', // The name of the API defined in backend.ts
+      path: 'translate-text-speech', // endpoint defined in backend.ts, meetingId is dynamically passed
+      options: {
+        body: {
+          inputText: inputText, // The text to be translated
+          sourceLanguageCode: sourceLanguageCode, // the source language code
+          targetLanguageCode: targetLanguageCode, // the target language code
+        }
+      }
+    });
+
+    const { body } = await restOperation.response;
+    const response = await body.json();
+    return response.data;
+  } catch (error) {
+    console.log('POST call translateTextSpeech failed: ', JSON.parse(error.response.body));
   }
 }

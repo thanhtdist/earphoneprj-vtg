@@ -20,6 +20,7 @@ import { listAttendee } from './functions/list-attendee/resource';
 // import { listAppInstanceUser } from './functions/list-app-instance-user/resource';
 import { addCloudWatchLogs } from './functions/add-cloud-watch-logs/resource';
 import { startMeetingTranscription } from './functions/start-meeting-transcription/resource';
+import { translateTextSpeech } from './functions/translate-text-speech/resource';
 /**
  * Define the backend resources 
  * - List lambda functions for audio voice (metting session) and chat(message session)
@@ -37,6 +38,7 @@ const backend = defineBackend({
   //listAppInstanceUser, // list app instance user for chat by the participants
   addCloudWatchLogs, // send logs to cloud watch
   startMeetingTranscription, // start meeting transcription
+  translateTextSpeech, // translate text to speech
 });
 
 /**
@@ -187,6 +189,33 @@ cloudWatchPath.addMethod("POST", new LambdaIntegration(
   backend.addCloudWatchLogs.resources.lambda
 ));
 
+// =============2. API Getway, Lambda function for TRANSLATE ===============
+// 2.1. Add app instance user API
+const translateRestApi = new RestApi(apiStack, "TranslateVTGRestApi", {
+  restApiName: "TranslateVTGRestApi",
+  deploy: true,
+  deployOptions: {
+    stageName: "prod",
+  },
+  defaultCorsPreflightOptions: {
+    allowOrigins: Cors.ALL_ORIGINS, // Restrict this to domains you trust
+    allowMethods: Cors.ALL_METHODS, // Specify only the methods you need to allow
+    allowHeaders: Cors.DEFAULT_HEADERS, // Specify only the headers you need to allow
+  },
+});
+
+// create a new resource path(endpoint) for /app-instance-users
+const translatePath = translateRestApi.root.addResource("translate-text-speech");
+
+// // add GET method to create /app-instance-users?appInstanceArn=appInstanceArn with listAppInstanceUser Lambda integration
+// appInstanceUserPath.addMethod("GET", new LambdaIntegration(
+//   backend.listAppInstanceUser.resources.lambda
+// ));
+// add POST method to create /app-instance-users with createAppInstanceUser Lambda integration
+translatePath.addMethod("POST", new LambdaIntegration(
+  backend.translateTextSpeech.resources.lambda
+));
+
 // add outputs to the configuration file for calling APIs metadata in the frontend
 backend.addOutput({
   custom: {
@@ -210,6 +239,11 @@ backend.addOutput({
         endpoint: cloudWatchLogRestApi.url,
         region: Stack.of(cloudWatchLogRestApi).region,
         apiName: cloudWatchLogRestApi.restApiName,
+      },
+      [translateRestApi.restApiName]: {
+        endpoint: translateRestApi.url,
+        region: Stack.of(translateRestApi).region,
+        apiName: translateRestApi.restApiName,
       },
     },
   },

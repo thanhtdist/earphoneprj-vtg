@@ -34,16 +34,15 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       TranscriptionConfiguration: {
         EngineTranscribeSettings: {
           LanguageCode: languageCode, // LanguageCode: 'en-US',
-          VocabularyFilterMethod: "tag",
-          VocabularyFilterName: "profanity",
-          VocabularyName: 'lingo',
+         // VocabularyFilterMethod: "tag",
+          //VocabularyFilterName: "profanity",
+          //VocabularyName: 'lingo',
           Region: 'us-east-1',
           EnablePartialResultsStabilization: true,
           PartialResultsStability: 'high',
           ContentIdentificationType: "PII",
-          ContentRedactionType: "PII",
           PiiEntityTypes: "ALL",
-          LanguageModelName: "language-model"
+          //LanguageModelName: "language-model"
         }
       }
     }).promise();

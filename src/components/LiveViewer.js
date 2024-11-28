@@ -4,6 +4,7 @@ import {
   createAppInstanceUsers,
   addChannelMembership,
   listAttendee,
+  translateTextSpeech,
 } from '../apis/api';
 import {
   DefaultDeviceController,
@@ -52,7 +53,11 @@ function LiveViewer() {
   const [userArn, setUserArn] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [participantsCount, setParticipantsCount] = useState(0);
-  const [transcriptions, setTranscriptions] = useState([]);
+  const [transcripts, setTranscriptions] = useState([]);
+  const [lines, setLine] = useState(null);
+  const [translatedText, setTranslatedText] = useState(null); 
+  //const [sourceLanguageCode, setSourceLanguageCode] = useState(null);
+  //const [audioUrl, setAudioUrl] = useState(null);
 
   // Function to initialize the meeting session from the meeting that the host has created
   const initializeMeetingSession = useCallback(async (meeting, attendee) => {
@@ -69,12 +74,12 @@ function LiveViewer() {
 
     selectSpeaker(meetingSession);
 
-    const audioElement = document.getElementById('audioElementListener');
-    if (audioElement) {
-      await meetingSession.audioVideo.bindAudioElement(audioElement);
-    } else {
-      console.error('Audio element not found');
-    }
+    // const audioElement = document.getElementById('audioElementListener');
+    // if (audioElement) {
+    //   await meetingSession.audioVideo.bindAudioElement(audioElement);
+    // } else {
+    //   console.error('Audio element not found');
+    // }
 
     console.log('Listeners - initializeMeetingSession--> Start');
     metricReport(meetingSession);
@@ -273,24 +278,95 @@ function LiveViewer() {
 
     meetingSession.audioVideo.realtimeSubscribeToAttendeeIdPresence(callback);
 
-    if (meetingSession) {
-      // Subscribe to transcription data messages
-      meetingSession.audioVideo.realtimeSubscribeToReceiveDataMessage(
-        'AmazonChimeVoiceFocusTranscriptionMessage',
-        (data) => {
-          const transcription = JSON.parse(data.text());
-          setTranscriptions((prev) => [...prev, transcription]);
-        }
-      );
-    }
-
+    // meetingSession.audioVideo.realtimeSubscribeToReceiveDataMessage(
+    //   'transcriptEvent',
+    //   (data) => {
+    //     console.log('enableLiveTranscription data', data);
+    //     const transcription = JSON.parse(data.text());
+    //     setTranscriptions((prev) => [...prev, transcription]);
+    //   }
+    // );
+    meetingSession.audioVideo.transcriptionController?.subscribeToTranscriptEvent(
+      (transcriptEvent) => {
+        console.log('enableLiveTranscription Received transcription:', transcriptEvent);
+        setTranscriptions(transcriptEvent);
+      },
+    );
   }, [meetingSession]);
-  console.log('enableLiveTranscription transcription', transcriptions);
+
+  useEffect(() => {
+    if (transcripts) {
+      // if (transcripts.type === "started") {
+      //   const transcriptionConfiguration = JSON.parse(transcripts.transcriptionConfiguration)
+      //   console.log('transcriptionConfiguration:', transcriptionConfiguration);
+      //   setSourceLanguageCode(transcriptionConfiguration.EngineTranscribeSettings.LanguageCode);
+      // }
+      if (transcripts.results !== undefined) {
+        if (!transcripts.results[0].isPartial) {
+          if (transcripts.results[0].alternatives[0].items[0].confidence > 0.5) {
+              setLine(
+                // `${transcripts.results[0].alternatives[0].items[0].attendee.externalUserId}: ${transcripts.results[0].alternatives[0].transcript}`,
+                `${transcripts.results[0].alternatives[0].transcript}`,
+              );
+          }
+        }
+      }
+    }
+  }, [transcripts]);
+
+  useEffect(() => {
+    const translateTextSpeechData = async () => {
+      console.log('translateTextSpeechData lines:', lines);
+      try {
+        if (!lines) return;
+        // Translate the text to speech
+        const sourceLanguageCode = 'en-US';
+        console.log('translateTextSpeechData sourceLanguageCode:', sourceLanguageCode);
+        const targetLanguageCode = localStorage.getItem('i18nextLng');
+        console.log('translateTextSpeechData targetLanguageCode:', targetLanguageCode);
+        const translateTextSpeechResponse = await translateTextSpeech(lines, sourceLanguageCode, targetLanguageCode === 'ja' ? "ja-JP" : "en-US");
+        console.log('translateTextSpeechData response:', translateTextSpeechResponse);
+        setTranslatedText(translateTextSpeechResponse.translatedText);
+
+        // Check if the response contains AudioStream data
+        if (!translateTextSpeechResponse.speech.AudioStream || !translateTextSpeechResponse.speech.AudioStream.data) {
+          throw new Error("Invalid AudioStream data");
+        }
+
+        // Convert the AudioStream buffer to a Blob
+        const audioBlob = new Blob([Uint8Array.from(translateTextSpeechResponse.speech.AudioStream.data)], {
+          type: translateTextSpeechResponse.speech.ContentType || "audio/mpeg", // Default to MP3 format
+        });
+
+        // Generate a Blob URL
+        const audioUrl = URL.createObjectURL(audioBlob);
+
+        // Bind the Blob URL to the <audio> element
+        const audioElement = document.getElementById("audioElementListener");
+        if (!audioElement) {
+          throw new Error("Audio element not found");
+        }
+
+        audioElement.src = audioUrl; // Assign the Blob URL to the audio element
+        audioElement.play();        // Play the audio
+      } catch (error) {
+        console.error('Error translating text to speech:', error);
+      }
+
+    };
+    translateTextSpeechData();
+
+  }, [lines]);
+  console.log('transcriptions', transcripts);
+  console.log('lines', lines);
   return (
     <>
       <Participants count={participantsCount} />
       <div className="live-viewer-container">
-        <audio id="audioElementListener" controls autoPlay className="audio-player" style={{ display: (meeting && attendee) ? 'block' : 'none' }} />
+        <audio id="audioElementListener" controls autoPlay
+          className="audio-player" style={{ display: (meeting && attendee) ? 'block' : 'none' }}
+        // src={audioUrl} // Set the source to the generated audio URL
+        />
         {(isLoading) ? (
           <div className="loading">
             <div className="spinner"></div>
@@ -298,13 +374,14 @@ function LiveViewer() {
           </div>
         ) : (
           <>
-            <div>
-              {transcriptions.map((t, idx) => (
-                <p key={idx}>
-                  <strong>{t.attendeeName}:</strong> {t.transcriptionText}
-                </p>
-              ))}
-            </div>
+            {/* {lines.slice(Math.max(lines.length - 10, 0)).map((line, index) => (
+              <div key={index}>
+                {line}
+                <br />
+              </div>
+            ))} */}
+            {lines && <div>{lines}</div>}
+            {translatedText && <div>{translatedText}</div>}
             <br />
             {channelArn && <ChatMessage userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} chatSetting={chatSetting} />}
           </>
