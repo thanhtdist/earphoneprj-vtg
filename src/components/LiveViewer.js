@@ -55,7 +55,7 @@ function LiveViewer() {
   const [participantsCount, setParticipantsCount] = useState(0);
   const [transcripts, setTranscriptions] = useState([]);
   const [lines, setLine] = useState(null);
-  const [translatedText, setTranslatedText] = useState(null); 
+  const [translatedText, setTranslatedText] = useState(null);
   const [sourceLanguageCode, setSourceLanguageCode] = useState(null);
   //const [audioUrl, setAudioUrl] = useState(null);
 
@@ -303,12 +303,16 @@ function LiveViewer() {
       }
       if (transcripts.results !== undefined) {
         if (!transcripts.results[0].isPartial) {
-          if (transcripts.results[0].alternatives[0].items[0].confidence > 0.5) {
-              setLine(
-                // `${transcripts.results[0].alternatives[0].items[0].attendee.externalUserId}: ${transcripts.results[0].alternatives[0].transcript}`,
-                `${transcripts.results[0].alternatives[0].transcript}`,
-              );
-          }
+          // if (transcripts.results[0].alternatives[0].items[0].confidence > 0.5) {
+          //     setLine(
+          //       // `${transcripts.results[0].alternatives[0].items[0].attendee.externalUserId}: ${transcripts.results[0].alternatives[0].transcript}`,
+          //       `${transcripts.results[0].alternatives[0].transcript}`,
+          //     );
+          // }
+          setLine(
+            // `${transcripts.results[0].alternatives[0].items[0].attendee.externalUserId}: ${transcripts.results[0].alternatives[0].transcript}`,
+            `${transcripts.results[0].alternatives[0].transcript}`,
+          );
         }
       }
     }
@@ -324,32 +328,34 @@ function LiveViewer() {
         //const sourceLanguageCode = 'en-US';
         console.log('translateTextSpeechData sourceLanguageCode:', sourceLanguageCode);
         const targetLanguageCode = i18n.language === 'ja' ? "ja-JP" : "en-US";
-        // console.log('current language targetLanguageCode:', targetLanguageCode);
-        const translateTextSpeechResponse = await translateTextSpeech(lines, sourceLanguageCode, targetLanguageCode);
-        console.log('translateTextSpeechData response:', translateTextSpeechResponse);
-        setTranslatedText(translateTextSpeechResponse.translatedText);
+        if (sourceLanguageCode !== targetLanguageCode) {
+          // console.log('current language targetLanguageCode:', targetLanguageCode);
+          const translateTextSpeechResponse = await translateTextSpeech(lines, sourceLanguageCode, targetLanguageCode);
+          console.log('translateTextSpeechData response:', translateTextSpeechResponse);
+          setTranslatedText(translateTextSpeechResponse.translatedText);
 
-        // Check if the response contains AudioStream data
-        if (!translateTextSpeechResponse.speech.AudioStream || !translateTextSpeechResponse.speech.AudioStream.data) {
-          throw new Error("Invalid AudioStream data");
+          // Check if the response contains AudioStream data
+          if (!translateTextSpeechResponse.speech.AudioStream || !translateTextSpeechResponse.speech.AudioStream.data) {
+            throw new Error("Invalid AudioStream data");
+          }
+
+          // Convert the AudioStream buffer to a Blob
+          const audioBlob = new Blob([Uint8Array.from(translateTextSpeechResponse.speech.AudioStream.data)], {
+            type: translateTextSpeechResponse.speech.ContentType || "audio/mpeg", // Default to MP3 format
+          });
+
+          // Generate a Blob URL
+          const audioUrl = URL.createObjectURL(audioBlob);
+
+          // Bind the Blob URL to the <audio> element
+          const audioElement = document.getElementById("audioElementListener");
+          if (!audioElement) {
+            throw new Error("Audio element not found");
+          }
+
+          audioElement.src = audioUrl; // Assign the Blob URL to the audio element
+          audioElement.play();        // Play the audio
         }
-
-        // Convert the AudioStream buffer to a Blob
-        const audioBlob = new Blob([Uint8Array.from(translateTextSpeechResponse.speech.AudioStream.data)], {
-          type: translateTextSpeechResponse.speech.ContentType || "audio/mpeg", // Default to MP3 format
-        });
-
-        // Generate a Blob URL
-        const audioUrl = URL.createObjectURL(audioBlob);
-
-        // Bind the Blob URL to the <audio> element
-        const audioElement = document.getElementById("audioElementListener");
-        if (!audioElement) {
-          throw new Error("Audio element not found");
-        }
-
-        audioElement.src = audioUrl; // Assign the Blob URL to the audio element
-        audioElement.play();        // Play the audio
       } catch (error) {
         console.error('Error translating text to speech:', error);
       }
