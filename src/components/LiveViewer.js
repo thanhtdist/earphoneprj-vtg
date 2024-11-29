@@ -317,14 +317,15 @@ function LiveViewer() {
   useEffect(() => {
     const translateTextSpeechData = async () => {
       console.log('translateTextSpeechData lines:', lines);
+      console.log("current language", i18n.language);
       try {
         if (!lines) return;
         // Translate the text to speech
         //const sourceLanguageCode = 'en-US';
         console.log('translateTextSpeechData sourceLanguageCode:', sourceLanguageCode);
-        const targetLanguageCode = localStorage.getItem('i18nextLng');
-        console.log('translateTextSpeechData targetLanguageCode:', targetLanguageCode);
-        const translateTextSpeechResponse = await translateTextSpeech(lines, sourceLanguageCode, targetLanguageCode === 'ja' ? "ja-JP" : "en-US");
+        const targetLanguageCode = i18n.language === 'ja' ? "ja-JP" : "en-US";
+        // console.log('current language targetLanguageCode:', targetLanguageCode);
+        const translateTextSpeechResponse = await translateTextSpeech(lines, sourceLanguageCode, targetLanguageCode);
         console.log('translateTextSpeechData response:', translateTextSpeechResponse);
         setTranslatedText(translateTextSpeechResponse.translatedText);
 
@@ -356,7 +357,7 @@ function LiveViewer() {
     };
     translateTextSpeechData();
 
-  }, [lines, sourceLanguageCode]);
+  }, [lines, sourceLanguageCode, i18n.language]);
   console.log('transcriptions', transcripts);
   console.log('lines', lines);
   return (
