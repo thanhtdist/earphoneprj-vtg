@@ -3,7 +3,7 @@
  */
 export const Config = {
     // region for the AWS SDK
-    region: 'us-east-1',
+    region: 'ap-east-1',
     // The API Gateway endpoint for the API
     headers: {
         'Content-Type': 'application/json', // The content type for API Gateway responses
