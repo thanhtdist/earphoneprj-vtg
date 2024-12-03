@@ -41,7 +41,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     const meetingResponse = await chime.createMeeting({
       ClientRequestToken: clientRequestToken, // Unique meeting identifier
       ExternalMeetingId: externalMeetingId, // External meeting identifier
-      MediaRegion: Config.region, // Region for the meeting
+      MediaRegion: "ap-southeast-1", // Region for the meeting
       MeetingFeatures: {
         Audio: {
           EchoReduction: "AVAILABLE" // enable and reduce echo from the meeting
