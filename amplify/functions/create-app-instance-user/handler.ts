@@ -9,7 +9,7 @@ import { Config } from '../config';
  */
 export const handler: APIGatewayProxyHandler = async (event) => {
   // Create a new Chime SDK Identity instance
-  const chime = new AWS.ChimeSDKIdentity({ region: Config.region });
+  const chime = new AWS.ChimeSDKIdentity({ region: Config.message_region });
 
   try {
     // Parse body from API Gateway event
