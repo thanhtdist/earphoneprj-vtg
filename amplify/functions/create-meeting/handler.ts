@@ -9,7 +9,7 @@ import { Config } from '../config';
  */
 export const handler: APIGatewayProxyHandler = async (event) => {
   // Create a new Chime SDK Meeting instance
-  const chime = new AWS.ChimeSDKMeetings({ region: "ap-southeast-1" });
+  const chime = new AWS.ChimeSDKMeetings({ region: Config.region });
 
   try {
     // Parse body from API Gateway event
@@ -41,7 +41,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     const meetingResponse = await chime.createMeeting({
       ClientRequestToken: clientRequestToken, // Unique meeting identifier
       ExternalMeetingId: externalMeetingId, // External meeting identifier
-      MediaRegion: "ap-southeast-1", // Region for the meeting
+      MediaRegion: Config.region, // Region for the meeting
       MeetingFeatures: {
         Audio: {
           EchoReduction: "AVAILABLE" // enable and reduce echo from the meeting

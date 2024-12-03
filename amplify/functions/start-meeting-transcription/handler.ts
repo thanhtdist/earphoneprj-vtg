@@ -9,7 +9,7 @@ import { Config } from '../config';
  */
 export const handler: APIGatewayProxyHandler = async (event) => {
   // Create a new Chime SDK Meeting instance
-  const chime = new AWS.ChimeSDKMeetings({ region: "ap-southeast-1" });
+  const chime = new AWS.ChimeSDKMeetings({ region: Config.region });
 
   try {
     // Parse body from API Gateway event
@@ -34,7 +34,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       TranscriptionConfiguration: {
         EngineTranscribeSettings: {
           LanguageCode: languageCode, // LanguageCode: 'en-US',
-          Region: 'us-east-1',
+          Region: Config.region, // Region
           EnablePartialResultsStabilization: true,
           PartialResultsStability: 'high',
         }
