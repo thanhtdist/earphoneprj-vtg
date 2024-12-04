@@ -296,7 +296,7 @@ export async function startMeetingTranscription(meetingId, languageCode) {
   }
 }
 
-export async function translateTextSpeech(inputText, sourceLanguageCode, targetLanguageCode) {
+export async function translateTextSpeech(inputText, sourceLanguageCode, targetLanguageCode, engine) {
   try {
     const restOperation = post({
       apiName: 'TranslateVTGRestApi', // The name of the API defined in backend.ts
@@ -306,6 +306,7 @@ export async function translateTextSpeech(inputText, sourceLanguageCode, targetL
           inputText: inputText, // The text to be translated
           sourceLanguageCode: sourceLanguageCode, // the source language code
           targetLanguageCode: targetLanguageCode, // the target language code
+          engine: engine, // the engine to be used for translation
         }
       }
     });

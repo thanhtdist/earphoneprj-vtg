@@ -32,6 +32,7 @@ import {
   faMicrophone, faMicrophoneSlash,
 } from '@fortawesome/free-solid-svg-icons';
 import { useTranslation } from 'react-i18next';
+import { VOICE_LANGUAGES } from '../utils/constant';
 // import { uploadFileToS3 } from '../services/S3Service';
 
 /**
@@ -65,6 +66,9 @@ function StartLiveSession() {
   const [noMicroMsg, setNoMicoMsg] = useState(t('noMicroMsg'));
   const [logger, setLogger] = useState(null);
   const [participantsCount, setParticipantsCount] = useState(0);
+  const [isTranslationEnabled, setIsTranslationEnabled] = useState(false);
+  const [selectedVoiceLanguage, setSelectedVoiceLanguage] = useState("");
+  //const [selectedTTSEngine, setSelectedTTSEngine] = useState("standard");
 
   // Function to start a live audio session
   const startLiveAduioSession = async () => {
@@ -219,18 +223,8 @@ function StartLiveSession() {
 
     // Start audio video session
     meetingSession.audioVideo.start();
-    console.log("enableLiveTranscription meetingId", meetingSession.configuration.meetingId);
-    //const language = localStorage.getItem('i18nextLng');
-    const languageCode = i18n.language === 'ja' ? "ja-JP" : "en-US";
-    console.log("current languageCode", languageCode);
-    const startMeetingTranscriptionResponse = await startMeetingTranscription(meetingSession.configuration.meetingId, languageCode);
-    console.log("enableLiveTranscription startMeetingTranscriptionResponse", startMeetingTranscriptionResponse);
-    // meetingSession.audioVideo.realtimeSendDataMessage(
-    //   'TranscriptEvent',
-    //   { message: "World" },
-    //   30000,
-    // );
-  }, [i18n.language]);
+
+  }, []);
 
   // Function to toggle microphone on/off
   const toggleMicrophone = async () => {
@@ -312,8 +306,8 @@ function StartLiveSession() {
       setMicroChecking('microChecking');
 
       // Check if there are no devices or if any device label is empty
-      if (devices.length === 0 || devices.some(device => !device.label.trim())) {
-      //if (devices.length === 0) {
+      // if (devices.length === 0 || devices.some(device => !device.label.trim())) {
+      if (devices.length === 0) {
         console.log('No audio input devices found');
         // Display a message after 5 seconds
         setTimeout(() => {
@@ -417,6 +411,29 @@ function StartLiveSession() {
 
   }, [meetingSession]);
 
+  // Send the language code to the listener
+  useEffect(() => {
+    if (!meetingSession) {
+      return;
+    }
+    let languageCodeSource = selectedVoiceLanguage;
+    if (!selectedVoiceLanguage) {
+      languageCodeSource = VOICE_LANGUAGES.find((lang) => lang.key.startsWith(i18n.language)).key;
+    }
+    console.log("enableMeetingTranscription languageCodeSource", languageCodeSource);
+    console.log("enableMeetingTranscription meetingSession", meetingSession);
+    // meetingSession.audioVideo.realtimeSendDataMessage(
+    //   'TranscriptLanguage',
+    //   { data: languageCodeSource },
+    //   30000,
+    // );
+    const enableMeetingTranscription = async (meetingId, languageCode) => {
+      const startMeetingTranscriptionResponse = await startMeetingTranscription(meetingId, languageCode);
+      console.log("enableLiveTranscription startMeetingTranscriptionResponse", startMeetingTranscriptionResponse);
+    };
+    enableMeetingTranscription(meetingSession.configuration.meetingId, languageCodeSource);
+  }, [meetingSession, selectedVoiceLanguage, i18n.language]);
+
   // Function to handle the chat setting change
   const handleChatSettingChange = (e) => {
     setChatSetting(e.target.value);
@@ -427,10 +444,60 @@ function StartLiveSession() {
     setSelectedQR(e.target.value);
   };
 
+  // Function to toggle checkbox the voice language select dropdown
+  const handleCheckboxChange = (e) => {
+    setIsTranslationEnabled(e.target.checked);
+    setSelectedVoiceLanguage(VOICE_LANGUAGES.find((lang) => lang.key.startsWith(i18n.language)).key);
+  };
+
+  // Function to handle the selected voice language change
+  const handleSelectedVoiceLanguageChange = (event) => {
+    setSelectedVoiceLanguage(event.target.value);
+    console.log("Selected voice language:", event.target.value);
+  };
+
+  // Function to handle the selected TTS engine change
+  // const handleSelectedTTSEngineChange = (event) => {
+  //   setSelectedTTSEngine(event.target.value);
+  //   console.log("Selected voice language:", event.target.value);
+  // };
+
   return (
     <>
       <Participants count={participantsCount} />
       <div className="container">
+        <label>
+          <input type="checkbox" id="translateCheckbox" onClick={handleCheckboxChange} />
+          I want the voice to be translated into
+        </label>
+        <select
+          disabled={!isTranslationEnabled}
+          id="selectedVoiceLanguage"
+          value={selectedVoiceLanguage}
+          onChange={handleSelectedVoiceLanguageChange}
+        >
+          {/* <option value="" disabled>
+            -- Choose a language --
+          </option> */}
+          {VOICE_LANGUAGES.map((language) => (
+            <option key={language.key} value={language.key}>
+              {language.label}
+            </option>
+          ))}
+        </select>
+
+        {/* <label htmlFor="tts-select">Select Text to Speech Engine: </label>
+        <select
+          id="tts-select"
+          value={selectedTTSEngine}
+          onChange={handleSelectedTTSEngineChange}
+        >
+          {TTS_ENGINE.map((engine) => (
+            <option key={engine.key} value={engine.key}>
+              {engine.label}
+            </option>
+          ))}
+        </select> */}
         <audio id="audioElementMain" controls autoPlay className="audio-player" style={{ display: (meeting && attendee) ? 'block' : 'none' }} />
         {(!meeting && !attendee) ? (
           <>

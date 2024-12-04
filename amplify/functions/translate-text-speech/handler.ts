@@ -14,17 +14,18 @@ export const handler: APIGatewayProxyHandler = async (event) => {
 
   try {
     // Parse body from API Gateway event
-    const { inputText, sourceLanguageCode, targetLanguageCode } = JSON.parse(event.body || '{}');
+    const { inputText, sourceLanguageCode, targetLanguageCode, engine } = JSON.parse(event.body || '{}');
 
-    console.log('Translate Text with inputText: ', inputText, 'sourceLanguageCode: ', sourceLanguageCode, 'targetLanguageCode: ', targetLanguageCode);
+    console.log('Translate Text with inputText: ', inputText, 'sourceLanguageCode: ', 
+      sourceLanguageCode, 'targetLanguageCode: ', targetLanguageCode, 'engine: ', engine);
 
     // Input validation
-    if (!inputText || !sourceLanguageCode || !targetLanguageCode) {
-      console.error('Invalid input: inputText, sourceLanguageCode and targetLanguageCode are required.',
-        { inputText, sourceLanguageCode, targetLanguageCode });
+    if (!inputText || !sourceLanguageCode || !targetLanguageCode || !engine) {
+      console.error('Invalid input: inputText, sourceLanguageCode, targetLanguageCode and engine are required.',
+        { inputText, sourceLanguageCode, targetLanguageCode, engine });
       return {
         statusCode: 400,
-        body: JSON.stringify({ error: 'Invalid input: inputText, sourceLanguageCode and targetLanguageCode are required.' }),
+        body: JSON.stringify({ error: 'Invalid input: inputText, sourceLanguageCode, targetLanguageCode and engine are required.' }),
         headers: Config.headers,
       };
     }
@@ -48,6 +49,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     }
 
     const pollyResponse = await polly.synthesizeSpeech({
+      Engine: engine,
       OutputFormat: 'mp3',
       Text: translateTextResponse.TranslatedText,
       //VoiceId: 'Mizuki' // Mizuki for a female voice. Takumi for a male voice.
