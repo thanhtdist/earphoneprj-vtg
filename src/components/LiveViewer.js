@@ -348,14 +348,13 @@ function LiveViewer() {
     console.log('translateTextSpeechData sourceLanguageCode:', sourceLanguageCode);
     console.log('translateTextSpeechData selectedVoiceLanguage:', selectedVoiceLanguage);
 
-    let transcriptText = null;
-    let translatedText = null;
-
     if (meetingSession && meetingSession.audioVideo) {
       meetingSession.audioVideo.unbindAudioElement();
       setTranscriptText(null);
       setTranslatedText(null);
     }
+
+    let transcriptedText = '';
 
     if (audioElement) {
 
@@ -370,21 +369,22 @@ function LiveViewer() {
 
           // Ensure that we are not processing partial results
           if (!transcriptResult.isPartial) {
-            setTranscriptText(`${transcriptResult.alternatives[0].transcript}`);
+            transcriptedText = `${transcriptResult.alternatives[0].transcript}`;
+            setTranscriptText(transcriptedText);
           }
         }
 
         // Function to translate text to speech and play audio
         const translateTextSpeechData = async () => {
           try {
-            if (!transcriptText) return; // If no lines to translate, return early
+            if (!transcriptedText) return; // If no lines to translate, return early
 
             // Translate the text to speech
 
             //console.log('translateTextSpeechData selectedTTSEngine:', selectedTTSEngine);
-            console.log('translateTextSpeechData transcriptText:', transcriptText);
+            console.log('translateTextSpeechData transcriptText:', transcriptedText);
             const translateTextSpeechResponse = await translateTextSpeech(
-              transcriptText,
+              transcriptedText,
               sourceLanguageCode,
               selectedVoiceLanguage,
               //selectedTTSEngine
