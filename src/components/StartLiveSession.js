@@ -66,7 +66,7 @@ function StartLiveSession() {
   const [noMicroMsg, setNoMicoMsg] = useState(t('noMicroMsg'));
   const [logger, setLogger] = useState(null);
   const [participantsCount, setParticipantsCount] = useState(0);
-  const [isTranslationEnabled, setIsTranslationEnabled] = useState(false);
+  //const [isTranslationEnabled, setIsTranslationEnabled] = useState(false);
   const [selectedVoiceLanguage, setSelectedVoiceLanguage] = useState("");
   //const [selectedTTSEngine, setSelectedTTSEngine] = useState("standard");
 
@@ -306,8 +306,8 @@ function StartLiveSession() {
       setMicroChecking('microChecking');
 
       // Check if there are no devices or if any device label is empty
-      // if (devices.length === 0 || devices.some(device => !device.label.trim())) {
-      if (devices.length === 0) {
+      if (devices.length === 0 || devices.some(device => !device.label.trim())) {
+      //if (devices.length === 0) {
         console.log('No audio input devices found');
         // Display a message after 5 seconds
         setTimeout(() => {
@@ -445,10 +445,10 @@ function StartLiveSession() {
   };
 
   // Function to toggle checkbox the voice language select dropdown
-  const handleCheckboxChange = (e) => {
-    setIsTranslationEnabled(e.target.checked);
-    setSelectedVoiceLanguage(VOICE_LANGUAGES.find((lang) => lang.key.startsWith(i18n.language)).key);
-  };
+  // const handleCheckboxChange = (e) => {
+  //   setIsTranslationEnabled(e.target.checked);
+  //   setSelectedVoiceLanguage(VOICE_LANGUAGES.find((lang) => lang.key.startsWith(i18n.language)).key);
+  // };
 
   // Function to handle the selected voice language change
   const handleSelectedVoiceLanguageChange = (event) => {
@@ -467,11 +467,11 @@ function StartLiveSession() {
       <Participants count={participantsCount} />
       <div className="container">
         <label>
-          <input type="checkbox" id="translateCheckbox" onClick={handleCheckboxChange} />
-          I want the voice to be translated into
+          {/* <input type="checkbox" id="translateCheckbox" onClick={handleCheckboxChange} /> */}
+          Select a language to speak
         </label>
         <select
-          disabled={!isTranslationEnabled}
+          //disabled={!isTranslationEnabled}
           id="selectedVoiceLanguage"
           value={selectedVoiceLanguage}
           onChange={handleSelectedVoiceLanguageChange}

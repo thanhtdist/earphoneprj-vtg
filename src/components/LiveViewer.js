@@ -496,6 +496,7 @@ function LiveViewer() {
 
         <label htmlFor="tts-select">Select Text to Speech Engine: </label>
         <select
+          disabled={!isTranslationEnabled}
           id="tts-select"
           value={selectedTTSEngine}
           onChange={handleSelectedTTSEngineChange}
