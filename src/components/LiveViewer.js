@@ -55,7 +55,7 @@ function LiveViewer() {
   const [isLoading, setIsLoading] = useState(false);
   const [participantsCount, setParticipantsCount] = useState(0);
   const [transcripts, setTranscriptions] = useState([]);
-  // const [lines, setLine] = useState(null);
+  const [lines, setLine] = useState(null);
   const [translatedText, setTranslatedText] = useState(null);
   const [sourceLanguageCode, setSourceLanguageCode] = useState(null);
   const [isTranslationEnabled, setIsTranslationEnabled] = useState(false);
@@ -319,7 +319,9 @@ function LiveViewer() {
         // If the source language and selected voice language match, bind the audio element
         const bindAudioElement = async () => {
           if (meetingSession && meetingSession.audioVideo) {
+            meetingSession.audioVideo.unbindAudioElement();
             await meetingSession.audioVideo.bindAudioElement(audioElement);
+            audioElement.play(); // Play the audio
           }
         };
 
@@ -335,6 +337,7 @@ function LiveViewer() {
             // Ensure that we are not processing partial results
             if (!transcriptResult.isPartial) {
               lines = `${transcriptResult.alternatives[0].transcript}`;
+              setLine(lines);
             }
           }
 
@@ -374,7 +377,7 @@ function LiveViewer() {
 
               // Bind the Blob URL to the <audio> element
               audioElement.src = audioUrl; // Assign the Blob URL to the audio element
-              await audioElement.play();    // Play the audio (ensure the audio element is ready)
+              audioElement.play();    // Play the audio (ensure the audio element is ready)
             } catch (error) {
               console.error('Error translating text to speech:', error);
             }
@@ -385,7 +388,9 @@ function LiveViewer() {
           // If the source language and selected voice language match, bind the audio element
           const bindAudioElement = async () => {
             if (meetingSession && meetingSession.audioVideo) {
+              meetingSession.audioVideo.unbindAudioElement();
               await meetingSession.audioVideo.bindAudioElement(audioElement);
+              audioElement.play(); // Play the audio
             }
           };
 
@@ -507,6 +512,7 @@ function LiveViewer() {
             </option>
           ))}
         </select>
+
         <audio id="audioElementListener" controls autoPlay
           className="audio-player" style={{ display: (meeting && attendee) ? 'block' : 'none' }}
         // src={audioUrl} // Set the source to the generated audio URL
@@ -524,8 +530,16 @@ function LiveViewer() {
                 <br />
               </div>
             ))} */}
-            {/* {lines && <div>{lines}</div>} */}
-            {translatedText && <div>{translatedText}</div>}
+            {lines && <div>
+              Orignial Text:
+              {lines}
+              </div>}
+            
+            {translatedText && 
+            <div>
+              Translated Text: 
+              {translatedText}
+              </div>}
             <br />
             {channelArn && <ChatMessage userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} chatSetting={chatSetting} />}
           </>

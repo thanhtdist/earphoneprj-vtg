@@ -16,7 +16,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     // Parse body from API Gateway event
     const { inputText, sourceLanguageCode, targetLanguageCode, engine } = JSON.parse(event.body || '{}');
 
-    console.log('Translate Text with inputText: ', inputText, 'sourceLanguageCode: ', 
+    console.log('Translate Text with inputText: ', inputText, 'sourceLanguageCode: ',
       sourceLanguageCode, 'targetLanguageCode: ', targetLanguageCode, 'engine: ', engine);
 
     // Input validation
@@ -53,16 +53,18 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       OutputFormat: 'mp3',
       Text: translateTextResponse.TranslatedText,
       //VoiceId: 'Mizuki' // Mizuki for a female voice. Takumi for a male voice.
-      VoiceId: targetLanguageCode === 'ja-JP' ? 'Mizuki' : 'Joanna'
+      VoiceId: targetLanguageCode === 'ja-JP' ? 'Mizuki' : targetLanguageCode === 'en-US' ? 'Danielle' : 'Joanna'
     }).promise();
 
     // Return successful response
     return {
       statusCode: 200,
-      body: JSON.stringify({ data: {
-        translatedText: translateTextResponse.TranslatedText,
-        speech: pollyResponse
-      } }),
+      body: JSON.stringify({
+        data: {
+          translatedText: translateTextResponse.TranslatedText,
+          speech: pollyResponse
+        }
+      }),
       headers: Config.headers,
     };
   } catch (error: any) {
