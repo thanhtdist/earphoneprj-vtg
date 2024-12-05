@@ -53,7 +53,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       OutputFormat: 'mp3',
       Text: translateTextResponse.TranslatedText,
       //VoiceId: 'Mizuki' // Mizuki for a female voice. Takumi for a male voice.
-      VoiceId: targetLanguageCode === 'ja-JP' ? 'Mizuki' : targetLanguageCode === 'en-US' ? 'Danielle' : 'Joanna'
+      VoiceId: targetLanguageCode === 'ja-JP' ? 'Mizuki' : targetLanguageCode === 'en-US' ? 'Joanna' : targetLanguageCode === 'ko-KR' ? 'Seoyeon': 'Joanna'
     }).promise();
 
     // Return successful response
