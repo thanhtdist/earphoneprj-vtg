@@ -32,7 +32,7 @@ import {
   faMicrophone, faMicrophoneSlash,
 } from '@fortawesome/free-solid-svg-icons';
 import { useTranslation } from 'react-i18next';
-import { VOICE_LANGUAGES } from '../utils/constant';
+import { SPEAK_VOICE_LANGUAGES } from '../utils/constant';
 // import { uploadFileToS3 } from '../services/S3Service';
 
 /**
@@ -67,7 +67,7 @@ function StartLiveSession() {
   const [logger, setLogger] = useState(null);
   const [participantsCount, setParticipantsCount] = useState(0);
   //const [isTranslationEnabled, setIsTranslationEnabled] = useState(false);
-  const [selectedVoiceLanguage, setSelectedVoiceLanguage] = useState("");
+  const [selectedVoiceLanguage, setSelectedVoiceLanguage] = useState(SPEAK_VOICE_LANGUAGES.find((lang) => lang.key.startsWith(i18n.language)).key);
   //const [selectedTTSEngine, setSelectedTTSEngine] = useState("standard");
 
   // Function to start a live audio session
@@ -306,8 +306,8 @@ function StartLiveSession() {
       setMicroChecking('microChecking');
 
       // Check if there are no devices or if any device label is empty
-      if (devices.length === 0 || devices.some(device => !device.label.trim())) {
-      //if (devices.length === 0) {
+      //if (devices.length === 0 || devices.some(device => !device.label.trim())) {
+      if (devices.length === 0) {
         console.log('No audio input devices found');
         // Display a message after 5 seconds
         setTimeout(() => {
@@ -416,11 +416,7 @@ function StartLiveSession() {
     if (!meetingSession) {
       return;
     }
-    let languageCodeSource = selectedVoiceLanguage;
-    if (!selectedVoiceLanguage) {
-      languageCodeSource = VOICE_LANGUAGES.find((lang) => lang.key.startsWith(i18n.language)).key;
-    }
-    console.log("enableMeetingTranscription languageCodeSource", languageCodeSource);
+    console.log("enableMeetingTranscription selectedVoiceLanguage", selectedVoiceLanguage);
     console.log("enableMeetingTranscription meetingSession", meetingSession);
     // meetingSession.audioVideo.realtimeSendDataMessage(
     //   'TranscriptLanguage',
@@ -428,11 +424,12 @@ function StartLiveSession() {
     //   30000,
     // );
     const enableMeetingTranscription = async (meetingId, languageCode) => {
+      console.log("enableLiveTranscription languageCode", languageCode);
       const startMeetingTranscriptionResponse = await startMeetingTranscription(meetingId, languageCode);
       console.log("enableLiveTranscription startMeetingTranscriptionResponse", startMeetingTranscriptionResponse);
     };
-    enableMeetingTranscription(meetingSession.configuration.meetingId, languageCodeSource);
-  }, [meetingSession, selectedVoiceLanguage, i18n.language]);
+    enableMeetingTranscription(meetingSession.configuration.meetingId, selectedVoiceLanguage);
+  }, [meetingSession, selectedVoiceLanguage]);
 
   // Function to handle the chat setting change
   const handleChatSettingChange = (e) => {
@@ -447,7 +444,7 @@ function StartLiveSession() {
   // Function to toggle checkbox the voice language select dropdown
   // const handleCheckboxChange = (e) => {
   //   setIsTranslationEnabled(e.target.checked);
-  //   setSelectedVoiceLanguage(VOICE_LANGUAGES.find((lang) => lang.key.startsWith(i18n.language)).key);
+  //   setSelectedVoiceLanguage(SPEAK_VOICE_LANGUAGES.find((lang) => lang.key.startsWith(i18n.language)).key);
   // };
 
   // Function to handle the selected voice language change
@@ -479,7 +476,7 @@ function StartLiveSession() {
           {/* <option value="" disabled>
             -- Choose a language --
           </option> */}
-          {VOICE_LANGUAGES.map((language) => (
+          {SPEAK_VOICE_LANGUAGES.map((language) => (
             <option key={language.key} value={language.key}>
               {language.label}
             </option>

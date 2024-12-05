@@ -23,7 +23,7 @@ import { checkAvailableMeeting } from '../utils/MeetingUtils';
 import { v4 as uuidv4 } from 'uuid';
 import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { VOICE_LANGUAGES, TTS_ENGINE } from '../utils/constant';
+import { LISTEN_VOICE_LANGUAGES } from '../utils/constant';
 /**
  * Component to join a meeting as a viewer and listen to the audio from the main & sub-speakers
  */
@@ -55,12 +55,12 @@ function LiveViewer() {
   const [isLoading, setIsLoading] = useState(false);
   const [participantsCount, setParticipantsCount] = useState(0);
   const [transcripts, setTranscriptions] = useState([]);
-  const [lines, setLine] = useState(null);
+  const [transcriptText, setTranscriptText] = useState(null);
   const [translatedText, setTranslatedText] = useState(null);
   const [sourceLanguageCode, setSourceLanguageCode] = useState(null);
-  const [isTranslationEnabled, setIsTranslationEnabled] = useState(false);
-  const [selectedVoiceLanguage, setSelectedVoiceLanguage] = useState("");
-  const [selectedTTSEngine, setSelectedTTSEngine] = useState("standard");
+  //const [isTranslationEnabled, setIsTranslationEnabled] = useState(false);
+  const [selectedVoiceLanguage, setSelectedVoiceLanguage] = useState(LISTEN_VOICE_LANGUAGES.find((lang) => lang.key.startsWith(i18n.language)).key);
+  //const [selectedTTSEngine, setSelectedTTSEngine] = useState("standard");
   //const [audioUrl, setAudioUrl] = useState(null);
 
   // Function to initialize the meeting session from the meeting that the host has created
@@ -227,40 +227,74 @@ function LiveViewer() {
   //     }
   //   }
   // }, [joinMeeting, meetingId, channelId, hostId, getMeetingAttendeeInfoFromCookies]);
-  useEffect(() => {
-    const checkMatch = async () => {
-      try {
-        // Retrieve and parse the "User" cookie
-        const retrievedUser = JSONCookieUtils.getJSONCookie("User");
-        console.log("Retrieved cookie:", retrievedUser);
-        if (!retrievedUser) {
-          console.log("User cookie not found");
-          joinMeeting();
-          return;
-        }
-        // Validate the retrieved cookie structure
-        const isMeetingMatched = retrievedUser.meeting.MeetingId === meetingId;
-        const isChannelMatched = retrievedUser.channelArn === `${Config.appInstanceArn}/channel/${channelId}`;
-        const isMatched = isMeetingMatched && isChannelMatched;
+  // useEffect(() => {
+  //   const checkMatch = async () => {
+  //     try {
+  //       // Retrieve and parse the "User" cookie
+  //       const retrievedUser = JSONCookieUtils.getJSONCookie("User");
+  //       console.log("Retrieved cookie:", retrievedUser);
+  //       if (!retrievedUser) {
+  //         console.log("User cookie not found");
+  //         joinMeeting();
+  //         return;
+  //       }
+  //       // Validate the retrieved cookie structure
+  //       const isMeetingMatched = retrievedUser.meeting.MeetingId === meetingId;
+  //       const isChannelMatched = retrievedUser.channelArn === `${Config.appInstanceArn}/channel/${channelId}`;
+  //       const isMatched = isMeetingMatched && isChannelMatched;
 
-        if (isMatched) {
-          console.log("User cookie matched the current meeting and channel");
-          // Call checkMatchedMeeting only once and store the result
-          const meeting = await checkAvailableMeeting(retrievedUser.meeting.MeetingId, "User");
-          console.log('getMeetingResponse:', meeting);
-          if (!meeting) return;
-          getMeetingAttendeeInfoFromCookies(retrievedUser);
-        } else {
-          console.log("User cookie did not match the current meeting and channel");
-          joinMeeting();
-        }
-      } catch (error) {
-        console.error("Error processing the User cookie:", error);
+  //       if (isMatched) {
+  //         console.log("User cookie matched the current meeting and channel");
+  //         // Call checkMatchedMeeting only once and store the result
+  //         const meeting = await checkAvailableMeeting(retrievedUser.meeting.MeetingId, "User");
+  //         console.log('getMeetingResponse:', meeting);
+  //         if (!meeting) return;
+  //         getMeetingAttendeeInfoFromCookies(retrievedUser);
+  //       } else {
+  //         console.log("User cookie did not match the current meeting and channel");
+  //         joinMeeting();
+  //       }
+  //     } catch (error) {
+  //       console.error("Error processing the User cookie:", error);
+  //     }
+  //   };
+
+  //   checkMatch(); // Execute the async function
+  // }, [joinMeeting, hostId, meetingId, channelId, getMeetingAttendeeInfoFromCookies]);
+
+
+  // Function to join the audio session
+  const joinAduioSession = async () => {
+    try {
+      // Retrieve and parse the "User" cookie
+      const retrievedUser = JSONCookieUtils.getJSONCookie("User");
+      console.log("Retrieved cookie:", retrievedUser);
+      if (!retrievedUser) {
+        console.log("User cookie not found");
+        joinMeeting();
+        return;
       }
-    };
+      // Validate the retrieved cookie structure
+      const isMeetingMatched = retrievedUser.meeting.MeetingId === meetingId;
+      const isChannelMatched = retrievedUser.channelArn === `${Config.appInstanceArn}/channel/${channelId}`;
+      const isMatched = isMeetingMatched && isChannelMatched;
 
-    checkMatch(); // Execute the async function
-  }, [joinMeeting, hostId, meetingId, channelId, getMeetingAttendeeInfoFromCookies]);
+      if (isMatched) {
+        console.log("User cookie matched the current meeting and channel");
+        // Call checkMatchedMeeting only once and store the result
+        const meeting = await checkAvailableMeeting(retrievedUser.meeting.MeetingId, "User");
+        console.log('getMeetingResponse:', meeting);
+        if (!meeting) return;
+        getMeetingAttendeeInfoFromCookies(retrievedUser);
+      } else {
+        console.log("User cookie did not match the current meeting and channel");
+        joinMeeting();
+      }
+    } catch (error) {
+      console.error("Error processing the User cookie:", error);
+    }
+  }
+
 
   // Subscribe to the attendee presence event, transcript language, and receive data message
   useEffect(() => {
@@ -314,98 +348,94 @@ function LiveViewer() {
     console.log('translateTextSpeechData sourceLanguageCode:', sourceLanguageCode);
     console.log('translateTextSpeechData selectedVoiceLanguage:', selectedVoiceLanguage);
 
+    let transcriptText = null;
+    let translatedText = null;
+
+    if (meetingSession && meetingSession.audioVideo) {
+      meetingSession.audioVideo.unbindAudioElement();
+      setTranscriptText(null);
+      setTranslatedText(null);
+    }
+
     if (audioElement) {
-      if (!isTranslationEnabled) {
+
+      if (!sourceLanguageCode) return;
+      if (!selectedVoiceLanguage) return;
+
+      if (sourceLanguageCode !== selectedVoiceLanguage) {
+
+        // Check if there are transcripts to process
+        if (transcripts && transcripts.results && transcripts.results[0]) {
+          const transcriptResult = transcripts.results[0];
+
+          // Ensure that we are not processing partial results
+          if (!transcriptResult.isPartial) {
+            setTranscriptText(`${transcriptResult.alternatives[0].transcript}`);
+          }
+        }
+
+        // Function to translate text to speech and play audio
+        const translateTextSpeechData = async () => {
+          try {
+            if (!transcriptText) return; // If no lines to translate, return early
+
+            // Translate the text to speech
+
+            //console.log('translateTextSpeechData selectedTTSEngine:', selectedTTSEngine);
+            console.log('translateTextSpeechData transcriptText:', transcriptText);
+            const translateTextSpeechResponse = await translateTextSpeech(
+              transcriptText,
+              sourceLanguageCode,
+              selectedVoiceLanguage,
+              //selectedTTSEngine
+              "standard"
+            );
+            console.log('translateTextSpeechData response:', translateTextSpeechResponse);
+            setTranslatedText(translateTextSpeechResponse.translatedText); // Set translated text
+
+            // Check if the response contains valid AudioStream data
+            if (!translateTextSpeechResponse.speech.AudioStream?.data) {
+              throw new Error('Invalid AudioStream data');
+            }
+
+            // Convert the AudioStream buffer to a Blob
+            const audioBlob = new Blob(
+              [Uint8Array.from(translateTextSpeechResponse.speech.AudioStream.data)],
+              {
+                type: translateTextSpeechResponse.speech.ContentType || 'audio/mpeg', // Default to MP3 format
+              }
+            );
+
+            // Generate a Blob URL
+            const audioUrl = URL.createObjectURL(audioBlob);
+
+            // Bind the Blob URL to the <audio> element
+            audioElement.src = audioUrl; // Assign the Blob URL to the audio element
+          } catch (error) {
+            console.error('Error translating text to speech:', error);
+          }
+        };
+
+        translateTextSpeechData(); // Call the translation and playback function
+      } else {
         // If the source language and selected voice language match, bind the audio element
         const bindAudioElement = async () => {
           if (meetingSession && meetingSession.audioVideo) {
-            meetingSession.audioVideo.unbindAudioElement();
             await meetingSession.audioVideo.bindAudioElement(audioElement);
-            audioElement.play(); // Play the audio
           }
         };
 
         bindAudioElement(); // Bind the meeting session's audio to the element
-      } else {
-        if (sourceLanguageCode !== selectedVoiceLanguage) {
-          let lines = '';
-
-          // Check if there are transcripts to process
-          if (transcripts && transcripts.results && transcripts.results[0]) {
-            const transcriptResult = transcripts.results[0];
-
-            // Ensure that we are not processing partial results
-            if (!transcriptResult.isPartial) {
-              lines = `${transcriptResult.alternatives[0].transcript}`;
-              setLine(lines);
-            }
-          }
-
-          // Function to translate text to speech and play audio
-          const translateTextSpeechData = async () => {
-            try {
-              if (!lines) return; // If no lines to translate, return early
-
-              // Translate the text to speech
-
-              console.log('translateTextSpeechData selectedTTSEngine:', selectedTTSEngine);
-              console.log('translateTextSpeechData lines:', lines);
-              const translateTextSpeechResponse = await translateTextSpeech(
-                lines,
-                sourceLanguageCode,
-                selectedVoiceLanguage,
-                selectedTTSEngine
-              );
-
-              setTranslatedText(translateTextSpeechResponse.translatedText); // Set translated text
-
-              // Check if the response contains valid AudioStream data
-              if (!translateTextSpeechResponse.speech.AudioStream?.data) {
-                throw new Error('Invalid AudioStream data');
-              }
-
-              // Convert the AudioStream buffer to a Blob
-              const audioBlob = new Blob(
-                [Uint8Array.from(translateTextSpeechResponse.speech.AudioStream.data)],
-                {
-                  type: translateTextSpeechResponse.speech.ContentType || 'audio/mpeg', // Default to MP3 format
-                }
-              );
-
-              // Generate a Blob URL
-              const audioUrl = URL.createObjectURL(audioBlob);
-
-              // Bind the Blob URL to the <audio> element
-              audioElement.src = audioUrl; // Assign the Blob URL to the audio element
-              audioElement.play();    // Play the audio (ensure the audio element is ready)
-            } catch (error) {
-              console.error('Error translating text to speech:', error);
-            }
-          };
-
-          translateTextSpeechData(); // Call the translation and playback function
-        } else {
-          // If the source language and selected voice language match, bind the audio element
-          const bindAudioElement = async () => {
-            if (meetingSession && meetingSession.audioVideo) {
-              meetingSession.audioVideo.unbindAudioElement();
-              await meetingSession.audioVideo.bindAudioElement(audioElement);
-              audioElement.play(); // Play the audio
-            }
-          };
-
-          bindAudioElement(); // Bind the meeting session's audio to the element
-        }
       }
-
+      audioElement.play(); // Play the audio
     }
   }, [
     meetingSession,
     transcripts,
     sourceLanguageCode,
     selectedVoiceLanguage,
-    selectedTTSEngine,
-    isTranslationEnabled
+    //selectedTTSEngine,
+    //isTranslationEnabled
   ]);
 
 
@@ -457,10 +487,10 @@ function LiveViewer() {
   // }, [lines, sourceLanguageCode, i18n.language]);
 
   // Function to toggle checkbox the voice language select dropdown
-  const handleCheckboxChange = (e) => {
-    setIsTranslationEnabled(e.target.checked);
-    setSelectedVoiceLanguage(VOICE_LANGUAGES.find((lang) => lang.key.startsWith(i18n.language)).key);
-  };
+  // const handleCheckboxChange = (e) => {
+  //   setIsTranslationEnabled(e.target.checked);
+  //   setSelectedVoiceLanguage(LISTEN_VOICE_LANGUAGES.find((lang) => lang.key.startsWith(i18n.language)).key);
+  // };
 
   // Function to handle the selected voice language change
   const handleSelectedVoiceLanguageChange = (event) => {
@@ -469,37 +499,39 @@ function LiveViewer() {
   };
 
   // Function to handle the selected TTS engine change
-  const handleSelectedTTSEngineChange = (event) => {
-    setSelectedTTSEngine(event.target.value);
-    console.log("Selected voice language:", event.target.value);
-  };
+  // const handleSelectedTTSEngineChange = (event) => {
+  //   setSelectedTTSEngine(event.target.value);
+  //   console.log("Selected voice language:", event.target.value);
+  // };
 
 
   return (
     <>
       <Participants count={participantsCount} />
       <div className="live-viewer-container">
-        <label>
+        {/* <label>
           <input type="checkbox" id="translateCheckbox" onClick={handleCheckboxChange} />
           I want the voice to be translated into
-        </label>
-        <select
-          disabled={!isTranslationEnabled}
-          id="selectedVoiceLanguage"
-          value={selectedVoiceLanguage}
-          onChange={handleSelectedVoiceLanguageChange}
-        >
-          {/* <option value="" disabled>
+        </label> */}
+        <div style={{ display: (!meeting && !attendee) ? 'block' : 'none' }}>
+          <label htmlFor="selectedVoiceLanguage">Select a language to listen: </label>
+          <select
+            //disabled={!isTranslationEnabled}
+            id="selectedVoiceLanguage"
+            value={selectedVoiceLanguage}
+            onChange={handleSelectedVoiceLanguageChange}
+          >
+            {/* <option value="" disabled>
             -- Choose a language --
           </option> */}
-          {VOICE_LANGUAGES.map((language) => (
-            <option key={language.key} value={language.key}>
-              {language.label}
-            </option>
-          ))}
-        </select>
-
-        <label htmlFor="tts-select">Select Text to Speech Engine: </label>
+            {LISTEN_VOICE_LANGUAGES.map((language) => (
+              <option key={language.key} value={language.key}>
+                {language.label}
+              </option>
+            ))}
+          </select>
+        </div>
+        {/* <label htmlFor="tts-select">Select Text to Speech Engine: </label>
         <select
           disabled={!isTranslationEnabled}
           id="tts-select"
@@ -511,17 +543,23 @@ function LiveViewer() {
               {engine.label}
             </option>
           ))}
-        </select>
+        </select> */}
 
         <audio id="audioElementListener" controls autoPlay
           className="audio-player" style={{ display: (meeting && attendee) ? 'block' : 'none' }}
         // src={audioUrl} // Set the source to the generated audio URL
         />
-        {(isLoading) ? (
-          <div className="loading">
-            <div className="spinner"></div>
-            <p>{t('loading')}</p>
-          </div>
+        {(!meeting && !attendee) ? (
+          <>
+            {(isLoading) ? (
+              <div className="loading">
+                <div className="spinner"></div>
+                <p>{t('loading')}</p>
+              </div>
+            ) : (
+              <button onClick={joinAduioSession}>Join</button>
+            )}
+          </>
         ) : (
           <>
             {/* {lines.slice(Math.max(lines.length - 10, 0)).map((line, index) => (
@@ -530,16 +568,19 @@ function LiveViewer() {
                 <br />
               </div>
             ))} */}
-            {lines && <div>
-              Orignial Text:
-              {lines}
-              </div>}
-            
-            {translatedText && 
-            <div>
-              Translated Text: 
-              {translatedText}
-              </div>}
+            The main speaker is speaking in {LISTEN_VOICE_LANGUAGES.find((lang) => lang.key === sourceLanguageCode)?.label}.
+            <br />
+            I am listening in {LISTEN_VOICE_LANGUAGES.find((lang) => lang.key === selectedVoiceLanguage)?.label}.
+            <br />
+            {transcriptText && <p>
+              Transcripted Text:
+              {transcriptText}
+            </p>}
+            {translatedText &&
+              <p>
+                Translated Text:
+                {translatedText}
+              </p>}
             <br />
             {channelArn && <ChatMessage userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} chatSetting={chatSetting} />}
           </>
