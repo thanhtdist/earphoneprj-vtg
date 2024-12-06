@@ -50,6 +50,9 @@ function LiveViewer() {
     LISTEN_VOICE_LANGUAGES.find((lang) => lang.key.startsWith(i18n.language))?.key || 'ja-JP'
   );
 
+  let transcriptList = [];
+  let translatedList = [];
+
   const initializeMeetingSession = useCallback(async (meetingData, attendeeData) => {
     if (!meetingData || !attendeeData) {
       console.error('Invalid meeting or attendee information');
@@ -207,6 +210,7 @@ function LiveViewer() {
     meetingSession.audioVideo.realtimeSubscribeToAttendeeIdPresence(presenceCallback);
 
     meetingSession.audioVideo.transcriptionController?.subscribeToTranscriptEvent((transcriptEvent) => {
+      console.log('Check transcriptEvent:', transcriptEvent);
       if (transcriptEvent?.type === 'started') {
         const transcriptionConfig = JSON.parse(transcriptEvent.transcriptionConfiguration);
         setSourceLanguageCode(transcriptionConfig.EngineTranscribeSettings.LanguageCode);
@@ -232,12 +236,14 @@ function LiveViewer() {
 
     if (sourceLanguageCode !== selectedVoiceLanguage && transcripts?.results?.[0]?.alternatives?.[0]?.transcript && !transcripts.results[0].isPartial) {
       const currentText = transcripts.results[0].alternatives[0].transcript;
+      transcriptList.push(currentText);
       setTranscriptText((prev) => [...prev, currentText]);
 
       const translateAndPlay = async () => {
         try {
           const response = await translateTextSpeech(currentText, sourceLanguageCode, selectedVoiceLanguage, 'standard');
           console.log('Check translateTextSpeech:', translateTextSpeech);
+          translatedList.push(response.translatedText);
           setTranslatedText((prev) => [...prev, response.translatedText]);
 
           if (!response.speech.AudioStream?.data) throw new Error('Invalid AudioStream data');
@@ -266,8 +272,17 @@ function LiveViewer() {
     setSelectedVoiceLanguage(event.target.value);
   };
 
-  console.log('Check transcriptText:', transcriptText.join(' '));
-  console.log('Check translatedText:', translatedText.join(' '));
+  console.log('Check transcriptList:', transcriptList);
+  console.log('Check transcriptList string:', transcriptList.join(' '));
+
+  console.log('Check translatedList:', translatedList);
+  console.log('Check translatedList string:', translatedList.join(' '));
+
+  console.log('Check transcriptText:', transcriptText);
+  console.log('Check transcriptText string:', transcriptText.join(' '));
+
+  console.log('Check translatedText:', translatedText);
+  console.log('Check translatedText string:', translatedText.join(' '));
 
   return (
     <>
