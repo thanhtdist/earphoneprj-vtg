@@ -59,7 +59,7 @@ function LiveViewer() {
   const [translatedText, setTranslatedText] = useState(null);
   const [sourceLanguageCode, setSourceLanguageCode] = useState(null);
   //const [isTranslationEnabled, setIsTranslationEnabled] = useState(false);
-  const [selectedVoiceLanguage, setSelectedVoiceLanguage] = useState(LISTEN_VOICE_LANGUAGES.find((lang) => lang.key.startsWith(i18n.language)).key);
+  const [selectedVoiceLanguage, setSelectedVoiceLanguage] = useState(LISTEN_VOICE_LANGUAGES.find((lang) => lang.key.startsWith(i18n.language))?.key || 'ja-JP');
   //const [selectedTTSEngine, setSelectedTTSEngine] = useState("standard");
   //const [audioUrl, setAudioUrl] = useState(null);
 
