@@ -55,8 +55,8 @@ function LiveViewer() {
   const [isLoading, setIsLoading] = useState(false);
   const [participantsCount, setParticipantsCount] = useState(0);
   const [transcripts, setTranscriptions] = useState([]);
-  const [transcriptText, setTranscriptText] = useState(null);
-  const [translatedText, setTranslatedText] = useState(null);
+  const [transcriptText, setTranscriptText] = useState([]);
+  const [translatedText, setTranslatedText] = useState([]);
   const [sourceLanguageCode, setSourceLanguageCode] = useState(null);
   //const [isTranslationEnabled, setIsTranslationEnabled] = useState(false);
   const [selectedVoiceLanguage, setSelectedVoiceLanguage] = useState(LISTEN_VOICE_LANGUAGES.find((lang) => lang.key.startsWith(i18n.language))?.key || 'ja-JP');
@@ -350,8 +350,8 @@ function LiveViewer() {
 
     if (meetingSession && meetingSession.audioVideo) {
       meetingSession.audioVideo.unbindAudioElement();
-      setTranscriptText(null);
-      setTranslatedText(null);
+      setTranscriptText([]);
+      setTranslatedText([]);
     }
 
     let transcriptedText = '';
@@ -370,7 +370,9 @@ function LiveViewer() {
           // Ensure that we are not processing partial results
           if (!transcriptResult.isPartial) {
             transcriptedText = `${transcriptResult.alternatives[0].transcript}`;
-            setTranscriptText(transcriptedText);
+            console.log('Check transcriptedText:', transcriptedText);
+            setTranscriptText((transcriptText) => [...transcriptText, transcriptedText]);
+            //setTranscriptText(transcriptedText);
           }
         }
 
@@ -390,8 +392,8 @@ function LiveViewer() {
               //selectedTTSEngine
               "standard"
             );
-            console.log('translateTextSpeechData response:', translateTextSpeechResponse);
-            setTranslatedText(translateTextSpeechResponse.translatedText); // Set translated text
+            console.log('Check translateTextSpeechData:', translateTextSpeechResponse);
+            setTranslatedText((translatedText) => [...translatedText, translateTextSpeechResponse.translatedText]); // Set translated text
 
             // Check if the response contains valid AudioStream data
             if (!translateTextSpeechResponse.speech.AudioStream?.data) {
@@ -503,7 +505,8 @@ function LiveViewer() {
   //   setSelectedTTSEngine(event.target.value);
   //   console.log("Selected voice language:", event.target.value);
   // };
-
+  console.log('Check Transcripts:', transcriptText.join(' '));
+  console.log('Check Translated:', translatedText.join(' '));
 
   return (
     <>
@@ -514,7 +517,7 @@ function LiveViewer() {
           I want the voice to be translated into
         </label> */}
         <div style={{ display: (!meeting && !attendee) ? 'block' : 'none' }}>
-          <label htmlFor="selectedVoiceLanguage">Select a language to listen: </label>
+          <label htmlFor="selectedVoiceLanguage">Select a language to listen </label>
           <select
             //disabled={!isTranslationEnabled}
             id="selectedVoiceLanguage"
@@ -562,25 +565,19 @@ function LiveViewer() {
           </>
         ) : (
           <>
-            {/* {lines.slice(Math.max(lines.length - 10, 0)).map((line, index) => (
-              <div key={index}>
-                {line}
-                <br />
-              </div>
-            ))} */}
             The main speaker is speaking in {LISTEN_VOICE_LANGUAGES.find((lang) => lang.key === sourceLanguageCode)?.label}.
             <br />
             I am listening in {LISTEN_VOICE_LANGUAGES.find((lang) => lang.key === selectedVoiceLanguage)?.label}.
             <br />
-            {transcriptText && <p>
-              Transcripted Text:
-              {transcriptText}
-            </p>}
-            {translatedText &&
-              <p>
-                Translated Text:
-                {translatedText}
-              </p>}
+            {transcriptText && transcriptText.slice(Math.max(transcriptText.length - 10, 0)).map((line, index) => (
+              <div key={index}>
+                {line}
+                <br />
+              </div>
+            ))}
+            {transcriptText &&<span>Transcripts: <span>{transcriptText.join(' ')}</span></span>}
+            <br />
+            {translatedText &&<span>Translations: <span>{translatedText.join(' ')}</span></span>}
             <br />
             {channelArn && <ChatMessage userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} chatSetting={chatSetting} />}
           </>
