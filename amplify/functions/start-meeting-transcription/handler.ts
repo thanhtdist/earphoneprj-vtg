@@ -36,7 +36,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
           LanguageCode: languageCode, // LanguageCode: 'en-US',
           Region: Config.region, // Region
           EnablePartialResultsStabilization: true,
-          PartialResultsStability: 'high',
+          PartialResultsStability: 'low',
         }
       }
     }).promise();
