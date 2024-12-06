@@ -301,6 +301,7 @@ function LiveViewer() {
           const audioUrl = URL.createObjectURL(audioBlob);
           console.log('Check audioUrl:', audioUrl);
           audioElement.src = audioUrl;
+          audioElement.play();
         } catch (error) {
           console.error('Error translating text to speech:', error);
         }
