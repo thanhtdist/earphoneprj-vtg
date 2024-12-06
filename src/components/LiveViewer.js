@@ -575,9 +575,9 @@ function LiveViewer() {
                 <br />
               </div>
             ))}
-            {transcriptText &&<span>Transcripts: <span>{transcriptText.join(' ')}</span></span>}
+            {transcriptText.length > 0 && <span>Transcripts: <span>{transcriptText.join(' ')}</span></span>}
             <br />
-            {translatedText &&<span>Translations: <span>{translatedText.join(' ')}</span></span>}
+            {translatedText.length > 0 && <span>Translations: <span>{translatedText.join(' ')}</span></span>}
             <br />
             {channelArn && <ChatMessage userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} chatSetting={chatSetting} />}
           </>
