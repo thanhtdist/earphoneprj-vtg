@@ -237,6 +237,7 @@ function LiveViewer() {
       const translateAndPlay = async () => {
         try {
           const response = await translateTextSpeech(currentText, sourceLanguageCode, selectedVoiceLanguage, 'standard');
+          console.log('Check translateTextSpeech:', translateTextSpeech);
           setTranslatedText((prev) => [...prev, response.translatedText]);
 
           if (!response.speech.AudioStream?.data) throw new Error('Invalid AudioStream data');
@@ -245,6 +246,7 @@ function LiveViewer() {
             type: response.speech.ContentType || 'audio/mpeg',
           });
           const audioUrl = URL.createObjectURL(audioBlob);
+          console.log('Check audioUrl:', audioUrl);
           audioElement.src = audioUrl;
         } catch (error) {
           console.error('Error translating text to speech:', error);
@@ -264,8 +266,8 @@ function LiveViewer() {
     setSelectedVoiceLanguage(event.target.value);
   };
 
-  console.log('transcriptText:', transcriptText.join(' '));
-  console.log('translatedText:', translatedText.join(' '));
+  console.log('Check transcriptText:', transcriptText.join(' '));
+  console.log('Check translatedText:', translatedText.join(' '));
 
   return (
     <>
@@ -302,7 +304,7 @@ function LiveViewer() {
         ) : (
           <div>
             <p>
-              The main speaker is speaking in{' '}
+              The host is speaking in{' '}
               {LISTEN_VOICE_LANGUAGES.find((lang) => lang.key === sourceLanguageCode)?.label}.
             </p>
             <p>
