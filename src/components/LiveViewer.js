@@ -366,7 +366,7 @@ function LiveViewer() {
 
       if (text) {
         transcriptListRef.current.push(text);
-        translatedListRef.current.push(text);
+        transcriptedListRef.current.push(text);
 
         if (timer) clearTimeout(timer);
 
