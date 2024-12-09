@@ -267,40 +267,6 @@ function LiveViewer() {
       transcripts?.results?.[0]?.alternatives?.[0]?.transcript &&
       !transcripts.results[0].isPartial
     ) {
-      // const currentText = transcripts.results[0].alternatives[0].transcript;
-      // transcriptListRef.current.push(currentText);
-      // setTranscriptText((prev) => [...prev, currentText]);
-
-      // const translateAndPlay = async () => {
-      //   try {
-      //     const response = await translateTextSpeech(
-      //       currentText,
-      //       sourceLanguageCode,
-      //       selectedVoiceLanguage,
-      //       'standard'
-      //     );
-      //     console.log('Check translateTextSpeech:', translateTextSpeech);
-      //     translatedListRef.current.push(response.translatedText);
-      //     setTranslatedText((prev) => [...prev, response.translatedText]);
-
-      //     if (!response.speech.AudioStream?.data)
-      //       throw new Error('Invalid AudioStream data');
-
-      //     const audioBlob = new Blob(
-      //       [Uint8Array.from(response.speech.AudioStream.data)],
-      //       {
-      //         type: response.speech.ContentType || 'audio/mpeg',
-      //       }
-      //     );
-      //     const audioUrl = URL.createObjectURL(audioBlob);
-      //     console.log('Check audioUrl:', audioUrl);
-      //     audioElement.src = audioUrl;
-      //     audioElement.play();
-      //   } catch (error) {
-      //     console.error('Error translating text to speech:', error);
-      //   }
-      // };
-
       // translateAndPlay();
       const processAudioQueue = async () => {
         if (audioQueueRef.current.length === 0) return;
@@ -341,7 +307,7 @@ function LiveViewer() {
           const audioElement = audioElementRef.current;
           if (audioElement) {
             audioElement.src = audioUrl;
-            audioElement.play();
+            //audioElement.play();
       
             audioElement.onended = () => {
               processAudioQueue();
@@ -376,7 +342,7 @@ function LiveViewer() {
     } else {
       if (sourceLanguageCode === selectedVoiceLanguage) {
         meetingSession.audioVideo.bindAudioElement(audioElement);
-        audioElement.play();
+        //audioElement.play();
       }
     }
   }, [
@@ -426,7 +392,7 @@ function LiveViewer() {
           id="audioElementListener"
           controls
           ref={audioElementRef}
-          //autoPlay
+          autoPlay
           className="audio-player"
           style={{ display: meeting && attendee ? 'block' : 'none' }}
         />
