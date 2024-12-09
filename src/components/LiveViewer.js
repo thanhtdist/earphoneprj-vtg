@@ -311,7 +311,7 @@ function LiveViewer() {
         } catch (error) {
           console.error('Error processing audio queue:', error);
         }
-        setTimeout(processAudioQueue, 0);  // Xử lý tiếp audio tiếp theo trong hàng đợi.
+        setTimeout(processAudioQueue, 0);
       };
       
       const translateAndPlay = async (currentText) => {
@@ -344,7 +344,7 @@ function LiveViewer() {
             audioElement.play();
       
             audioElement.onended = () => {
-              processAudioQueue();  // Gọi tiếp audio tiếp theo trong hàng đợi.
+              processAudioQueue();
             };
           }
         } catch (error) {
@@ -370,7 +370,7 @@ function LiveViewer() {
             processAudioQueue();  // Start processing the queue.
           }
           transcriptListRef.current = [];
-        }, 1000);  // Gộp các transcriptions trong vòng 1 giây.
+        }, 1000);
       }
 
     } else {
