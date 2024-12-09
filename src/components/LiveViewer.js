@@ -262,15 +262,6 @@ function LiveViewer() {
     let timer = null;
     const audioElement = audioElementRef.current;
     if (!audioElement || !meetingSession || !sourceLanguageCode || !selectedVoiceLanguage) return;
-
-    // Reset the audio source
-    audioElement.pause();
-    audioElement.src = '';
-    audioElement.load();
-    meetingSession.audioVideo.unbindAudioElement();
-    setTranscriptText([]);
-    setTranslatedText([]);
-
     if (
       sourceLanguageCode !== selectedVoiceLanguage &&
       transcripts?.results?.[0]?.alternatives?.[0]?.transcript &&
