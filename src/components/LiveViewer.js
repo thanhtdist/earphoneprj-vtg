@@ -52,7 +52,9 @@ function LiveViewer() {
 
   // Replace local variables with refs
   const transcriptListRef = useRef([]);
+  const transcriptedListRef = useRef([]);
   const translatedListRef = useRef([]);
+  const audioQueueRef = useRef([]);
 
   // Ref for the audio element
   const audioElementRef = useRef(null);
@@ -257,6 +259,7 @@ function LiveViewer() {
   }, [meetingSession]);
 
   useEffect(() => {
+    let timer = null;
     const audioElement = audioElementRef.current;
     if (!audioElement || !meetingSession || !sourceLanguageCode || !selectedVoiceLanguage) return;
 
@@ -273,11 +276,54 @@ function LiveViewer() {
       transcripts?.results?.[0]?.alternatives?.[0]?.transcript &&
       !transcripts.results[0].isPartial
     ) {
-      const currentText = transcripts.results[0].alternatives[0].transcript;
-      transcriptListRef.current.push(currentText);
-      setTranscriptText((prev) => [...prev, currentText]);
+      // const currentText = transcripts.results[0].alternatives[0].transcript;
+      // transcriptListRef.current.push(currentText);
+      // setTranscriptText((prev) => [...prev, currentText]);
 
-      const translateAndPlay = async () => {
+      // const translateAndPlay = async () => {
+      //   try {
+      //     const response = await translateTextSpeech(
+      //       currentText,
+      //       sourceLanguageCode,
+      //       selectedVoiceLanguage,
+      //       'standard'
+      //     );
+      //     console.log('Check translateTextSpeech:', translateTextSpeech);
+      //     translatedListRef.current.push(response.translatedText);
+      //     setTranslatedText((prev) => [...prev, response.translatedText]);
+
+      //     if (!response.speech.AudioStream?.data)
+      //       throw new Error('Invalid AudioStream data');
+
+      //     const audioBlob = new Blob(
+      //       [Uint8Array.from(response.speech.AudioStream.data)],
+      //       {
+      //         type: response.speech.ContentType || 'audio/mpeg',
+      //       }
+      //     );
+      //     const audioUrl = URL.createObjectURL(audioBlob);
+      //     console.log('Check audioUrl:', audioUrl);
+      //     audioElement.src = audioUrl;
+      //     audioElement.play();
+      //   } catch (error) {
+      //     console.error('Error translating text to speech:', error);
+      //   }
+      // };
+
+      // translateAndPlay();
+      const processAudioQueue = async () => {
+        if (audioQueueRef.current.length === 0) return;
+      
+        const nextAudio = audioQueueRef.current.shift();
+        try {
+          await translateAndPlay(nextAudio);
+        } catch (error) {
+          console.error('Error processing audio queue:', error);
+        }
+        setTimeout(processAudioQueue, 0);  // Xử lý tiếp audio tiếp theo trong hàng đợi.
+      };
+      
+      const translateAndPlay = async (currentText) => {
         try {
           const response = await translateTextSpeech(
             currentText,
@@ -285,29 +331,57 @@ function LiveViewer() {
             selectedVoiceLanguage,
             'standard'
           );
-          console.log('Check translateTextSpeech:', translateTextSpeech);
+      
+          console.log('Translated response:', response);
+          
           translatedListRef.current.push(response.translatedText);
           setTranslatedText((prev) => [...prev, response.translatedText]);
-
+      
           if (!response.speech.AudioStream?.data)
             throw new Error('Invalid AudioStream data');
-
+      
           const audioBlob = new Blob(
             [Uint8Array.from(response.speech.AudioStream.data)],
-            {
-              type: response.speech.ContentType || 'audio/mpeg',
-            }
+            { type: response.speech.ContentType || 'audio/mpeg' }
           );
+      
           const audioUrl = URL.createObjectURL(audioBlob);
-          console.log('Check audioUrl:', audioUrl);
-          audioElement.src = audioUrl;
-          audioElement.play();
+      
+          const audioElement = audioElementRef.current;
+          if (audioElement) {
+            audioElement.src = audioUrl;
+            audioElement.play();
+      
+            audioElement.onended = () => {
+              processAudioQueue();  // Gọi tiếp audio tiếp theo trong hàng đợi.
+            };
+          }
         } catch (error) {
-          console.error('Error translating text to speech:', error);
+          console.error('Failed to translate text to speech:', error);
         }
       };
 
-      translateAndPlay();
+      // process the audio queue
+      const text = transcripts.results[0].alternatives[0].transcript;
+
+      if (text) {
+        transcriptListRef.current.push(text);
+        translatedListRef.current.push(text);
+
+        if (timer) clearTimeout(timer);
+
+        timer = setTimeout(() => {
+          const aggregatedText = transcriptListRef.current.join(' ');
+          console.log('Aggregated Transcription:', aggregatedText);
+
+          audioQueueRef.current.push(aggregatedText);
+          if (audioQueueRef.current.length === 1) {
+            processAudioQueue();  // Start processing the queue.
+          }
+          transcriptListRef.current = [];
+        }, 1000);  // Gộp các transcriptions trong vòng 1 giây.
+      }
+
     } else {
       if (sourceLanguageCode === selectedVoiceLanguage) {
         meetingSession.audioVideo.bindAudioElement(audioElement);
@@ -390,9 +464,15 @@ function LiveViewer() {
               </span>
             )}
             <br />
+            {transcriptedListRef.current.length > 0 && (
+              <span>
+                Transcripts full: <span>{transcriptedListRef.current.join(' ')}</span>
+              </span>
+            )}
+            <br />
             {translatedListRef.current.length > 0 && (
               <span>
-                Translations: <span>{translatedListRef.current.join(' ')}</span>
+                Translations full: <span>{translatedListRef.current.join(' ')}</span>
               </span>
             )}
             <br />
