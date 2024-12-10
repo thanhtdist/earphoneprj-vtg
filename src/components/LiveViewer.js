@@ -43,7 +43,7 @@ function LiveViewer() {
   const [isLoading, setIsLoading] = useState(false);
   const [participantsCount, setParticipantsCount] = useState(0);
   const [transcripts, setTranscriptions] = useState([]);
-  //const [transcriptText, setTranscriptText] = useState([]);
+  const [transcriptText, setTranscriptText] = useState([]);
   const [translatedText, setTranslatedText] = useState([]);
   const [sourceLanguageCode, setSourceLanguageCode] = useState(null);
   const [selectedVoiceLanguage, setSelectedVoiceLanguage] = useState(
@@ -52,9 +52,7 @@ function LiveViewer() {
 
   // Replace local variables with refs
   const transcriptListRef = useRef([]);
-  const transcriptedListRef = useRef([]);
   const translatedListRef = useRef([]);
-  const audioQueueRef = useRef([]);
 
   // Ref for the audio element
   const audioElementRef = useRef(null);
@@ -258,40 +256,28 @@ function LiveViewer() {
     };
   }, [meetingSession]);
 
-  // Add this function inside the LiveViewer component
-  const resetAudio = () => {
-    if (audioElementRef.current) {
-      audioElementRef.current.pause();
-      audioElementRef.current.currentTime = 0;
-      audioElementRef.current.src = ''; // Clear source
-      audioElementRef.current = null;
-    }
-  };
-
   useEffect(() => {
-    let timer = null;
     const audioElement = audioElementRef.current;
     if (!audioElement || !meetingSession || !sourceLanguageCode || !selectedVoiceLanguage) return;
+
+    // Reset the audio source
+    audioElement.pause();
+    audioElement.src = '';
+    audioElement.load();
+    meetingSession.audioVideo.unbindAudioElement();
+    setTranscriptText([]);
+    setTranslatedText([]);
+
     if (
       sourceLanguageCode !== selectedVoiceLanguage &&
       transcripts?.results?.[0]?.alternatives?.[0]?.transcript &&
       !transcripts.results[0].isPartial
     ) {
-      // translateAndPlay();
-      const processAudioQueue = async () => {
-        if (audioQueueRef.current.length === 0) return;
+      const currentText = transcripts.results[0].alternatives[0].transcript;
+      transcriptListRef.current.push(currentText);
+      setTranscriptText((prev) => [...prev, currentText]);
 
-        const nextAudio = audioQueueRef.current.shift();
-        try {
-          await translateAndPlay(nextAudio);
-        } catch (error) {
-          console.error('Error processing audio queue:', error);
-        }
-        setTimeout(processAudioQueue, 0);
-      };
-
-      const translateAndPlay = async (currentText) => {
-        resetAudio(); // Reset audio before playing new audio
+      const translateAndPlay = async () => {
         try {
           const response = await translateTextSpeech(
             currentText,
@@ -299,9 +285,7 @@ function LiveViewer() {
             selectedVoiceLanguage,
             'standard'
           );
-
-          console.log('Translated response:', response);
-
+          console.log('Check translateTextSpeech:', translateTextSpeech);
           translatedListRef.current.push(response.translatedText);
           setTranslatedText((prev) => [...prev, response.translatedText]);
 
@@ -310,53 +294,24 @@ function LiveViewer() {
 
           const audioBlob = new Blob(
             [Uint8Array.from(response.speech.AudioStream.data)],
-            { type: response.speech.ContentType || 'audio/mpeg' }
+            {
+              type: response.speech.ContentType || 'audio/mpeg',
+            }
           );
-
           const audioUrl = URL.createObjectURL(audioBlob);
-
-          const audioElement = audioElementRef.current;
-          if (audioElement) {
-            audioElement.src = audioUrl;
-            //audioElement.play();
-            audioElement.onended = () => {
-              processAudioQueue();
-            };
-          }
+          console.log('Check audioUrl:', audioUrl);
+          audioElement.src = audioUrl;
+          //audioElement.play();
         } catch (error) {
-          console.error('Failed to translate text to speech:', error);
+          console.error('Error translating text to speech:', error);
         }
       };
 
-      // process the audio queue
-      const text = transcripts.results[0].alternatives[0].transcript;
-
-      if (text) {
-        transcriptListRef.current.push(text);
-        transcriptedListRef.current.push(text);
-
-        if (timer) clearTimeout(timer);
-
-        timer = setTimeout(() => {
-          const aggregatedText = transcriptListRef.current.join(' ');
-          console.log('Aggregated Transcription:', aggregatedText);
-
-          audioQueueRef.current.push(aggregatedText);
-          if (audioQueueRef.current.length === 1) {
-            processAudioQueue();  // Start processing the queue.
-          }
-          transcriptListRef.current = [];
-        }, 1000);
-      }
-
+      translateAndPlay();
     } else {
       if (sourceLanguageCode === selectedVoiceLanguage) {
-        const bindAudioElement = async () => {
-          await meetingSession.audioVideo.bindAudioElement(audioElement); 
-          //audioElement.play();
-        };
-        resetAudio(); // Reset audio before playing new audio
-        bindAudioElement();
+        meetingSession.audioVideo.bindAudioElement(audioElement);
+        //audioElement.play();
       }
     }
   }, [
@@ -376,8 +331,8 @@ function LiveViewer() {
   console.log('Check translatedList:', translatedListRef.current);
   console.log('Check translatedList string:', translatedListRef.current.join(' '));
 
-  // console.log('Check transcriptText:', transcriptText);
-  // console.log('Check transcriptText string:', transcriptText.join(' '));
+  console.log('Check transcriptText:', transcriptText);
+  console.log('Check transcriptText string:', transcriptText.join(' '));
 
   console.log('Check translatedText:', translatedText);
   console.log('Check translatedText string:', translatedText.join(' '));
@@ -388,7 +343,7 @@ function LiveViewer() {
       <div className="live-viewer-container">
         {!meeting && !attendee && (
           <div>
-            <h3 htmlFor="selectedVoiceLanguage">{t('voiceLanguageLbl.listening')}</h3>
+            <label htmlFor="selectedVoiceLanguage">Select a language to listen</label>
             <select
               id="selectedVoiceLanguage"
               value={selectedVoiceLanguage}
@@ -406,6 +361,7 @@ function LiveViewer() {
           id="audioElementListener"
           controls
           ref={audioElementRef}
+          //autoPlay
           className="audio-player"
           style={{ display: meeting && attendee ? 'block' : 'none' }}
         />
@@ -416,7 +372,7 @@ function LiveViewer() {
               <p>{t('loading')}</p>
             </div>
           ) : (
-            <button onClick={joinAudioSession}>{t('joinBtn')}</button>
+            <button onClick={joinAudioSession}>Join</button>
           )
         ) : (
           <div>
@@ -428,10 +384,9 @@ function LiveViewer() {
               I am listening in{' '}
               {LISTEN_VOICE_LANGUAGES.find((lang) => lang.key === selectedVoiceLanguage)?.label}.
             </p>
-            <br />
-            {transcriptedListRef.current.length > 0 && (
+            {transcriptListRef.current.length > 0 && (
               <span>
-                Transcriptions: <span>{transcriptedListRef.current.join(' ')}</span>
+                Transcripts: <span>{transcriptListRef.current.join(' ')}</span>
               </span>
             )}
             <br />
