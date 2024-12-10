@@ -263,6 +263,7 @@ function LiveViewer() {
     if (audioElementRef.current) {
       audioElementRef.current.pause();
       audioElementRef.current.currentTime = 0;
+      //audioElementRef.current.play();
     }
   };
 
@@ -316,7 +317,7 @@ function LiveViewer() {
           const audioElement = audioElementRef.current;
           if (audioElement) {
             audioElement.src = audioUrl;
-            //audioElement.play();
+            audioElement.play();
 
             audioElement.onended = () => {
               processAudioQueue();
@@ -350,9 +351,12 @@ function LiveViewer() {
 
     } else {
       if (sourceLanguageCode === selectedVoiceLanguage) {
+        const bindAudioElement = async () => {
+          await meetingSession.audioVideo.bindAudioElement(audioElement); 
+          audioElement.play();
+        };
         resetAudio(); // Reset audio before playing new audio
-        meetingSession.audioVideo.bindAudioElement(audioElement);
-        //audioElement.play();
+        bindAudioElement();
       }
     }
   }, [
