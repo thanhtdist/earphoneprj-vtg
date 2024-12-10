@@ -263,7 +263,8 @@ function LiveViewer() {
     if (audioElementRef.current) {
       audioElementRef.current.pause();
       audioElementRef.current.currentTime = 0;
-      //audioElementRef.current.play();
+      audioElementRef.current.src = ''; // Clear source
+      audioElementRef.current = null;
     }
   };
 
@@ -318,7 +319,6 @@ function LiveViewer() {
           if (audioElement) {
             audioElement.src = audioUrl;
             //audioElement.play();
-
             audioElement.onended = () => {
               processAudioQueue();
             };
@@ -388,7 +388,7 @@ function LiveViewer() {
       <div className="live-viewer-container">
         {!meeting && !attendee && (
           <div>
-            <label htmlFor="selectedVoiceLanguage">Select a language to listen</label>
+            <h3 htmlFor="selectedVoiceLanguage">Select a language to listen</h3>
             <select
               id="selectedVoiceLanguage"
               value={selectedVoiceLanguage}
