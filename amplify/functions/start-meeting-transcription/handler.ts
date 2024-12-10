@@ -16,7 +16,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     const meetingId = event.pathParameters ? event.pathParameters.MeetingID : null;
     const { languageCode, partialResultsStability } = JSON.parse(event.body || '{}');
 
-    console.log('Start MeetingTranscription with meetingId: ', meetingId, 'languageCode: ', languageCode);
+    console.log('Start MeetingTranscription with meetingId: ', meetingId, 'languageCode: ', languageCode, 'partialResultsStability: ', partialResultsStability);
 
     // Input validation
     if (!meetingId || !languageCode) {

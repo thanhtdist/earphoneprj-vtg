@@ -428,11 +428,6 @@ function LiveViewer() {
               I am listening in{' '}
               {LISTEN_VOICE_LANGUAGES.find((lang) => lang.key === selectedVoiceLanguage)?.label}.
             </p>
-            {transcriptListRef.current.length > 0 && (
-              <span>
-                Transcripts: <span>{transcriptListRef.current.join(' ')}</span>
-              </span>
-            )}
             <br />
             {transcriptedListRef.current.length > 0 && (
               <span>
