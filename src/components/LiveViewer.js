@@ -406,7 +406,7 @@ function LiveViewer() {
           id="audioElementListener"
           controls
           ref={audioElementRef}
-          autoPlay
+          //autoPlay
           className="audio-player"
           style={{ display: meeting && attendee ? 'block' : 'none' }}
         />
