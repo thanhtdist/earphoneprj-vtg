@@ -317,7 +317,7 @@ function LiveViewer() {
           const audioElement = audioElementRef.current;
           if (audioElement) {
             audioElement.src = audioUrl;
-            audioElement.play();
+            //audioElement.play();
 
             audioElement.onended = () => {
               processAudioQueue();
@@ -353,7 +353,7 @@ function LiveViewer() {
       if (sourceLanguageCode === selectedVoiceLanguage) {
         const bindAudioElement = async () => {
           await meetingSession.audioVideo.bindAudioElement(audioElement); 
-          audioElement.play();
+          //audioElement.play();
         };
         resetAudio(); // Reset audio before playing new audio
         bindAudioElement();
@@ -406,7 +406,6 @@ function LiveViewer() {
           id="audioElementListener"
           controls
           ref={audioElementRef}
-          //autoPlay
           className="audio-player"
           style={{ display: meeting && attendee ? 'block' : 'none' }}
         />

@@ -2,12 +2,10 @@
 // Voice languages
 export const SPEAK_VOICE_LANGUAGES = [
     { key: "ja-JP", label: "日本語" },
-    { key: "en-US", label: "English" },
-    { key: "ko-KR", label: "Korean" },
 ]
 
 export const LISTEN_VOICE_LANGUAGES = [
-    { key: "ja-JP", label: "日本語" },
+    { key: "ja-JP", label: "Japanese" },
     { key: "en-US", label: "English" },
     { key: "ko-KR", label: "Korean" },
 ]
