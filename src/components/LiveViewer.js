@@ -429,9 +429,9 @@ function LiveViewer() {
               {LISTEN_VOICE_LANGUAGES.find((lang) => lang.key === selectedVoiceLanguage)?.label}.
             </p>
             <br />
-            {transcriptListRef.current.length > 0 && (
+            {transcriptedListRef.current.length > 0 && (
               <span>
-                Transcriptions: <span>{transcriptListRef.current.join(' ')}</span>
+                Transcriptions: <span>{transcriptedListRef.current.join(' ')}</span>
               </span>
             )}
             <br />
