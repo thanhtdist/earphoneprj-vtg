@@ -2,9 +2,13 @@ import React, { useState, useRef, useEffect } from "react";
 import { FaUpload, FaPlay, FaPause, FaTimes, FaFile } from "react-icons/fa";
 import "../styles/AudioUploadBox.css";
 import { uploadFileToS3 } from '../services/S3Service';
+import { useTranslation } from 'react-i18next';
 
 const AudioUploadBox = ({ meetingSession, logger }) => {
     console.log('meetingSession zzzyyy:', meetingSession);
+    const { t, i18n } = useTranslation();
+    console.log('t:', t);
+    console.log('i18n:', i18n);
     const [voiceFileType, setVoiceFileType] = useState("instruction"); // Tracks the current voice type
     const [uploading, setUploading] = useState(false); // Tracks upload state
     const [audioFiles, setAudioFiles] = useState({
@@ -234,10 +238,10 @@ const AudioUploadBox = ({ meetingSession, logger }) => {
 
     return (
         <>
-            <h3>Play the voice file for</h3>
+            <h3>{t('playVoiceLbl')}</h3>
             <select value={voiceFileType} onChange={handleVoiceFileTypeChange}>
-                <option value="instruction">Instruction</option>
-                <option value="closingSpeech">Closing Speech</option>
+                <option value="instruction">{t('playVoiceOptions.instruction')}</option>
+                <option value="closingSpeech">{t('playVoiceOptions.closingSpeech')}</option>
             </select>
             <div className="audio-upload-container">
                 {uploading ? (

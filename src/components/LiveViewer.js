@@ -388,7 +388,7 @@ function LiveViewer() {
       <div className="live-viewer-container">
         {!meeting && !attendee && (
           <div>
-            <h3 htmlFor="selectedVoiceLanguage">Select a language to listen</h3>
+            <h3 htmlFor="selectedVoiceLanguage">{t('voiceLanguageLbl.listening')}</h3>
             <select
               id="selectedVoiceLanguage"
               value={selectedVoiceLanguage}
@@ -416,7 +416,7 @@ function LiveViewer() {
               <p>{t('loading')}</p>
             </div>
           ) : (
-            <button onClick={joinAudioSession}>Join</button>
+            <button onClick={joinAudioSession}>{t('joinBtn')}</button>
           )
         ) : (
           <div>
@@ -431,13 +431,13 @@ function LiveViewer() {
             <br />
             {transcriptedListRef.current.length > 0 && (
               <span>
-                Transcripts full: <span>{transcriptedListRef.current.join(' ')}</span>
+                Transcriptions: <span>{transcriptedListRef.current.join(' ')}</span>
               </span>
             )}
             <br />
             {translatedListRef.current.length > 0 && (
               <span>
-                Translations full: <span>{translatedListRef.current.join(' ')}</span>
+                Translations: <span>{translatedListRef.current.join(' ')}</span>
               </span>
             )}
             <br />

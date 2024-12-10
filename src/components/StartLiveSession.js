@@ -472,7 +472,7 @@ function StartLiveSession() {
       <div className="container">
         <h3>
           {/* <input type="checkbox" id="translateCheckbox" onClick={handleCheckboxChange} /> */}
-          Select a language to speak
+          {t('voiceLanguageLbl.speaking')}
         </h3>
         <select
           //disabled={!isTranslationEnabled}

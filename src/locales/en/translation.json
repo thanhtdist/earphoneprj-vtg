@@ -1,6 +1,7 @@
 {
   "webTitle": "Voice Tour Guide",
   "startLiveBtn": "Start a Live Audio Session",
+  "joinBtn": "Join",
   "loading": "Please wait...",
   "microChecking": "Checking your microphone... Please wait.",
   "noMicroMsg": "Your microphone is currently blocked. Please enable microphone access in your browser settings or on this site to proceed.",
@@ -27,5 +28,14 @@
     "listener": "User",
     "myself": "Me"
   },
-  "languagesLbl": "Language"
+  "languagesLbl": "Language",
+  "voiceLanguageLbl": {
+    "speaking": "Select a language to speak",
+    "listening": "Select a language to listen"
+  },
+  "playVoiceLbl": "Play the voice file for",
+  "playVoiceOptions": {
+    "instruction": "Instruction",
+    "closingSpeech": "Closing Speech"
+  }
 }

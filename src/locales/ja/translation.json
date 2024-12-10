@@ -1,6 +1,7 @@
 {
   "webTitle": "音声ツアーガイド",
   "startLiveBtn": "音声ガイドをスタート",
+  "joinBtn": "参加する",
   "loading": "お待ちください。。。",
   "microChecking": "マイクを確認しています...しばらくお待ちください。",
   "noMicroMsg": "現在、マイクがブロックされています。続行するには、ブラウザの設定またはこのサイトでマイクのアクセスを有効にし下さい。",
@@ -27,5 +28,14 @@
     "listener": "ユーザー",
     "myself": "自分"
   },
-  "languagesLbl": "言語選択"
+  "languagesLbl": "言語選択",
+  "voiceLanguageLbl": {
+    "speaking": "話す言語を選択してください",
+    "listening": "聞く言語を選択してください"
+  },
+  "playVoiceLbl": "再生する音声ファイル",
+  "playVoiceOptions": {
+    "instruction": "案内",
+    "closingSpeech": "閉会の挨拶"
+  }
 }
