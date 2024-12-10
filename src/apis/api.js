@@ -276,7 +276,7 @@ export async function listAppInstanceUser(appInstanceArn) {
   }
 }
 
-export async function startMeetingTranscription(meetingId, languageCode) {
+export async function startMeetingTranscription(meetingId, languageCode, partialResultsStability) {
   try {
     const restOperation = post({
       apiName: 'MeetingVTGRestApi', // The name of the API defined in backend.ts
@@ -284,6 +284,7 @@ export async function startMeetingTranscription(meetingId, languageCode) {
       options: {
         body: {
           languageCode: languageCode, // The external ID of the user, it is userId of participant joined the meeting
+          partialResultsStability: partialResultsStability, // The stability of the partial results
         }
       }
     });

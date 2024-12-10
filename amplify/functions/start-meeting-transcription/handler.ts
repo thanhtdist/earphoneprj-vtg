@@ -14,7 +14,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
   try {
     // Parse body from API Gateway event
     const meetingId = event.pathParameters ? event.pathParameters.MeetingID : null;
-    const { languageCode } = JSON.parse(event.body || '{}');
+    const { languageCode, partialResultsStability } = JSON.parse(event.body || '{}');
 
     console.log('Start MeetingTranscription with meetingId: ', meetingId, 'languageCode: ', languageCode);
 
@@ -36,7 +36,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
           LanguageCode: languageCode, // LanguageCode: 'en-US',
           Region: Config.region, // Region
           EnablePartialResultsStabilization: true,
-          PartialResultsStability: 'low',
+          PartialResultsStability: partialResultsStability,
         }
       }
     }).promise();

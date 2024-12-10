@@ -17,3 +17,10 @@ export const TTS_ENGINE = [
     { key: "long-form", label: "Long-form" },
     { key: "generative", label: "Generative" },
 ]
+
+// Stability
+export const STABILITY = [
+    { key: "low", label: "Low" },
+    { key: "medium", label: "Medium" },
+    { key: "high", label: "High" },
+]

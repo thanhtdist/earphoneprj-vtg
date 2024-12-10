@@ -32,7 +32,7 @@ import {
   faMicrophone, faMicrophoneSlash,
 } from '@fortawesome/free-solid-svg-icons';
 import { useTranslation } from 'react-i18next';
-import { SPEAK_VOICE_LANGUAGES } from '../utils/constant';
+import { SPEAK_VOICE_LANGUAGES, STABILITY } from '../utils/constant';
 // import { uploadFileToS3 } from '../services/S3Service';
 
 /**
@@ -68,6 +68,7 @@ function StartLiveSession() {
   const [participantsCount, setParticipantsCount] = useState(0);
   //const [isTranslationEnabled, setIsTranslationEnabled] = useState(false);
   const [selectedVoiceLanguage, setSelectedVoiceLanguage] = useState(SPEAK_VOICE_LANGUAGES.find((lang) => lang.key.startsWith(i18n.language))?.key || 'ja-JP');
+  const [selecteStability, setSelecteStability] = useState('medium');
   //const [selectedTTSEngine, setSelectedTTSEngine] = useState("standard");
 
   // Function to start a live audio session
@@ -425,11 +426,11 @@ function StartLiveSession() {
     // );
     const enableMeetingTranscription = async (meetingId, languageCode) => {
       console.log("enableLiveTranscription languageCode", languageCode);
-      const startMeetingTranscriptionResponse = await startMeetingTranscription(meetingId, languageCode);
+      const startMeetingTranscriptionResponse = await startMeetingTranscription(meetingId, languageCode, selecteStability);
       console.log("enableLiveTranscription startMeetingTranscriptionResponse", startMeetingTranscriptionResponse);
     };
     enableMeetingTranscription(meetingSession.configuration.meetingId, selectedVoiceLanguage);
-  }, [meetingSession, selectedVoiceLanguage]);
+  }, [meetingSession, selectedVoiceLanguage, selecteStability]);
 
   // Function to handle the chat setting change
   const handleChatSettingChange = (e) => {
@@ -459,6 +460,12 @@ function StartLiveSession() {
   //   console.log("Selected voice language:", event.target.value);
   // };
 
+  // Function to handle the selected stability change
+  const handleSelectedStability = (event) => {
+    setSelecteStability(event.target.value);
+    console.log("Selected stability:", event.target.value);
+   };
+
   return (
     <>
       <Participants count={participantsCount} />
@@ -479,6 +486,22 @@ function StartLiveSession() {
           {SPEAK_VOICE_LANGUAGES.map((language) => (
             <option key={language.key} value={language.key}>
               {language.label}
+            </option>
+          ))}
+        </select>
+        <h3>Check Transcribe Stability for testing(only demo)</h3>
+        <select
+          //disabled={!isTranslationEnabled}
+          id="selectedStability"
+          value={selecteStability}
+          onChange={handleSelectedStability}
+        >
+          {/* <option value="" disabled>
+            -- Choose a language --
+          </option> */}
+          {STABILITY.map((stability) => (
+            <option key={stability.key} value={stability.key}>
+              {stability.label}
             </option>
           ))}
         </select>
