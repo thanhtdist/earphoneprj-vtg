@@ -245,7 +245,7 @@ const AudioUploadBox = ({ meetingSession, logger }) => {
             </select>
             <div className="audio-upload-container">
                 {uploading ? (
-                    <p>Uploading...</p>
+                    <p>{t('uploading')}</p>
                 ) : currentAudioFile ? (
                     <div className="audio-box">
                         <div

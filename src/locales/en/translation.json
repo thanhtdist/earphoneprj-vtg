@@ -35,7 +35,12 @@
   },
   "playVoiceLbl": "Play the voice file for",
   "playVoiceOptions": {
-    "instruction": "Instruction",
-    "closingSpeech": "Closing Speech"
-  }
+    "instruction": "Voice File 1",
+    "closingSpeech": "Voice File 2"
+  },
+  "uploading": "Uploading...",
+  "transcriptionTxt": "The host is speaking in ",
+  "translationTxt": "I am listening in",
+  "transcriptions": "Transcriptions",
+  "translations": "Translations"
 }

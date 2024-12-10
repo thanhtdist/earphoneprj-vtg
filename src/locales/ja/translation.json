@@ -31,11 +31,16 @@
   "languagesLbl": "言語選択",
   "voiceLanguageLbl": {
     "speaking": "話す言語を選択してください",
-    "listening": "聞く言語を選択してください"
+    "listening": "聴く言語を選択してください"
   },
   "playVoiceLbl": "再生する音声ファイル",
   "playVoiceOptions": {
-    "instruction": "案内",
-    "closingSpeech": "閉会の挨拶"
-  }
+    "instruction": "音声ファイル1",
+    "closingSpeech": "音声ファイル2"
+  },
+  "uploading": "アップロード中...",
+  "transcriptionTxt": "で話しています",
+  "translationTxt": "で聴いています",
+  "transcriptions": "文字起こし",
+  "translations": "翻訳"
 }
