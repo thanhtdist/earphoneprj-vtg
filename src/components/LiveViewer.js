@@ -310,7 +310,10 @@ function LiveViewer() {
       translateAndPlay();
     } else {
       if (sourceLanguageCode === selectedVoiceLanguage) {
-        meetingSession.audioVideo.bindAudioElement(audioElement);
+        const bindAudioElement = async () => {
+          meetingSession.audioVideo.bindAudioElement(audioElement);
+        };
+        bindAudioElement();
         //audioElement.play();
       }
     }
