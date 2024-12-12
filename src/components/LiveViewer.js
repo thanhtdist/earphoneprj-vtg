@@ -265,10 +265,10 @@ function LiveViewer() {
     if (!audioElement || !meetingSession || !sourceLanguageCode || !selectedVoiceLanguage) return;
 
     // Reset the audio source
-    audioElement.pause();
-    audioElement.src = '';
-    audioElement.load();
-    meetingSession.audioVideo.unbindAudioElement();
+    // audioElement.pause();
+    // audioElement.src = '';
+    // audioElement.load();
+    // meetingSession.audioVideo.unbindAudioElement();
     setTranscriptText([]);
     setTranslatedText([]);
 
@@ -439,7 +439,7 @@ function LiveViewer() {
           id="audioElementListener"
           controls
           ref={audioElementRef}
-          //autoPlay
+          autoPlay
           className="audio-player"
           style={{ display: meeting && attendee ? 'block' : 'none' }}
         />
