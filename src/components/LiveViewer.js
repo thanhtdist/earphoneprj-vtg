@@ -311,7 +311,7 @@ function LiveViewer() {
     } else {
       if (sourceLanguageCode === selectedVoiceLanguage) {
         const bindAudioElement = async () => {
-          meetingSession.audioVideo.bindAudioElement(audioElement);
+          await meetingSession.audioVideo.bindAudioElement(audioElement);
         };
         bindAudioElement();
         //audioElement.play();
