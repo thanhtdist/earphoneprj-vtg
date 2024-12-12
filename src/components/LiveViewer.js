@@ -226,7 +226,7 @@ function LiveViewer() {
     if (!meetingSession) return;
 
     const attendeeSet = new Set();
-    const presenceCallback = (present, attendeeId) => {
+    const presenceCallback = (attendeeId, present) => {
       if (present) {
         attendeeSet.add(attendeeId);
       } else {
