@@ -307,7 +307,7 @@ function LiveViewer() {
 
           console.log('Translated response:', response);
           translatedListRef.current.push(response.translatedText);
-          setTranslatedText((prev) => [...prev, response.translatedText]);
+          
           if (!response.speech.AudioStream?.data)
             throw new Error('Invalid AudioStream data');
 
@@ -330,6 +330,7 @@ function LiveViewer() {
 
             audioElement.onended = () => processAudioQueue();
           }
+          setTranslatedText((prev) => [...prev, response.translatedText]);
         } catch (error) {
           console.error('Failed to translate text to speech:', error);
         }
