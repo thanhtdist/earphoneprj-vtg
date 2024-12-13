@@ -308,7 +308,7 @@ function LiveViewer() {
 
           console.log('Translated response:', response);
           translatedListRef.current.push(response.translatedText);
-
+          setTranslatedText((prev) => [...prev, response.translatedText]);
           if (!response.speech.AudioStream?.data)
             throw new Error('Invalid AudioStream data');
 
