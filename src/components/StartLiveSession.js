@@ -68,7 +68,7 @@ function StartLiveSession() {
   const [participantsCount, setParticipantsCount] = useState(0);
   //const [isTranslationEnabled, setIsTranslationEnabled] = useState(false);
   const [selectedVoiceLanguage, setSelectedVoiceLanguage] = useState(SPEAK_VOICE_LANGUAGES.find((lang) => lang.key.startsWith(i18n.language))?.key || 'ja-JP');
-  const [selecteStability, setSelecteStability] = useState('medium');
+  const [selecteStability, setSelecteStability] = useState('low');
   //const [selectedTTSEngine, setSelectedTTSEngine] = useState("standard");
 
   // Function to start a live audio session
