@@ -279,7 +279,7 @@ function LiveViewer() {
       transcripts?.results?.[0]?.alternatives?.[0]?.transcript &&
       !transcripts.results[0].isPartial
     ) {
-      // Process hàng đợi audio
+      // Process audio queue
       const processAudioQueue = async () => {
         if (audioQueueRef.current.length === 0) return;
 
@@ -291,12 +291,11 @@ function LiveViewer() {
           console.error('Error processing audio queue:', error);
         }
 
-        // Sử dụng setImmediate thay vì setTimeout để xử lý nhanh hơn
         //setImmediate(processAudioQueue);
-        setTimeout(processAudioQueue, 0); 
+        setTimeout(processAudioQueue, 0);
       };
 
-      // Dịch và phát âm thanh
+      // Translate and play the audio
       const translateAndPlay = async (currentText) => {
         try {
           const response = await translateTextSpeech(
@@ -323,6 +322,11 @@ function LiveViewer() {
           if (audioElement) {
             audioElement.src = audioUrl;
             //audioElement.play();
+            audioElement.play().then(() => {
+              console.log("Audio is playing");
+            }).catch(error => {
+              console.error("Autoplay failed:", error);
+            });
 
             audioElement.onended = () => processAudioQueue();
           }
