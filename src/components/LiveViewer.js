@@ -322,11 +322,11 @@ function LiveViewer() {
           if (audioElement) {
             audioElement.src = audioUrl;
             //audioElement.play();
-            audioElement.play().then(() => {
-              console.log("Audio is playing");
-            }).catch(error => {
-              console.error("Autoplay failed:", error);
-            });
+            // audioElement.play().then(() => {
+            //   console.log("Audio is playing");
+            // }).catch(error => {
+            //   console.error("Autoplay failed:", error);
+            // });
 
             audioElement.onended = () => processAudioQueue();
           }
