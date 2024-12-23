@@ -70,6 +70,7 @@ function StartLiveSession() {
   const [selectedVoiceLanguage, setSelectedVoiceLanguage] = useState(SPEAK_VOICE_LANGUAGES.find((lang) => lang.key.startsWith(i18n.language))?.key || 'ja-JP');
   const [selecteStability, setSelecteStability] = useState('low');
   //const [selectedTTSEngine, setSelectedTTSEngine] = useState("standard");
+  const [transcripts, setTranscriptions] = useState([]);
   // Replace local variables with refs
   const transcriptListRef = useRef([]);
 
@@ -386,17 +387,21 @@ function StartLiveSession() {
     meetingSession.audioVideo.transcriptionController?.subscribeToTranscriptEvent(
       (transcriptEvent) => {
         console.log('Check transcriptEvent:', transcriptEvent);
-        if (transcriptEvent?.results?.[0]?.alternatives?.[0]?.transcript &&
-          !transcriptEvent.results[0].isPartial
-        ) {
-          const currentText = transcriptEvent.results[0].alternatives[0].transcript;
-          transcriptListRef.current.push(currentText);
-        }
-
+        setTranscriptions(transcriptEvent);
       }
     );
 
   }, [meetingSession]);
+
+  // Add the transcript to the list
+  useEffect(() => {
+    if (transcripts?.results?.[0]?.alternatives?.[0]?.transcript &&
+      !transcripts.results[0].isPartial
+    ) {
+      const currentText = transcripts.results[0].alternatives[0].transcript;
+      transcriptListRef.current.push(currentText);
+    }
+  }, [transcripts]);
 
   // Send the language code to the listener
   useEffect(() => {
