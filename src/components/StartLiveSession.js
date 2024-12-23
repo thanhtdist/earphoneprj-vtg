@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import {
   createMeeting,
   createAttendee,
@@ -70,6 +70,8 @@ function StartLiveSession() {
   const [selectedVoiceLanguage, setSelectedVoiceLanguage] = useState(SPEAK_VOICE_LANGUAGES.find((lang) => lang.key.startsWith(i18n.language))?.key || 'ja-JP');
   const [selecteStability, setSelecteStability] = useState('low');
   //const [selectedTTSEngine, setSelectedTTSEngine] = useState("standard");
+  // Replace local variables with refs
+  const transcriptListRef = useRef([]);
 
   // Function to start a live audio session
   const startLiveAduioSession = async () => {
@@ -380,35 +382,19 @@ function StartLiveSession() {
     };
 
     meetingSession.audioVideo.realtimeSubscribeToAttendeeIdPresence(callback);
+    // Subscribe to transcription events
+    meetingSession.audioVideo.transcriptionController?.subscribeToTranscriptEvent(
+      (transcriptEvent) => {
+        console.log('Check transcriptEvent:', transcriptEvent);
+        if (transcriptEvent?.results?.[0]?.alternatives?.[0]?.transcript &&
+          !transcriptEvent.results[0].isPartial
+        ) {
+          const currentText = transcriptEvent.results[0].alternatives[0].transcript;
+          transcriptListRef.current.push(currentText);
+        }
 
-    if (meetingSession) {
-      // console.log("enableLiveTranscription meetingId", meetingSession.configuration.meetingId);
-      // // Enable live transcription
-      // const enableLiveTranscription = async () => {
-      //   // startMeetingTranscription(meetingId, languageCode)
-      //   const startMeetingTranscriptionResponse = await startMeetingTranscription(meetingSession.configuration.meetingId, 'en-US');
-      //   console.log("enableLiveTranscription startMeetingTranscriptionResponse",startMeetingTranscriptionResponse);
-      // };
-
-      // enableLiveTranscription();
-      // console.log("enableLiveTranscription audioVideo", meetingSession.audioVideo);
-      // Subscribe to transcription events
-      // meetingSession.audioVideo.realtimeSubscribeToReceiveDataMessage(
-      //   'transcription',//'transcription',
-      //   (data) => {
-      //     console.log('enableLiveTranscription Received transcription:');
-      //     try {
-      //       const transcription = JSON.parse(data.text());
-      //       setTranscriptions((prev) => [...prev, transcription]);
-
-      //       // Display transcription or do something with it
-      //     } catch (error) {
-      //       console.error('enableLiveTranscription Error processing transcription data:', error);
-      //     }
-      //   }
-      // );
-
-    }
+      }
+    );
 
   }, [meetingSession]);
 
@@ -464,7 +450,7 @@ function StartLiveSession() {
   const handleSelectedStability = (event) => {
     setSelecteStability(event.target.value);
     console.log("Selected stability:", event.target.value);
-   };
+  };
 
   return (
     <>
@@ -519,6 +505,11 @@ function StartLiveSession() {
           ))}
         </select> */}
         <audio id="audioElementMain" controls autoPlay className="audio-player" style={{ display: (meeting && attendee) ? 'block' : 'none' }} />
+        {transcriptListRef.current.length > 0 && (
+          <span>
+            Transcripts: <span>{transcriptListRef.current.join(' ')}</span>
+          </span>
+        )}
         {(!meeting && !attendee) ? (
           <>
             {(isLoading) ? (
