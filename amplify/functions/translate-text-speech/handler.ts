@@ -48,13 +48,19 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       };
     }
 
-    const pollyResponse = await polly.synthesizeSpeech({
+    const voiceId = targetLanguageCode === 'ja-JP' ? 'Mizuki' : targetLanguageCode === 'en-US' ? 'Joanna' : targetLanguageCode === 'ko-KR' ? 'Seoyeon' : (targetLanguageCode === 'zh' || targetLanguageCode === 'zh-TW') ? 'Zhiyu' : 'Joanna'
+    console.log('Translate VoiceId: ', voiceId);
+    let params = {
       Engine: engine,
+      ...(targetLanguageCode === 'zh' || targetLanguageCode === 'zh-TW' ? { LanguageCode: 'cmn-CN' } : {}),
       OutputFormat: 'mp3',
       Text: translateTextResponse.TranslatedText,
       //VoiceId: 'Mizuki' // Mizuki for a female voice. Takumi for a male voice.
-      VoiceId: targetLanguageCode === 'ja-JP' ? 'Mizuki' : targetLanguageCode === 'en-US' ? 'Joanna' : targetLanguageCode === 'ko-KR' ? 'Seoyeon' : targetLanguageCode === 'cmn-CN' ? 'Zhiyu' : targetLanguageCode === 'yue-CN' ? 'Hiujin' : 'Joanna'
-    }).promise();
+      VoiceId: voiceId
+    };
+
+    console.log('Synthesize Speech Params: ', params);
+    const pollyResponse = await polly.synthesizeSpeech(params).promise();
 
     // Return successful response
     return {
