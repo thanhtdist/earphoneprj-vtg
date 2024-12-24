@@ -52,7 +52,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     console.log('Translate VoiceId: ', voiceId);
     let params = {
       Engine: engine,
-      ...(targetLanguageCode === 'zh' || targetLanguageCode === 'zh-TW' ? { LanguageCode: 'cmn-CN' } : {}),
+      ...(targetLanguageCode === 'zh' ? { LanguageCode: 'cmn-CN' } : {}),
       OutputFormat: 'mp3',
       Text: translateTextResponse.TranslatedText,
       //VoiceId: 'Mizuki' // Mizuki for a female voice. Takumi for a male voice.

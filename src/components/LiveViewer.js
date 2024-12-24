@@ -23,7 +23,7 @@ import { checkAvailableMeeting } from '../utils/MeetingUtils';
 import { v4 as uuidv4 } from 'uuid';
 import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { LISTEN_VOICE_LANGUAGES, CHINESE_TRANSLATE_LANGUAGES } from '../utils/constant';
+import { LISTEN_VOICE_LANGUAGES } from '../utils/constant';
 
 function LiveViewer() {
   const location = useLocation();
@@ -50,7 +50,6 @@ function LiveViewer() {
     LISTEN_VOICE_LANGUAGES.find((lang) => lang.key.startsWith(i18n.language))?.key || 'ja-JP'
   );
 
-  const [selectedChineseStyle, setSelectedChineseStyle] = useState('zh');
   // Replace local variables with refs
   const transcriptListRef = useRef([]);
   const transcriptList2Ref = useRef([]);
@@ -301,7 +300,7 @@ function LiveViewer() {
         try {
           let targetLanguageCode = selectedVoiceLanguage;
           if (selectedVoiceLanguage === 'cmn-CN') {
-            targetLanguageCode = selectedChineseStyle;
+            targetLanguageCode = "zh";
           }
 
           console.log('Check sourceLanguageCode:', sourceLanguageCode);
@@ -412,15 +411,10 @@ function LiveViewer() {
     transcripts,
     sourceLanguageCode,
     selectedVoiceLanguage,
-    selectedChineseStyle,
   ]);
 
   const handleSelectedVoiceLanguageChange = (event) => {
     setSelectedVoiceLanguage(event.target.value);
-  };
-
-  const handleSelectedChineseStyleChange = (event) => {
-    setSelectedChineseStyle(event.target.value);
   };
 
   console.log('Check transcriptList:', transcriptListRef.current);
@@ -456,22 +450,6 @@ function LiveViewer() {
                 </option>
               ))}
             </select>
-            {selectedVoiceLanguage === 'cmn-CN' && (
-              <>
-                <h3>Chinese style</h3>
-                <select
-                  id="selectedVoiceLanguage"
-                  value={selectedChineseStyle}
-                  onChange={handleSelectedChineseStyleChange}
-                >
-                  {CHINESE_TRANSLATE_LANGUAGES.map((language) => (
-                    <option key={language.key} value={language.key}>
-                      {language.label}
-                    </option>
-                  ))}
-                </select>
-              </>
-            )}
           </div>
         )}
         <audio
@@ -503,13 +481,13 @@ function LiveViewer() {
             </p>
             {transcriptListRef.current.length > 0 && (
               <span>
-                Transcripts: <span>{transcriptListRef.current.join(' ')}</span>
+                {t('transcriptions')}: <span>{transcriptListRef.current.join(' ')}</span>
               </span>
             )}
             <br />
             {translatedListRef.current.length > 0 && (
               <span>
-                Translations: <span>{translatedListRef.current.join(' ')}</span>
+                {t('translations')}: <span>{translatedListRef.current.join(' ')}</span>
               </span>
             )}
             <br />

@@ -8,14 +8,7 @@ export const SPEAK_VOICE_LANGUAGES = [
 export const LISTEN_VOICE_LANGUAGES = [
     { key: "ja-JP", label: "Japanese" },
     { key: "en-US", label: "English" },
-    { key: "ko-KR", label: "Korean" },
-    { key: "cmn-CN", label: "Chinese (Mandarin)" },
-]
-
-// Translate languages for chinese
-export const CHINESE_TRANSLATE_LANGUAGES = [
-    { key: "zh", label: "Chinese (Simplified)" },
-    { key: "zh-TW", label: "Chinese (Traditional)" },
+    { key: "cmn-CN", label: "Chinese" },
 ]
 
 //Text To Speech (TTS) engine

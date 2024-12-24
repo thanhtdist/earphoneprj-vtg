@@ -32,7 +32,7 @@ import {
   faMicrophone, faMicrophoneSlash,
 } from '@fortawesome/free-solid-svg-icons';
 import { useTranslation } from 'react-i18next';
-import { SPEAK_VOICE_LANGUAGES, STABILITY } from '../utils/constant';
+import { SPEAK_VOICE_LANGUAGES } from '../utils/constant';
 // import { uploadFileToS3 } from '../services/S3Service';
 
 /**
@@ -68,8 +68,6 @@ function StartLiveSession() {
   const [participantsCount, setParticipantsCount] = useState(0);
   //const [isTranslationEnabled, setIsTranslationEnabled] = useState(false);
   const [selectedVoiceLanguage, setSelectedVoiceLanguage] = useState(SPEAK_VOICE_LANGUAGES.find((lang) => lang.key.startsWith(i18n.language))?.key || 'ja-JP');
-  const [selecteStability, setSelecteStability] = useState('low');
-  //const [selectedTTSEngine, setSelectedTTSEngine] = useState("standard");
   const [transcripts, setTranscriptions] = useState([]);
   // Replace local variables with refs
   const transcriptListRef = useRef([]);
@@ -417,11 +415,11 @@ function StartLiveSession() {
     // );
     const enableMeetingTranscription = async (meetingId, languageCode) => {
       console.log("enableLiveTranscription languageCode", languageCode);
-      const startMeetingTranscriptionResponse = await startMeetingTranscription(meetingId, languageCode, selecteStability);
+      const startMeetingTranscriptionResponse = await startMeetingTranscription(meetingId, languageCode);
       console.log("enableLiveTranscription startMeetingTranscriptionResponse", startMeetingTranscriptionResponse);
     };
     enableMeetingTranscription(meetingSession.configuration.meetingId, selectedVoiceLanguage);
-  }, [meetingSession, selectedVoiceLanguage, selecteStability]);
+  }, [meetingSession, selectedVoiceLanguage]);
 
   // Function to handle the chat setting change
   const handleChatSettingChange = (e) => {
@@ -433,28 +431,10 @@ function StartLiveSession() {
     setSelectedQR(e.target.value);
   };
 
-  // Function to toggle checkbox the voice language select dropdown
-  // const handleCheckboxChange = (e) => {
-  //   setIsTranslationEnabled(e.target.checked);
-  //   setSelectedVoiceLanguage(SPEAK_VOICE_LANGUAGES.find((lang) => lang.key.startsWith(i18n.language)).key);
-  // };
-
   // Function to handle the selected voice language change
   const handleSelectedVoiceLanguageChange = (event) => {
     setSelectedVoiceLanguage(event.target.value);
     console.log("Selected voice language:", event.target.value);
-  };
-
-  // Function to handle the selected TTS engine change
-  // const handleSelectedTTSEngineChange = (event) => {
-  //   setSelectedTTSEngine(event.target.value);
-  //   console.log("Selected voice language:", event.target.value);
-  // };
-
-  // Function to handle the selected stability change
-  const handleSelectedStability = (event) => {
-    setSelecteStability(event.target.value);
-    console.log("Selected stability:", event.target.value);
   };
 
   return (
@@ -480,39 +460,10 @@ function StartLiveSession() {
             </option>
           ))}
         </select>
-        <h3>Check Transcribe Stability for testing(only demo)</h3>
-        <select
-          //disabled={!isTranslationEnabled}
-          id="selectedStability"
-          value={selecteStability}
-          onChange={handleSelectedStability}
-        >
-          {/* <option value="" disabled>
-            -- Choose a language --
-          </option> */}
-          {STABILITY.map((stability) => (
-            <option key={stability.key} value={stability.key}>
-              {stability.label}
-            </option>
-          ))}
-        </select>
-
-        {/* <label htmlFor="tts-select">Select Text to Speech Engine: </label>
-        <select
-          id="tts-select"
-          value={selectedTTSEngine}
-          onChange={handleSelectedTTSEngineChange}
-        >
-          {TTS_ENGINE.map((engine) => (
-            <option key={engine.key} value={engine.key}>
-              {engine.label}
-            </option>
-          ))}
-        </select> */}
         <audio id="audioElementMain" controls autoPlay className="audio-player" style={{ display: (meeting && attendee) ? 'block' : 'none' }} />
         {transcriptListRef.current.length > 0 && (
           <span>
-            Transcripts: <span>{transcriptListRef.current.join(' ')}</span>
+            {t('transcriptions')}: <span>{transcriptListRef.current.join(' ')}</span>
           </span>
         )}
         {(!meeting && !attendee) ? (
