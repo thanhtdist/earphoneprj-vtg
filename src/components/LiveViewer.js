@@ -263,16 +263,8 @@ function LiveViewer() {
 
     const audioElement = audioElementRef.current;
     if (!audioElement || !meetingSession || !sourceLanguageCode || !selectedVoiceLanguage) return;
-
-    // Reset the audio source
-    // audioElement.pause();
-    // audioElement.src = '';
-    // audioElement.load();
-    // meetingSession.audioVideo.unbindAudioElement();
     setTranscriptText([]);
     setTranslatedText([]);
-
-    //let timer = null;
 
     if (
       sourceLanguageCode !== selectedVoiceLanguage &&
@@ -328,13 +320,6 @@ function LiveViewer() {
           const audioElement = audioElementRef.current;
           if (audioElement) {
             audioElement.src = audioUrl;
-            //audioElement.play();
-            // audioElement.play().then(() => {
-            //   console.log("Audio is playing");
-            // }).catch(error => {
-            //   console.error("Autoplay failed:", error);
-            // });
-
             audioElement.onended = () => processAudioQueue();
           }
           setTranslatedText((prev) => [...prev, response.translatedText]);
@@ -345,19 +330,6 @@ function LiveViewer() {
       const currentText = transcripts.results[0].alternatives[0].transcript;
       transcriptListRef.current.push(currentText);
       transcriptList2Ref.current.push(currentText);
-      // if (timer) clearTimeout(timer);
-
-      // timer = setTimeout(() => {
-      //   const aggregatedText = transcriptList2Ref.current.join(' ');
-      //   console.log('Aggregated Transcription:', aggregatedText);
-
-      //   audioQueueRef.current.push(aggregatedText);
-      //   audioQueue2Ref.current.push(aggregatedText);
-      //   if (audioQueueRef.current.length === 1) {
-      //     processAudioQueue();  // Start processing the queue.
-      //   }
-      //   transcriptList2Ref.current = [];
-      // }, 1000);
       audioQueueRef.current.push(currentText);
       audioQueue2Ref.current.push(currentText);
       if (audioQueueRef.current.length === 1) {
@@ -365,38 +337,6 @@ function LiveViewer() {
       }
 
       setTranscriptText((prev) => [...prev, currentText]);
-
-      // const translateAndPlay = async () => {
-      //   try {
-      //     const response = await translateTextSpeech(
-      //       currentText,
-      //       sourceLanguageCode,
-      //       selectedVoiceLanguage,
-      //       'standard'
-      //     );
-      //     console.log('Check translateTextSpeech:', translateTextSpeech);
-      //     translatedListRef.current.push(response.translatedText);
-      //     setTranslatedText((prev) => [...prev, response.translatedText]);
-
-      //     if (!response.speech.AudioStream?.data)
-      //       throw new Error('Invalid AudioStream data');
-
-      //     const audioBlob = new Blob(
-      //       [Uint8Array.from(response.speech.AudioStream.data)],
-      //       {
-      //         type: response.speech.ContentType || 'audio/mpeg',
-      //       }
-      //     );
-      //     const audioUrl = URL.createObjectURL(audioBlob);
-      //     console.log('Check audioUrl:', audioUrl);
-      //     audioElement.src = audioUrl;
-      //     //audioElement.play();
-      //   } catch (error) {
-      //     console.error('Error translating text to speech:', error);
-      //   }
-      // };
-
-      // translateAndPlay();
     } else {
       if (sourceLanguageCode === selectedVoiceLanguage) {
         const bindAudioElement = async () => {
@@ -416,21 +356,11 @@ function LiveViewer() {
   const handleSelectedVoiceLanguageChange = (event) => {
     setSelectedVoiceLanguage(event.target.value);
   };
-
-  console.log('Check transcriptList:', transcriptListRef.current);
-  console.log('Check transcriptList string:', transcriptListRef.current.join(' '));
-
-  console.log('Check translatedList:', translatedListRef.current);
-  console.log('Check translatedList string:', translatedListRef.current.join(' '));
-
   console.log('Check transcriptText:', transcriptText);
   console.log('Check transcriptText string:', transcriptText.join(' '));
 
   console.log('Check translatedText:', translatedText);
   console.log('Check translatedText string:', translatedText.join(' '));
-
-  console.log("transcriptText 1s", audioQueue2Ref.current)
-  console.log("transcriptText 1s string", audioQueue2Ref.current.join(' '))
 
   return (
     <>

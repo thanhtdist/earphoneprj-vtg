@@ -308,8 +308,8 @@ function StartLiveSession() {
       setMicroChecking('microChecking');
 
       // Check if there are no devices or if any device label is empty
-      //if (devices.length === 0 || devices.some(device => !device.label.trim())) {
-      if (devices.length === 0) {
+      if (devices.length === 0 || devices.some(device => !device.label.trim())) {
+      //if (devices.length === 0) {
         console.log('No audio input devices found');
         // Display a message after 5 seconds
         setTimeout(() => {
@@ -408,11 +408,6 @@ function StartLiveSession() {
     }
     console.log("enableMeetingTranscription selectedVoiceLanguage", selectedVoiceLanguage);
     console.log("enableMeetingTranscription meetingSession", meetingSession);
-    // meetingSession.audioVideo.realtimeSendDataMessage(
-    //   'TranscriptLanguage',
-    //   { data: languageCodeSource },
-    //   30000,
-    // );
     const enableMeetingTranscription = async (meetingId, languageCode) => {
       console.log("enableLiveTranscription languageCode", languageCode);
       const startMeetingTranscriptionResponse = await startMeetingTranscription(meetingId, languageCode);
@@ -442,18 +437,13 @@ function StartLiveSession() {
       <Participants count={participantsCount} />
       <div className="container">
         <h3>
-          {/* <input type="checkbox" id="translateCheckbox" onClick={handleCheckboxChange} /> */}
           {t('voiceLanguageLbl.speaking')}
         </h3>
         <select
-          //disabled={!isTranslationEnabled}
           id="selectedVoiceLanguage"
           value={selectedVoiceLanguage}
           onChange={handleSelectedVoiceLanguageChange}
         >
-          {/* <option value="" disabled>
-            -- Choose a language --
-          </option> */}
           {SPEAK_VOICE_LANGUAGES.map((language) => (
             <option key={language.key} value={language.key}>
               {language.label}
@@ -510,13 +500,6 @@ function StartLiveSession() {
                 </div>
               </>
             )}
-            {/* <div>
-              {transcriptions.map((t, idx) => (
-                <p key={idx}>
-                  <strong>{t.attendeeName}:</strong> {t.transcriptionText}
-                </p>
-              ))}
-            </div> */}
             <h3>{t('chatSettingLbl')}</h3>
             <select value={chatSetting} onChange={handleChatSettingChange}>
               <option value="allChat">{t('chatSettingOptions.allChat')}</option>
