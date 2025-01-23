@@ -309,7 +309,7 @@ function StartLiveSession() {
 
       // Check if there are no devices or if any device label is empty
       if (devices.length === 0 || devices.some(device => !device.label.trim())) {
-      //if (devices.length === 0) {
+        //if (devices.length === 0) {
         console.log('No audio input devices found');
         // Display a message after 5 seconds
         setTimeout(() => {
@@ -509,13 +509,13 @@ function StartLiveSession() {
 
             <h3>{t('generateQRCodeLbl')}</h3>
             <select value={selectedQR} onChange={handleQRSelectionChange}>
-              <option value="subSpeaker">{t('generateQRCodeOptions.subGuide')}</option>
+              {/* <option value="subSpeaker">{t('generateQRCodeOptions.subGuide')}</option> */}
               <option value="listener">{t('generateQRCodeOptions.listener')}</option>
             </select>
 
             {meeting && channelArn && (
               <>
-                {selectedQR === 'subSpeaker' ? (
+                {/* {selectedQR === 'subSpeaker' ? (
                   <>
                     <QRCodeSVG value={`${Config.appSubSpeakerURL}?meetingId=${meeting.MeetingId}&channelId=${channelID}&hostId=${userId}&chatSetting=${chatSetting}`} size={256} level="H" />
                     <a target="_blank" rel="noopener noreferrer" style={{ color: 'green' }} href={`${Config.appSubSpeakerURL}?meetingId=${meeting.MeetingId}&channelId=${channelID}&hostId=${userId}&chatSetting=${chatSetting}`}>
@@ -523,6 +523,14 @@ function StartLiveSession() {
                     </a>
                   </>
                 ) : (
+                  <>
+                    <QRCodeSVG value={`${Config.appViewerURL}?meetingId=${meeting.MeetingId}&channelId=${channelID}&hostId=${userId}&chatSetting=${chatSetting}`} size={256} level="H" />
+                    <a target="_blank" rel="noopener noreferrer" style={{ color: 'green' }} href={`${Config.appViewerURL}?meetingId=${meeting.MeetingId}&channelId=${channelID}&hostId=${userId}&chatSetting=${chatSetting}`}>
+                      {t('scanQRCodeTxt.listener')}
+                    </a>
+                  </>
+                )} */}
+                {selectedQR === 'listener' && (
                   <>
                     <QRCodeSVG value={`${Config.appViewerURL}?meetingId=${meeting.MeetingId}&channelId=${channelID}&hostId=${userId}&chatSetting=${chatSetting}`} size={256} level="H" />
                     <a target="_blank" rel="noopener noreferrer" style={{ color: 'green' }} href={`${Config.appViewerURL}?meetingId=${meeting.MeetingId}&channelId=${channelID}&hostId=${userId}&chatSetting=${chatSetting}`}>
