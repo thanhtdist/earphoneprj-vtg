@@ -19,7 +19,7 @@ import {
 import '../styles/StartLiveSession.css';
 import ChatMessage from './ChatMessage';
 import Participants from './Participants';
-import AudioUploadBox from './AudioUploadBox';
+//import AudioUploadBox from './AudioUploadBox';
 import Config from '../utils/config';
 import metricReport from '../utils/MetricReport';
 //import { getPOSTLogger } from '../utils/MeetingLogger';
@@ -469,7 +469,7 @@ function StartLiveSession() {
           </>
         ) : (
           <>
-            {meetingSession && (<AudioUploadBox meetingSession={meetingSession} logger={logger} />)}
+            {/* {meetingSession && (<AudioUploadBox meetingSession={meetingSession} logger={logger} />)} */}
             {(noMicroMsg) ? (
               <>
                 {!microChecking ? (
