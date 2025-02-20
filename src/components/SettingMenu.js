@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { GiHamburgerMenu } from "react-icons/gi";
+import { GrLanguage } from "react-icons/gr";
 import '../i18n'; // Ensure i18n is initialized
 import '../styles/SettingMenu.css'; // Import the CSS file
 
@@ -61,11 +62,11 @@ function SettingMenu() {
   };
 
   return (
-    <div className="menu-container" ref={menuRef}>
+    <>
       {/* Menu Toggle Button */}
-      <button className="menu-toggle" onClick={toggleMenu}>
-        <GiHamburgerMenu size={24} />
-      </button>
+      {/* <button className="menu-toggle" onClick={toggleMenu}> */}
+        <GrLanguage size={24} onClick={toggleMenu} ref={menuRef}/>
+      {/* </button> */}
 
       {/* Collapsible Menu Content */}
       <div className={`menu-content ${isMenuOpen ? 'open' : ''}`}>
@@ -84,7 +85,7 @@ function SettingMenu() {
           </div>
         )}
       </div>
-    </div>
+      </>
   );
 }
 

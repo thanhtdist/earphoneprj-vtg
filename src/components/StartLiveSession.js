@@ -33,6 +33,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { useTranslation } from 'react-i18next';
 import { SPEAK_VOICE_LANGUAGES } from '../utils/constant';
+import Header from './Header';
 // import { uploadFileToS3 } from '../services/S3Service';
 
 /**
@@ -71,7 +72,6 @@ function StartLiveSession() {
   const [transcripts, setTranscriptions] = useState([]);
   // Replace local variables with refs
   const transcriptListRef = useRef([]);
-
   // Function to start a live audio session
   const startLiveAduioSession = async () => {
     setIsLoading(true);
@@ -309,7 +309,7 @@ function StartLiveSession() {
 
       // Check if there are no devices or if any device label is empty
       if (devices.length === 0 || devices.some(device => !device.label.trim())) {
-      //if (devices.length === 0) {
+        //if (devices.length === 0) {
         console.log('No audio input devices found');
         // Display a message after 5 seconds
         setTimeout(() => {
@@ -434,11 +434,13 @@ function StartLiveSession() {
 
   return (
     <>
-      <Participants count={participantsCount} />
+      {/* <Participants count={participantsCount} /> */}
+      <Header count={participantsCount} Config={Config.appViewerURL} meeting={meeting} channelID={channelID} userId={userId} chatSetting={chatSetting} />
       <div className="container">
-        <h3>
-          {t('voiceLanguageLbl.speaking')}
-        </h3>
+        <span className='titleLiveSession'>
+          {/* {t('voiceLanguageLbl.speaking')} */}
+          ガイド専用ページ
+        </span>
         <select
           id="selectedVoiceLanguage"
           value={selectedVoiceLanguage}
@@ -513,7 +515,7 @@ function StartLiveSession() {
               <option value="listener">{t('generateQRCodeOptions.listener')}</option>
             </select>
 
-            {meeting && channelArn && (
+            {/* {meeting && channelArn && (
               <>
                 {selectedQR === 'subSpeaker' ? (
                   <>
@@ -531,13 +533,13 @@ function StartLiveSession() {
                   </>
                 )}
               </>
-            )}
+            )} */}
             {chatSetting !== "nochat" && (
               <ChatMessage userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} />
             )}
           </>
         )}
-      </div>
+      </div>     
     </>
   );
 }

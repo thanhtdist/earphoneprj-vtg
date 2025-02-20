@@ -11,7 +11,7 @@ function App() {
     <>
       <Router>
         <div className="App">
-          <SettingMenu></SettingMenu>
+          {/* <SettingMenu></SettingMenu> */}
           <Routes>
             <Route path="/" element={<StartLiveSession />} />
             <Route path="/sub-speaker" element={<LiveSubSpeaker />} />

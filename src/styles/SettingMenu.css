@@ -1,10 +1,14 @@
 /* Base styles for desktop */
 .menu-container {
-  position: fixed; /* Fixes the menu at the top-right */
-  top: 10px; /* Distance from the top of the viewport */
-  right: 10px; /* Distance from the right of the viewport */
-  z-index: 9999; /* Ensures the menu stays above other elements */
-  padding: 1rem;  
+  /* position: fixed;  */
+  /* Fixes the menu at the top-right */
+  /* top: 10px;  */
+  /* Distance from the top of the viewport */
+  /* right: 10px;  */
+  /* Distance from the right of the viewport */
+  /* z-index: 9999;  */
+  /* Ensures the menu stays above other elements */
+  /* padding: 1rem;   */
 }
 
 .menu-toggle {
@@ -54,8 +58,10 @@
 @media (max-width: 768px) {
   /* Move the menu icon to the right */
   .menu-container {
-      top: 10px; /* Keeps it at the top of the viewport */
-      right: 10px; /* Keeps it on the right side */
+      /* top: 10px;  */
+      /* Keeps it at the top of the viewport */
+      /* right: 10px;  */
+      /* Keeps it on the right side */
   }
 
   .menu-content {
@@ -64,7 +70,7 @@
   }
 
   .menu-toggle {
-      font-size: 1.25rem;
+      /* font-size: 1.25rem; */
   }
 
   .menu-content h1 {
@@ -79,8 +85,10 @@
 /* Additional Styles for smaller screens */
 @media (max-width: 600px) {
   .menu-container {
-      top: 5px; /* Adjust top position for smaller screens */
-      right: 5px; /* Move icon further to the right if needed */
+      /* top: 5px;  */
+      /* Adjust top position for smaller screens */
+      /* right: 5px;  */
+      /* Move icon further to the right if needed */
   }
 
   .menu-content {
@@ -89,7 +97,7 @@
   }
 
   .menu-toggle {
-      font-size: 1.1rem;
+      /* font-size: 1.1rem; */
   }
 
   .menu-content h1 {
