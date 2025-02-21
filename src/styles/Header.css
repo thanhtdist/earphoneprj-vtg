@@ -3,6 +3,7 @@
     justify-content: space-between;
     border-bottom: solid 0.5px grey ;
     color: red;
+    /* box-shadow: 0 6px 5px rgba(0, 0, 0, 0.2); */
 }
 
 .participantsCount {
@@ -44,6 +45,7 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
     position: relative;
     /* display: grid; */
+    margin: 20px;
 }
 .link{
     display: flex;
@@ -78,4 +80,9 @@
     font-size: 20px;
     background-color: red;
     color: white;
+}
+
+.contentChat{
+    /* padding-top: 10%; */
+    /* width: 93%; */
 }

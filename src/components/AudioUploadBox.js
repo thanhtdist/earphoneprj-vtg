@@ -238,48 +238,52 @@ const AudioUploadBox = ({ meetingSession, logger }) => {
 
     return (
         <>
-            <h3>{t('playVoiceLbl')}</h3>
-            <select value={voiceFileType} onChange={handleVoiceFileTypeChange}>
-                <option value="instruction">{t('playVoiceOptions.instruction')}</option>
-                <option value="closingSpeech">{t('playVoiceOptions.closingSpeech')}</option>
-            </select>
-            <div className="audio-upload-container">
-                {uploading ? (
-                    <p>{t('uploading')}</p>
-                ) : currentAudioFile ? (
-                    <div className="audio-box">
-                        <div
-                            className="icon-wrapper"
-                            onClick={handleRemoveFile} // Ensure the click event is attached here
-                        >
-                            <FaTimes size={16} />
-                        </div>
-                        <div className="audio-content">
-                            <FaFile size={60} className="audio-icon" />
+            <div className="box-start-live-session">
+                <div className="box-start-live-session-container">
+                <h3>{t('playVoiceLbl')}</h3>
+                <select className="selectFile" value={voiceFileType} onChange={handleVoiceFileTypeChange}>
+                    <option value="instruction">{t('playVoiceOptions.instruction')}</option>
+                    <option value="closingSpeech">{t('playVoiceOptions.closingSpeech')}</option>
+                </select>
+                <div className="audio-upload-container">
+                    {uploading ? (
+                        <p>{t('uploading')}</p>
+                    ) : currentAudioFile ? (
+                        <div className="audio-box">
                             <div
-                                className="play-pause-icon"
-                                onClick={handlePlayPause}
-                                style={{ zIndex: 10 }} // Ensure play/pause icon is above the file icon
+                                className="icon-wrapper"
+                                onClick={handleRemoveFile} // Ensure the click event is attached here
                             >
-                                {isPlaying ? <FaPause size={24} /> : <FaPlay size={24} />}
+                                <FaTimes size={16} />
+                            </div>
+                            <div className="audio-content">
+                                <FaFile size={30} className="audio-icon" />
+                                <div
+                                    className="play-pause-icon"
+                                    onClick={handlePlayPause}
+                                    style={{ zIndex: 10 }} // Ensure play/pause icon is above the file icon
+                                >
+                                    {isPlaying ? <FaPause size={24} /> : <FaPlay size={24} />}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                ) : (
-                    <label className="upload-box">
-                        <FaUpload size={60} />
-                        <input
-                            type="file"
-                            accept=".mp3, .mp4, .m4a, .aac, .wav"
-                            //accept="audio/*"
-                            onChange={handleFileUpload}
-                            className="hidden-input"
-                        />
-                    </label>
-                )}
+                    ) : (
+                        <label className="upload-box">
+                            <FaUpload size={24} />
+                            <input
+                                type="file"
+                                accept=".mp3, .mp4, .m4a, .aac, .wav"
+                                //accept="audio/*"
+                                onChange={handleFileUpload}
+                                className="hidden-input"
+                            />
+                        </label>
+                    )}
+                </div>
+                {errorMessage && <p className="error-message">{errorMessage}</p>}
+                {currentAudioFile && (<p><a target="_blank" rel="noopener noreferrer" href={currentAudioFile.url} style={{ color: "green" }}>{currentAudioFile.name}</a></p>)}
             </div>
-            {errorMessage && <p className="error-message">{errorMessage}</p>}
-            {currentAudioFile && (<p><a target="_blank" rel="noopener noreferrer" href={currentAudioFile.url} style={{ color: "green" }}>{currentAudioFile.name}</a></p>)}
+            </div>
         </>
     );
 };

@@ -1,17 +1,17 @@
 .chat-container {
-    border: 1px solid #ccc;
+    /* border: 1px solid #ccc; */
     padding: 10px;
     margin-top: 20px;
     max-width: 100%;
-    width: 400px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); */
 }
 
 .chat-window {
     height: 300px; /* Increased height for better usability */
     overflow-y: auto; /* Allow scrolling */
-    border-bottom: 1px solid #ccc;
-    padding: 10px;
+    /* border-bottom: 1px solid #ccc; */
+    /* padding: 10px; */
     margin-bottom: 10px; /* Space between messages and input */
 }
 
@@ -25,7 +25,9 @@
 
 .message-header {
     display: flex;
-    align-items: center; /* Align icon and name on the same line */
+    /* align-items: center;  */
+    justify-content: end;
+    /* Align icon and name on the same line */
     margin-bottom: 4px; /* Add some space between the two lines */
 }
 
@@ -67,7 +69,7 @@
 
 .my-message {
     text-align: right;
-    background-color: #b3e5fc;
+    background-color: rgb(221, 205, 205);
 }
 
 .other-message {
@@ -78,11 +80,13 @@
 .timestamp {
     font-size: 0.8em;
     color: #888;
+    align-content: space-evenly;
 }
 
 .chat-input {
     display: flex;
-    flex-direction: column; /* Stack items vertically */
+    /* flex-direction: column;  */
+    /* Stack items vertically */
     align-items: stretch; /* Make children take full width */
     gap: 10px;
     margin-top: 10px;
@@ -94,7 +98,7 @@
     align-items: center;
     flex-grow: 1;
     border: 1px solid #ccc;
-    border-radius: 5px;
+    border-radius: 25px;
     padding: 8px;
     background-color: #fff;
     max-width: 100%;
@@ -137,14 +141,18 @@
 }
 
 .send-button {
-    padding: 10px 12px;
-    border: none;
-    color: white;
-    cursor: pointer;
-    border-radius: 5px;
-    font-size: 1rem;
-    width: 100%; /* Full width */
-    max-width: 100%;
+    /* padding: 10px 12px; */
+    /* border: none; */
+    /* color: white; */
+    /* cursor: pointer; */
+    /* border-radius: 5px; */
+    /* font-size: 1rem; */
+    /* width: 100%;  */
+    /* Full width */
+    /* max-width: 100%; */
+    /* color: red; */
+    display: contents;
+    justify-content: space-between;
 }
 
 /* Responsive adjustments */

@@ -16,6 +16,7 @@ import '../styles/ChatMessage.css';
 import Config from '../utils/config';
 import ChatAttachment from './ChatAttachment';
 import { useTranslation } from 'react-i18next';
+import { MdAttachFile } from "react-icons/md";
 /**
  * Component to display chat messages and send messages to a channel
  * @param {string} userArn - The ARN of the user
@@ -208,7 +209,7 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null }) {
       }, 300); // Adjust delay
     }
   };
-  
+
 
   // Function to handle file upload icon click
   const handleFileUploadClick = () => {
@@ -260,6 +261,8 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null }) {
             <div key={index} className="message">
               <div className="message-header">
                 {/* <VscAccount color={!message.senderName.startsWith("User") ? "blue" : ""} size={24}/> */}
+                <div className="timestamp">{formatTimestamp(message.timestamp)}</div>
+                <strong>{message.senderArn === userArn ? t('userNameDisplay.myself') : displayUserName(message.senderName)}</strong>
                 {message.senderName.startsWith("Guide") && (
                   <img
                     src={`${process.env.PUBLIC_URL}/images/main-speaker.png`}
@@ -281,9 +284,9 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null }) {
                     style={{ width: '24px', height: '24px' }} // Icon size
                   />
                 )}
-                <strong>{message.senderArn === userArn ? t('userNameDisplay.myself') : displayUserName(message.senderName)}</strong>
+               
               </div>
-              <div className="timestamp">{formatTimestamp(message.timestamp)}</div>
+
               {message.content !== ' ' && (
                 <div className={`message-content ${message.senderArn === userArn ? 'my-message' : 'other-message'}`}>
                   <span>{message.content}</span>
@@ -307,6 +310,24 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null }) {
       {/* Render chat input based on chatSetting */}
       {chatSetting !== 'guideOnly' && (
         <div className="chat-input">
+          <div className='attachment-container'>
+            {selectedFile && (
+              <>
+                <div className="file-attachment">
+                  <span className="file-name" title={selectedFile.name}>{selectedFile.name}</span>
+                  <FiX className="clear-file-icon" onClick={clearFile} />
+                </div>
+              </>
+            )}
+            <MdAttachFile size={24} className="upload-icon" onClick={handleFileUploadClick} />
+          </div>
+          <input
+            type="file"
+            accept=".jpg, .jpeg, .png, .gif, .pdf"
+            ref={fileInputRef}
+            style={{ display: 'none' }}
+            onChange={handleFileChange}
+          />
           <div className="input-container">
             <div className="input-like-div">
               <input
@@ -317,36 +338,23 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null }) {
                 onKeyDown={handleInputKeyDown}
                 placeholder={t('messagePlaceholder')}
               />
-              {selectedFile && (
-                <>
-                  <div className="file-attachment">
-                    <span className="file-name" title={selectedFile.name}>{selectedFile.name}</span>
-                    <FiX className="clear-file-icon" onClick={clearFile} />
-                  </div>
-                </>
-              )}
+
             </div>
-            <FiUpload className="upload-icon" onClick={handleFileUploadClick} />
-            <input
-              type="file"
-              accept=".jpg, .jpeg, .png, .gif, .pdf"
-              ref={fileInputRef}
-              style={{ display: 'none' }}
-              onChange={handleFileChange}
-            />
+            <button
+              className="send-button"
+              onClick={sendMessageClick}
+              disabled={sending || (!inputMessage && !selectedFile)}
+              style={{
+                // backgroundColor: (sending || (!inputMessage && !selectedFile)) ? '#d3d3d3' : '#4CAF50', // Adjust colors as needed
+                color: 'red',
+                cursor: (sending || (!inputMessage && !selectedFile)) ? 'not-allowed' : 'pointer',
+                opacity: (sending || (!inputMessage && !selectedFile)) ? 0.6 : 1,
+              }}>
+              <FiSend size={24} />
+            </button>
           </div>
-          <button
-            className="send-button"
-            onClick={sendMessageClick}
-            disabled={sending || (!inputMessage && !selectedFile)}
-            style={{
-              backgroundColor: (sending || (!inputMessage && !selectedFile)) ? '#d3d3d3' : '#4CAF50', // Adjust colors as needed
-              color: 'white',
-              cursor: (sending || (!inputMessage && !selectedFile)) ? 'not-allowed' : 'pointer',
-              opacity: (sending || (!inputMessage && !selectedFile)) ? 0.6 : 1,
-            }}>
-            <FiSend size={24} />
-          </button>
+
+
         </div>
 
       )}

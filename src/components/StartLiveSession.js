@@ -34,6 +34,10 @@ import {
 import { useTranslation } from 'react-i18next';
 import { SPEAK_VOICE_LANGUAGES } from '../utils/constant';
 import Header from './Header';
+import MessageBox from './MessageBox';
+import { IoPlay } from "react-icons/io5";
+import { HiMiniSpeakerWave, HiMiniSpeakerXMark } from "react-icons/hi2";
+import { IoMicCircle } from "react-icons/io5";
 // import { uploadFileToS3 } from '../services/S3Service';
 
 /**
@@ -308,8 +312,8 @@ function StartLiveSession() {
       setMicroChecking('microChecking');
 
       // Check if there are no devices or if any device label is empty
-      if (devices.length === 0 || devices.some(device => !device.label.trim())) {
-        //if (devices.length === 0) {
+      //if (devices.length === 0 || devices.some(device => !device.label.trim())) {
+      if (devices.length === 0) {
         console.log('No audio input devices found');
         // Display a message after 5 seconds
         setTimeout(() => {
@@ -437,11 +441,75 @@ function StartLiveSession() {
       {/* <Participants count={participantsCount} /> */}
       <Header count={participantsCount} Config={Config.appViewerURL} meeting={meeting} channelID={channelID} userId={userId} chatSetting={chatSetting} />
       <div className="container">
-        <span className='titleLiveSession'>
-          {/* {t('voiceLanguageLbl.speaking')} */}
+        <p className='titleLiveSession'>
           ガイド専用ページ
-        </span>
-        <select
+        </p>
+        <div className='titleFileUpload'>
+          <p className='time'>2025/01/01</p>
+          <h3>浅草寺ツアー</h3>
+        </div>
+        <div className='audio'>
+          <div className='playButton'>
+            <IoPlay size={30} />
+          </div>
+          <div className='muteButton'>
+            <HiMiniSpeakerWave size={30} />
+          </div>
+        </div>
+
+        {(!meeting && !attendee) ? (
+          <>
+            {(isLoading) ? (
+              <div className="loading">
+                <div className="spinner"></div>
+                <p>{t('loading')}</p>
+              </div>
+            ) : (
+              <button onClick={startLiveAduioSession}>{t('startLiveBtn')}</button>
+            )}
+          </>
+        ) : (
+          <>
+            {meetingSession && (<AudioUploadBox meetingSession={meetingSession} logger={logger} />)}
+            {(noMicroMsg) ? (
+              <>
+                {!microChecking ? (
+                  <p style={{ color: "red" }}>{t('noMicroMsg')}</p>
+                ) : (
+                  <div className="loading">
+                    <div className="spinner"></div>
+                    {microChecking && <p>{t('microChecking')}</p>}
+                  </div>
+                )}
+              </>
+            ) : (
+              <>
+                <div className='box-start-live-session'>
+                  <h3>{t('microSelectionLbl')}</h3>
+                  {(audioInputDevices && audioInputDevices.length > 0) && (
+                    <select className='selectFile' value={selectedAudioInput} onChange={(e) => setSelectedAudioInput(e.target.value)}>
+                      {audioInputDevices.map((device) => (
+                        <option key={device.deviceId} value={device.deviceId}>
+                          {device.label}
+                        </option>
+                      ))}
+                    </select>
+                  )}
+                  <div className="controls">
+                    {/* <button onClick={toggleMicrophone} className="toggle-mic-button">
+                      <IoMicCircle icon={isMicOn ? faMicrophone : faMicrophoneSlash}  color={isMicOn ? "red" : "gray"} />
+                    </button> */}
+                    <div className='mic-button' onClick={toggleMicrophone}>
+                      <IoMicCircle size={60} icon={isMicOn ? faMicrophone : faMicrophoneSlash} color={isMicOn ? "red" : "gray"} />
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
+          </>
+        )}
+
+        {/* <select
           id="selectedVoiceLanguage"
           value={selectedVoiceLanguage}
           onChange={handleSelectedVoiceLanguageChange}
@@ -515,7 +583,7 @@ function StartLiveSession() {
               <option value="listener">{t('generateQRCodeOptions.listener')}</option>
             </select>
 
-            {/* {meeting && channelArn && (
+            {meeting && channelArn && (
               <>
                 {selectedQR === 'subSpeaker' ? (
                   <>
@@ -533,13 +601,14 @@ function StartLiveSession() {
                   </>
                 )}
               </>
-            )} */}
+            )}
             {chatSetting !== "nochat" && (
               <ChatMessage userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} />
             )}
           </>
-        )}
-      </div>     
+        )} */}
+        <MessageBox userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} chatSetting={chatSetting} action={handleChatSettingChange} />
+      </div>
     </>
   );
 }

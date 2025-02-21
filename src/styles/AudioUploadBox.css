@@ -3,12 +3,13 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100px;
-    width: 100px;
-    border: 2px dashed #ccc;
+    /* height: 100px; */
+    /* width: 100px; */
+    
     border-radius: 10px;
     position: relative;
     overflow: hidden;
+    margin:10px;
   }
   
   /* Upload Box (when file is not uploaded) */
@@ -17,9 +18,11 @@
     justify-content: center;
     align-items: center;
     height: 100%;
-    width: 100%;
+    width: 60%;
     cursor: pointer;
-    color: #666;
+    color: red;
+    border: 2px dashed #ccc;
+    padding: 5px;
   }
   
   /* Hidden File Input */
@@ -71,4 +74,16 @@
 .error-message {
   color: red;
   margin-top: 8px;
+}
+.box-start-live-session{
+    width: 100%;
+    border: 1px solid outset;
+    box-shadow: 0 6px 5px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+.selectFile{
+  border-radius: 25px;
+  border: 1px solid red;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
 }
