@@ -136,5 +136,7 @@
 }
 .mic-button{
   display: flex;
-  justify-self: center;
+  /* justify-self: center; */
+  justify-content: center;
+  align-items: center;
 }
