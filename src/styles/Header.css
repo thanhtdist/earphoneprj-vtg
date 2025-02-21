@@ -1,12 +1,13 @@
 .containerHeader {
     display: flex;
     justify-content: space-between;
-    border-bottom: solid 0.5px grey ;
+    border-bottom: solid 0.5px grey;
     color: red;
     /* box-shadow: 0 6px 5px rgba(0, 0, 0, 0.2); */
 }
 
 .participantsCount {
+    display: flex;
     padding-left: 10px;
     align-content: center;
     align-items: center;
@@ -40,21 +41,25 @@
 
 .popup-content {
     background-color: white;
-    padding: 20px;
+    padding: 40px;
     border-radius: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
     position: relative;
     /* display: grid; */
     margin: 20px;
 }
-.link{
+
+.link {
     display: flex;
     justify-content: center;
     color: red;
+    font-size: 14px;
 }
-.contentQR p{
+
+.contentQR p {
     justify-self: center;
 }
+
 .close-btn {
     /* position: absolute;
     right: 10px;
@@ -82,7 +87,11 @@
     color: white;
 }
 
-.contentChat{
+.contentChat {
     /* padding-top: 10%; */
     /* width: 93%; */
+}
+
+.countNumber {
+    padding: 5px;
 }

@@ -9,7 +9,10 @@ import { HiUserGroup } from "react-icons/hi2";
 export const Participants = ({ count }) => {
 
     return (
-        <div className='participantsCount'><HiUserGroup size={24} /> {count}</div>
+        <div className='participantsCount'>
+            <HiUserGroup size={35} />
+            <p className='countNumber'>{count}</p>
+        </div>
     );
 };
 

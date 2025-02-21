@@ -65,7 +65,7 @@ function SettingMenu() {
     <>
       {/* Menu Toggle Button */}
       {/* <button className="menu-toggle" onClick={toggleMenu}> */}
-        <GrLanguage size={24} onClick={toggleMenu} ref={menuRef}/>
+        <GrLanguage size={35} onClick={toggleMenu} ref={menuRef}/>
       {/* </button> */}
 
       {/* Collapsible Menu Content */}

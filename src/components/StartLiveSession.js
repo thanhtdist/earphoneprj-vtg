@@ -37,7 +37,7 @@ import Header from './Header';
 import MessageBox from './MessageBox';
 import { IoPlay } from "react-icons/io5";
 import { HiMiniSpeakerWave, HiMiniSpeakerXMark } from "react-icons/hi2";
-import { IoMicCircle } from "react-icons/io5";
+import { IoMicCircle,IoMicOffCircleSharp  } from "react-icons/io5";
 // import { uploadFileToS3 } from '../services/S3Service';
 
 /**
@@ -500,7 +500,11 @@ function StartLiveSession() {
                       <IoMicCircle icon={isMicOn ? faMicrophone : faMicrophoneSlash}  color={isMicOn ? "red" : "gray"} />
                     </button> */}
                     <div className='mic-button' onClick={toggleMicrophone}>
-                      <IoMicCircle size={60} icon={isMicOn ? faMicrophone : faMicrophoneSlash} color={isMicOn ? "red" : "gray"} />
+                      {isMicOn ? 
+                      <IoMicCircle size={60} color="red" /> 
+                      : <IoMicOffCircleSharp  size={60} color="gray" />}
+                      {/* <IoMicCircle size={60} icon={isMicOn ? faMicrophone : faMicrophoneSlash} color={isMicOn ? "red" : "gray"} /> */}
+                      {/* <FontAwesomeIcon icon={isMicOn ? IoMicCircle : IoMicOffCircleSharp } size={'2x'} color={isMicOn ? "red" : "gray"} /> */}
                     </div>
                   </div>
                 </div>
