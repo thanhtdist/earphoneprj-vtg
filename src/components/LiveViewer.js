@@ -10,6 +10,7 @@ import {
   DefaultDeviceController,
   DefaultMeetingSession,
   ConsoleLogger,
+  MultiLogger,
   LogLevel,
   MeetingSessionConfiguration,
 } from 'amazon-chime-sdk-js';
@@ -18,6 +19,7 @@ import ChatMessage from './ChatMessage';
 import Participants from './Participants';
 import Config from '../utils/config';
 import metricReport from '../utils/MetricReport';
+import { getPOSTLogger } from '../utils/MeetingLogger';
 import JSONCookieUtils from '../utils/JSONCookieUtils';
 import { checkAvailableMeeting } from '../utils/MeetingUtils';
 import { v4 as uuidv4 } from 'uuid';
@@ -66,14 +68,20 @@ function LiveViewer() {
       return;
     }
 
-    const logger = new ConsoleLogger('ChimeMeetingLogs', LogLevel.INFO);
+    const consoleLogger = new ConsoleLogger('ChimeMeetingLogs', LogLevel.INFO);
+    const meetingSessionConfiguration = new MeetingSessionConfiguration(meetingData, attendeeData);
+    const meetingSessionPOSTLogger = getPOSTLogger(meetingSessionConfiguration, 'SDK', `${Config.cloudWatchLogRestApiVTGRestApi}cloud-watch-logs`, LogLevel.INFO);
+    console.log('meetingSessionPOSTLogger', meetingSessionPOSTLogger);
+    const logger = new MultiLogger(
+      consoleLogger,
+      meetingSessionPOSTLogger,
+    );
     const deviceController = new DefaultDeviceController(logger);
-    const meetingSessionConfig = new MeetingSessionConfiguration(meetingData, attendeeData);
-    const session = new DefaultMeetingSession(meetingSessionConfig, logger, deviceController);
+    const session = new DefaultMeetingSession(meetingSessionConfiguration, logger, deviceController);
     setMeetingSession(session);
 
     await selectSpeaker(session);
-    metricReport(session);
+    metricReport(session, logger, 'User');
     session.audioVideo.start();
   }, []);
 

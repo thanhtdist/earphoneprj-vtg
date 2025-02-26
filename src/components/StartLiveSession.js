@@ -11,7 +11,7 @@ import {
   DefaultDeviceController,
   DefaultMeetingSession,
   ConsoleLogger,
-  //MultiLogger,
+  MultiLogger,
   LogLevel,
   MeetingSessionConfiguration,
   VoiceFocusDeviceTransformer,
@@ -22,7 +22,7 @@ import Participants from './Participants';
 import AudioUploadBox from './AudioUploadBox';
 import Config from '../utils/config';
 import metricReport from '../utils/MetricReport';
-//import { getPOSTLogger } from '../utils/MeetingLogger';
+import { getPOSTLogger } from '../utils/MeetingLogger';
 import { checkAvailableMeeting } from '../utils/MeetingUtils';
 import JSONCookieUtils from '../utils/JSONCookieUtils';
 import { v4 as uuidv4 } from 'uuid';
@@ -169,13 +169,13 @@ function StartLiveSession() {
 
     const meetingSessionConfiguration = new MeetingSessionConfiguration(meeting, attendee);
 
-    // const meetingSessionPOSTLogger = getPOSTLogger(meetingSessionConfiguration, 'SDK', `${Config.cloudWatchLogRestApiVTGRestApi}cloud-watch-logs`, LogLevel.INFO);
-    // console.log('meetingSessionPOSTLogger', meetingSessionPOSTLogger);
-    // const logger = new MultiLogger(
-    //   consoleLogger,
-    //   meetingSessionPOSTLogger,
-    // );
-    const logger = consoleLogger;
+    const meetingSessionPOSTLogger = getPOSTLogger(meetingSessionConfiguration, 'SDK', `${Config.cloudWatchLogRestApiVTGRestApi}cloud-watch-logs`, LogLevel.INFO);
+    console.log('meetingSessionPOSTLogger', meetingSessionPOSTLogger);
+    const logger = new MultiLogger(
+      consoleLogger,
+      meetingSessionPOSTLogger,
+    );
+    // const logger = consoleLogger;
     console.log('logger', logger);
     setLogger(logger);
     // Check if the Voice Focus Device is supported on the client
@@ -183,13 +183,12 @@ function StartLiveSession() {
     //logger.info('deviceController isVoiceFocusSupported' + isVoiceFocusSupported);
     // Initialize the meeting session
     const deviceController = new DefaultDeviceController(logger, { enableWebAudio: isVoiceFocusSupported });
+
     //logger.info('deviceController' + JSON.stringify(deviceController));
     const meetingSession = new DefaultMeetingSession(meetingSessionConfiguration, logger, deviceController);
     setMeetingSession(meetingSession);
     selectSpeaker(meetingSession);
-    console.log('Main Speaker - initializeMeetingSession--> Start');
-    metricReport(meetingSession);
-    console.log('Main Speaker - initializeMeetingSession--> End');
+    metricReport(meetingSession, logger, 'Guide');
     // Bind the audio element to the meeting session
     const audioElement = document.getElementById('audioElementMain');
     if (audioElement) {
@@ -252,7 +251,7 @@ function StartLiveSession() {
           //logger.info('toggleMicrophone Echo Reduction ' + JSON.stringify(observeMeetingAudio));
           console.log('toggleMicrophone Echo Reduction', observeMeetingAudio);
           const deviceToUse = vfDevice || selectedAudioInput;
-          //logger.info('toggleMicrophone deviceToUse ' + JSON.stringify(deviceToUse));
+          logger.info(`${'Guide'} toggleMicrophone deviceToUse ` + JSON.stringify(deviceToUse));
           console.log('toggleMicrophone deviceToUse', deviceToUse);
           const startAudioInput = await meetingSession.audioVideo.startAudioInput(deviceToUse);
           //logger.info('toggleMicrophone startAudioInput ' + JSON.stringify(startAudioInput));
@@ -290,6 +289,7 @@ function StartLiveSession() {
   // Async function to select audio output device
   const selectSpeaker = async (meetingSession) => {
     const audioOutputDevices = await meetingSession.audioVideo.listAudioOutputDevices();
+    console.log('List Audio Output Devices:', audioOutputDevices);
 
     if (audioOutputDevices.length > 0) {
       await meetingSession.audioVideo.chooseAudioOutput(audioOutputDevices[0].deviceId);
@@ -308,8 +308,8 @@ function StartLiveSession() {
       setMicroChecking('microChecking');
 
       // Check if there are no devices or if any device label is empty
-      if (devices.length === 0 || devices.some(device => !device.label.trim())) {
-      //if (devices.length === 0) {
+      //if (devices.length === 0 || devices.some(device => !device.label.trim())) {
+      if (devices.length === 0) {
         console.log('No audio input devices found');
         // Display a message after 5 seconds
         setTimeout(() => {

@@ -66,7 +66,7 @@ function LiveSubSpeaker() {
   const [transformVFD, setTransformVFD] = useState(null);
   const [microChecking, setMicroChecking] = useState(t('microChecking'));
   const [noMicroMsg, setNoMicoMsg] = useState(t('noMicroMsg'));
-  //const [logger, setLogger] = useState(null);
+  const [logger, setLogger] = useState(null);
   const [participantsCount, setParticipantsCount] = useState(0);
 
   // Function to transform the audio input device to Voice Focus Device/Echo Reduction
@@ -113,7 +113,7 @@ function LiveSubSpeaker() {
       consoleLogger,
       meetingSessionPOSTLogger,
     );
-    //setLogger(logger);
+    setLogger(logger);
     // Check if the Voice Focus Device is supported on the client
     const isVoiceFocusSupported = await transformVoiceFocusDevice(meeting, attendee, logger);
     logger.info('Sub-Guide deviceController isVoiceFocusSupported' + isVoiceFocusSupported);
@@ -124,7 +124,7 @@ function LiveSubSpeaker() {
     setMeetingSession(meetingSession);
     selectSpeaker(meetingSession);
     console.log('Sub Speaker - initializeMeetingSession--> Start');
-    metricReport(meetingSession);
+    metricReport(meetingSession, logger, 'Sub-Guide');
     console.log('Sub Speaker - initializeMeetingSession--> End');
     // Bind the audio element to the meeting session
     const audioElement = document.getElementById('audioElementSub');
@@ -277,7 +277,7 @@ function LiveSubSpeaker() {
           //logger.info('Sub-Guide toggleMicrophone Echo Reduction ' + JSON.stringify(observeMeetingAudio));
           console.log('Sub-Guide toggleMicrophone Echo Reduction', observeMeetingAudio);
           const deviceToUse = vfDevice || selectedAudioInput;
-          //logger.info('Sub-Guide toggleMicrophone deviceToUse ' + JSON.stringify(deviceToUse));
+          logger.info('Sub-Guide toggleMicrophone deviceToUse ' + JSON.stringify(deviceToUse));
           console.log('Sub-Guide toggleMicrophone deviceToUse', deviceToUse);
           const startAudioInput = await meetingSession.audioVideo.startAudioInput(deviceToUse);
           //logger.info('Sub-Guide toggleMicrophone startAudioInput ' + JSON.stringify(startAudioInput));
