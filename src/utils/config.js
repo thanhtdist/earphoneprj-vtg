@@ -22,6 +22,6 @@ const Config = {
     // S3 attchment bucket name
     attachmentBucketName: 'vtg-chat-attachments',
     // Write logs from client side to CloudWatch using API Gateway      
-    cloudWatchLogRestApiVTGRestApi: 'https://4ipuok618b.execute-api.us-east-1.amazonaws.com/prod/'
+    //cloudWatchLogRestApiVTGRestApi: 'https://4ipuok618b.execute-api.us-east-1.amazonaws.com/prod/'
 };
 export default Config;
