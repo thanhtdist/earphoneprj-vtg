@@ -204,6 +204,8 @@ function StartLiveSession() {
 
   // Check incoming volume
   const presentAttendeeId = meetingSession.configuration.credentials.attendeeId;
+  logger.info(`Guide ID ${attendee.AttendeeId}`);
+  logger.info(`🔊 Guide Listening to incoming volume from ${presentAttendeeId}`);
   meetingSession.audioVideo.realtimeSubscribeToVolumeIndicator(
     presentAttendeeId,
     (attendeeId, volume, muted, signalStrength) => {
@@ -219,14 +221,14 @@ function StartLiveSession() {
   );
 
   // Check outgoing mic volume
-  meetingSession.audioVideo.realtimeSubscribeToLocalAudioVolume((volume) => {
-    logger.info(`🎤 Guide Outgoing volume: ${volume}`);
-    if (volume < 0.3) {
-      console.warn("⚠️ Microphone volume is too low! Increasing gain.");
-      logger.info("⚠️ Microphone volume is too low! Increasing gain.");
-      //micGainNode.gain.value = 1.5; // Boost mic volume
-    }
-  });
+  // meetingSession.audioVideo.realtimeSubscribeToLocalAudioVolume((volume) => {
+  //   logger.info(`🎤 Guide Outgoing volume: ${volume}`);
+  //   if (volume < 0.3) {
+  //     console.warn("⚠️ Microphone volume is too low! Increasing gain.");
+  //     logger.info("⚠️ Microphone volume is too low! Increasing gain.");
+  //     //micGainNode.gain.value = 1.5; // Boost mic volume
+  //   }
+  // });
 
   // Connect gain node to output
   // const audioElement = document.createElement("audio");
@@ -301,13 +303,25 @@ function StartLiveSession() {
           console.log('toggleMicrophone startAudioInput', startAudioInput);
 
           if (vfDevice) {
-            // logger.info('Amazon Voice Focus enabled ');
-            console.log('Amazon Voice Focus enabled ');
+            logger.info('Guide Amazon Voice Focus enabled ');
+            console.log('Guide Amazon Voice Focus enabled ');
           }
           // Unmute the microphone
           const realtimeUnmuteLocalAudio = meetingSession.audioVideo.realtimeUnmuteLocalAudio();
           //logger.info('toggleMicrophone realtimeUnmuteLocalAudio ' + JSON.stringify(realtimeUnmuteLocalAudio));
           console.log('toggleMicrophone realtimeUnmuteLocalAudio', realtimeUnmuteLocalAudio);
+
+          // Get the first audio track(Microphone) from the audio input
+          logger.info('Guide check settings and capabilities of the active audio input(Microphone)'); 
+          const audioTrack = startAudioInput.getAudioTracks()[0];
+
+          if (audioTrack) {
+            // Log the actual settings of the active audio input
+            logger.info("🎤 Guide Active Audio Input Settings:", audioTrack.getSettings());
+            logger.info("🔧 Guide Capabilities:", audioTrack.getCapabilities());
+          } else {
+            logger.info("⚠️ Guide No active audio track found.");
+          }
         }
 
         setIsMicOn(!isMicOn); // Toggle mic status

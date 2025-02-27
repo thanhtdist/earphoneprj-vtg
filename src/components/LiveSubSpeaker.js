@@ -113,6 +113,7 @@ function LiveSubSpeaker() {
       consoleLogger,
       meetingSessionPOSTLogger,
     );
+    logger.info(`Sub-Guide ID ${attendee.AttendeeId}`);
     setLogger(logger);
     // Check if the Voice Focus Device is supported on the client
     const isVoiceFocusSupported = await transformVoiceFocusDevice(meeting, attendee, logger);

@@ -76,6 +76,7 @@ function LiveViewer() {
       consoleLogger,
       meetingSessionPOSTLogger,
     );
+    logger.info(`User ID ${attendeeData.AttendeeId}`);
     const deviceController = new DefaultDeviceController(logger);
     const session = new DefaultMeetingSession(meetingSessionConfiguration, logger, deviceController);
     setMeetingSession(session);
