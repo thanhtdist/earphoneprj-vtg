@@ -142,8 +142,8 @@ function LiveSubSpeaker() {
       presentAttendeeId,
       (attendeeId, volume, muted, signalStrength) => {
         logger.info(`🔊 Sub-Guide Incoming volume from ${attendeeId}: ${volume}`);
-        logger.info(`🔇 Sub-Guide Incoming volume from ${attendeeId}: ${muted}`);
-        logger.info(`📶 Sub-Guide Incoming volume from ${attendeeId}: ${signalStrength}`);
+        logger.info(`🔇 Sub-Guide Incoming muted from ${attendeeId}: ${muted}`);
+        logger.info(`📶 Sub-Guide Incoming signalStrengthsignalStrength from ${attendeeId}: ${signalStrength}`);
         if (volume !== null && volume < 0.2) {
           console.warn(`🔈Sub-Guide Incoming volume from ${attendeeId} is low! Boosting volume.`);
           logger.info(`🔈 Sub-Guide Incoming volume from ${attendeeId} is low! Boosting volume.`);
@@ -332,6 +332,7 @@ function LiveSubSpeaker() {
 
           // Get the first audio track(Microphone) from the audio input
           logger.info('Sub-Guide check settings and capabilities of the active audio input(Microphone)'); 
+          logger.info('Guide getAudioTracks ' + JSON.stringify(startAudioInput.getAudioTracks()));
           const audioTrack = startAudioInput.getAudioTracks()[0];
 
           if (audioTrack) {
