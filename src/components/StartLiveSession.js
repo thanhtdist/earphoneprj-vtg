@@ -21,7 +21,7 @@ import ChatMessage from './ChatMessage';
 import Participants from './Participants';
 import AudioUploadBox from './AudioUploadBox';
 import Config from '../utils/config';
-//import metricReport from '../utils/MetricReport';
+import metricReport from '../utils/MetricReport';
 import { getPOSTLogger } from '../utils/MeetingLogger';
 import { checkAvailableMeeting } from '../utils/MeetingUtils';
 import JSONCookieUtils from '../utils/JSONCookieUtils';
@@ -188,7 +188,7 @@ function StartLiveSession() {
     const meetingSession = new DefaultMeetingSession(meetingSessionConfiguration, logger, deviceController);
     setMeetingSession(meetingSession);
     selectSpeaker(meetingSession);
-    //metricReport(meetingSession, logger, 'Guide');
+    metricReport(meetingSession, logger, 'Guide');
     // Bind the audio element to the meeting session
     const audioElement = document.getElementById('audioElementMain');
     if (audioElement) {
@@ -210,8 +210,8 @@ function StartLiveSession() {
     presentAttendeeId,
     (attendeeId, volume, muted, signalStrength) => {
       logger.info(`🔊 Guide Incoming volume from ${attendeeId}: ${volume}`);
-      logger.info(`🔇 Guide Incoming volume from ${attendeeId}: ${muted}`);
-      logger.info(`📶 Guide Incoming volume from ${attendeeId}: ${signalStrength}`);
+      logger.info(`🔇 Guide Incoming muted from ${attendeeId}: ${muted}`);
+      logger.info(`📶 Guide Incoming signalStrength from ${attendeeId}: ${signalStrength}`);
       if (volume !== null && volume < 0.2) {
         console.warn(`🔈 Guide Incoming volume from ${attendeeId} is low! Boosting volume.`);
         logger.info(`🔈 Guide Incoming volume from ${attendeeId} is low! Boosting volume.`);
@@ -246,22 +246,23 @@ function StartLiveSession() {
       audioInputsChanged: freshAudioInputDeviceList => {
         // An array of MediaDeviceInfo objects
         freshAudioInputDeviceList.forEach(mediaDeviceInfo => {
-          console.log(`Device ID xxx: ${mediaDeviceInfo.deviceId} Microphone: ${mediaDeviceInfo.label}`);
+          console.log(`Guide Device ID: ${mediaDeviceInfo.deviceId} Microphone: ${mediaDeviceInfo.label}`);
+          logger.info(`Guide Device ID: ${mediaDeviceInfo.deviceId} Microphone: ${mediaDeviceInfo.label}`);
         });
       },
 
       audioOutputsChanged: freshAudioOutputDeviceList => {
-        console.log('Audio outputs updated xxx: ', freshAudioOutputDeviceList);
+        console.log('Guide Audio outputs updated: ', freshAudioOutputDeviceList);
       },
 
       videoInputsChanged: freshVideoInputDeviceList => {
-        console.log('Video inputs updated xxx: ', freshVideoInputDeviceList);
+        console.log('Guide Video inputs updated: ', freshVideoInputDeviceList);
       },
 
       audioInputMuteStateChanged: (device, muted) => {
         // console.log('Device xxx', device, muted ? 'is muted in hardware' : 'is not muted');
-        console.log('Device yyy:', device);
-        console.log('Status yyy:', muted ? 'is muted in hardware' : 'is not muted');
+        console.log('Guide Device:', device);
+        console.log('Guide Status:', muted ? 'is muted in hardware' : 'is not muted');
       },
     };
 
@@ -313,6 +314,7 @@ function StartLiveSession() {
 
           // Get the first audio track(Microphone) from the audio input
           logger.info('Guide check settings and capabilities of the active audio input(Microphone)'); 
+          logger.info('Guide getAudioTracks ' + JSON.stringify(startAudioInput.getAudioTracks()));
           const audioTrack = startAudioInput.getAudioTracks()[0];
 
           if (audioTrack) {
