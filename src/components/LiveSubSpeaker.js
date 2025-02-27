@@ -143,7 +143,7 @@ function LiveSubSpeaker() {
       (attendeeId, volume, muted, signalStrength) => {
         logger.info(`🔊 Sub-Guide Incoming volume from ${attendeeId}: ${volume}`);
         logger.info(`🔇 Sub-Guide Incoming muted from ${attendeeId}: ${muted}`);
-        logger.info(`📶 Sub-Guide Incoming signalStrengthsignalStrength from ${attendeeId}: ${signalStrength}`);
+        logger.info(`📶 Sub-Guide Incoming signalStrength from ${attendeeId}: ${signalStrength}`);
         if (volume !== null && volume < 0.2) {
           console.warn(`🔈Sub-Guide Incoming volume from ${attendeeId} is low! Boosting volume.`);
           logger.info(`🔈 Sub-Guide Incoming volume from ${attendeeId} is low! Boosting volume.`);
