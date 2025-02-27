@@ -213,8 +213,8 @@ function StartLiveSession() {
       logger.info(`🔇 Guide Incoming volume from ${attendeeId}: ${muted}`);
       logger.info(`📶 Guide Incoming volume from ${attendeeId}: ${signalStrength}`);
       if (volume !== null && volume < 0.2) {
-        console.warn(`🔈 Incoming volume from ${attendeeId} is low! Boosting volume.`);
-        logger.info(`🔈 Incoming volume from ${attendeeId} is low! Boosting volume.`);
+        console.warn(`🔈 Guide Incoming volume from ${attendeeId} is low! Boosting volume.`);
+        logger.info(`🔈 Guide Incoming volume from ${attendeeId} is low! Boosting volume.`);
         //gainNode.gain.value = 2; // Double the volume
       }
     }

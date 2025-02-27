@@ -134,8 +134,46 @@ function LiveSubSpeaker() {
     } else {
       console.error('Audio element not found');
     }
-    // Start audio video session
-    meetingSession.audioVideo.start();
+    // Check incoming volume
+    const presentAttendeeId = meetingSession.configuration.credentials.attendeeId;
+    logger.info(`Sub-Guide ID ${attendee.AttendeeId}`);
+    logger.info(`🔊 Sub-Guide Listening to incoming volume from ${presentAttendeeId}`);
+    meetingSession.audioVideo.realtimeSubscribeToVolumeIndicator(
+      presentAttendeeId,
+      (attendeeId, volume, muted, signalStrength) => {
+        logger.info(`🔊 Sub-Guide Incoming volume from ${attendeeId}: ${volume}`);
+        logger.info(`🔇 Sub-Guide Incoming volume from ${attendeeId}: ${muted}`);
+        logger.info(`📶 Sub-Guide Incoming volume from ${attendeeId}: ${signalStrength}`);
+        if (volume !== null && volume < 0.2) {
+          console.warn(`🔈Sub-Guide Incoming volume from ${attendeeId} is low! Boosting volume.`);
+          logger.info(`🔈 Sub-Guide Incoming volume from ${attendeeId} is low! Boosting volume.`);
+          //gainNode.gain.value = 2; // Double the volume
+        }
+      }
+    );
+
+    // Check outgoing mic volume
+    // meetingSession.audioVideo.realtimeSubscribeToLocalAudioVolume((volume) => {
+    //   logger.info(`🎤 Guide Outgoing volume: ${volume}`);
+    //   if (volume < 0.3) {
+    //     console.warn("⚠️ Microphone volume is too low! Increasing gain.");
+    //     logger.info("⚠️ Microphone volume is too low! Increasing gain.");
+    //     //micGainNode.gain.value = 1.5; // Boost mic volume
+    //   }
+    // });
+
+    // Connect gain node to output
+    // const audioElement = document.createElement("audio");
+    // audioElement.autoplay = true;
+    // audioElement.playsInline = true;
+    // document.body.appendChild(audioElement);
+    // meetingSession.audioVideo.bindAudioElement(audioElement);
+
+    // const sourceNode = audioContext.createMediaElementSource(audioElement);
+    // sourceNode.connect(gainNode);
+    // gainNode.connect(audioContext.destination);
+      // Start audio video session
+      meetingSession.audioVideo.start();
   }, []);
 
   // Async function to select audio output device
@@ -284,13 +322,25 @@ function LiveSubSpeaker() {
           //logger.info('Sub-Guide toggleMicrophone startAudioInput ' + JSON.stringify(startAudioInput));
           console.log('Sub-Guide toggleMicrophone startAudioInput', startAudioInput);
           if (vfDevice) {
-            //logger.info('Sub-Guide Amazon Voice Focus enabled ');
+            logger.info('Sub-Guide Amazon Voice Focus enabled ');
             console.log('Sub-Guide Amazon Voice Focus enabled');
           }
           // Unmute the microphone
           const realtimeUnmuteLocalAudio = meetingSession.audioVideo.realtimeUnmuteLocalAudio();
           //logger.info('Sub-Guide toggleMicrophone realtimeUnmuteLocalAudio ' + JSON.stringify(realtimeUnmuteLocalAudio));
           console.log('Sub-Guide toggleMicrophone realtimeUnmuteLocalAudio', realtimeUnmuteLocalAudio);
+
+          // Get the first audio track(Microphone) from the audio input
+          logger.info('Sub-Guide check settings and capabilities of the active audio input(Microphone)'); 
+          const audioTrack = startAudioInput.getAudioTracks()[0];
+
+          if (audioTrack) {
+            // Log the actual settings of the active audio input
+            logger.info("🎤 Sub-Guide Active Audio Input Settings:", audioTrack.getSettings());
+            logger.info("🔧 Sub-Guide Capabilities:", audioTrack.getCapabilities());
+          } else {
+            logger.info("⚠️ Sub-Guide No active audio track found.");
+          }
         }
 
         setIsMicOn(!isMicOn); // Toggle mic status

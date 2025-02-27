@@ -78,12 +78,49 @@ function LiveViewer() {
     );
     logger.info(`User ID ${attendeeData.AttendeeId}`);
     const deviceController = new DefaultDeviceController(logger);
-    const session = new DefaultMeetingSession(meetingSessionConfiguration, logger, deviceController);
-    setMeetingSession(session);
+    const meetingSession = new DefaultMeetingSession(meetingSessionConfiguration, logger, deviceController);
+    setMeetingSession(meetingSession);
 
-    await selectSpeaker(session);
-    metricReport(session, logger, 'User');
-    session.audioVideo.start();
+    await selectSpeaker(meetingSession);
+    metricReport(meetingSession, logger, 'User');
+    // Check incoming volume
+    const presentAttendeeId = meetingSession.configuration.credentials.attendeeId;
+    logger.info(`🔊 User Listening to incoming volume from ${presentAttendeeId}`);
+    meetingSession.audioVideo.realtimeSubscribeToVolumeIndicator(
+      presentAttendeeId,
+      (attendeeId, volume, muted, signalStrength) => {
+        logger.info(`🔊 User Incoming volume from ${attendeeId}: ${volume}`);
+        logger.info(`🔇 User Incoming volume from ${attendeeId}: ${muted}`);
+        logger.info(`📶 User Incoming volume from ${attendeeId}: ${signalStrength}`);
+        if (volume !== null && volume < 0.2) {
+          console.warn(`🔈User Incoming volume from ${attendeeId} is low! Boosting volume.`);
+          logger.info(`🔈 User Incoming volume from ${attendeeId} is low! Boosting volume.`);
+          //gainNode.gain.value = 2; // Double the volume
+        }
+      }
+    );
+
+    // Check outgoing mic volume
+    // meetingSession.audioVideo.realtimeSubscribeToLocalAudioVolume((volume) => {
+    //   logger.info(`🎤 Guide Outgoing volume: ${volume}`);
+    //   if (volume < 0.3) {
+    //     console.warn("⚠️ Microphone volume is too low! Increasing gain.");
+    //     logger.info("⚠️ Microphone volume is too low! Increasing gain.");
+    //     //micGainNode.gain.value = 1.5; // Boost mic volume
+    //   }
+    // });
+
+    // Connect gain node to output
+    // const audioElement = document.createElement("audio");
+    // audioElement.autoplay = true;
+    // audioElement.playsInline = true;
+    // document.body.appendChild(audioElement);
+    // meetingSession.audioVideo.bindAudioElement(audioElement);
+
+    // const sourceNode = audioContext.createMediaElementSource(audioElement);
+    // sourceNode.connect(gainNode);
+    // gainNode.connect(audioContext.destination);
+    meetingSession.audioVideo.start();
   }, []);
 
   const selectSpeaker = async (session) => {
