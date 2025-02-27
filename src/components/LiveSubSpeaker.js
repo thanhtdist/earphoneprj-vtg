@@ -114,10 +114,11 @@ function LiveSubSpeaker() {
       meetingSessionPOSTLogger,
     );
     logger.info(`Sub-Guide ID ${attendee.AttendeeId}`);
-    setLogger(logger);
+    //setLogger(logger);
     // Check if the Voice Focus Device is supported on the client
     const isVoiceFocusSupported = await transformVoiceFocusDevice(meeting, attendee, logger);
     logger.info('Sub-Guide deviceController isVoiceFocusSupported' + isVoiceFocusSupported);
+    console.log("xxx");
     // Initialize the meeting session
     const deviceController = new DefaultDeviceController(logger, { enableWebAudio: isVoiceFocusSupported });
     logger.info('Sub-Guide deviceController' + JSON.stringify(deviceController));
@@ -316,13 +317,13 @@ function LiveSubSpeaker() {
           //logger.info('Sub-Guide toggleMicrophone Echo Reduction ' + JSON.stringify(observeMeetingAudio));
           console.log('Sub-Guide toggleMicrophone Echo Reduction', observeMeetingAudio);
           const deviceToUse = vfDevice || selectedAudioInput;
-          logger.info('Sub-Guide toggleMicrophone deviceToUse ' + JSON.stringify(deviceToUse));
+          //logger.info('Sub-Guide toggleMicrophone deviceToUse ' + JSON.stringify(deviceToUse));
           console.log('Sub-Guide toggleMicrophone deviceToUse', deviceToUse);
           const startAudioInput = await meetingSession.audioVideo.startAudioInput(deviceToUse);
           //logger.info('Sub-Guide toggleMicrophone startAudioInput ' + JSON.stringify(startAudioInput));
           console.log('Sub-Guide toggleMicrophone startAudioInput', startAudioInput);
           if (vfDevice) {
-            logger.info('Sub-Guide Amazon Voice Focus enabled ');
+            //logger.info('Sub-Guide Amazon Voice Focus enabled ');
             console.log('Sub-Guide Amazon Voice Focus enabled');
           }
           // Unmute the microphone
@@ -331,16 +332,18 @@ function LiveSubSpeaker() {
           console.log('Sub-Guide toggleMicrophone realtimeUnmuteLocalAudio', realtimeUnmuteLocalAudio);
 
           // Get the first audio track(Microphone) from the audio input
-          logger.info('Sub-Guide check settings and capabilities of the active audio input(Microphone)'); 
-          logger.info('Guide getAudioTracks ' + JSON.stringify(startAudioInput.getAudioTracks()));
+          //logger.info('Sub-Guide check settings and capabilities of the active audio input(Microphone)'); 
+          //logger.info('Guide getAudioTracks ' + JSON.stringify(startAudioInput.getAudioTracks()));
           const audioTrack = startAudioInput.getAudioTracks()[0];
 
           if (audioTrack) {
             // Log the actual settings of the active audio input
-            logger.info("🎤 Sub-Guide Active Audio Input Settings:", audioTrack.getSettings());
-            logger.info("🔧 Sub-Guide Capabilities:", audioTrack.getCapabilities());
+            //logger.info("🎤 Sub-Guide Active Audio Input Settings:", audioTrack.getSettings());
+            //logger.info("🔧 Sub-Guide Capabilities:", audioTrack.getCapabilities());
+            console.log("🔧 Sub-Guide Capabilities:", audioTrack.getCapabilities());
           } else {
-            logger.info("⚠️ Sub-Guide No active audio track found.");
+            //logger.info("⚠️ Sub-Guide No active audio track found.");
+            console.log("⚠️ Sub-Guide No active audio track found.");
           }
         }
 
