@@ -18,7 +18,7 @@ import '../styles/LiveViewer.css';
 import ChatMessage from './ChatMessage';
 import Participants from './Participants';
 import Config from '../utils/config';
-//import metricReport from '../utils/MetricReport';
+import metricReport from '../utils/MetricReport';
 import { getPOSTLogger } from '../utils/MeetingLogger';
 import { checkAvailableMeeting } from '../utils/MeetingUtils';
 import JSONCookieUtils from '../utils/JSONCookieUtils';
@@ -125,7 +125,7 @@ function LiveSubSpeaker() {
     setMeetingSession(meetingSession);
     selectSpeaker(meetingSession);
     console.log('Sub Speaker - initializeMeetingSession--> Start');
-    //metricReport(meetingSession, logger, 'Sub-Guide');
+    metricReport(meetingSession, logger, 'Sub-Guide');
     console.log('Sub Speaker - initializeMeetingSession--> End');
     // Bind the audio element to the meeting session
     const audioElement = document.getElementById('audioElementSub');
