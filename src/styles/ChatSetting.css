@@ -1,0 +1,13 @@
+.chat-setting-container{
+    margin-top: 20px;
+}
+.btn-confirm{
+    display: flex;
+    justify-self: center
+}
+.btn-confirm{
+    background-color: red;
+    border: red;
+    border-radius: 25px;
+    color: white;
+}

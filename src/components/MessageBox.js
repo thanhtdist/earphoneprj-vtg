@@ -4,7 +4,7 @@ import '../styles/MessageBox.css';
 import '../styles/Header.css';
 import ChatMessage from './ChatMessage';
 
-const MessageBox = ({ userArn, sessionId, channelArn,chatSetting,action }) => {
+const MessageBox = ({ userArn, sessionId, channelArn}) => {
     const [openChatBox, setOpenChatBox] = useState(false);
     const openChat = () => {
         setOpenChatBox(true);
@@ -20,7 +20,7 @@ const MessageBox = ({ userArn, sessionId, channelArn,chatSetting,action }) => {
             {
                 openChatBox === true && (
                     <div className="popup">
-                        <div className="popup-content">
+                        <div className="popup-chat-content">
                             <span className="close-btn" onClick={closeChat}>&times;</span>                           
                             <div className='contentChat'>
                                 <div>

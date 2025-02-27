@@ -5,13 +5,14 @@ import { QRCodeSVG } from 'qrcode.react';
 import SettingMenu from './SettingMenu';
 import '../styles/Header.css';
 import { useTranslation } from 'react-i18next';
-function Header({ count, Config, meeting, channelID, userId, chatSetting }) {
+import Config from '../utils/config';
+
+function Header({ count, meeting, channelID, userId, chatSetting }) {
     const { t } = useTranslation();
     const [openQRCode, setOpenQRCode] = useState(false);
     const [selectedQR, setSelectedQR] = useState('listener');
     const openPopup = () => {
         setOpenQRCode(true);
-        console.log('configggggg', Config);
     }
     const closePopup = () => {
         setOpenQRCode(false);
@@ -46,18 +47,18 @@ function Header({ count, Config, meeting, channelID, userId, chatSetting }) {
                             </select>                   
                             {selectedQR === 'subSpeaker' ? (
                                 <>
-                                    <div>
-                                        <QRCodeSVG value={`${Config}?meetingId=${meeting.MeetingId}&channelId=${channelID}&hostId=${userId}&chatSetting=${chatSetting}`} size={256} level="H" />
-                                        <a className='link' target="_blank" rel="noopener noreferrer" style={{ color: 'red' }} href={`${Config}?meetingId=${meeting.MeetingId}&channelId=${channelID}&hostId=${userId}&chatSetting=${chatSetting}`}>
+                                    <div className='qrCodeContainer'>
+                                        <QRCodeSVG value={`${Config.appSubSpeakerURL}?meetingId=${meeting.MeetingId}&channelId=${channelID}&hostId=${userId}&chatSetting=${chatSetting}`} size={256} level="H" />
+                                        <a className='link' target="_blank" rel="noopener noreferrer" style={{ color: 'red' }} href={`${Config.appSubSpeakerURL}?meetingId=${meeting.MeetingId}&channelId=${channelID}&hostId=${userId}&chatSetting=${chatSetting}`}>
                                             {t('scanQRCodeTxt.subGuide')}
                                         </a>
                                     </div>
                                 </>
                             ) : (
                                 <>
-                                    <div>
-                                        <QRCodeSVG value={`${Config}?meetingId=${meeting.MeetingId}&channelId=${channelID}&hostId=${userId}&chatSetting=${chatSetting}`} size={256} level="H" />
-                                        <a className='link' target="_blank" rel="noopener noreferrer" style={{ color: 'red' }} href={`${Config}?meetingId=${meeting.MeetingId}&channelId=${channelID}&hostId=${userId}&chatSetting=${chatSetting}`}>
+                                    <div className='qrCodeContainer'>
+                                        <QRCodeSVG value={`${Config.appViewerURL}?meetingId=${meeting.MeetingId}&channelId=${channelID}&hostId=${userId}&chatSetting=${chatSetting}`} size={256} level="H" />
+                                        <a className='link' target="_blank" rel="noopener noreferrer" style={{ color: 'red' }} href={`${Config.appViewerURL}?meetingId=${meeting.MeetingId}&channelId=${channelID}&hostId=${userId}&chatSetting=${chatSetting}`}>
                                             {t('scanQRCodeTxt.listener')}
                                         </a>
                                     </div>

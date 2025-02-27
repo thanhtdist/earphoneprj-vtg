@@ -47,8 +47,19 @@
     position: relative;
     /* display: grid; */
     margin: 20px;
+    width: 100%;
 }
-
+.popup-chat-content{
+    background-color: white;
+    /* padding: 40px; */
+    border-radius: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    position: relative;
+    /* display: grid; */
+    margin: 20px;
+    height: 78%;
+    width: 100%;
+}
 .link {
     display: flex;
     justify-content: center;
@@ -88,10 +99,12 @@
 }
 
 .contentChat {
-    /* padding-top: 10%; */
-    /* width: 93%; */
+    height: 100%;
 }
 
 .countNumber {
     padding: 5px;
+}
+.qrCodeContainer{
+    justify-self: center;
 }

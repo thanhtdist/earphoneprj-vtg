@@ -4,15 +4,19 @@
     margin-top: 20px;
     max-width: 100%;
     width: 100%;
+    height: 85%;
     /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); */
+    position: relative;
 }
 
 .chat-window {
-    height: 300px; /* Increased height for better usability */
+    height: 90%; /* Increased height for better usability */
     overflow-y: auto; /* Allow scrolling */
     /* border-bottom: 1px solid #ccc; */
     /* padding: 10px; */
     margin-bottom: 10px; /* Space between messages and input */
+    display: flex;
+    flex-direction: column;
 }
 
 .message {
@@ -24,11 +28,14 @@
 }
 
 .message-header {
-    display: flex;
+    /* display: flex; */
     /* align-items: center;  */
-    justify-content: end;
+    /* justify-content: end; */
     /* Align icon and name on the same line */
-    margin-bottom: 4px; /* Add some space between the two lines */
+    /* margin-bottom: 4px;  */
+    /* Add some space between the two lines */
+   
+
 }
 
 .message-header strong {
@@ -39,6 +46,8 @@
     display: flex;
     justify-content: space-between; /* Push the timestamp to the right */
     font-size: 0.9em; /* Slightly smaller text for message content */
+    max-width: 70%;
+    /* width: auto; */
 }
 
 .message-content .timestamp {
@@ -52,6 +61,7 @@
     background-color: #b3e5fc;
     border-radius: 5px;
     padding: 8px;
+    justify-content: end;
 }
 
 .other-message {
@@ -59,6 +69,7 @@
     background-color: #e1bee7;
     border-radius: 5px;
     padding: 8px;
+    align-self: flex-start;
 }
 
 .message-content .timestamp {
@@ -70,6 +81,7 @@
 .my-message {
     text-align: right;
     background-color: rgb(221, 205, 205);
+    align-self: flex-end;
 }
 
 .other-message {
@@ -81,6 +93,7 @@
     font-size: 0.8em;
     color: #888;
     align-content: space-evenly;
+    margin: 0px 5px;
 }
 
 .chat-input {
@@ -90,7 +103,9 @@
     align-items: stretch; /* Make children take full width */
     gap: 10px;
     margin-top: 10px;
-    width: 100%; /* Ensure it takes full width of the container */
+    width: 96%; /* Ensure it takes full width of the container */
+    position: absolute;
+    bottom: 0;
 }
 
 .input-container {
@@ -166,4 +181,46 @@
         padding: 12px; /* Slightly larger padding for easier tap targeting on small screens */
         font-size: 1rem;
     }
+}
+.image-person-chat{
+    width: 24px;
+    height: 24px;
+    margin-left: 5px;
+}
+.myself-chat{
+ display: flex;
+    /* align-items: center;  */
+    justify-content: end;
+    /* Align icon and name on the same line */
+    margin-bottom: 4px; 
+    /* Add some space between the two lines */
+}
+.myself-chat .timestamp{
+    order: 1;
+}
+.myself-chat .image-person-chat{
+    order: 3
+}
+.myself-chat strong{
+    order: 2;
+}
+.sender-chat{
+     display: flex;
+    /* align-items: center;  */
+    justify-content: start;
+    /* Align icon and name on the same line */
+    margin-bottom: 4px; 
+    /* Add some space between the two lines */
+}
+.sender-chat .image-person-chat{
+    order: 1;
+}
+.sender-chat strong{
+    order: 2;
+}
+.sender-chat .timestamp{
+    order: 3;
+}
+.text-message{
+    text-align: left;
 }

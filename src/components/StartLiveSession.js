@@ -17,8 +17,6 @@ import {
   VoiceFocusDeviceTransformer,
 } from 'amazon-chime-sdk-js';
 import '../styles/StartLiveSession.css';
-import ChatMessage from './ChatMessage';
-import Participants from './Participants';
 import AudioUploadBox from './AudioUploadBox';
 import Config from '../utils/config';
 import metricReport from '../utils/MetricReport';
@@ -26,18 +24,17 @@ import metricReport from '../utils/MetricReport';
 import { checkAvailableMeeting } from '../utils/MeetingUtils';
 import JSONCookieUtils from '../utils/JSONCookieUtils';
 import { v4 as uuidv4 } from 'uuid';
-import { QRCodeSVG } from 'qrcode.react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faMicrophone, faMicrophoneSlash,
-} from '@fortawesome/free-solid-svg-icons';
 import { useTranslation } from 'react-i18next';
 import { SPEAK_VOICE_LANGUAGES } from '../utils/constant';
 import Header from './Header';
 import MessageBox from './MessageBox';
 import { IoPlay } from "react-icons/io5";
-import { HiMiniSpeakerWave, HiMiniSpeakerXMark } from "react-icons/hi2";
-import { IoMicCircle,IoMicOffCircleSharp  } from "react-icons/io5";
+import { HiMiniSpeakerWave } from "react-icons/hi2";
+import { IoVolumeMute } from "react-icons/io5";
+import { IoMicCircle, IoMicOffCircleSharp } from "react-icons/io5";
+import { FaPause } from "react-icons/fa6";
+import { useLocation } from 'react-router-dom';
+
 // import { uploadFileToS3 } from '../services/S3Service';
 
 /**
@@ -63,8 +60,6 @@ function StartLiveSession() {
   const [userArn, setUserArn] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [userId, setUserId] = useState('');
-  const [chatSetting, setChatSetting] = useState('guideOnly'); // State to manage chat setting
-  const [selectedQR, setSelectedQR] = useState('listener'); // State to manage selected QR type
   const [isMicOn, setIsMicOn] = useState(false); // State for microphone status
   const [transformVFD, setTransformVFD] = useState(null);
   const [microChecking, setMicroChecking] = useState(t('microChecking'));
@@ -76,51 +71,27 @@ function StartLiveSession() {
   const [transcripts, setTranscriptions] = useState([]);
   // Replace local variables with refs
   const transcriptListRef = useRef([]);
-  // Function to start a live audio session
-  const startLiveAduioSession = async () => {
-    setIsLoading(true);
-    // Delete the cookie
-    JSONCookieUtils.deleteCookie("Main-Guide");
-    console.log("Cookie deleted successfully!");
-    try {
-      const userID = uuidv4();
-      setUserId(userID);
-      const userType = `Guide`;
-      const userName = `Guide`;
+  //get value chatSetting from ChatSetting.js
+  const location = useLocation();
+  const { state } = location;
+  const valueChatSetting = state?.chatSetting
 
-      const meeting = await createMeeting();
-      console.log('Meeting created:', meeting);
-      const attendee = await createAttendee(meeting.MeetingId, `${userType}|${Date.now()}`);
-      console.log('Attendee created:', attendee);
-
-      // Initialize the meeting session such as meeting session
-      initializeMeetingSession(meeting, attendee);
-      const createAppUserAndChannelResponse = await createAppUserAndChannel(userID, userName);
-      setMetting(meeting);
-      setAttendee(attendee);
-      setUserArn(createAppUserAndChannelResponse.userArn);
-      setChannelArn(createAppUserAndChannelResponse.channelArn);
-      setChannelID(createAppUserAndChannelResponse.channelID);
-
-      // Storage the Guide information in the cookies
-      // Define your data
-      const mainGuide = {
-        meeting: meeting,
-        attendee: attendee,
-        userArn: createAppUserAndChannelResponse.userArn,
-        channelArn: createAppUserAndChannelResponse.channelArn,
-      };
-
-      // Set the JSON cookie for 1 day
-      JSONCookieUtils.setJSONCookie("Main-Guide", mainGuide, 1);
-      console.log("Cookie set for 1 day!");
-
-    } catch (error) {
-      console.error('Error starting meeting:', error);
-    } finally {
-      setIsLoading(false);
-    }
+  const [isMuted, setIsMuted] = useState(true);
+  const [isPlay, setIsPlay] = useState(false);
+  const audioRef = useRef(null);
+  const handleMuteUnmute = () => {
+    setIsMuted(!isMuted);
+    audioRef.current.muted = isMuted;
   };
+  const handlePlay = () => {
+    if (isPlay === false) {
+      setIsPlay(true)
+      audioRef.current.play();
+    } else {
+      setIsPlay(false);
+      audioRef.current.pause();
+    }
+  }
 
   const createAppUserAndChannel = async (userID, userName) => {
     const userArn = await createAppInstanceUsers(userID, userName);
@@ -232,6 +203,53 @@ function StartLiveSession() {
 
   }, []);
 
+    // Function to start a live audio session
+    const startLiveAduioSession = useCallback(async () => {
+      setIsLoading(true);
+      // Delete the cookie
+      JSONCookieUtils.deleteCookie("Main-Guide");
+      console.log("Cookie deleted successfully!");
+      try {
+        const userID = uuidv4();
+        setUserId(userID);
+        const userType = `Guide`;
+        const userName = `Guide`;
+  
+        const meeting = await createMeeting();
+        console.log('Meeting created:', meeting);
+        const attendee = await createAttendee(meeting.MeetingId, `${userType}|${Date.now()}`);
+        console.log('Attendee created:', attendee);
+  
+        // Initialize the meeting session such as meeting session
+        initializeMeetingSession(meeting, attendee);
+        const createAppUserAndChannelResponse = await createAppUserAndChannel(userID, userName);
+        setMetting(meeting);
+        setAttendee(attendee);
+        setUserArn(createAppUserAndChannelResponse.userArn);
+        setChannelArn(createAppUserAndChannelResponse.channelArn);
+        setChannelID(createAppUserAndChannelResponse.channelID);
+  
+        // Storage the Guide information in the cookies
+        // Define your data
+        const mainGuide = {
+          meeting: meeting,
+          attendee: attendee,
+          userArn: createAppUserAndChannelResponse.userArn,
+          channelArn: createAppUserAndChannelResponse.channelArn,
+        };
+  
+        // Set the JSON cookie for 1 day
+        JSONCookieUtils.setJSONCookie("Main-Guide", mainGuide, 1);
+        console.log("Cookie set for 1 day!");
+  
+      } catch (error) {
+        console.error('Error starting meeting:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    }, [initializeMeetingSession]);
+  
+
   // Function to toggle microphone on/off
   const toggleMicrophone = async () => {
     if (meetingSession) {
@@ -312,8 +330,8 @@ function StartLiveSession() {
       setMicroChecking('microChecking');
 
       // Check if there are no devices or if any device label is empty
-      if (devices.length === 0 || devices.some(device => !device.label.trim())) {
-      //if (devices.length === 0) {
+      // if (devices.length === 0 || devices.some(device => !device.label.trim())) {
+      if (devices.length === 0) {
         console.log('No audio input devices found');
         // Display a message after 5 seconds
         setTimeout(() => {
@@ -363,6 +381,7 @@ function StartLiveSession() {
     if (selectedAudioInput) {
       console.log('Selected Audio Input:', selectedAudioInput);
     }
+
   }, [selectedAudioInput]);
 
 
@@ -420,26 +439,13 @@ function StartLiveSession() {
     enableMeetingTranscription(meetingSession.configuration.meetingId, selectedVoiceLanguage);
   }, [meetingSession, selectedVoiceLanguage]);
 
-  // Function to handle the chat setting change
-  const handleChatSettingChange = (e) => {
-    setChatSetting(e.target.value);
-  };
-
-  // Function to handle the QR code generation selection
-  const handleQRSelectionChange = (e) => {
-    setSelectedQR(e.target.value);
-  };
-
-  // Function to handle the selected voice language change
-  const handleSelectedVoiceLanguageChange = (event) => {
-    setSelectedVoiceLanguage(event.target.value);
-    console.log("Selected voice language:", event.target.value);
-  };
-
+  useEffect(() => {
+    startLiveAduioSession();
+    setSelectedVoiceLanguage('ja-JP');
+  }, [valueChatSetting, startLiveAduioSession]);
   return (
     <>
-      {/* <Participants count={participantsCount} /> */}
-      <Header count={participantsCount} Config={Config.appViewerURL} meeting={meeting} channelID={channelID} userId={userId} chatSetting={chatSetting} />
+      <Header count={participantsCount} meeting={meeting} channelID={channelID} userId={userId} chatSetting={valueChatSetting} />
       <div className="container">
         <p className='titleLiveSession'>
           ガイド専用ページ
@@ -449,23 +455,25 @@ function StartLiveSession() {
           <h3>浅草寺ツアー</h3>
         </div>
         <div className='audio'>
-          <div className='playButton'>
-            <IoPlay size={30} />
+          <div className='playButton' onClick={handlePlay}>
+            {isPlay ? <FaPause size={30} /> : <IoPlay size={30} />}
           </div>
-          <div className='muteButton'>
-            <HiMiniSpeakerWave size={30} />
+
+          <div className='muteButton' onClick={handleMuteUnmute}>
+            {isMuted ? <HiMiniSpeakerWave size={30} /> : <IoVolumeMute size={30} />
+            }
           </div>
+          <audio id='audioElementMain' ref={audioRef} >
+          </audio>
         </div>
 
         {(!meeting && !attendee) ? (
           <>
-            {(isLoading) ? (
+            {isLoading === true && (
               <div className="loading">
                 <div className="spinner"></div>
                 <p>{t('loading')}</p>
               </div>
-            ) : (
-              <button onClick={startLiveAduioSession}>{t('startLiveBtn')}</button>
             )}
           </>
         ) : (
@@ -496,15 +504,10 @@ function StartLiveSession() {
                     </select>
                   )}
                   <div className="controls">
-                    {/* <button onClick={toggleMicrophone} className="toggle-mic-button">
-                      <IoMicCircle icon={isMicOn ? faMicrophone : faMicrophoneSlash}  color={isMicOn ? "red" : "gray"} />
-                    </button> */}
                     <div className='mic-button' onClick={toggleMicrophone}>
-                      {isMicOn ? 
-                      <IoMicCircle size={60} color="red" /> 
-                      : <IoMicOffCircleSharp  size={60} color="gray" />}
-                      {/* <IoMicCircle size={60} icon={isMicOn ? faMicrophone : faMicrophoneSlash} color={isMicOn ? "red" : "gray"} /> */}
-                      {/* <FontAwesomeIcon icon={isMicOn ? IoMicCircle : IoMicOffCircleSharp } size={'2x'} color={isMicOn ? "red" : "gray"} /> */}
+                      {isMicOn ?
+                        <IoMicCircle size={60} color="red" />
+                        : <IoMicOffCircleSharp size={60} color="gray" />}
                     </div>
                   </div>
                 </div>
@@ -512,106 +515,9 @@ function StartLiveSession() {
             )}
           </>
         )}
-
-        {/* <select
-          id="selectedVoiceLanguage"
-          value={selectedVoiceLanguage}
-          onChange={handleSelectedVoiceLanguageChange}
-        >
-          {SPEAK_VOICE_LANGUAGES.map((language) => (
-            <option key={language.key} value={language.key}>
-              {language.label}
-            </option>
-          ))}
-        </select>
-        <audio id="audioElementMain" controls autoPlay className="audio-player" style={{ display: (meeting && attendee) ? 'block' : 'none' }} />
-        {transcriptListRef.current.length > 0 && (
-          <span>
-            {t('transcriptions')}: <span>{transcriptListRef.current.join(' ')}</span>
-          </span>
+        {valueChatSetting !== "nochat" && (
+          <MessageBox userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} />
         )}
-        {(!meeting && !attendee) ? (
-          <>
-            {(isLoading) ? (
-              <div className="loading">
-                <div className="spinner"></div>
-                <p>{t('loading')}</p>
-              </div>
-            ) : (
-              <button onClick={startLiveAduioSession}>{t('startLiveBtn')}</button>
-            )}
-          </>
-        ) : (
-          <>
-            {meetingSession && (<AudioUploadBox meetingSession={meetingSession} logger={logger} />)}
-            {(noMicroMsg) ? (
-              <>
-                {!microChecking ? (
-                  <p style={{ color: "red" }}>{t('noMicroMsg')}</p>
-                ) : (
-                  <div className="loading">
-                    <div className="spinner"></div>
-                    {microChecking && <p>{t('microChecking')}</p>}
-                  </div>
-                )}
-              </>
-            ) : (
-              <>
-                <h3>{t('microSelectionLbl')}</h3>
-                {(audioInputDevices && audioInputDevices.length > 0) && (
-                  <select value={selectedAudioInput} onChange={(e) => setSelectedAudioInput(e.target.value)}>
-                    {audioInputDevices.map((device) => (
-                      <option key={device.deviceId} value={device.deviceId}>
-                        {device.label}
-                      </option>
-                    ))}
-                  </select>
-                )}
-                <div className="controls">
-                  <button onClick={toggleMicrophone} className="toggle-mic-button">
-                    <FontAwesomeIcon icon={isMicOn ? faMicrophone : faMicrophoneSlash} size="2x" color={isMicOn ? "green" : "gray"} />
-                  </button>
-                </div>
-              </>
-            )}
-            <h3>{t('chatSettingLbl')}</h3>
-            <select value={chatSetting} onChange={handleChatSettingChange}>
-              <option value="allChat">{t('chatSettingOptions.allChat')}</option>
-              <option value="guideOnly">{t('chatSettingOptions.onlyGuideChat')}</option>
-              <option value="nochat">{t('chatSettingOptions.noChat')}</option>
-            </select>
-
-            <h3>{t('generateQRCodeLbl')}</h3>
-            <select value={selectedQR} onChange={handleQRSelectionChange}>
-              <option value="subSpeaker">{t('generateQRCodeOptions.subGuide')}</option>
-              <option value="listener">{t('generateQRCodeOptions.listener')}</option>
-            </select>
-
-            {meeting && channelArn && (
-              <>
-                {selectedQR === 'subSpeaker' ? (
-                  <>
-                    <QRCodeSVG value={`${Config.appSubSpeakerURL}?meetingId=${meeting.MeetingId}&channelId=${channelID}&hostId=${userId}&chatSetting=${chatSetting}`} size={256} level="H" />
-                    <a target="_blank" rel="noopener noreferrer" style={{ color: 'green' }} href={`${Config.appSubSpeakerURL}?meetingId=${meeting.MeetingId}&channelId=${channelID}&hostId=${userId}&chatSetting=${chatSetting}`}>
-                      {t('scanQRCodeTxt.subGuide')}
-                    </a>
-                  </>
-                ) : (
-                  <>
-                    <QRCodeSVG value={`${Config.appViewerURL}?meetingId=${meeting.MeetingId}&channelId=${channelID}&hostId=${userId}&chatSetting=${chatSetting}`} size={256} level="H" />
-                    <a target="_blank" rel="noopener noreferrer" style={{ color: 'green' }} href={`${Config.appViewerURL}?meetingId=${meeting.MeetingId}&channelId=${channelID}&hostId=${userId}&chatSetting=${chatSetting}`}>
-                      {t('scanQRCodeTxt.listener')}
-                    </a>
-                  </>
-                )}
-              </>
-            )}
-            {chatSetting !== "nochat" && (
-              <ChatMessage userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} />
-            )}
-          </>
-        )} */}
-        <MessageBox userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} chatSetting={chatSetting} action={handleChatSettingChange} />
       </div>
     </>
   );
