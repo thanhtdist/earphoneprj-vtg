@@ -90,8 +90,8 @@ function LiveViewer() {
       presentAttendeeId,
       (attendeeId, volume, muted, signalStrength) => {
         logger.info(`🔊 User Incoming volume from ${attendeeId}: ${volume}`);
-        logger.info(`🔇 User Incoming volume from ${attendeeId}: ${muted}`);
-        logger.info(`📶 User Incoming volume from ${attendeeId}: ${signalStrength}`);
+        logger.info(`🔇 User Incoming muted from ${attendeeId}: ${muted}`);
+        logger.info(`📶 User Incoming signalStrength from ${attendeeId}: ${signalStrength}`);
         if (volume !== null && volume < 0.2) {
           console.warn(`🔈User Incoming volume from ${attendeeId} is low! Boosting volume.`);
           logger.info(`🔈 User Incoming volume from ${attendeeId} is low! Boosting volume.`);
