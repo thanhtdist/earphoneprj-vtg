@@ -197,6 +197,49 @@ function StartLiveSession() {
       console.error('Audio element not found');
     }
 
+  // Check and monitor the incoming and outgoing audio volume
+  const audioContext = new (window.AudioContext)();
+  const gainNode = audioContext.createGain();
+  gainNode.gain.value = 1; // Default (1x volume)
+
+  // Check incoming volume
+  const presentAttendeeId = meetingSession.configuration.credentials.attendeeId;
+  meetingSession.audioVideo.realtimeSubscribeToVolumeIndicator(
+    presentAttendeeId,
+    (attendeeId, volume, muted, signalStrength) => {
+      logger.info(`🔊 Guide Incoming volume from ${attendeeId}: ${volume}`);
+      logger.info(`🔇 Guide Incoming volume from ${attendeeId}: ${muted}`);
+      logger.info(`📶 Guide Incoming volume from ${attendeeId}: ${signalStrength}`);
+      if (volume !== null && volume < 0.2) {
+        console.warn(`🔈 Incoming volume from ${attendeeId} is low! Boosting volume.`);
+        logger.info(`🔈 Incoming volume from ${attendeeId} is low! Boosting volume.`);
+        //gainNode.gain.value = 2; // Double the volume
+      }
+    }
+  );
+
+  // Check outgoing mic volume
+  meetingSession.audioVideo.realtimeSubscribeToLocalAudioVolume((volume) => {
+    logger.info(`🎤 Guide Outgoing volume: ${volume}`);
+    if (volume < 0.3) {
+      console.warn("⚠️ Microphone volume is too low! Increasing gain.");
+      logger.info("⚠️ Microphone volume is too low! Increasing gain.");
+      //micGainNode.gain.value = 1.5; // Boost mic volume
+    }
+  });
+
+  // Connect gain node to output
+  // const audioElement = document.createElement("audio");
+  // audioElement.autoplay = true;
+  // audioElement.playsInline = true;
+  // document.body.appendChild(audioElement);
+  // meetingSession.audioVideo.bindAudioElement(audioElement);
+
+  // const sourceNode = audioContext.createMediaElementSource(audioElement);
+  // sourceNode.connect(gainNode);
+  // gainNode.connect(audioContext.destination);
+
+
     const observer = {
       audioInputsChanged: freshAudioInputDeviceList => {
         // An array of MediaDeviceInfo objects
@@ -308,8 +351,8 @@ function StartLiveSession() {
       setMicroChecking('microChecking');
 
       // Check if there are no devices or if any device label is empty
-      //if (devices.length === 0 || devices.some(device => !device.label.trim())) {
-      if (devices.length === 0) {
+      if (devices.length === 0 || devices.some(device => !device.label.trim())) {
+      //if (devices.length === 0) {
         console.log('No audio input devices found');
         // Display a message after 5 seconds
         setTimeout(() => {
