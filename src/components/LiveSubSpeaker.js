@@ -116,7 +116,7 @@ function LiveSubSpeaker() {
     logger.info(`Sub-Guide ID ${attendee.AttendeeId}`);
     // Check if the Voice Focus Device is supported on the client
     const isVoiceFocusSupported = await transformVoiceFocusDevice(meeting, attendee, logger);
-    logger.info('Sub-Guide deviceController isVoiceFocusSupported' + isVoiceFocusSupported);
+    logger.info('Sub-Guide deviceController isVoiceFocusSupported: ' + isVoiceFocusSupported);
     console.log("xxx");
     // Initialize the meeting session
     const deviceController = new DefaultDeviceController(logger, { enableWebAudio: isVoiceFocusSupported });
