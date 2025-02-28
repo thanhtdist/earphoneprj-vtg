@@ -2,7 +2,7 @@
     display: flex;
     justify-content: space-between;
     border-bottom: solid 0.5px grey;
-    color: red;
+    /* color: red; */
     /* box-shadow: 0 6px 5px rgba(0, 0, 0, 0.2); */
 }
 
@@ -49,7 +49,8 @@
     margin: 20px;
     width: 100%;
 }
-.popup-chat-content{
+
+.popup-chat-content {
     background-color: white;
     /* padding: 40px; */
     border-radius: 20px;
@@ -60,6 +61,7 @@
     height: 78%;
     width: 100%;
 }
+
 .link {
     display: flex;
     justify-content: center;
@@ -105,6 +107,14 @@
 .countNumber {
     padding: 5px;
 }
-.qrCodeContainer{
-    justify-self: center;
+
+.qrCodeContainer {
+    /* justify-self: center; */
+    justify-content: center;
+    align-items: center;
+}
+.qrCodeContent{
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
