@@ -87,7 +87,7 @@ function LiveSubSpeaker() {
       console.log('transformVoiceFocusDevice transformer', transformer);
       setTransformVFD(transformer);
       isVoiceFocusSupported = transformer.isSupported();
-      console.log('transformVoiceFocusDevice isVoiceFocusSupported', isVoiceFocusSupported);
+      console.log('transformVoiceFocusDevice isVoiceFocusSupported: ', isVoiceFocusSupported);
     } catch (e) {
       // Will only occur due to invalid input or transient errors (e.g., network).
       console.error('Failed to create VoiceFocusDeviceTransformer:', e);
