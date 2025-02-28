@@ -122,9 +122,14 @@ function LiveSubSpeaker() {
     const deviceController = new DefaultDeviceController(logger, { enableWebAudio: isVoiceFocusSupported });
     logger.info('Sub-Guide deviceController' + JSON.stringify(deviceController));
     const meetingSession = new DefaultMeetingSession(meetingSessionConfiguration, logger, deviceController);
-    // Check constraints
+    // Check Browser constraints
     const constraints = navigator.mediaDevices.getSupportedConstraints();
-    logger.info("Sub-Guide Supported audio constraints:", constraints);
+    logger.info("Sub-Guide Browser Supported audio constraints:", constraints);
+    // Check the active audio input device
+    navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+      const audioTrack = stream.getAudioTracks()[0];
+      logger.info("🎤 Sub-Guide Micro is using constraints:", audioTrack.getSettings());
+    });
 
     setMeetingSession(meetingSession);
     //setLogger(logger);

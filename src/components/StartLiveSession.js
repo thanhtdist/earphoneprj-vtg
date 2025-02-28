@@ -186,6 +186,15 @@ function StartLiveSession() {
 
     //logger.info('deviceController' + JSON.stringify(deviceController));
     const meetingSession = new DefaultMeetingSession(meetingSessionConfiguration, logger, deviceController);
+    // Check Browser constraints
+    const constraints = navigator.mediaDevices.getSupportedConstraints();
+    logger.info("Guide Browser Supported audio constraints:", constraints);
+    // Check the active audio input device
+    navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+      const audioTrack = stream.getAudioTracks()[0];
+      logger.info("🎤 Guide Micro is using constraints:", audioTrack.getSettings());
+    });
+    
     setMeetingSession(meetingSession);
     selectSpeaker(meetingSession);
     metricReport(meetingSession, logger, 'Guide');
