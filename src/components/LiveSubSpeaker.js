@@ -66,7 +66,7 @@ function LiveSubSpeaker() {
   const [transformVFD, setTransformVFD] = useState(null);
   const [microChecking, setMicroChecking] = useState(t('microChecking'));
   const [noMicroMsg, setNoMicoMsg] = useState(t('noMicroMsg'));
-  const [logger, setLogger] = useState(null);
+  //const [logger, setLogger] = useState(null);
   const [participantsCount, setParticipantsCount] = useState(0);
 
   // Function to transform the audio input device to Voice Focus Device/Echo Reduction
@@ -114,7 +114,6 @@ function LiveSubSpeaker() {
       meetingSessionPOSTLogger,
     );
     logger.info(`Sub-Guide ID ${attendee.AttendeeId}`);
-    //setLogger(logger);
     // Check if the Voice Focus Device is supported on the client
     const isVoiceFocusSupported = await transformVoiceFocusDevice(meeting, attendee, logger);
     logger.info('Sub-Guide deviceController isVoiceFocusSupported' + isVoiceFocusSupported);
@@ -123,7 +122,12 @@ function LiveSubSpeaker() {
     const deviceController = new DefaultDeviceController(logger, { enableWebAudio: isVoiceFocusSupported });
     logger.info('Sub-Guide deviceController' + JSON.stringify(deviceController));
     const meetingSession = new DefaultMeetingSession(meetingSessionConfiguration, logger, deviceController);
+    // Check constraints
+    const constraints = navigator.mediaDevices.getSupportedConstraints();
+    logger.info("Sub-Guide Supported audio constraints:", constraints);
+
     setMeetingSession(meetingSession);
+    //setLogger(logger);
     selectSpeaker(meetingSession);
     console.log('Sub Speaker - initializeMeetingSession--> Start');
     metricReport(meetingSession, logger, 'Sub-Guide');
