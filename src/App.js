@@ -15,7 +15,7 @@ function App() {
           <Routes>
             {/* <Route path="/" element={<StartLiveSession />} /> */}
             <Route path="/" element={<ChatSetting />} />
-            <Route path="/main-guild" element={<StartLiveSession />} />
+            <Route path="/guide" element={<StartLiveSession />} />
             <Route path="/sub-speaker" element={<LiveSubSpeaker />} />
             <Route path="/viewer" element={<LiveViewer />} />
           </Routes>

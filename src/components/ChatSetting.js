@@ -10,7 +10,7 @@ const ChatSetting = () => {
       };
     const navigate = useNavigate();
     const handleClick = () => {
-        navigate('/main-guild', { state: { chatSetting:chatSetting } });
+        navigate('/guide', { state: { chatSetting:chatSetting } });
     }
     return (
         <>
@@ -25,8 +25,8 @@ const ChatSetting = () => {
                         <option value="nochat">{t('chatSettingOptions.noChat')}</option>
                     </select>
                 </div>
-                <div >                
-                    <button className='btn-confirm' onClick={handleClick}>ガイドを開始する</button>
+                <div className='btn'>                
+                    <button className="btn-confirm"  onClick={handleClick}>ガイドを開始する</button>
                         
                </div>
             </div>

@@ -1,11 +1,15 @@
-.chat-setting-container{
+.chat-setting-container {
     margin-top: 20px;
 }
-.btn-confirm{
+
+.btn {
     display: flex;
-    justify-self: center
+    /* justify-self: center; */
+    justify-content: center;
+    align-items: center;
 }
-.btn-confirm{
+
+.btn-confirm {
     background-color: red;
     border: red;
     border-radius: 25px;

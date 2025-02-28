@@ -451,7 +451,10 @@ function StartLiveSession() {
           ガイド専用ページ
         </p>
         <div className='titleFileUpload'>
-          <p className='time'>2025/01/01</p>
+          <div className='time'>
+          <p >2025/01/01</p>
+          </div>
+         
           <h3>浅草寺ツアー</h3>
         </div>
         <div className='audio'>

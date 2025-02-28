@@ -263,7 +263,7 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null }) {
                 {/* <VscAccount color={!message.senderName.startsWith("User") ? "blue" : ""} size={24}/> */}
 
                 {message.senderName.startsWith("Guide") && (
-                  <div className= {message.senderArn === userArn ? "myself-chat":"sender-chat"}>
+                  <div className={message.senderArn === userArn ? "myself-chat" : "sender-chat"}>
                     <div className="timestamp">{formatTimestamp(message.timestamp)}</div>
                     <strong>{message.senderArn === userArn ? t('userNameDisplay.myself') : displayUserName(message.senderName)}</strong>
                     <img
@@ -275,7 +275,7 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null }) {
                   </div>
                 )}
                 {message.senderName.startsWith("Sub-Guide") && (
-                  <div className= {message.senderArn === userArn ? "myself-chat":"sender-chat"}>
+                  <div className={message.senderArn === userArn ? "myself-chat" : "sender-chat"}>
                     <img
                       src={`${process.env.PUBLIC_URL}/images/sub-guide-person.png`}
                       alt="Sub-Guide"
@@ -287,7 +287,7 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null }) {
                   </div>
                 )}
                 {message.senderName.startsWith("User") && (
-                  <div className= {message.senderArn === userArn ? "myself-chat":"sender-chat"}>
+                  <div className={message.senderArn === userArn ? "myself-chat" : "sender-chat"}>
                     <img
                       src={`${process.env.PUBLIC_URL}/images/user.png`}
                       alt="User"
@@ -306,6 +306,10 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null }) {
                   <span className='text-message'>{message.content}</span>
                 </div>
               )}
+              {message.attachments?.length > 0 &&
+                (<div className={`${message.senderArn === userArn ? 'my-message' : 'other-message'}`}>
+                  <ChatAttachment {...message.attachments[0]} />
+                </div>)}
               {/* {message.attachments && message.attachments.length > 0 && (
                 <>
                   <ChatAttachment
@@ -316,7 +320,9 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null }) {
                     size={message.attachments[0].size} />
                 </>
               )} */}
-              {message.attachments?.length > 0 && <ChatAttachment {...message.attachments[0]} />}
+              {/* {message.senderArn} */}
+
+              {/* {message.attachments?.length > 0 && <ChatAttachment {...message.attachments[0]} userType={message.senderArn} />} */}
             </div>
           ))}
         </div>
