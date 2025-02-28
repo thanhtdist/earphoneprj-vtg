@@ -298,7 +298,11 @@ function StartLiveSession() {
         } else {
           // Start the audio input device
           // Create a new transform device if Voice Focus is supported
-          const vfDevice = await transformVFD.createTransformDevice(selectedAudioInput);
+          //const vfDevice = await transformVFD.createTransformDevice(selectedAudioInput);
+          //const vfDevice = await transformVFD.createTransformDevice(selectedAudioInput);
+          const vfDevice = await transformVFD.createTransformDevice(selectedAudioInput, { 
+            agc: { useBuiltInAGC: false }  // Disable AGC in Voice Focus
+          });
           //logger.info('toggleMicrophone vfDevice ' + JSON.stringify(vfDevice));
           console.log('toggleMicrophone vfDevice', vfDevice);
           // Enable Echo Reduction on this client
