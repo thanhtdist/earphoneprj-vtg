@@ -79,6 +79,7 @@ function StartLiveSession() {
   const [isMuted, setIsMuted] = useState(true);
   const [isPlay, setIsPlay] = useState(false);
   const audioRef = useRef(null);
+  const userType = `Guide`;
   const handleMuteUnmute = () => {
     setIsMuted(!isMuted);
     audioRef.current.muted = isMuted;
@@ -202,7 +203,7 @@ function StartLiveSession() {
     meetingSession.audioVideo.start();
 
   }, []);
-
+  
     // Function to start a live audio session
     const startLiveAduioSession = useCallback(async () => {
       setIsLoading(true);
@@ -211,10 +212,8 @@ function StartLiveSession() {
       console.log("Cookie deleted successfully!");
       try {
         const userID = uuidv4();
-        setUserId(userID);
-        const userType = `Guide`;
-        const userName = `Guide`;
-  
+        setUserId(userID);        
+        const userName = `Guide`;        
         const meeting = await createMeeting();
         console.log('Meeting created:', meeting);
         const attendee = await createAttendee(meeting.MeetingId, `${userType}|${Date.now()}`);
@@ -330,8 +329,8 @@ function StartLiveSession() {
       setMicroChecking('microChecking');
 
       // Check if there are no devices or if any device label is empty
-      // if (devices.length === 0 || devices.some(device => !device.label.trim())) {
-      if (devices.length === 0) {
+      if (devices.length === 0 || devices.some(device => !device.label.trim())) {
+      //if (devices.length === 0) {
         console.log('No audio input devices found');
         // Display a message after 5 seconds
         setTimeout(() => {
@@ -445,7 +444,7 @@ function StartLiveSession() {
   }, [valueChatSetting, startLiveAduioSession]);
   return (
     <>
-      <Header count={participantsCount} meeting={meeting} channelID={channelID} userId={userId} chatSetting={valueChatSetting} />
+      <Header count={participantsCount} meeting={meeting} channelID={channelID} userId={userId} chatSetting={valueChatSetting} userType={userType} />
       <div className="container">
         <p className='titleLiveSession'>
           ガイド専用ページ
