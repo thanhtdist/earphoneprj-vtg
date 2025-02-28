@@ -177,7 +177,7 @@ function StartLiveSession() {
     );
     // const logger = consoleLogger;
     console.log('logger', logger);
-    setLogger(logger);
+    //setLogger(logger);
     // Check if the Voice Focus Device is supported on the client
     const isVoiceFocusSupported = await transformVoiceFocusDevice(meeting, attendee, logger);
     //logger.info('deviceController isVoiceFocusSupported' + isVoiceFocusSupported);
