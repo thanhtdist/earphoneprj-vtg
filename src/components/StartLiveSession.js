@@ -247,28 +247,22 @@ function StartLiveSession() {
           logger.info('Guide toggleMicrophone realtimeMuteLocalAudio ' + JSON.stringify(realtimeMuteLocalAudio));
           //console.log('toggleMicrophone realtimeMuteLocalAudio', realtimeMuteLocalAudio);
           const stopAudioInput = await meetingSession.audioVideo.stopAudioInput(); // Stops the audio input device
-          //logger.info('toggleMicrophone stopAudioInput ' + JSON.stringify(stopAudioInput));
-          logger.info('Guide toggleMicrophone stopAudioInput', stopAudioInput);
-
+          logger.info('toggleMicrophone stopAudioInput ' + JSON.stringify(stopAudioInput));
         } else {
           // Start the audio input device
           // Create a new transform device if Voice Focus is supported
           //const vfDevice = await transformVFD.createTransformDevice(selectedAudioInput);
           const vfDevice = await transformVFD.createTransformDevice(selectedAudioInput, { 
-            agc: { useBuiltInAGC: false }  // Disable AGC in Voice Focus
+            //agc: { useBuiltInAGC: false }  // Disable AGC in Voice Focus
           });
-          //logger.info('toggleMicrophone vfDevice ' + JSON.stringify(vfDevice));
-          logger.info('Guide toggleMicrophone vfDevice', vfDevice);
+          logger.info('toggleMicrophone vfDevice ' + JSON.stringify(vfDevice));
           // Enable Echo Reduction on this client
           const observeMeetingAudio = await vfDevice.observeMeetingAudio(meetingSession.audioVideo);
-          //logger.info('toggleMicrophone Echo Reduction ' + JSON.stringify(observeMeetingAudio));
-          logger.info('Guide toggleMicrophone Echo Reduction', observeMeetingAudio);
+          logger.info('toggleMicrophone Echo Reduction ' + JSON.stringify(observeMeetingAudio));
           const deviceToUse = vfDevice || selectedAudioInput;
-          //logger.info('toggleMicrophone deviceToUse ' + JSON.stringify(deviceToUse));
-          logger.info('Guide toggleMicrophone deviceToUse', deviceToUse);
+          logger.info('toggleMicrophone deviceToUse ' + JSON.stringify(deviceToUse));
           const startAudioInput = await meetingSession.audioVideo.startAudioInput(deviceToUse);
-          //logger.info('toggleMicrophone startAudioInput ' + JSON.stringify(startAudioInput));
-          logger.info('Guide toggleMicrophone startAudioInput', startAudioInput);
+          logger.info('toggleMicrophone startAudioInput ' + JSON.stringify(startAudioInput));
 
           if (vfDevice) {
             // logger.info('Amazon Voice Focus enabled ');
@@ -276,8 +270,7 @@ function StartLiveSession() {
           }
           // Unmute the microphone
           const realtimeUnmuteLocalAudio = meetingSession.audioVideo.realtimeUnmuteLocalAudio();
-          //logger.info('toggleMicrophone realtimeUnmuteLocalAudio ' + JSON.stringify(realtimeUnmuteLocalAudio));
-          logger.info('Guide toggleMicrophone realtimeUnmuteLocalAudio', realtimeUnmuteLocalAudio);
+          logger.info('toggleMicrophone realtimeUnmuteLocalAudio ' + JSON.stringify(realtimeUnmuteLocalAudio));
         }
 
         setIsMicOn(!isMicOn); // Toggle mic status
