@@ -87,7 +87,7 @@ function LiveSubSpeaker() {
       console.log('transformVoiceFocusDevice transformer', transformer);
       setTransformVFD(transformer);
       isVoiceFocusSupported = transformer.isSupported();
-      console.log('transformVoiceFocusDevice isVoiceFocusSupported: ', isVoiceFocusSupported);
+      console.log('transformVoiceFocusDevice isVoiceFocusSupported', isVoiceFocusSupported);
     } catch (e) {
       // Will only occur due to invalid input or transient errors (e.g., network).
       console.error('Failed to create VoiceFocusDeviceTransformer:', e);
@@ -113,29 +113,18 @@ function LiveSubSpeaker() {
       consoleLogger,
       meetingSessionPOSTLogger,
     );
-    logger.info(`Sub-Guide ID ${attendee.AttendeeId}`);
+    //setLogger(logger);
     // Check if the Voice Focus Device is supported on the client
     const isVoiceFocusSupported = await transformVoiceFocusDevice(meeting, attendee, logger);
-    logger.info('Sub-Guide deviceController isVoiceFocusSupported: ' + isVoiceFocusSupported);
-    console.log("xxx");
+    logger.info('Sub-Guide deviceController isVoiceFocusSupported' + isVoiceFocusSupported);
     // Initialize the meeting session
     const deviceController = new DefaultDeviceController(logger, { enableWebAudio: isVoiceFocusSupported });
     logger.info('Sub-Guide deviceController' + JSON.stringify(deviceController));
     const meetingSession = new DefaultMeetingSession(meetingSessionConfiguration, logger, deviceController);
-    // Check Browser constraints
-    //const constraints = navigator.mediaDevices.getSupportedConstraints();
-    //logger.info("Sub-Guide Browser Supported audio constraints:", constraints);
-    // Check the active audio input device
-    //navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
-      //const audioTrack = stream.getAudioTracks()[0];
-      //logger.info("🎤 Sub-Guide Micro is using constraints:", audioTrack.getSettings());
-    //});
-
     setMeetingSession(meetingSession);
-    //setLogger(logger);
     selectSpeaker(meetingSession);
     console.log('Sub Speaker - initializeMeetingSession--> Start');
-    //metricReport(meetingSession, logger, 'Sub-Guide');
+    metricReport(meetingSession);
     console.log('Sub Speaker - initializeMeetingSession--> End');
     // Bind the audio element to the meeting session
     const audioElement = document.getElementById('audioElementSub');
@@ -144,46 +133,8 @@ function LiveSubSpeaker() {
     } else {
       console.error('Audio element not found');
     }
-    // Check incoming volume
-    const presentAttendeeId = meetingSession.configuration.credentials.attendeeId;
-    logger.info(`Sub-Guide ID ${attendee.AttendeeId}`);
-    logger.info(`🔊 Sub-Guide Listening to incoming volume from ${presentAttendeeId}`);
-    meetingSession.audioVideo.realtimeSubscribeToVolumeIndicator(
-      presentAttendeeId,
-      (attendeeId, volume, muted, signalStrength) => {
-        logger.info(`🔊 Sub-Guide Incoming volume from ${attendeeId}: ${volume}`);
-        logger.info(`🔇 Sub-Guide Incoming muted from ${attendeeId}: ${muted}`);
-        logger.info(`📶 Sub-Guide Incoming signalStrength from ${attendeeId}: ${signalStrength}`);
-        if (volume !== null && volume < 0.2) {
-          console.warn(`🔈Sub-Guide Incoming volume from ${attendeeId} is low! Boosting volume.`);
-          logger.info(`🔈 Sub-Guide Incoming volume from ${attendeeId} is low! Boosting volume.`);
-          //gainNode.gain.value = 2; // Double the volume
-        }
-      }
-    );
-
-    // Check outgoing mic volume
-    // meetingSession.audioVideo.realtimeSubscribeToLocalAudioVolume((volume) => {
-    //   logger.info(`🎤 Guide Outgoing volume: ${volume}`);
-    //   if (volume < 0.3) {
-    //     console.warn("⚠️ Microphone volume is too low! Increasing gain.");
-    //     logger.info("⚠️ Microphone volume is too low! Increasing gain.");
-    //     //micGainNode.gain.value = 1.5; // Boost mic volume
-    //   }
-    // });
-
-    // Connect gain node to output
-    // const audioElement = document.createElement("audio");
-    // audioElement.autoplay = true;
-    // audioElement.playsInline = true;
-    // document.body.appendChild(audioElement);
-    // meetingSession.audioVideo.bindAudioElement(audioElement);
-
-    // const sourceNode = audioContext.createMediaElementSource(audioElement);
-    // sourceNode.connect(gainNode);
-    // gainNode.connect(audioContext.destination);
-      // Start audio video session
-      meetingSession.audioVideo.start();
+    // Start audio video session
+    meetingSession.audioVideo.start();
   }, []);
 
   // Async function to select audio output device
@@ -318,7 +269,6 @@ function LiveSubSpeaker() {
         } else {
           // Start the audio input device
           // Create a new transform device if Voice Focus is supported
-          // const vfDevice = await transformVFD.createTransformDevice(selectedAudioInput);
           //const vfDevice = await transformVFD.createTransformDevice(selectedAudioInput);
           const vfDevice = await transformVFD.createTransformDevice(selectedAudioInput, { 
             agc: { useBuiltInAGC: false }  // Disable AGC in Voice Focus
@@ -343,21 +293,6 @@ function LiveSubSpeaker() {
           const realtimeUnmuteLocalAudio = meetingSession.audioVideo.realtimeUnmuteLocalAudio();
           //logger.info('Sub-Guide toggleMicrophone realtimeUnmuteLocalAudio ' + JSON.stringify(realtimeUnmuteLocalAudio));
           console.log('Sub-Guide toggleMicrophone realtimeUnmuteLocalAudio', realtimeUnmuteLocalAudio);
-
-          // Get the first audio track(Microphone) from the audio input
-          //logger.info('Sub-Guide check settings and capabilities of the active audio input(Microphone)'); 
-          //logger.info('Guide getAudioTracks ' + JSON.stringify(startAudioInput.getAudioTracks()));
-          const audioTrack = startAudioInput.getAudioTracks()[0];
-
-          if (audioTrack) {
-            // Log the actual settings of the active audio input
-            //logger.info("🎤 Sub-Guide Active Audio Input Settings:", audioTrack.getSettings());
-            //logger.info("🔧 Sub-Guide Capabilities:", audioTrack.getCapabilities());
-            console.log("🔧 Sub-Guide Capabilities:", audioTrack.getCapabilities());
-          } else {
-            //logger.info("⚠️ Sub-Guide No active audio track found.");
-            console.log("⚠️ Sub-Guide No active audio track found.");
-          }
         }
 
         setIsMicOn(!isMicOn); // Toggle mic status
