@@ -129,7 +129,15 @@ function LiveSubSpeaker() {
     // Bind the audio element to the meeting session
     const audioElement = document.getElementById('audioElementSub');
     if (audioElement) {
+      // Connect gain node to output
+      const audioContext = new (window.AudioContext)();
+      const gainNode = audioContext.createGain();
+      gainNode.gain.value = 1.5; // Default (1x volume)
+      audioElement.playsInline = true;
       await meetingSession.audioVideo.bindAudioElement(audioElement);
+      const sourceNode = audioContext.createMediaElementSource(audioElement);
+      sourceNode.connect(gainNode);
+      gainNode.connect(audioContext.destination);
     } else {
       console.error('Audio element not found');
     }
@@ -270,6 +278,7 @@ function LiveSubSpeaker() {
           // Start the audio input device
           // Create a new transform device if Voice Focus is supported
           //const vfDevice = await transformVFD.createTransformDevice(selectedAudioInput);
+          console.log('Sub-Guide toggleMicrophone selectedAudioInput', selectedAudioInput);
           const vfDevice = await transformVFD.createTransformDevice(selectedAudioInput, { 
             agc: { useBuiltInAGC: false }  // Disable AGC in Voice Focus
           });

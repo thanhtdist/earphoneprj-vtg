@@ -11,7 +11,7 @@ import {
   DefaultDeviceController,
   DefaultMeetingSession,
   ConsoleLogger,
-  //MultiLogger,
+  MultiLogger,
   LogLevel,
   MeetingSessionConfiguration,
   VoiceFocusDeviceTransformer,
@@ -21,8 +21,8 @@ import ChatMessage from './ChatMessage';
 import Participants from './Participants';
 import AudioUploadBox from './AudioUploadBox';
 import Config from '../utils/config';
-import metricReport from '../utils/MetricReport';
-//import { getPOSTLogger } from '../utils/MeetingLogger';
+//import metricReport from '../utils/MetricReport';
+import { getPOSTLogger } from '../utils/MeetingLogger';
 import { checkAvailableMeeting } from '../utils/MeetingUtils';
 import JSONCookieUtils from '../utils/JSONCookieUtils';
 import { v4 as uuidv4 } from 'uuid';
@@ -169,14 +169,14 @@ function StartLiveSession() {
 
     const meetingSessionConfiguration = new MeetingSessionConfiguration(meeting, attendee);
 
-    // const meetingSessionPOSTLogger = getPOSTLogger(meetingSessionConfiguration, 'SDK', `${Config.cloudWatchLogRestApiVTGRestApi}cloud-watch-logs`, LogLevel.INFO);
-    // console.log('meetingSessionPOSTLogger', meetingSessionPOSTLogger);
-    // const logger = new MultiLogger(
-    //   consoleLogger,
-    //   meetingSessionPOSTLogger,
-    // );
-    const logger = consoleLogger;
-    console.log('logger', logger);
+    const meetingSessionPOSTLogger = getPOSTLogger(meetingSessionConfiguration, 'SDK', `${Config.cloudWatchLogRestApiVTGRestApi}cloud-watch-logs`, LogLevel.INFO);
+    console.log('meetingSessionPOSTLogger', meetingSessionPOSTLogger);
+    const logger = new MultiLogger(
+      consoleLogger,
+      meetingSessionPOSTLogger,
+    );
+    // const logger = consoleLogger;
+    // console.log('logger', logger);
     setLogger(logger);
     // Check if the Voice Focus Device is supported on the client
     const isVoiceFocusSupported = await transformVoiceFocusDevice(meeting, attendee, logger);
@@ -188,12 +188,20 @@ function StartLiveSession() {
     setMeetingSession(meetingSession);
     selectSpeaker(meetingSession);
     console.log('Main Speaker - initializeMeetingSession--> Start');
-    metricReport(meetingSession);
+    //metricReport(meetingSession);
     console.log('Main Speaker - initializeMeetingSession--> End');
     // Bind the audio element to the meeting session
     const audioElement = document.getElementById('audioElementMain');
     if (audioElement) {
+      // Connect gain node to output
+      const audioContext = new (window.AudioContext)();
+      const gainNode = audioContext.createGain();
+      gainNode.gain.value = 1.5; // Default (1x volume)
+      audioElement.playsInline = true;
       await meetingSession.audioVideo.bindAudioElement(audioElement);
+      const sourceNode = audioContext.createMediaElementSource(audioElement);
+      sourceNode.connect(gainNode);
+      gainNode.connect(audioContext.destination);
     } else {
       console.error('Audio element not found');
     }
@@ -234,12 +242,13 @@ function StartLiveSession() {
       try {
         if (isMicOn) {
           // Mute the microphone
+          console.log("loggerxxxxxxxxxx", logger);
           const realtimeMuteLocalAudio = meetingSession.audioVideo.realtimeMuteLocalAudio();
-          //logger.info('toggleMicrophone realtimeMuteLocalAudio ' + JSON.stringify(realtimeMuteLocalAudio));
-          console.log('toggleMicrophone realtimeMuteLocalAudio', realtimeMuteLocalAudio);
+          logger.info('Guide toggleMicrophone realtimeMuteLocalAudio ' + JSON.stringify(realtimeMuteLocalAudio));
+          //console.log('toggleMicrophone realtimeMuteLocalAudio', realtimeMuteLocalAudio);
           const stopAudioInput = await meetingSession.audioVideo.stopAudioInput(); // Stops the audio input device
           //logger.info('toggleMicrophone stopAudioInput ' + JSON.stringify(stopAudioInput));
-          console.log('toggleMicrophone stopAudioInput', stopAudioInput);
+          logger.info('Guide toggleMicrophone stopAudioInput', stopAudioInput);
 
         } else {
           // Start the audio input device
@@ -249,26 +258,26 @@ function StartLiveSession() {
             agc: { useBuiltInAGC: false }  // Disable AGC in Voice Focus
           });
           //logger.info('toggleMicrophone vfDevice ' + JSON.stringify(vfDevice));
-          console.log('toggleMicrophone vfDevice', vfDevice);
+          logger.info('Guide toggleMicrophone vfDevice', vfDevice);
           // Enable Echo Reduction on this client
           const observeMeetingAudio = await vfDevice.observeMeetingAudio(meetingSession.audioVideo);
           //logger.info('toggleMicrophone Echo Reduction ' + JSON.stringify(observeMeetingAudio));
-          console.log('toggleMicrophone Echo Reduction', observeMeetingAudio);
+          logger.info('Guide toggleMicrophone Echo Reduction', observeMeetingAudio);
           const deviceToUse = vfDevice || selectedAudioInput;
           //logger.info('toggleMicrophone deviceToUse ' + JSON.stringify(deviceToUse));
-          console.log('toggleMicrophone deviceToUse', deviceToUse);
+          logger.info('Guide toggleMicrophone deviceToUse', deviceToUse);
           const startAudioInput = await meetingSession.audioVideo.startAudioInput(deviceToUse);
           //logger.info('toggleMicrophone startAudioInput ' + JSON.stringify(startAudioInput));
-          console.log('toggleMicrophone startAudioInput', startAudioInput);
+          logger.info('Guide toggleMicrophone startAudioInput', startAudioInput);
 
           if (vfDevice) {
             // logger.info('Amazon Voice Focus enabled ');
-            console.log('Amazon Voice Focus enabled ');
+            logger.info('Guide Amazon Voice Focus enabled ');
           }
           // Unmute the microphone
           const realtimeUnmuteLocalAudio = meetingSession.audioVideo.realtimeUnmuteLocalAudio();
           //logger.info('toggleMicrophone realtimeUnmuteLocalAudio ' + JSON.stringify(realtimeUnmuteLocalAudio));
-          console.log('toggleMicrophone realtimeUnmuteLocalAudio', realtimeUnmuteLocalAudio);
+          logger.info('Guide toggleMicrophone realtimeUnmuteLocalAudio', realtimeUnmuteLocalAudio);
         }
 
         setIsMicOn(!isMicOn); // Toggle mic status
@@ -311,8 +320,8 @@ function StartLiveSession() {
       setMicroChecking('microChecking');
 
       // Check if there are no devices or if any device label is empty
-      if (devices.length === 0 || devices.some(device => !device.label.trim())) {
-      //if (devices.length === 0) {
+      //if (devices.length === 0 || devices.some(device => !device.label.trim())) {
+      if (devices.length === 0) {
         console.log('No audio input devices found');
         // Display a message after 5 seconds
         setTimeout(() => {

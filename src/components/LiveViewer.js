@@ -386,7 +386,20 @@ function LiveViewer() {
     } else {
       if (sourceLanguageCode === selectedVoiceLanguage) {
         const bindAudioElement = async () => {
-          await meetingSession.audioVideo.bindAudioElement(audioElement);
+          //await meetingSession.audioVideo.bindAudioElement(audioElement);
+          if (audioElement) {
+            // Connect gain node to output
+            const audioContext = new (window.AudioContext)();
+            const gainNode = audioContext.createGain();
+            gainNode.gain.value = 1.5; // Default (1x volume)
+            audioElement.playsInline = true;
+            await meetingSession.audioVideo.bindAudioElement(audioElement);
+            const sourceNode = audioContext.createMediaElementSource(audioElement);
+            sourceNode.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+          } else {
+            console.error('Audio element not found');
+          }
         };
         bindAudioElement();
         //audioElement.play();
