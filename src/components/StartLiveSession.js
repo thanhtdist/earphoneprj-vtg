@@ -212,7 +212,7 @@ function StartLiveSession() {
       // Connect gain node to output
       const audioContext = new (window.AudioContext)();
       const gainNode = audioContext.createGain();
-      gainNode.gain.value = 1.5; // Default (1x volume)
+      gainNode.gain.value = 2; // Default (1x volume)
       audioElement.playsInline = true;
       await meetingSession.audioVideo.bindAudioElement(audioElement);
       const sourceNode = audioContext.createMediaElementSource(audioElement);
@@ -269,7 +269,7 @@ function StartLiveSession() {
           // Create a new transform device if Voice Focus is supported
           //const vfDevice = await transformVFD.createTransformDevice(selectedAudioInput);
           const vfDevice = await transformVFD.createTransformDevice(selectedAudioInput, { 
-            //agc: { useBuiltInAGC: false }  // Disable AGC in Voice Focus
+            agc: { useBuiltInAGC: false }  // Disable AGC in Voice Focus
           });
           logger.info('toggleMicrophone vfDevice ' + JSON.stringify(vfDevice));
           // Enable Echo Reduction on this client
@@ -329,8 +329,8 @@ function StartLiveSession() {
       setMicroChecking('microChecking');
 
       // Check if there are no devices or if any device label is empty
-      //if (devices.length === 0 || devices.some(device => !device.label.trim())) {
-      if (devices.length === 0) {
+      if (devices.length === 0 || devices.some(device => !device.label.trim())) {
+      //if (devices.length === 0) {
         console.log('No audio input devices found');
         // Display a message after 5 seconds
         setTimeout(() => {

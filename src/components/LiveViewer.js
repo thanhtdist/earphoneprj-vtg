@@ -392,7 +392,7 @@ function LiveViewer() {
             // Connect gain node to output
             const audioContext = new (window.AudioContext)();
             const gainNode = audioContext.createGain();
-            gainNode.gain.value = 2.0; // Default (1x volume)
+            gainNode.gain.value = 2; // Default (1x volume)
             audioElement.playsInline = true;
             await meetingSession.audioVideo.bindAudioElement(audioElement);
             const sourceNode = audioContext.createMediaElementSource(audioElement);
