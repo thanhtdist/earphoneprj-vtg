@@ -386,24 +386,45 @@ function LiveViewer() {
       setTranscriptText((prev) => [...prev, currentText]);
     } else {
       if (sourceLanguageCode === selectedVoiceLanguage) {
-        const bindAudioElement = async () => {
-          //await meetingSession.audioVideo.bindAudioElement(audioElement);
-          if (audioElement) {
-            // Connect gain node to output
-            const audioContext = new (window.AudioContext)();
-            const gainNode = audioContext.createGain();
-            gainNode.gain.value = 2; // Default (1x volume)
-            audioElement.playsInline = true;
-            await meetingSession.audioVideo.bindAudioElement(audioElement);
-            const sourceNode = audioContext.createMediaElementSource(audioElement);
-            sourceNode.connect(gainNode);
-            gainNode.connect(audioContext.destination);
-          } else {
-            console.error('Audio element not found');
-          }
-        };
-        bindAudioElement();
+        // const bindAudioElement = async () => {
+        //   //await meetingSession.audioVideo.bindAudioElement(audioElement);
+        //   if (audioElement) {
+        //     // Connect gain node to output
+        //     // const audioContext = new (window.AudioContext)();
+        //     // const gainNode = audioContext.createGain();
+        //     // gainNode.gain.value = 2; // Default (1x volume)
+        //     // audioElement.playsInline = true;
+        //     // await meetingSession.audioVideo.bindAudioElement(audioElement);
+        //     // const sourceNode = audioContext.createMediaElementSource(audioElement);
+        //     // sourceNode.connect(gainNode);
+        //     // gainNode.connect(audioContext.destination);
+        //   } else {
+        //     console.error('Audio element not found');
+        //   }
+        // };
+        // bindAudioElement();
         //audioElement.play();
+        const bindMeetingAudioWithWebAudio = (meetingSession) => {
+          const audioVideo = meetingSession.audioVideo;
+
+          // 🎯 Tạo AudioContext để xử lý âm thanh
+          const audioContext = new AudioContext();
+          const mediaStreamDestination = audioContext.createMediaStreamDestination();
+
+          // 🎯 Lấy stream audio của cuộc họp
+          audioVideo.bindAudioElement(new Audio()); // Vẫn cần tạo 1 audio ẩn để kích hoạt
+          audioVideo.start(); // Bắt đầu nhận audio
+
+          // 🎯 Kết nối MediaStream vào AudioContext
+          const stream = mediaStreamDestination.stream;
+          const source = audioContext.createMediaStreamSource(stream);
+          source.connect(audioContext.destination); // Kết nối đến loa
+
+          console.log("🔊 Đã bind audio với Web Audio API thành công!");
+        }
+
+        // 🔥 Gọi hàm này sau khi đã join meeting
+        bindMeetingAudioWithWebAudio(meetingSession);
       }
     }
   }, [
