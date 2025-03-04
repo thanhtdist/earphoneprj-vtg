@@ -189,6 +189,22 @@ function StartLiveSession() {
     selectSpeaker(meetingSession);
     console.log('Main Speaker - initializeMeetingSession--> Start');
     //metricReport(meetingSession);
+    // Check incoming volume
+    // const presentAttendeeId = meetingSession.configuration.credentials.attendeeId;
+    // logger.info(`🔊 User Listening to incoming volume from ${presentAttendeeId}`);
+    // meetingSession.audioVideo.realtimeSubscribeToVolumeIndicator(
+    //   presentAttendeeId,
+    //   (attendeeId, volume, muted, signalStrength) => {
+    //     logger.info(`🔊 User Incoming volume from ${attendeeId}: ${volume}`);
+    //     logger.info(`🔇 User Incoming muted from ${attendeeId}: ${muted}`);
+    //     logger.info(`📶 User Incoming signalStrength from ${attendeeId}: ${signalStrength}`);
+    //     if (volume !== null && volume < 0.2) {
+    //       console.warn(`🔈User Incoming volume from ${attendeeId} is low! Boosting volume.`);
+    //       logger.info(`🔈 User Incoming volume from ${attendeeId} is low! Boosting volume.`);
+    //       //gainNode.gain.value = 2; // Double the volume
+    //     }
+    //   }
+    // );
     console.log('Main Speaker - initializeMeetingSession--> End');
     // Bind the audio element to the meeting session
     const audioElement = document.getElementById('audioElementMain');

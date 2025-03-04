@@ -18,7 +18,7 @@ import '../styles/LiveViewer.css';
 import ChatMessage from './ChatMessage';
 import Participants from './Participants';
 import Config from '../utils/config';
-import metricReport from '../utils/MetricReport';
+//import metricReport from '../utils/MetricReport';
 import { getPOSTLogger } from '../utils/MeetingLogger';
 import JSONCookieUtils from '../utils/JSONCookieUtils';
 import { checkAvailableMeeting } from '../utils/MeetingUtils';
@@ -81,8 +81,9 @@ function LiveViewer() {
     const meetingSession = new DefaultMeetingSession(meetingSessionConfiguration, logger, deviceController);
     setMeetingSession(meetingSession);
 
-    await selectSpeaker(meetingSession);
-    metricReport(meetingSession, logger, 'User');
+    //await selectSpeaker(meetingSession);
+    selectSpeaker(meetingSession);
+    //metricReport(meetingSession, logger, 'User');
     // Check incoming volume
     const presentAttendeeId = meetingSession.configuration.credentials.attendeeId;
     logger.info(`🔊 User Listening to incoming volume from ${presentAttendeeId}`);
