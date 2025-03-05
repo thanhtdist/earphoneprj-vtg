@@ -376,8 +376,8 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null, userT
               disabled={sending || (!inputMessage && !selectedFile)}
               style={{
                 // backgroundColor: (sending || (!inputMessage && !selectedFile)) ? '#d3d3d3' : '#4CAF50', // Adjust colors as needed
-                backgroundColor:styleButton(),
-                color: (sending || (!inputMessage && !selectedFile)) ? 'black' : "red",
+                color:styleButton(),
+                // color: (sending || (!inputMessage && !selectedFile)) ? 'black' : "red",
                 cursor: (sending || (!inputMessage && !selectedFile)) ? 'not-allowed' : 'pointer',
                 opacity: (sending || (!inputMessage && !selectedFile)) ? 0.6 : 1,
               }}>

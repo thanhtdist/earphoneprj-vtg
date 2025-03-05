@@ -170,7 +170,8 @@ function LiveViewer() {
         setAttendee(attendeeData);
         setChannelArn(channelArn);
         setUserArn(userArn);
-
+        console.log('Cookie set for 1 day!');
+        setIsJoinAudio(true);
         const user = {
           meeting: meetingData,
           attendee: attendeeData,
@@ -179,8 +180,7 @@ function LiveViewer() {
         };
 
         JSONCookieUtils.setJSONCookie('User', user, 1);
-        console.log('Cookie set for 1 day!');
-        setIsJoinAudio(true);
+
       } catch (error) {
         console.error('Error joining the meeting:', error);
       } finally {
@@ -384,8 +384,9 @@ function LiveViewer() {
       audioElementRef.current.pause();
     }
   }
-  // const text = " Năm 2004, nơi mục từ Vân Đài trong Từ điển Văn học (bộ mới), có đoạn viết, đại để như sau:Buổi đầu, đa phần thơ Vân Đài làm theo thể Đường luậtđa phần thơ Vân Đài làm theo thể Đường luậtđa phần thơ Vân Đài làm theo thể Đường luậtđa phần thơ Vân Đài làm theo thể Đường luậtđa phần thơ Vân Đài làm theo thể Đường luậtđa phần thơ Vân Đài làm theo thể Đường luậtđa phần thơ Vân Đài làm theo thể Đường luậtđa phần thơ Vân Đài làm theo thể Đường luật";
-  const isLongText = translatedListRef.current.join(' ').length > 400;
+  const text = " Năm 2004, nơi mục từ Vân Đài trong Từ điển Văn học (bộ mới), có đoạn viết, đại để như sau:Buổi đầu, đa phần thơ Vân Đài làm theo thể Đường luậtđa phần thơ Vân Đài làm theo thể Đường luậtđa phần thơ Vân Đài làm theo thể Đường luậtđa phần thơ Vân Đài làm theo thể Đường luậtđa phần thơ Vân Đài làm theo thể Đường luậtđa phần thơ Vân Đài làm theo thể Đường luậtđa phần thơ Vân Đài làm theo thể Đường luậtđa phần thơ Vân Đài làm theo thể Đường luậtNăm 2004, nơi mục từ Vân Đài trong Từ điển Văn học (bộ mới), có đoạn viết, đại để như sau:Buổi đầu, đa phần thơ Vân Đài làm theo thể Đường luậtđa phần thơ Vân Đài làm theo thể Đường luậtđa phần thơ Vân Đài làm theo thể Đường luậtđa phần thơ Vân Đài làm theo thể Đường luậtđa phần thơ Vân Đài làm theo thể Đường luậtđa phần thơ Vân Đài làm theo thể Đường luậtđa phần thơ Vân Đài làm theo thể Đường luậtđa phần thơ Vân Đài làm theo thể Đường luật";
+  // const isLongText = translatedListRef.current.join(' ').length > 300;
+  const isLongText = text.length > 300;
   return (
     <>
       {/* <Participants count={participantsCount} /> */}
@@ -462,26 +463,28 @@ function LiveViewer() {
                 I am listening in{' '}
                 {LISTEN_VOICE_LANGUAGES.find((lang) => lang.key === selectedVoiceLanguage)?.label}.
               </p> */}
-              {translatedListRef.current.length > 0 && (
+              {/* {translatedListRef.current.length > 0 && ( */}
 
                 <div className='trans-text-box'>
                   <div className={` ${isLongText ? 'long-text' : 'short-text'}`}></div>
                   <span className='trans-text'>
-                    {t('translations')}: <span>{translatedListRef.current.join(' ')}</span>
+                    {/* {t('translations')}: <span>{translatedListRef.current.join(' ')}</span>        */}
+                    {text}
                   </span>
                 </div>
 
-              )}
-              {transcriptListRef.current.length > 0 && (
+               {/* )}  */}
+              {/* {transcriptListRef.current.length > 0 && ( */}
 
                 <div className='trans-text-box'>
                   {/* <div className="blur-mask"></div> */}
                   <div className={` ${isLongText ? 'long-text' : 'short-text'}`}></div>
                   <span className='trans-text'>
-                    {t('transcriptions')}: <span>{transcriptListRef.current.join(' ')}</span>
-                  </span>
+                    {/* {t('transcriptions')}: <span>{transcriptListRef.current.join(' ')}</span> */}
+      {text}
+                    </span>
                 </div>
-              )}
+               {/* )}  */}
               <br />
 
               <br />

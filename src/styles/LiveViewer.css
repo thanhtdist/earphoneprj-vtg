@@ -15,6 +15,7 @@
     padding: 20px 20px 0 20px;
     font-family: Arial, sans-serif;
     height: 500px;
+    margin-top: 40px;
   }
   
   .audio-player {
@@ -133,7 +134,7 @@
 }
 .trans-text-box{
   /* background-color: burlywood; */
-  height: 200px;
+  height: 150px;
   overflow-y: scroll;
   margin-bottom: 20px;
 }

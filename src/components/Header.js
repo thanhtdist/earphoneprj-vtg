@@ -44,7 +44,6 @@ function Header({ count, meeting, channelID, userId, chatSetting, userType }) {
         <div className='containerHeader' style={style()}>
 
             <Participants count={count}></Participants>
-            {/* {userId} */}
             <div className='rightMenu'>
                 {userType === "Guide" && (
                     <div className='qrCode' onClick={openPopup}>
@@ -62,7 +61,7 @@ function Header({ count, meeting, channelID, userId, chatSetting, userType }) {
             {openQRCode === true && meeting &&
                 <div className="popup">
                     <div className="popup-content">
-                        <span className="close-btn" onClick={closePopup}>&times;</span>
+                        <span className="close-btn" style={{border:'2px solid red',backgroundColor:'red'}} onClick={closePopup}>&times;</span>
                         <div className='contentQR'>
                             <h3>QRコードを共有</h3>
                             <select className='selectFile' value={selectedQR} onChange={handleQRSelectionChange}>
