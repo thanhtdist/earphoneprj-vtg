@@ -424,9 +424,9 @@ function LiveViewer() {
             biquadFilter.type = "lowshelf";
             biquadFilter.frequency.setValueAtTime(1000, audioContext.currentTime);
             biquadFilter.gain.setValueAtTime(-40, audioContext.currentTime);
-            // 🎯 Tạo GainNode để giảm âm lượng 80%
+            // 🎯 Tạo GainNode để giữ 80% âm lượng
             const gainNode = audioContext.createGain();
-            gainNode.gain.value = 0.2; // đặt 0.2 để giữ 20% âm lượng
+            gainNode.gain.value = 0.8; // đặt 0.8 để giữ 80% âm lượng
 
             // 🎯 Kết nối các node
             source.connect(biquadFilter);
