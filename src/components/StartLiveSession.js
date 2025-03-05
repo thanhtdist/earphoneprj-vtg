@@ -185,6 +185,15 @@ function StartLiveSession() {
     const deviceController = new DefaultDeviceController(logger, { enableWebAudio: isVoiceFocusSupported });
     //logger.info('deviceController' + JSON.stringify(deviceController));
     const meetingSession = new DefaultMeetingSession(meetingSessionConfiguration, logger, deviceController);
+    const audioProfile = {
+      audio: {
+      codec: "opus", // Set Opus codec
+      sampleRate: 48000, // Sample rate 48kHz
+      bitrate: 64000 // Bitrate 64kbps (or 128kbps if stereo)
+      }
+    };
+
+    meetingSession.audioVideo.setAudioProfile(audioProfile);
     setMeetingSession(meetingSession);
     selectSpeaker(meetingSession);
     console.log('Main Speaker - initializeMeetingSession--> Start');
