@@ -275,7 +275,8 @@ function StartLiveSession() {
           // Enable Echo Reduction on this client
           const observeMeetingAudio = await vfDevice.observeMeetingAudio(meetingSession.audioVideo);
           logger.info('toggleMicrophone Echo Reduction ' + JSON.stringify(observeMeetingAudio));
-          const deviceToUse = vfDevice || selectedAudioInput;
+          //const deviceToUse = vfDevice || selectedAudioInput;
+          const deviceToUse = selectedAudioInput;
           logger.info('toggleMicrophone deviceToUse ' + JSON.stringify(deviceToUse));
           const startAudioInput = await meetingSession.audioVideo.startAudioInput(deviceToUse);
           logger.info('toggleMicrophone startAudioInput ' + JSON.stringify(startAudioInput));
