@@ -424,12 +424,16 @@ function LiveViewer() {
             biquadFilter.type = "lowshelf";
             biquadFilter.frequency.setValueAtTime(1000, audioContext.currentTime);
             biquadFilter.gain.setValueAtTime(-40, audioContext.currentTime);
+            // 🎯 Tạo GainNode để giảm âm lượng 80%
+            const gainNode = audioContext.createGain();
+            gainNode.gain.value = 0.2; // đặt 0.2 để giữ 20% âm lượng
 
             // 🎯 Kết nối các node
             source.connect(biquadFilter);
-            biquadFilter.connect(audioContext.destination); // Kết nối đến loa
+            biquadFilter.connect(gainNode);
+            gainNode.connect(audioContext.destination); // Kết nối đến loa
 
-            console.log("🔊 Đã bind audio với Web Audio API thành công!");
+            console.log("🔊 Đã bind audio với Web Audio API và giảm âm lượng 80% thành công!");
         }
 
         // 🔥 Gọi hàm này sau khi đã join meeting
