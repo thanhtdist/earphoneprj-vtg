@@ -68,18 +68,38 @@ function LiveViewer() {
 
     selectSpeaker(meetingSession);
 
-    const audioElement = document.getElementById('audioElementListener');
-    if (audioElement) {
-      await meetingSession.audioVideo.bindAudioElement(audioElement);
-    } else {
-      console.error('Audio element not found');
-    }
+    // const audioElement = document.getElementById('audioElementListener');
+    // if (audioElement) {
+    //   await meetingSession.audioVideo.bindAudioElement(audioElement);
+    // } else {
+    //   console.error('Audio element not found');
+    // }
 
-    console.log('Listeners - initializeMeetingSession--> Start');
+    // console.log('Listeners - initializeMeetingSession--> Start');
     metricReport(meetingSession);
-    console.log('Listeners - initializeMeetingSession--> End');
+    // console.log('Listeners - initializeMeetingSession--> End');
 
+    // meetingSession.audioVideo.start();
+
+    // Create an AudioContext
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+    // Create a MediaStreamDestinationNode
+    const audioDestination = audioContext.createMediaStreamDestination();
+
+    // Bind the audio output to the MediaStreamDestinationNode
+    meetingSession.audioVideo.bindAudioStream(audioDestination.stream);
+
+    // Create an Audio element and set its source to the processed audio
+    const audioElement = new Audio();
+    audioElement.srcObject = audioDestination.stream;
+    audioElement.play();
+
+    // Start the meeting session
     meetingSession.audioVideo.start();
+
+    console.log('Audio playback started using Web Audio API');
+    
   }, []);
 
   // Async function to select audio output device
