@@ -405,22 +405,31 @@ function LiveViewer() {
         // bindAudioElement();
         //audioElement.play();
         const bindMeetingAudioWithWebAudio = (meetingSession) => {
-          const audioVideo = meetingSession.audioVideo;
+            const audioVideo = meetingSession.audioVideo;
 
-          // 🎯 Tạo AudioContext để xử lý âm thanh
-          const audioContext = new AudioContext();
-          const mediaStreamDestination = audioContext.createMediaStreamDestination();
+            // 🎯 Tạo AudioContext để xử lý âm thanh
+            const audioContext = new AudioContext();
+            const mediaStreamDestination = audioContext.createMediaStreamDestination();
 
-          // 🎯 Lấy stream audio của cuộc họp
-          audioVideo.bindAudioElement(new Audio()); // Vẫn cần tạo 1 audio ẩn để kích hoạt
-          audioVideo.start(); // Bắt đầu nhận audio
+            // 🎯 Lấy stream audio của cuộc họp
+            audioVideo.bindAudioElement(new Audio()); // Vẫn cần tạo 1 audio ẩn để kích hoạt
+            audioVideo.start(); // Bắt đầu nhận audio
 
-          // 🎯 Kết nối MediaStream vào AudioContext
-          const stream = mediaStreamDestination.stream;
-          const source = audioContext.createMediaStreamSource(stream);
-          source.connect(audioContext.destination); // Kết nối đến loa
+            // 🎯 Kết nối MediaStream vào AudioContext
+            const stream = mediaStreamDestination.stream;
+            const source = audioContext.createMediaStreamSource(stream);
 
-          console.log("🔊 Đã bind audio với Web Audio API thành công!");
+            // 🎯 Tạo bộ lọc tạp âm
+            const biquadFilter = audioContext.createBiquadFilter();
+            biquadFilter.type = "lowshelf";
+            biquadFilter.frequency.setValueAtTime(1000, audioContext.currentTime);
+            biquadFilter.gain.setValueAtTime(-40, audioContext.currentTime);
+
+            // 🎯 Kết nối các node
+            source.connect(biquadFilter);
+            biquadFilter.connect(audioContext.destination); // Kết nối đến loa
+
+            console.log("🔊 Đã bind audio với Web Audio API thành công!");
         }
 
         // 🔥 Gọi hàm này sau khi đã join meeting
