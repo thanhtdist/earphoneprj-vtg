@@ -407,33 +407,45 @@ function LiveViewer() {
         const bindMeetingAudioWithWebAudio = (meetingSession) => {
             const audioVideo = meetingSession.audioVideo;
 
-            // 🎯 Tạo AudioContext để xử lý âm thanh
+            // Create AudioContext to process audio
             const audioContext = new AudioContext();
             const mediaStreamDestination = audioContext.createMediaStreamDestination();
 
-            // 🎯 Lấy stream audio của cuộc họp
-            audioVideo.bindAudioElement(new Audio()); // Vẫn cần tạo 1 audio ẩn để kích hoạt
-            audioVideo.start(); // Bắt đầu nhận audio
+            // Get meeting audio stream
+            audioVideo.bindAudioElement(new Audio()); // Still need to create a hidden audio element to activate
+            audioVideo.start(); // Start receiving audio
 
-            // 🎯 Kết nối MediaStream vào AudioContext
+            // Connect MediaStream to AudioContext
             const stream = mediaStreamDestination.stream;
             const source = audioContext.createMediaStreamSource(stream);
 
-            // 🎯 Tạo bộ lọc tạp âm
-            const biquadFilter = audioContext.createBiquadFilter();
-            biquadFilter.type = "lowshelf";
-            biquadFilter.frequency.setValueAtTime(1000, audioContext.currentTime);
-            biquadFilter.gain.setValueAtTime(-40, audioContext.currentTime);
-            // 🎯 Tạo GainNode để giữ 80% âm lượng
+            // Create a bandpass filter to isolate voice frequencies
+            const bandpassFilter = audioContext.createBiquadFilter();
+            bandpassFilter.type = "bandpass";
+            bandpassFilter.frequency.setValueAtTime(1000, audioContext.currentTime); // Center frequency for voice
+            bandpassFilter.Q.setValueAtTime(1, audioContext.currentTime); // Quality factor
+
+            // Create GainNode to control volume
             const gainNode = audioContext.createGain();
-            gainNode.gain.value = 0.8; // đặt 0.8 để giữ 80% âm lượng
+            gainNode.gain.value = 1.0; // Set to 1.0 to keep original volume
 
-            // 🎯 Kết nối các node
-            source.connect(biquadFilter);
-            biquadFilter.connect(gainNode);
-            gainNode.connect(audioContext.destination); // Kết nối đến loa
+            // Create a delay node to reduce echo
+            const delayNode = audioContext.createDelay();
+            delayNode.delayTime.value = 0.2; // Adjust delay time to reduce echo
 
-            console.log("🔊 Đã bind audio với Web Audio API và giảm âm lượng 80% thành công!");
+            // Create a feedback gain node to control the amount of echo reduction
+            const feedbackGainNode = audioContext.createGain();
+            feedbackGainNode.gain.value = 0.5; // Adjust feedback gain to reduce echo
+
+            // Connect nodes
+            source.connect(bandpassFilter);
+            bandpassFilter.connect(gainNode);
+            gainNode.connect(delayNode);
+            delayNode.connect(feedbackGainNode);
+            feedbackGainNode.connect(delayNode); // Create feedback loop
+            feedbackGainNode.connect(audioContext.destination); // Connect to speakers
+
+            console.log("🔊 Audio bound with Web Audio API, noise reduced to keep only voice frequencies, and echo reduced!");
         }
 
         // 🔥 Gọi hàm này sau khi đã join meeting
