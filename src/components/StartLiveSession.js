@@ -246,7 +246,7 @@ function StartLiveSession() {
       } finally {
         setIsLoading(false);
       }
-    }, [initializeMeetingSession,userType]);
+    }, [valueChatSetting,initializeMeetingSession,userType]);
   
 
   // Function to toggle microphone on/off
@@ -441,7 +441,7 @@ function StartLiveSession() {
   useEffect(() => {
     startLiveAduioSession();
     setSelectedVoiceLanguage('ja-JP');
-  }, [valueChatSetting, startLiveAduioSession]);
+  }, [ startLiveAduioSession]);
   return (
     <>
       <Header count={participantsCount} meeting={meeting} channelID={channelID} userId={userId} chatSetting={valueChatSetting} userType={userType} />
