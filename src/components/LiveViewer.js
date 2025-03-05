@@ -82,7 +82,7 @@ function LiveViewer() {
     // meetingSession.audioVideo.start();
 
     // Create an AudioContext
-    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    const audioContext = new (window.AudioContext)();
 
     // Create a MediaStreamDestinationNode
     const audioDestination = audioContext.createMediaStreamDestination();
