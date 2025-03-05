@@ -425,6 +425,16 @@ function LiveViewer() {
             bandpassFilter.frequency.setValueAtTime(1000, audioContext.currentTime); // Center frequency for voice
             bandpassFilter.Q.setValueAtTime(1, audioContext.currentTime); // Quality factor
 
+            // Create a highpass filter to remove low frequencies
+            const highpassFilter = audioContext.createBiquadFilter();
+            highpassFilter.type = "highpass";
+            highpassFilter.frequency.setValueAtTime(100, audioContext.currentTime); // Cutoff frequency for low frequencies
+
+            // Create a lowpass filter to remove high frequencies
+            const lowpassFilter = audioContext.createBiquadFilter();
+            lowpassFilter.type = "lowpass";
+            lowpassFilter.frequency.setValueAtTime(8000, audioContext.currentTime); // Cutoff frequency for high frequencies
+
             // Create GainNode to control volume
             const gainNode = audioContext.createGain();
             gainNode.gain.value = 1.0; // Set to 1.0 to keep original volume
@@ -438,7 +448,9 @@ function LiveViewer() {
             feedbackGainNode.gain.value = 0.5; // Adjust feedback gain to reduce echo
 
             // Connect nodes
-            source.connect(bandpassFilter);
+            source.connect(highpassFilter);
+            highpassFilter.connect(lowpassFilter);
+            lowpassFilter.connect(bandpassFilter);
             bandpassFilter.connect(gainNode);
             gainNode.connect(delayNode);
             delayNode.connect(feedbackGainNode);
@@ -448,7 +460,7 @@ function LiveViewer() {
             console.log("🔊 Audio bound with Web Audio API, noise reduced to keep only voice frequencies, and echo reduced!");
         }
 
-        // 🔥 Gọi hàm này sau khi đã join meeting
+        // 🔥 Call this function after joining the meeting
         bindMeetingAudioWithWebAudio(meetingSession);
       }
     }
