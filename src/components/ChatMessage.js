@@ -23,7 +23,7 @@ import { MdAttachFile } from "react-icons/md";
  * @param {string} channelArn - The ARN of the channel
  * @param {string} sessionId - The session ID for the messaging session 
  */
-function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null }) {
+function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null, userType }) {
   const subGuideCount = localStorage.getItem('subGuideJoinCount') || 0;
   console.log('subGuideJoinCount:', subGuideCount);
   // State variables to store messages and input message
@@ -252,7 +252,17 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null }) {
       }
     };
   }, [initializeMessagingSession, channelArn, userArn, sessionId]);
-
+  const styleButton = () => {
+    if (userType === "Guide") {
+      return  'red'     
+    }
+    else if (userType === "User") {
+      return  '#16A085'
+    }
+    else if (userType === "Sub-Guide") {
+      return  '#E57A00'
+    }
+  }
   return (
     <div className="chat-container" style={{ display: ((chatSetting === 'guideOnly' && messages.length <= 0) || chatSetting === 'nochat') ? 'none' : 'block' }}>
       {messages.length > 0 && (
@@ -366,7 +376,8 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null }) {
               disabled={sending || (!inputMessage && !selectedFile)}
               style={{
                 // backgroundColor: (sending || (!inputMessage && !selectedFile)) ? '#d3d3d3' : '#4CAF50', // Adjust colors as needed
-                color: 'red',
+                backgroundColor:styleButton(),
+                color: (sending || (!inputMessage && !selectedFile)) ? 'black' : "red",
                 cursor: (sending || (!inputMessage && !selectedFile)) ? 'not-allowed' : 'pointer',
                 opacity: (sending || (!inputMessage && !selectedFile)) ? 0.6 : 1,
               }}>

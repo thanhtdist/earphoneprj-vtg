@@ -246,7 +246,7 @@ function StartLiveSession() {
       } finally {
         setIsLoading(false);
       }
-    }, [initializeMeetingSession]);
+    }, [initializeMeetingSession,userType]);
   
 
   // Function to toggle microphone on/off
@@ -329,8 +329,8 @@ function StartLiveSession() {
       setMicroChecking('microChecking');
 
       // Check if there are no devices or if any device label is empty
-      if (devices.length === 0 || devices.some(device => !device.label.trim())) {
-      //if (devices.length === 0) {
+      // if (devices.length === 0 || devices.some(device => !device.label.trim())) {
+      if (devices.length === 0) {
         console.log('No audio input devices found');
         // Display a message after 5 seconds
         setTimeout(() => {
@@ -518,7 +518,7 @@ function StartLiveSession() {
           </>
         )}
         {valueChatSetting !== "nochat" && (
-          <MessageBox userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} />
+          <MessageBox userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} userType={userType} statusChat={valueChatSetting} />
         )}
       </div>
     </>

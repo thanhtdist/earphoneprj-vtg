@@ -1,7 +1,7 @@
 .containerHeader {
     display: flex;
     justify-content: space-between;
-    border-bottom: solid 0.5px grey;
+    border-bottom: solid 0.5px #DDDDDD;
     /* color: red; */
     /* box-shadow: 0 6px 5px rgba(0, 0, 0, 0.2); */
 }

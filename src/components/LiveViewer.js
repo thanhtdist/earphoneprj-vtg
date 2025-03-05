@@ -14,8 +14,6 @@ import {
   MeetingSessionConfiguration,
 } from 'amazon-chime-sdk-js';
 import '../styles/LiveViewer.css';
-import ChatMessage from './ChatMessage';
-import Participants from './Participants';
 import Config from '../utils/config';
 import metricReport from '../utils/MetricReport';
 import JSONCookieUtils from '../utils/JSONCookieUtils';
@@ -24,7 +22,13 @@ import { v4 as uuidv4 } from 'uuid';
 import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { LISTEN_VOICE_LANGUAGES } from '../utils/constant';
-
+import Header from './Header';
+import { IoPlay } from "react-icons/io5";
+import { HiMiniSpeakerWave } from "react-icons/hi2";
+import { IoVolumeMute } from "react-icons/io5";
+// import { IoMicCircle, IoMicOffCircleSharp } from "react-icons/io5";
+import { FaPause } from "react-icons/fa6";
+import MessageBox from './MessageBox';
 function LiveViewer() {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -49,15 +53,16 @@ function LiveViewer() {
   const [selectedVoiceLanguage, setSelectedVoiceLanguage] = useState(
     LISTEN_VOICE_LANGUAGES.find((lang) => lang.key.startsWith(i18n.language))?.key || 'ja-JP'
   );
-
+  const [isJoinAudio, setIsJoinAudio] = useState(false);
   // Replace local variables with refs
   const transcriptListRef = useRef([]);
   const transcriptList2Ref = useRef([]);
   const translatedListRef = useRef([]);
   const audioQueueRef = useRef([]);
   const audioQueue2Ref = useRef([]);
-
-  // Ref for the audio element
+  const userID = uuidv4();
+  const userType = 'User';
+  // Ref for the audio element  
   const audioElementRef = useRef(null);
 
   const initializeMeetingSession = useCallback(async (meetingData, attendeeData) => {
@@ -142,8 +147,7 @@ function LiveViewer() {
           return;
         }
 
-        const userID = uuidv4();
-        const userType = 'User';
+
 
         const meetingData = await checkAvailableMeeting(meetingId, userType);
         if (!meetingData) return;
@@ -176,6 +180,7 @@ function LiveViewer() {
 
         JSONCookieUtils.setJSONCookie('User', user, 1);
         console.log('Cookie set for 1 day!');
+        setIsJoinAudio(true);
       } catch (error) {
         console.error('Error joining the meeting:', error);
       } finally {
@@ -183,6 +188,7 @@ function LiveViewer() {
       }
     },
     [
+      userID,
       meetingId,
       channelId,
       hostId,
@@ -212,7 +218,7 @@ function LiveViewer() {
             }
           }
         }
-        joinMeeting();
+        joinMeeting();       
       } catch (error) {
         console.error('Error processing the User cookie:', error);
       }
@@ -252,7 +258,7 @@ function LiveViewer() {
         setTranscriptions(transcriptEvent);
       }
     );
-
+    // splitUrl()
     // Cleanup on unmount
     // return () => {
     //   meetingSession.audioVideo.realtimeUnsubscribeFromAttendeeIdPresence(presenceCallback);
@@ -361,15 +367,43 @@ function LiveViewer() {
 
   console.log('Check translatedText:', translatedText);
   console.log('Check translatedText string:', translatedText.join(' '));
-
+  const [isMuted, setIsMuted] = useState(true);
+  const [isPlay, setIsPlay] = useState(false);
+  
+  // const audioRef = useRef(null);
+  const handleMuteUnmute = () => {
+    setIsMuted(!isMuted);
+    audioElementRef.current.muted = isMuted;
+  };
+  const handlePlay = () => {
+    if (isPlay === false) {
+      setIsPlay(true)
+      audioElementRef.current.play();
+    } else {
+      setIsPlay(false);
+      audioElementRef.current.pause();
+    }
+  }
+  // const text = " Năm 2004, nơi mục từ Vân Đài trong Từ điển Văn học (bộ mới), có đoạn viết, đại để như sau:Buổi đầu, đa phần thơ Vân Đài làm theo thể Đường luậtđa phần thơ Vân Đài làm theo thể Đường luậtđa phần thơ Vân Đài làm theo thể Đường luậtđa phần thơ Vân Đài làm theo thể Đường luậtđa phần thơ Vân Đài làm theo thể Đường luậtđa phần thơ Vân Đài làm theo thể Đường luậtđa phần thơ Vân Đài làm theo thể Đường luậtđa phần thơ Vân Đài làm theo thể Đường luật";
+  const isLongText = translatedListRef.current.join(' ').length > 400;
   return (
     <>
-      <Participants count={participantsCount} />
-      <div className="live-viewer-container">
+      {/* <Participants count={participantsCount} /> */}
+      <Header count={participantsCount} meeting={meeting} channelID={channelId} userId={userID} chatSetting={chatSetting} userType={userType} />
+      {/* <div className="live-viewer-container"> */}
+      <div className={` ${isJoinAudio ? 'live-viewer-container' : 'live-viewer-container-center'}`}>
+        <div className='live-viewer-title'>
+          <span>2025年1月1日</span>
+          <span className='name-tour'>浅草寺ツアー</span>
+        </div>
         {!meeting && !attendee && (
-          <div>
-            <h3>{t('voiceLanguageLbl.listening')}</h3>
+          <div className="box-selected-language">
+            <h3>
+              {/* {t('voiceLanguageLbl.listening')} */}
+              聴く言語を選択
+            </h3>
             <select
+              className='selected-language'
               id="selectedVoiceLanguage"
               value={selectedVoiceLanguage}
               onChange={handleSelectedVoiceLanguageChange}
@@ -382,14 +416,15 @@ function LiveViewer() {
             </select>
           </div>
         )}
-        <audio
+        {/* <audio
           id="audioElementListener"
           controls
           ref={audioElementRef}
           autoPlay
           className="audio-player"
           style={{ display: meeting && attendee ? 'block' : 'none' }}
-        />
+        /> */}
+
         {!meeting && !attendee ? (
           isLoading ? (
             <div className="loading">
@@ -397,41 +432,77 @@ function LiveViewer() {
               <p>{t('loading')}</p>
             </div>
           ) : (
-            <button onClick={joinAudioSession}>{t('joinBtn')}</button>
+            <div className='btn' onClick={joinAudioSession}>
+              <button className='btn-join'>{t('joinBtn')}</button>
+            </div>
           )
         ) : (
-          <div>
-            <p>
-              The host is speaking in{' '}
-              {LISTEN_VOICE_LANGUAGES.find((lang) => lang.key === sourceLanguageCode)?.label}.
-            </p>
-            <p>
-              I am listening in{' '}
-              {LISTEN_VOICE_LANGUAGES.find((lang) => lang.key === selectedVoiceLanguage)?.label}.
-            </p>
-            {transcriptListRef.current.length > 0 && (
-              <span>
-                {t('transcriptions')}: <span>{transcriptListRef.current.join(' ')}</span>
-              </span>
-            )}
-            <br />
-            {translatedListRef.current.length > 0 && (
-              <span>
-                {t('translations')}: <span>{translatedListRef.current.join(' ')}</span>
-              </span>
-            )}
-            <br />
-            {channelArn && (
-              <ChatMessage
-                userArn={userArn}
-                sessionId={Config.sessionId}
-                channelArn={channelArn}
-                chatSetting={chatSetting}
-              />
-            )}
-          </div>
+          <>
+            <div className='audio'>
+              <div className='playButton' onClick={handlePlay}>
+                {isPlay ? <FaPause size={30} /> : <IoPlay size={30} />}
+              </div>
+
+              <div className='muteButton' onClick={handleMuteUnmute}>
+                {isMuted ? <HiMiniSpeakerWave size={30} /> : <IoVolumeMute size={30} />
+                }
+              </div>
+              <audio id='audioElementListener' ref={audioElementRef} >
+              </audio>
+            </div>
+            <div className='trans-box'>
+              <div style={{ textAlign: 'center' }}>
+                <p>キャプチャー</p>
+              </div>
+              {/* <p>
+                The host is speaking in{' '}
+                {LISTEN_VOICE_LANGUAGES.find((lang) => lang.key === sourceLanguageCode)?.label}.
+              </p>
+              <p>
+                I am listening in{' '}
+                {LISTEN_VOICE_LANGUAGES.find((lang) => lang.key === selectedVoiceLanguage)?.label}.
+              </p> */}
+              {translatedListRef.current.length > 0 && (
+
+                <div className='trans-text-box'>
+                  <div className={` ${isLongText ? 'long-text' : 'short-text'}`}></div>
+                  <span className='trans-text'>
+                    {t('translations')}: <span>{translatedListRef.current.join(' ')}</span>
+                  </span>
+                </div>
+
+              )}
+              {transcriptListRef.current.length > 0 && (
+
+                <div className='trans-text-box'>
+                  {/* <div className="blur-mask"></div> */}
+                  <div className={` ${isLongText ? 'long-text' : 'short-text'}`}></div>
+                  <span className='trans-text'>
+                    {t('transcriptions')}: <span>{transcriptListRef.current.join(' ')}</span>
+                  </span>
+                </div>
+              )}
+              <br />
+
+              <br />
+            </div>
+            {/* <div>
+              {channelArn && (
+                <ChatMessage
+                  userArn={userArn}
+                  sessionId={Config.sessionId}
+                  channelArn={channelArn}
+                  chatSetting={chatSetting}
+                />
+              )}
+            </div> */}
+
+            <MessageBox userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} userType={userType} statusChat={chatSetting}/>
+
+          </>
         )}
       </div>
+
     </>
   );
 }
