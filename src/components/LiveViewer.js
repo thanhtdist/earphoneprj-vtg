@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import {
   createAttendee,
   createAppInstanceUsers,
   addChannelMembership,
   listAttendee,
+  translateTextSpeech,
 } from '../apis/api';
 import {
   DefaultDeviceController,
@@ -16,302 +17,434 @@ import '../styles/LiveViewer.css';
 import ChatMessage from './ChatMessage';
 import Participants from './Participants';
 import Config from '../utils/config';
-import metricReport from '../utils/MetricReport';
+//import metricReport from '../utils/MetricReport';
 import JSONCookieUtils from '../utils/JSONCookieUtils';
 import { checkAvailableMeeting } from '../utils/MeetingUtils';
 import { v4 as uuidv4 } from 'uuid';
 import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-/**
- * Component to join a meeting as a viewer and listen to the audio from the main & sub-speakers
- */
+import { LISTEN_VOICE_LANGUAGES } from '../utils/constant';
+
 function LiveViewer() {
-  // Get the meeting ID and channel ID from the URL query parameters
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  // Use for audio voice
   const meetingId = queryParams.get('meetingId');
-  // Use for chat
   const channelId = queryParams.get('channelId');
-  // Use for list channel membership
   const hostId = queryParams.get('hostId');
-
-  // Hidden chat input based on chatSetting with chatSetting = 'guideOnly'
   const chatSetting = queryParams.get('chatSetting');
 
-  // Use translation
   const { t, i18n } = useTranslation();
-  console.log('i18n', i18n);
-  console.log('t', t);
 
-  // State variables to store the channel ARN and user ARN
   const [meetingSession, setMeetingSession] = useState(null);
-  const [meeting, setMetting] = useState(null);
+  const [meeting, setMeeting] = useState(null);
   const [attendee, setAttendee] = useState(null);
   const [channelArn, setChannelArn] = useState('');
   const [userArn, setUserArn] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [participantsCount, setParticipantsCount] = useState(0);
+  const [transcripts, setTranscriptions] = useState([]);
+  const [transcriptText, setTranscriptText] = useState([]);
+  const [translatedText, setTranslatedText] = useState([]);
+  const [sourceLanguageCode, setSourceLanguageCode] = useState(null);
+  const [selectedVoiceLanguage, setSelectedVoiceLanguage] = useState(
+    LISTEN_VOICE_LANGUAGES.find((lang) => lang.key.startsWith(i18n.language))?.key || 'ja-JP'
+  );
 
-  // Function to initialize the meeting session from the meeting that the host has created
-  const initializeMeetingSession = useCallback(async (meeting, attendee) => {
-    if (!meeting || !attendee) {
+  // Replace local variables with refs
+  const transcriptListRef = useRef([]);
+  const transcriptList2Ref = useRef([]);
+  const translatedListRef = useRef([]);
+  const audioQueueRef = useRef([]);
+  const audioQueue2Ref = useRef([]);
+
+  // Ref for the audio element
+  const audioElementRef = useRef(null);
+
+  const initializeMeetingSession = useCallback(async (meetingData, attendeeData) => {
+    if (!meetingData || !attendeeData) {
       console.error('Invalid meeting or attendee information');
       return;
     }
 
     const logger = new ConsoleLogger('ChimeMeetingLogs', LogLevel.INFO);
     const deviceController = new DefaultDeviceController(logger);
-    const meetingSessionConfig = new MeetingSessionConfiguration(meeting, attendee);
-    const meetingSession = new DefaultMeetingSession(meetingSessionConfig, logger, deviceController);
-    setMeetingSession(meetingSession);
+    const meetingSessionConfig = new MeetingSessionConfiguration(meetingData, attendeeData);
+    const session = new DefaultMeetingSession(meetingSessionConfig, logger, deviceController);
+    setMeetingSession(session);
 
-    selectSpeaker(meetingSession);
+    await selectSpeaker(session);
+    if (selectedVoiceLanguage === 'ja-JP') {
+      console.log('Selected voice language is Japanese', selectedVoiceLanguage);
+      const audioElement = document.getElementById('audioElementListener');
+      if (audioElement) {
+        await session.audioVideo.bindAudioElement(audioElement);
+      } else {
+        console.error('Audio element not found');
+      }
+    }
+    console.log('Listeners - initializeMeetingSession--> Start');
+    //metricReport(session);
+    console.log('Listeners - initializeMeetingSession--> End');
+    session.audioVideo.start();
+  }, [selectedVoiceLanguage]);
 
-    // const audioElement = document.getElementById('audioElementListener');
-    // if (audioElement) {
-    //   await meetingSession.audioVideo.bindAudioElement(audioElement);
-    // } else {
-    //   console.error('Audio element not found');
-    // }
-
-    // console.log('Listeners - initializeMeetingSession--> Start');
-    metricReport(meetingSession);
-    // console.log('Listeners - initializeMeetingSession--> End');
-
-    // meetingSession.audioVideo.start();
-
-    // Create an AudioContext
-    const audioContext = new (window.AudioContext)();
-
-    // Create a MediaStreamDestinationNode
-    const audioDestination = audioContext.createMediaStreamDestination();
-
-    // Bind the audio output to the MediaStreamDestinationNode
-    meetingSession.audioVideo.bindAudioStream(audioDestination.stream);
-
-    // Create an Audio element and set its source to the processed audio
-    const audioElement = new Audio();
-    audioElement.srcObject = audioDestination.stream;
-    audioElement.play();
-
-    // Start the meeting session
-    meetingSession.audioVideo.start();
-
-    console.log('Audio playback started using Web Audio API');
-    
-  }, []);
-
-  // Async function to select audio output device
-  const selectSpeaker = async (meetingSession) => {
-    const audioOutputDevices = await meetingSession.audioVideo.listAudioOutputDevices();
-
-    if (audioOutputDevices.length > 0) {
-      await meetingSession.audioVideo.chooseAudioOutput(audioOutputDevices[0].deviceId);
-    } else {
-      console.log('No speaker devices found');
+  const selectSpeaker = async (session) => {
+    try {
+      const audioOutputDevices = await session.audioVideo.listAudioOutputDevices();
+      if (audioOutputDevices.length > 0) {
+        await session.audioVideo.chooseAudioOutput(audioOutputDevices[0].deviceId);
+      } else {
+        console.log('No speaker devices found');
+      }
+    } catch (error) {
+      console.error('Error selecting speaker:', error);
     }
   };
 
-  // Function to create a new user and channel
-  const createAppUserAndJoinChannel = useCallback(async (meetingId, attendeeId, userID, userType, channelId) => {
-
-    //Get the channel ARN from the channel ID
-    const channelArn = `${Config.appInstanceArn}/channel/${channelId}`;
-    console.log('channelArn:', channelArn);
-
-    // Create a new user and join the channel
-    const listAttendeeResponse = await listAttendee(meetingId);
-    console.log('listAttendeeResponse:', listAttendeeResponse);
-
-    // Count members starting with "User"
-    const attendees = listAttendeeResponse.attendees || [];
-    console.log('attendees:', attendees);
-    const subGuideList = attendees.filter(member => member.ExternalUserId && member.ExternalUserId.startsWith(userType)) || [];
-    console.log('user List:', subGuideList);
-
-    // Sorting the attendees by the Created Date in ascending order
-    subGuideList.sort((a, b) => {
-      // Extract the Created Date from the ExternalUserId and convert it to integer (timestamp)
-      const dateA = parseInt(a.ExternalUserId.split('|')[1]);
-      const dateB = parseInt(b.ExternalUserId.split('|')[1]);
-
-      // Compare the timestamps
-      return dateA - dateB;
-    });
-
-    console.log('user sort date:', subGuideList);
-    console.log('user attendee ID:', attendeeId);
-
-    const subGuideCount = subGuideList.length || 0;
-    console.log('user count:', subGuideCount);
-
-    const index = subGuideList.findIndex(attendee => attendee.AttendeeId === attendeeId);
-
-    console.log('user attendee index:', index);
-
-    // Create a unique user name for the listener
-    // Always 1 member is the host, so listeners will start from the number of participants currently in the channel
-    let userName = `${userType}${index + 1}`;
-    console.log('user username:', userName);
-    // Create userArn and join channel
-
-    const userArn = await createAppInstanceUsers(userID, userName);
-    await addChannelMembership(channelArn, userArn);
-
-    return {
-      channelArn,
-      userArn,
-    };
-  }, []);
-
-  // Function to get the meeting and attendee information from the cookies
-  const getMeetingAttendeeInfoFromCookies = useCallback((retrievedUser) => {
-    setIsLoading(true);
-    console.log("Retrieved cookie:", retrievedUser);
-    initializeMeetingSession(retrievedUser.meeting, retrievedUser.attendee);
-    setMetting(retrievedUser.meeting);
-    setAttendee(retrievedUser.attendee);
-    setUserArn(retrievedUser.userArn);
-    setChannelArn(retrievedUser.channelArn);
-    setIsLoading(false);
-  }, [initializeMeetingSession]);
-
-  // Function to join the meeting
-  const joinMeeting = useCallback(async () => {
-    setIsLoading(true);
-    try {
-      if (!meetingId || !channelId || !hostId) {
-        alert('Meeting ID, Channel ID, and hostId are required');
-        return;
-      }
-      // Get host user ID from the host ID
-      const hostUserArn = `${Config.appInstanceArn}/user/${hostId}`;
-      console.log('hostUserArn:', hostUserArn);
-      // Generate a unique user ID and name for the host
-      const userID = uuidv4(); // Generate unique user ID
-      const userType = 'User';
-      // Join the meeting from the meeting ID the host has created
-      //const meeting = await getMeeting(meetingId);
-      const meeting = await checkAvailableMeeting(meetingId, "User");
-      if (!meeting) return;
-      console.log('Meeting:', meeting);
-      const attendee = await createAttendee(meeting.MeetingId, `${userType}|${Date.now()}`);
-      console.log('Attendee:', attendee);
-      initializeMeetingSession(meeting, attendee);
-      // Create a new user and join the channel
-      const createAppUserAndJoinChannelResponse = await createAppUserAndJoinChannel(meeting.MeetingId, attendee.AttendeeId, userID, userType, channelId);
-      console.log('createAppUserAndJoinChannelResponse:', createAppUserAndJoinChannelResponse);
-      setMetting(meeting);
-      setAttendee(attendee);
-      setChannelArn(createAppUserAndJoinChannelResponse.channelArn);
-      setUserArn(createAppUserAndJoinChannelResponse.userArn);
-      // Storage the User information in the cookies
-      // Define your data
-      const user = {
-        meeting: meeting,
-        attendee: attendee,
-        userArn: createAppUserAndJoinChannelResponse.userArn,
-        channelArn: createAppUserAndJoinChannelResponse.channelArn,
-      };
-
-      // Set the JSON cookie for 1 day
-      JSONCookieUtils.setJSONCookie("User", user, 1);
-      console.log("Cookie set for 1 day!");
-    } catch (error) {
-      console.error('Error joining the meeting:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [meetingId, channelId, hostId, initializeMeetingSession, createAppUserAndJoinChannel]);
-
-  // Use effect to join the meeting
-  // useEffect(() => {
-  //   if (meetingId && channelId) {
-  //     const retrievedUser = JSONCookieUtils.getJSONCookie("User");
-  //     console.log("Retrieved cookie:", retrievedUser);
-  //     if (retrievedUser) {
-  //       getMeetingAttendeeInfoFromCookies(retrievedUser);
-  //     } else {
-  //       joinMeeting();
-  //     }
-  //   }
-  // }, [joinMeeting, meetingId, channelId, hostId, getMeetingAttendeeInfoFromCookies]);
-  useEffect(() => {
-    const checkMatch = async () => {
+  const createAppUserAndJoinChannel = useCallback(
+    async (meetingId, attendeeId, userID, userType, channelId) => {
       try {
-        // Retrieve and parse the "User" cookie
-        const retrievedUser = JSONCookieUtils.getJSONCookie("User");
-        console.log("Retrieved cookie:", retrievedUser);
-        if (!retrievedUser) {
-          console.log("User cookie not found");
-          joinMeeting();
+        const channelArn = `${Config.appInstanceArn}/channel/${channelId}`;
+        const listAttendeeResponse = await listAttendee(meetingId);
+        const attendees = listAttendeeResponse.attendees || [];
+        const subGuideList = attendees.filter(
+          (member) => member.ExternalUserId && member.ExternalUserId.startsWith(userType)
+        );
+
+        subGuideList.sort(
+          (a, b) =>
+            parseInt(a.ExternalUserId.split('|')[1]) - parseInt(b.ExternalUserId.split('|')[1])
+        );
+
+        const index = subGuideList.findIndex((att) => att.AttendeeId === attendeeId);
+        const userName = `${userType}${index + 1}`;
+
+        const newUserArn = await createAppInstanceUsers(userID, userName);
+        await addChannelMembership(channelArn, newUserArn);
+
+        return { channelArn, userArn: newUserArn };
+      } catch (error) {
+        console.error('Error creating user and joining channel:', error);
+        throw error;
+      }
+    },
+    []
+  );
+
+  const getMeetingAttendeeInfoFromCookies = useCallback(
+    (retrievedUser) => {
+      setIsLoading(true);
+      initializeMeetingSession(retrievedUser.meeting, retrievedUser.attendee);
+      setMeeting(retrievedUser.meeting);
+      setAttendee(retrievedUser.attendee);
+      setUserArn(retrievedUser.userArn);
+      setChannelArn(retrievedUser.channelArn);
+      setIsLoading(false);
+    },
+    [initializeMeetingSession]
+  );
+
+  const joinMeeting = useCallback(
+    async () => {
+      setIsLoading(true);
+      try {
+        if (!meetingId || !channelId || !hostId) {
+          alert('Meeting ID, Channel ID, and Host ID are required');
           return;
         }
-        // Validate the retrieved cookie structure
-        const isMeetingMatched = retrievedUser.meeting.MeetingId === meetingId;
-        const isChannelMatched = retrievedUser.channelArn === `${Config.appInstanceArn}/channel/${channelId}`;
-        const isMatched = isMeetingMatched && isChannelMatched;
 
-        if (isMatched) {
-          console.log("User cookie matched the current meeting and channel");
-          // Call checkMatchedMeeting only once and store the result
-          const meeting = await checkAvailableMeeting(retrievedUser.meeting.MeetingId, "User");
-          console.log('getMeetingResponse:', meeting);
-          if (!meeting) return;
-          getMeetingAttendeeInfoFromCookies(retrievedUser);
-        } else {
-          console.log("User cookie did not match the current meeting and channel");
-          joinMeeting();
-        }
+        const userID = uuidv4();
+        const userType = 'User';
+
+        const meetingData = await checkAvailableMeeting(meetingId, userType);
+        if (!meetingData) return;
+
+        const attendeeData = await createAttendee(
+          meetingData.MeetingId,
+          `${userType}|${Date.now()}`
+        );
+        await initializeMeetingSession(meetingData, attendeeData);
+
+        const { channelArn, userArn } = await createAppUserAndJoinChannel(
+          meetingData.MeetingId,
+          attendeeData.AttendeeId,
+          userID,
+          userType,
+          channelId
+        );
+
+        setMeeting(meetingData);
+        setAttendee(attendeeData);
+        setChannelArn(channelArn);
+        setUserArn(userArn);
+
+        const user = {
+          meeting: meetingData,
+          attendee: attendeeData,
+          userArn,
+          channelArn,
+        };
+
+        JSONCookieUtils.setJSONCookie('User', user, 1);
+        console.log('Cookie set for 1 day!');
       } catch (error) {
-        console.error("Error processing the User cookie:", error);
+        console.error('Error joining the meeting:', error);
+      } finally {
+        setIsLoading(false);
       }
-    };
+    },
+    [
+      meetingId,
+      channelId,
+      hostId,
+      initializeMeetingSession,
+      createAppUserAndJoinChannel,
+    ]
+  );
 
-    checkMatch(); // Execute the async function
-  }, [joinMeeting, hostId, meetingId, channelId, getMeetingAttendeeInfoFromCookies]);
+  const joinAudioSession = useCallback(
+    async () => {
+      try {
+        const retrievedUser = JSONCookieUtils.getJSONCookie('User');
+        if (retrievedUser) {
+          const isMeetingMatched =
+            retrievedUser.meeting.MeetingId === meetingId;
+          const isChannelMatched =
+            retrievedUser.channelArn === `${Config.appInstanceArn}/channel/${channelId}`;
+
+          if (isMeetingMatched && isChannelMatched) {
+            const meetingData = await checkAvailableMeeting(
+              retrievedUser.meeting.MeetingId,
+              'User'
+            );
+            if (meetingData) {
+              getMeetingAttendeeInfoFromCookies(retrievedUser);
+              return;
+            }
+          }
+        }
+        joinMeeting();
+      } catch (error) {
+        console.error('Error processing the User cookie:', error);
+      }
+    },
+    [
+      meetingId,
+      channelId,
+      getMeetingAttendeeInfoFromCookies,
+      joinMeeting,
+    ]
+  );
 
   useEffect(() => {
+    if (!meetingSession) return;
 
-    if (!meetingSession) {
-      return;
-    }
-    const attendeeSet = new Set(); // List of sub-guides, listeners
-    const callback = (presentAttendeeId, present, externalUserId) => {
-      console.log(`Attendee ID: ${presentAttendeeId} Present: ${present} externalUserId: ${externalUserId}`);
+    const attendeeSet = new Set();
+    const presenceCallback = (attendeeId, present) => {
       if (present) {
-        attendeeSet.add(presentAttendeeId);
+        attendeeSet.add(attendeeId);
       } else {
-        attendeeSet.delete(presentAttendeeId);
+        attendeeSet.delete(attendeeId);
       }
-
-      // Update the attendee count in the state
       setParticipantsCount(attendeeSet.size);
     };
 
-    meetingSession.audioVideo.realtimeSubscribeToAttendeeIdPresence(callback);
+    // Subscribe to attendee presence
+    meetingSession.audioVideo.realtimeSubscribeToAttendeeIdPresence(presenceCallback);
+
+    // Subscribe to transcription events
+    meetingSession.audioVideo.transcriptionController?.subscribeToTranscriptEvent(
+      (transcriptEvent) => {
+        console.log('Check transcriptEvent:', transcriptEvent);
+        if (transcriptEvent?.type === 'started') {
+          const transcriptionConfig = JSON.parse(transcriptEvent.transcriptionConfiguration);
+          setSourceLanguageCode(transcriptionConfig.EngineTranscribeSettings.LanguageCode);
+        }
+        setTranscriptions(transcriptEvent);
+      }
+    );
+
+    // Cleanup on unmount
+    // return () => {
+    //   meetingSession.audioVideo.realtimeUnsubscribeFromAttendeeIdPresence(presenceCallback);
+    // };
   }, [meetingSession]);
+
+  useEffect(() => {
+
+    const audioElement = audioElementRef.current;
+    if (!audioElement || !meetingSession || !sourceLanguageCode || !selectedVoiceLanguage) return;
+    setTranscriptText([]);
+    setTranslatedText([]);
+
+    if (
+      sourceLanguageCode !== selectedVoiceLanguage &&
+      transcripts?.results?.[0]?.alternatives?.[0]?.transcript &&
+      !transcripts.results[0].isPartial
+    ) {
+      // Process audio queue
+      const processAudioQueue = async () => {
+        if (audioQueueRef.current.length === 0) return;
+
+        const nextAudio = audioQueueRef.current.shift();
+        console.log("nextAudio", nextAudio);
+        try {
+          await translateAndPlay(nextAudio);
+        } catch (error) {
+          console.error('Error processing audio queue:', error);
+        }
+
+        //setImmediate(processAudioQueue);
+        setTimeout(processAudioQueue, 0);
+      };
+
+      // Translate and play the audio
+      const translateAndPlay = async (currentText) => {
+        try {
+          let targetLanguageCode = selectedVoiceLanguage;
+          if (selectedVoiceLanguage === 'cmn-CN') {
+            targetLanguageCode = "zh";
+          }
+
+          console.log('Check sourceLanguageCode:', sourceLanguageCode);
+          console.log('Check targetLanguageCode:', targetLanguageCode);
+          const response = await translateTextSpeech(
+            currentText,
+            sourceLanguageCode,
+            targetLanguageCode,
+            "standard"
+          );
+
+          console.log('Translated response:', response);
+          translatedListRef.current.push(response.translatedText);
+
+          if (!response.speech.AudioStream?.data)
+            throw new Error('Invalid AudioStream data');
+
+          const audioBlob = new Blob(
+            [Uint8Array.from(response.speech.AudioStream.data)],
+            { type: response.speech.ContentType || 'audio/mpeg' }
+          );
+
+          const audioUrl = URL.createObjectURL(audioBlob);
+
+          const audioElement = audioElementRef.current;
+          if (audioElement) {
+            audioElement.src = audioUrl;
+            audioElement.onended = () => processAudioQueue();
+          }
+          setTranslatedText((prev) => [...prev, response.translatedText]);
+        } catch (error) {
+          console.error('Failed to translate text to speech:', error);
+        }
+      };
+      const currentText = transcripts.results[0].alternatives[0].transcript;
+      transcriptListRef.current.push(currentText);
+      transcriptList2Ref.current.push(currentText);
+      audioQueueRef.current.push(currentText);
+      audioQueue2Ref.current.push(currentText);
+      if (audioQueueRef.current.length === 1) {
+        processAudioQueue();  // Start processing the queue.
+      }
+
+      setTranscriptText((prev) => [...prev, currentText]);
+    }
+    // else {
+    //   if (sourceLanguageCode === selectedVoiceLanguage) {
+    //     const bindAudioElement = async () => {
+    //       await meetingSession.audioVideo.bindAudioElement(audioElement);
+    //     };
+    //     bindAudioElement();
+    //     //audioElement.play();
+    //   }
+    // }
+  }, [
+    meetingSession,
+    transcripts,
+    sourceLanguageCode,
+    selectedVoiceLanguage,
+  ]);
+
+  const handleSelectedVoiceLanguageChange = (event) => {
+    setSelectedVoiceLanguage(event.target.value);
+  };
+  console.log('Check transcriptText:', transcriptText);
+  console.log('Check transcriptText string:', transcriptText.join(' '));
+
+  console.log('Check translatedText:', translatedText);
+  console.log('Check translatedText string:', translatedText.join(' '));
 
   return (
     <>
       <Participants count={participantsCount} />
       <div className="live-viewer-container">
-        <audio id="audioElementListener" controls autoPlay className="audio-player" style={{ display: (meeting && attendee) ? 'block' : 'none' }} />
-        {(isLoading) ? (
-          <div className="loading">
-            <div className="spinner"></div>
-            <p>{t('loading')}</p>
+        {!meeting && !attendee && (
+          <div>
+            <h3>{t('voiceLanguageLbl.listening')}</h3>
+            <select
+              id="selectedVoiceLanguage"
+              value={selectedVoiceLanguage}
+              onChange={handleSelectedVoiceLanguageChange}
+            >
+              {LISTEN_VOICE_LANGUAGES.map((language) => (
+                <option key={language.key} value={language.key}>
+                  {language.label}
+                </option>
+              ))}
+            </select>
           </div>
+        )}
+        <audio
+          id="audioElementListener"
+          controls
+          ref={audioElementRef}
+          autoPlay
+          className="audio-player"
+          style={{ display: meeting && attendee ? 'block' : 'none' }}
+        />
+        {!meeting && !attendee ? (
+          isLoading ? (
+            <div className="loading">
+              <div className="spinner"></div>
+              <p>{t('loading')}</p>
+            </div>
+          ) : (
+            <button onClick={joinAudioSession}>{t('joinBtn')}</button>
+          )
         ) : (
-          <>
+          <div>
+            <p>
+              The host is speaking in{' '}
+              {LISTEN_VOICE_LANGUAGES.find((lang) => lang.key === sourceLanguageCode)?.label}.
+            </p>
+            <p>
+              I am listening in{' '}
+              {LISTEN_VOICE_LANGUAGES.find((lang) => lang.key === selectedVoiceLanguage)?.label}.
+            </p>
+            {transcriptListRef.current.length > 0 && (
+              <span>
+                {t('transcriptions')}: <span>{transcriptListRef.current.join(' ')}</span>
+              </span>
+            )}
             <br />
-            {channelArn && <ChatMessage userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} chatSetting={chatSetting} />}
-          </>
+            {translatedListRef.current.length > 0 && (
+              <span>
+                {t('translations')}: <span>{translatedListRef.current.join(' ')}</span>
+              </span>
+            )}
+            <br />
+            {channelArn && (
+              <ChatMessage
+                userArn={userArn}
+                sessionId={Config.sessionId}
+                channelArn={channelArn}
+                chatSetting={chatSetting}
+              />
+            )}
+          </div>
         )}
       </div>
     </>
-
   );
 }
 
