@@ -218,7 +218,7 @@ function LiveViewer() {
             }
           }
         }
-        joinMeeting();       
+        joinMeeting();
       } catch (error) {
         console.error('Error processing the User cookie:', error);
       }
@@ -369,7 +369,7 @@ function LiveViewer() {
   console.log('Check translatedText string:', translatedText.join(' '));
   const [isMuted, setIsMuted] = useState(true);
   const [isPlay, setIsPlay] = useState(false);
-  
+
   // const audioRef = useRef(null);
   const handleMuteUnmute = () => {
     setIsMuted(!isMuted);
@@ -468,11 +468,11 @@ function LiveViewer() {
                 <div className='trans-text-box'>
                   <div className={` ${isLongText ? 'long-text' : 'short-text'}`}></div>
                   <span className='trans-text'>
-                    {t('translations')}: <span>{translatedListRef.current.join(' ')}</span>       
+                    {t('translations')}: <span>{translatedListRef.current.join(' ')}</span>
                   </span>
                 </div>
 
-               )}  
+              )}
               {transcriptListRef.current.length > 0 && (
 
                 <div className='trans-text-box'>
@@ -480,9 +480,9 @@ function LiveViewer() {
                   <div className={` ${isLongText ? 'long-text' : 'short-text'}`}></div>
                   <span className='trans-text'>
                     {t('transcriptions')}: <span>{transcriptListRef.current.join(' ')}</span>
-                    </span>
+                  </span>
                 </div>
-                )} 
+              )}
               <br />
 
               <br />
@@ -497,9 +497,7 @@ function LiveViewer() {
                 />
               )}
             </div> */}
-
-            <MessageBox userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} userType={userType} statusChat={chatSetting}/>
-
+            {chatSetting !== "nochat" && (<MessageBox userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} userType={userType} statusChat={chatSetting} />)}
           </>
         )}
       </div>

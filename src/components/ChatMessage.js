@@ -37,7 +37,6 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null, userT
   const [sending, setSending] = useState(false);
   const fileInputRef = useRef();
   const inputRef = useRef(null);
-
   useEffect(() => {
     if (chatSetting !== 'guideOnly') {
       inputRef.current.focus();
@@ -264,7 +263,9 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null, userT
     }
   }
   return (
-    <div className="chat-container" style={{ display: ((chatSetting === 'guideOnly' && messages.length <= 0) || chatSetting === 'nochat') ? 'none' : 'block' }}>
+    // style={{ display: ((chatSetting === 'guideOnly' && messages.length <= 0) || chatSetting === 'nochat') ? 'none' : 'block' }}
+
+    <div className="chat-container" >
       {messages.length > 0 && (
         <div className="chat-window">
           {messages.map((message, index) => (
@@ -338,7 +339,7 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null, userT
         </div>
       )}
       {/* Render chat input based on chatSetting */}
-      {chatSetting !== 'guideOnly' && (
+      {(chatSetting === 'allChat' || (chatSetting==="guideOnly" && userType==="Guide") ) && (
         <div className="chat-input">
           <div className='attachment-container'>
 

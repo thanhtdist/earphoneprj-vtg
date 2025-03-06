@@ -80,7 +80,7 @@ const MessageBox = ({ userArn, sessionId, channelArn, userType, statusChat }) =>
                                 <div className='status-chat'>
                                     <span>ステータス : {setStatusChat()}</span>
                                 </div>
-                                <ChatMessage userArn={userArn} sessionId={sessionId} channelArn={channelArn} userType={userType}></ChatMessage>
+                                <ChatMessage userArn={userArn} sessionId={sessionId} channelArn={channelArn}  userType={userType} chatSetting={statusChat}></ChatMessage>
                             </div>
                         </div>
                     </div>
