@@ -78,9 +78,19 @@ function LiveViewer() {
     setMeetingSession(session);
 
     await selectSpeaker(session);
+    if (selectedVoiceLanguage === 'ja-JP') {
+      console.log('Selected voice language is Japanese', selectedVoiceLanguage);
+      //const audioElement = document.getElementById('audioElementListener');
+      const audioElement = audioElementRef.current;
+      if (audioElement) {
+        await session.audioVideo.bindAudioElement(audioElement);
+      } else {
+        console.error('Audio element not found');
+      }
+    }
     metricReport(session);
     session.audioVideo.start();
-  }, []);
+  }, [selectedVoiceLanguage]);
 
   const selectSpeaker = async (session) => {
     try {
@@ -343,15 +353,16 @@ function LiveViewer() {
       }
 
       setTranscriptText((prev) => [...prev, currentText]);
-    } else {
-      if (sourceLanguageCode === selectedVoiceLanguage) {
-        const bindAudioElement = async () => {
-          await meetingSession.audioVideo.bindAudioElement(audioElement);
-        };
-        bindAudioElement();
-        //audioElement.play();
-      }
-    }
+    } 
+    // else {
+    //   if (sourceLanguageCode === selectedVoiceLanguage) {
+    //     const bindAudioElement = async () => {
+    //       await meetingSession.audioVideo.bindAudioElement(audioElement);
+    //     };
+    //     bindAudioElement();
+    //     //audioElement.play();
+    //   }
+    // }
   }, [
     meetingSession,
     transcripts,
