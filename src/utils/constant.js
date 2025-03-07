@@ -4,11 +4,18 @@ export const SPEAK_VOICE_LANGUAGES = [
     { key: "ja-JP", label: "日本語" },
 ]
 
-// Voice languages
+// Voice languages in enalish(default)
 export const LISTEN_VOICE_LANGUAGES = [
     { key: "ja-JP", label: "Japanese" },
     { key: "en-US", label: "English" },
     { key: "cmn-CN", label: "Chinese" },
+]
+
+// Voice languages in Japanese
+export const JA_LISTEN_VOICE_LANGUAGES = [
+    { key: "ja-JP", label: "日本語" },
+    { key: "en-US", label: "英語" },
+    { key: "cmn-CN", label: "中国" },
 ]
 
 //Text To Speech (TTS) engine

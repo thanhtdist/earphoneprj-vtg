@@ -21,7 +21,7 @@ import { checkAvailableMeeting } from '../utils/MeetingUtils';
 import { v4 as uuidv4 } from 'uuid';
 import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { LISTEN_VOICE_LANGUAGES } from '../utils/constant';
+import { LISTEN_VOICE_LANGUAGES, JA_LISTEN_VOICE_LANGUAGES } from '../utils/constant';
 import Header from './Header';
 import { IoPlay } from "react-icons/io5";
 import { HiMiniSpeakerWave } from "react-icons/hi2";
@@ -411,8 +411,7 @@ function LiveViewer() {
         {!meeting && !attendee && (
           <div className="box-selected-language">
             <h3>
-              {/* {t('voiceLanguageLbl.listening')} */}
-              聴く言語を選択
+              {t('voiceLanguageLbl.listening')}
             </h3>
             <select
               className='selected-language'
@@ -420,11 +419,12 @@ function LiveViewer() {
               value={selectedVoiceLanguage}
               onChange={handleSelectedVoiceLanguageChange}
             >
-              {LISTEN_VOICE_LANGUAGES.map((language) => (
+              {(i18n.language === 'ja' ? JA_LISTEN_VOICE_LANGUAGES : LISTEN_VOICE_LANGUAGES).map((language) => (
                 <option key={language.key} value={language.key}>
                   {language.label}
                 </option>
               ))}
+
             </select>
           </div>
         )}
@@ -464,7 +464,7 @@ function LiveViewer() {
             </div>
             <div className='trans-box'>
               <div style={{ textAlign: 'center' }}>
-                <p>キャプチャー</p>
+                <p>{t('captureTranslations')}</p>
               </div>
               {/* <p>
                 The host is speaking in{' '}

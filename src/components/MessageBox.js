@@ -75,10 +75,10 @@ const MessageBox = ({ userArn, sessionId, channelArn, userType, statusChat }) =>
                             <span className="close-btn" style={styleCloseButton()} onClick={closeChat}>&times;</span>
                             <div className='contentChat'>
                                 <div>
-                                    <h3>チャット</h3>
+                                    <h3>{t('chatPopup.title')}</h3>
                                 </div>
                                 <div className='status-chat'>
-                                    <span>ステータス : {setStatusChat()}</span>
+                                    <span>{t('chatPopup.statuslbl')} : {setStatusChat()}</span>
                                 </div>
                                 <ChatMessage userArn={userArn} sessionId={sessionId} channelArn={channelArn}  userType={userType} chatSetting={statusChat}></ChatMessage>
                             </div>

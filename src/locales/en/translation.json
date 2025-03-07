@@ -6,13 +6,13 @@
   "microChecking": "Checking your microphone... Please wait.",
   "noMicroMsg": "Your microphone is currently blocked. Please enable microphone access in your browser settings or on this site to proceed.",
   "microSelectionLbl": "Select Input Microphone",
-  "chatSettingLbl": "Chat Settings",
+  "chatSettingLbl": "Chat usage restrictions",
   "chatSettingOptions": {
-    "allChat": "Enable chat function for both Guide and User",
-    "onlyGuideChat": "Enable chat function for Guide only",
-    "noChat": "Disable chat function for all"
+    "allChat": "Everyone can chat",
+    "onlyGuideChat": "Only guide can chat",
+    "noChat": "No chat"
   },
-  "generateQRCodeLbl": "Generate QR Code for",
+  "generateQRCodeLbl": "Share QR Code",
   "generateQRCodeOptions": {
     "subGuide": "Sub-Guide",
     "listener": "User"
@@ -26,7 +26,7 @@
     "mainGuide": "Guide",
     "subGuide": "Sub-Guide",
     "listener": "User",
-    "myself": "Me"
+    "myself": "You"
   },
   "languagesLbl": "Language",
   "voiceLanguageLbl": {
@@ -42,5 +42,21 @@
   "transcriptionTxt": "The host is speaking in ",
   "translationTxt": "I am listening in",
   "transcriptions": "Transcriptions",
-  "translations": "Translations"
+  "translations": "Translations",
+  "chatPopup": {
+    "title": "Chat",
+    "statuslbl": "Status"
+  },
+  "captureTranslations": "Capture",
+  "headerSettings": {
+    "qrCode": "QR Code",
+    "language": "Language Setting"
+  },
+  "pageTitles": {
+    "guide": "Main Guide",
+    "subGuide": "Sub Guide"
+  },
+  "startGuidePage": {
+    "startBtn": "Start the guide"
+  }
 }

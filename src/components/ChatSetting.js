@@ -16,7 +16,7 @@ const ChatSetting = () => {
         <>
             <div className='chat-setting-container'>
                 <div>
-                    <p style={{textAlign:'center', fontWeight:'700'}}>チャットの制限</p>
+                    <p style={{textAlign:'center', fontWeight:'700'}}>{t('chatSettingLbl')}</p>
                 </div>
                 <div>
                     <select className='selectFile' value={chatSetting} onChange={handleChatSettingChange}>
@@ -26,7 +26,7 @@ const ChatSetting = () => {
                     </select>
                 </div>
                 <div className='btn'>                
-                    <button className="btn-confirm"  onClick={handleClick}>ガイドを開始する</button>
+                    <button className="btn-confirm"  onClick={handleClick}>{t('startGuidePage.startBtn')}</button>
                         
                </div>
             </div>

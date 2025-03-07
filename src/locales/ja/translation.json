@@ -5,14 +5,14 @@
   "loading": "お待ちください。。。",
   "microChecking": "マイクを確認しています...しばらくお待ちください。",
   "noMicroMsg": "現在、マイクがブロックされています。続行するには、ブラウザの設定またはこのサイトでマイクのアクセスを有効にし下さい。",
-  "microSelectionLbl": "音声入力（マイク）を選択",
-  "chatSettingLbl": "チャット設定",
+  "microSelectionLbl": "音声入力(マイク)を選択",
+  "chatSettingLbl": "チャットの制限",
   "chatSettingOptions": {
-    "allChat": "ガイドとユーザーがチャット可能",
+    "allChat": "誰でもチャット可能",
     "onlyGuideChat": "ガイドのみチャット可能",
     "noChat": "チャット無効"
   },
-  "generateQRCodeLbl": "QRコードを生成",
+  "generateQRCodeLbl": "QRコードを共有",
   "generateQRCodeOptions": {
     "subGuide": "サブガイド用QRコード",
     "listener": "ユーザー用QRコード"
@@ -26,12 +26,12 @@
     "mainGuide": "ガイド",
     "subGuide": "サブガイド",
     "listener": "ユーザー",
-    "myself": "自分"
+    "myself": "あなた"
   },
   "languagesLbl": "言語選択",
   "voiceLanguageLbl": {
     "speaking": "話す言語を選択してください",
-    "listening": "聴く言語を選択してください"
+    "listening": "聴く言語を選択"
   },
   "playVoiceLbl": "再生する音声ファイル",
   "playVoiceOptions": {
@@ -42,5 +42,21 @@
   "transcriptionTxt": "で話しています",
   "translationTxt": "で聴いています",
   "transcriptions": "文字起こし",
-  "translations": "翻訳"
+  "translations": "翻訳",
+  "chatPopup": {
+    "title": "チャット",
+    "statuslbl": "ステータス"
+  },
+  "captureTranslations": "キャプチャー",
+  "headerSettings": {
+    "qrCode": "QRコード",
+    "language": "言語設定"
+  },
+  "pageTitles": {
+    "guide": "メインガイド専用ページ",
+    "subGuide": "サブガイド専用ページ"
+  },
+  "startGuidePage": {
+    "startBtn": "ガイドを開始する"
+  }
 }

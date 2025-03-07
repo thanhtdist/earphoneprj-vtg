@@ -48,14 +48,14 @@ function Header({ count, meeting, channelID, userId, chatSetting, userType }) {
                 {userType === "Guide" && (
                     <div className='qrCode' onClick={openPopup}>
                         <BsQrCode className='icon' size={35} />
-                        <span>QRコード</span>
+                        <span>{t('headerSettings.qrCode')}</span>
                     </div>
                  )} 
 
                 <div className='selectLanguage'>
                     {/* <GrLanguage className='icon' size={24} /> */}
                     <SettingMenu></SettingMenu>
-                    <span>言語設定</span>
+                    <span>{t('headerSettings.language')}</span>
                 </div>
             </div>
             {openQRCode === true && meeting &&
@@ -63,7 +63,7 @@ function Header({ count, meeting, channelID, userId, chatSetting, userType }) {
                     <div className="popup-content">
                         <span className="close-btn" style={{border:'2px solid red',backgroundColor:'red'}} onClick={closePopup}>&times;</span>
                         <div className='contentQR'>
-                            <h3>QRコードを共有</h3>
+                            <h3>{t('generateQRCodeLbl')}</h3>
                             <select className='selectFile' value={selectedQR} onChange={handleQRSelectionChange}>
                                 <option value="subSpeaker">{t('generateQRCodeOptions.subGuide')}</option>
                                 <option value="listener">{t('generateQRCodeOptions.listener')}</option>

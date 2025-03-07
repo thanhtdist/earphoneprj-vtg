@@ -451,7 +451,7 @@ function LiveSubSpeaker() {
       <div className="live-sub-container">
         {/* <audio id="audioElementSub" controls autoPlay className="audio-player" style={{ display: (meeting && attendee) ? 'block' : 'none' }} /> */}
         <p className='title-sub-live'>
-          スピーカー専用ページ
+          {t('pageTitles.subGuide')}
         </p>
         <div className='title-sub-live-upload'>
           <div className='time'>

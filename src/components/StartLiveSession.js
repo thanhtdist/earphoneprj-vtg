@@ -447,7 +447,7 @@ function StartLiveSession() {
       <Header count={participantsCount} meeting={meeting} channelID={channelID} userId={userId} chatSetting={valueChatSetting} userType={userType} />
       <div className="container">
         <p className='titleLiveSession'>
-          ガイド専用ページ
+          {t('pageTitles.guide')}
         </p>
         <div className='titleFileUpload'>
           <div className='time'>
