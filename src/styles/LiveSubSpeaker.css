@@ -1,0 +1,38 @@
+.live-sub-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 20px 0 20px;
+    font-family: Arial, sans-serif;
+}
+
+.title-sub-live {
+    border: 1px solid #E57A00;
+    color: #E57A00;
+    border-radius: 25px;
+    width: 50%;
+    text-align: center;
+    margin-bottom: 5px;
+}
+
+.audio-sub {
+    display: flex;
+    justify-content: space-between;
+    width: 25%;
+}
+
+.box-start-live-session {
+    width: 100%;
+    border: 1px solid outset;
+    box-shadow: 0 6px 5px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.mic-button {
+    display: flex;
+    /* justify-self: center; */
+    justify-content: center;
+    align-items: center;
+}
