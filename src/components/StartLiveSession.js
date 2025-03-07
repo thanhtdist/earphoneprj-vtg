@@ -246,7 +246,7 @@ function StartLiveSession() {
       } finally {
         setIsLoading(false);
       }
-    }, [valueChatSetting,initializeMeetingSession,userType]);
+    }, [initializeMeetingSession,userType]);
   
 
   // Function to toggle microphone on/off

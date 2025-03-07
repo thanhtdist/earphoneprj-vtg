@@ -57,7 +57,7 @@ function LiveSubSpeaker() {
   // State variables to store the channel ARN and user ARN
   const [meetingSession, setMeetingSession] = useState(null);
   const [meeting, setMetting] = useState(null);
-  const [attendee, setAttendee] = useState(null);
+  // const [attendee, setAttendee] = useState(null);
   const [selectedAudioInput, setSelectedAudioInput] = useState('');
   const [audioInputDevices, setAudioInputDevices] = useState([]);
   const [channelArn, setChannelArn] = useState('');
@@ -230,7 +230,7 @@ function LiveSubSpeaker() {
       const createAppUserAndJoinChannelResponse = await createAppUserAndJoinChannel(meeting.MeetingId, attendee.AttendeeId, userID, userType, channelId);
       console.log('createAppUserAndJoinChannelResponse:', createAppUserAndJoinChannelResponse);
       setMetting(meeting);
-      setAttendee(attendee);
+      //setAttendee(attendee);
       setChannelArn(createAppUserAndJoinChannelResponse.channelArn);
       setUserArn(createAppUserAndJoinChannelResponse.userArn);
 
@@ -252,7 +252,7 @@ function LiveSubSpeaker() {
     } finally {
       setIsLoading(false);
     }
-  }, [meetingId, channelId, hostId, initializeMeetingSession, createAppUserAndJoinChannel]);
+  }, [userID,meetingId, channelId, hostId, initializeMeetingSession, createAppUserAndJoinChannel]);
 
 
   // Function to toggle microphone on/off
@@ -347,7 +347,7 @@ function LiveSubSpeaker() {
     console.log("Retrieved cookie:", retrievedSubGuide);
     initializeMeetingSession(retrievedSubGuide.meeting, retrievedSubGuide.attendee);
     setMetting(retrievedSubGuide.meeting);
-    setAttendee(retrievedSubGuide.attendee);
+    // setAttendee(retrievedSubGuide.attendee);
     setUserArn(retrievedSubGuide.userArn);
     setChannelArn(retrievedSubGuide.channelArn);
     setIsLoading(false);
