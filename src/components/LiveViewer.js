@@ -82,6 +82,7 @@ function LiveViewer() {
       console.log('Selected voice language is Japanese', selectedVoiceLanguage);
       //const audioElement = document.getElementById('audioElementListener');
       const audioElement = audioElementRef.current;
+      console.log('Check audioElement:', audioElement);
       if (audioElement) {
         await session.audioVideo.bindAudioElement(audioElement);
       } else {
@@ -428,14 +429,14 @@ function LiveViewer() {
             </select>
           </div>
         )}
-        {/* <audio
+        <audio
           id="audioElementListener"
-          controls
+          //controls
           ref={audioElementRef}
-          autoPlay
-          className="audio-player"
-          style={{ display: meeting && attendee ? 'block' : 'none' }}
-        /> */}
+          //autoPlay
+          //className="audio-player"
+          style={{ display: 'none' }}
+        />
 
         {!meeting && !attendee ? (
           isLoading ? (
@@ -459,8 +460,8 @@ function LiveViewer() {
                 {isMuted ? <HiMiniSpeakerWave size={30} /> : <IoVolumeMute size={30} />
                 }
               </div>
-              <audio id='audioElementListener' ref={audioElementRef} >
-              </audio>
+              {/* <audio id='audioElementListener' ref={audioElementRef} >
+              </audio> */}
             </div>
             <div className='trans-box'>
               <div style={{ textAlign: 'center' }}>
