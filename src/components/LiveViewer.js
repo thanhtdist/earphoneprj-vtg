@@ -64,6 +64,8 @@ function LiveViewer() {
   const userType = 'User';
   // Ref for the audio element  
   const audioElementRef = useRef(null);
+  const [isMuted, setIsMuted] = useState(true);
+  const [isPlay, setIsPlay] = useState(false);
 
   const initializeMeetingSession = useCallback(async (meetingData, attendeeData) => {
     if (!meetingData || !attendeeData) {
@@ -338,6 +340,10 @@ function LiveViewer() {
           if (audioElement) {
             audioElement.src = audioUrl;
             audioElement.onended = () => processAudioQueue();
+            // Only play automatically if “isPlay” is true
+            if (isPlay) {
+              audioElement.play();
+            }
           }
           setTranslatedText((prev) => [...prev, response.translatedText]);
         } catch (error) {
@@ -369,6 +375,7 @@ function LiveViewer() {
     transcripts,
     sourceLanguageCode,
     selectedVoiceLanguage,
+    isPlay
   ]);
 
   const handleSelectedVoiceLanguageChange = (event) => {
@@ -379,8 +386,6 @@ function LiveViewer() {
 
   console.log('Check translatedText:', translatedText);
   console.log('Check translatedText string:', translatedText.join(' '));
-  const [isMuted, setIsMuted] = useState(true);
-  const [isPlay, setIsPlay] = useState(false);
 
   // const audioRef = useRef(null);
   const handleMuteUnmute = () => {
