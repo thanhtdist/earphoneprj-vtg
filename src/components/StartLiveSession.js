@@ -50,7 +50,7 @@ function StartLiveSession() {
   console.log('i18n', i18n);
   console.log('t', t);
   // Use navigate to add params for meeting and channel
-  const navigate = useNavigate();
+ const navigate = useNavigate();
 
   // States to manage the meeting session
   const [channelArn, setChannelArn] = useState('');
@@ -253,9 +253,9 @@ function StartLiveSession() {
 
   useEffect(() => {
     if (meeting && channelID) {
-      navigate(`/guide?meetingId=${meeting.MeetingId}&channelId=${channelID}`);
+      navigate(`/guide?meetingId=${meeting.MeetingId}&channelId=${channelID}`, { state: { chatSetting:valueChatSetting } });
     }
-  }, [meeting, channelID, navigate]);
+  }, [meeting, channelID, valueChatSetting, navigate]);
 
 
   // Function to toggle microphone on/off
