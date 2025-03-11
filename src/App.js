@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import LiveViewer from './components/LiveViewer';
 import LiveSubSpeaker from './components/LiveSubSpeaker';
 import StartLiveSession from './components/StartLiveSession';
-import ChatSetting from './components/ChatSetting';
+import StartMainGuide from './components/StartMainGuide';
 import './styles/App.css';  // Importing the updated CSS for responsiveness
 import '@aws-amplify/ui-react/styles.css';
 function App() {
@@ -14,7 +14,7 @@ function App() {
           {/* <SettingMenu></SettingMenu> */}
           <Routes>
             {/* <Route path="/" element={<StartLiveSession />} /> */}
-            <Route path="/" element={<ChatSetting />} />
+            <Route path="/" element={<StartMainGuide />} />
             <Route path="/guide" element={<StartLiveSession />} />
             <Route path="/sub-speaker" element={<LiveSubSpeaker />} />
             <Route path="/viewer" element={<LiveViewer />} />

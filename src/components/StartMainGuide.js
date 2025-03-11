@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import '../styles/ChatSetting.css';
-const ChatSetting = () => {
+import '../styles/StartMainGuide.css';
+import Header from './Header';
+const StartMainGuide = () => {
     const { t } = useTranslation();
     const [chatSetting, setChatSetting] = useState('guideOnly');
     const handleChatSettingChange = (e) => {
@@ -14,6 +15,7 @@ const ChatSetting = () => {
     }
     return (
         <>
+        <Header/>
             <div className='chat-setting-container'>
                 <div>
                     <p style={{textAlign:'center', fontWeight:'700'}}>{t('chatSettingLbl')}</p>
@@ -35,4 +37,4 @@ const ChatSetting = () => {
     );
 };
 
-export default ChatSetting;
+export default StartMainGuide;

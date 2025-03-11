@@ -7,7 +7,7 @@ import '../styles/Header.css';
 import { useTranslation } from 'react-i18next';
 import Config from '../utils/config';
 
-function Header({ count, meeting, channelID, userId, chatSetting, userType }) {
+function Header({ count = null, meeting = null, channelID = null, userId = null, chatSetting = null, userType = null }) {
     const { t } = useTranslation();
     const [openQRCode, setOpenQRCode] = useState(false);
     const [selectedQR, setSelectedQR] = useState('listener');
@@ -41,9 +41,10 @@ function Header({ count, meeting, channelID, userId, chatSetting, userType }) {
        
     }
     return (
-        <div className='containerHeader' style={style()}>
-
-            <Participants count={count}></Participants>
+        // <div className='containerHeader' style={style()}>
+            <div className={`${count !== null ? 'container-header' : 'container-header-startguide'}`} style={style()} >
+            {count !== null && <Participants count={count}></Participants>}
+            
             <div className='rightMenu'>
                 {userType === "Guide" && (
                     <div className='qrCode' onClick={openPopup}>
