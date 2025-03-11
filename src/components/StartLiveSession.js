@@ -34,6 +34,7 @@ import { IoVolumeMute } from "react-icons/io5";
 import { IoMicCircle, IoMicOffCircleSharp } from "react-icons/io5";
 import { FaPause } from "react-icons/fa6";
 import { useLocation } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 // import { uploadFileToS3 } from '../services/S3Service';
 
@@ -48,6 +49,8 @@ function StartLiveSession() {
   const { t, i18n } = useTranslation();
   console.log('i18n', i18n);
   console.log('t', t);
+  // Use navigate to add params for meeting and channel
+  const navigate = useNavigate();
 
   // States to manage the meeting session
   const [channelArn, setChannelArn] = useState('');
@@ -203,51 +206,57 @@ function StartLiveSession() {
     meetingSession.audioVideo.start();
 
   }, []);
-  
-    // Function to start a live audio session
-    const startLiveAduioSession = useCallback(async () => {
-      setIsLoading(true);
-      // Delete the cookie
-      JSONCookieUtils.deleteCookie("Main-Guide");
-      console.log("Cookie deleted successfully!");
-      try {
-        const userID = uuidv4();
-        setUserId(userID);        
-        const userName = `Guide`;        
-        const meeting = await createMeeting();
-        console.log('Meeting created:', meeting);
-        const attendee = await createAttendee(meeting.MeetingId, `${userType}|${Date.now()}`);
-        console.log('Attendee created:', attendee);
-  
-        // Initialize the meeting session such as meeting session
-        initializeMeetingSession(meeting, attendee);
-        const createAppUserAndChannelResponse = await createAppUserAndChannel(userID, userName);
-        setMetting(meeting);
-        setAttendee(attendee);
-        setUserArn(createAppUserAndChannelResponse.userArn);
-        setChannelArn(createAppUserAndChannelResponse.channelArn);
-        setChannelID(createAppUserAndChannelResponse.channelID);
-  
-        // Storage the Guide information in the cookies
-        // Define your data
-        const mainGuide = {
-          meeting: meeting,
-          attendee: attendee,
-          userArn: createAppUserAndChannelResponse.userArn,
-          channelArn: createAppUserAndChannelResponse.channelArn,
-        };
-  
-        // Set the JSON cookie for 1 day
-        JSONCookieUtils.setJSONCookie("Main-Guide", mainGuide, 1);
-        console.log("Cookie set for 1 day!");
-  
-      } catch (error) {
-        console.error('Error starting meeting:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    }, [initializeMeetingSession,userType]);
-  
+
+  // Function to start a live audio session
+  const startLiveAduioSession = useCallback(async () => {
+    setIsLoading(true);
+    // Delete the cookie
+    JSONCookieUtils.deleteCookie("Main-Guide");
+    console.log("Cookie deleted successfully!");
+    try {
+      const userID = uuidv4();
+      setUserId(userID);
+      const userName = `Guide`;
+      const meeting = await createMeeting();
+      console.log('Meeting created:', meeting);
+      const attendee = await createAttendee(meeting.MeetingId, `${userType}|${Date.now()}`);
+      console.log('Attendee created:', attendee);
+
+      // Initialize the meeting session such as meeting session
+      initializeMeetingSession(meeting, attendee);
+      const createAppUserAndChannelResponse = await createAppUserAndChannel(userID, userName);
+      setMetting(meeting);
+      setAttendee(attendee);
+      setUserArn(createAppUserAndChannelResponse.userArn);
+      setChannelArn(createAppUserAndChannelResponse.channelArn);
+      setChannelID(createAppUserAndChannelResponse.channelID);
+
+      // Storage the Guide information in the cookies
+      // Define your data
+      const mainGuide = {
+        meeting: meeting,
+        attendee: attendee,
+        userArn: createAppUserAndChannelResponse.userArn,
+        channelArn: createAppUserAndChannelResponse.channelArn,
+      };
+
+      // Set the JSON cookie for 1 day
+      JSONCookieUtils.setJSONCookie("Main-Guide", mainGuide, 1);
+      console.log("Cookie set for 1 day!");
+
+    } catch (error) {
+      console.error('Error starting meeting:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [initializeMeetingSession, userType]);
+
+  useEffect(() => {
+    if (meeting && channelID) {
+      navigate(`/guide?meetingId=${meeting.MeetingId}&channelId=${channelID}`);
+    }
+  }, [meeting, channelID, navigate]);
+
 
   // Function to toggle microphone on/off
   const toggleMicrophone = async () => {
@@ -441,7 +450,7 @@ function StartLiveSession() {
   useEffect(() => {
     startLiveAduioSession();
     setSelectedVoiceLanguage('ja-JP');
-  }, [ startLiveAduioSession]);
+  }, [startLiveAduioSession]);
   return (
     <>
       <Header count={participantsCount} meeting={meeting} channelID={channelID} userId={userId} chatSetting={valueChatSetting} userType={userType} />
@@ -451,9 +460,9 @@ function StartLiveSession() {
         </p>
         <div className='titleFileUpload'>
           <div className='time'>
-          <p >2025/01/01</p>
+            <p >2025/01/01</p>
           </div>
-         
+
           <h3>浅草寺ツアー</h3>
         </div>
         <div className='audio'>
