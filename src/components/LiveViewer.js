@@ -53,7 +53,7 @@ function LiveViewer() {
   const [selectedVoiceLanguage, setSelectedVoiceLanguage] = useState(
     LISTEN_VOICE_LANGUAGES.find((lang) => lang.key.startsWith(i18n.language))?.key || 'ja-JP'
   );
-  const [isJoinAudio, setIsJoinAudio] = useState(false);
+  //const [isJoinAudio, setIsJoinAudio] = useState(false);
   // Replace local variables with refs
   const transcriptListRef = useRef([]);
   const transcriptList2Ref = useRef([]);
@@ -181,7 +181,7 @@ function LiveViewer() {
         setChannelArn(channelArn);
         setUserArn(userArn);
         console.log('Cookie set for 1 day!');
-        setIsJoinAudio(true);
+        //setIsJoinAudio(true);
         const user = {
           meeting: meetingData,
           attendee: attendeeData,
@@ -403,7 +403,7 @@ function LiveViewer() {
       {/* <Participants count={participantsCount} /> */}
       <Header count={participantsCount} meeting={meeting} channelID={channelId} userId={userID} chatSetting={chatSetting} userType={userType} />
       {/* <div className="live-viewer-container"> */}
-      <div className={` ${isJoinAudio ? 'live-viewer-container' : 'live-viewer-container-center'}`}>
+      <div className={` ${meeting && attendee ? 'live-viewer-container' : 'live-viewer-container-center'}`}>
         <div className='live-viewer-title'>
           <span>2025年1月1日</span>
           <span className='name-tour'>浅草寺ツアー</span>
