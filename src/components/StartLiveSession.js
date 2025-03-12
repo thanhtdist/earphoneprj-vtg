@@ -25,7 +25,7 @@ import { checkAvailableMeeting } from '../utils/MeetingUtils';
 import JSONCookieUtils from '../utils/JSONCookieUtils';
 import { v4 as uuidv4 } from 'uuid';
 import { useTranslation } from 'react-i18next';
-import { SPEAK_VOICE_LANGUAGES } from '../utils/constant';
+import { SPEAK_VOICE_LANGUAGES_KEY } from '../utils/constant';
 import Header from './Header';
 import MessageBox from './MessageBox';
 import { IoPlay } from "react-icons/io5";
@@ -69,8 +69,6 @@ function StartLiveSession() {
   const [noMicroMsg, setNoMicoMsg] = useState(t('noMicroMsg'));
   const [logger, setLogger] = useState(null);
   const [participantsCount, setParticipantsCount] = useState(0);
-  //const [isTranslationEnabled, setIsTranslationEnabled] = useState(false);
-  const [selectedVoiceLanguage, setSelectedVoiceLanguage] = useState(SPEAK_VOICE_LANGUAGES.find((lang) => lang.key.startsWith(i18n.language))?.key || 'ja-JP');
   const [transcripts, setTranscriptions] = useState([]);
   // Replace local variables with refs
   const transcriptListRef = useRef([]);
@@ -360,8 +358,7 @@ function StartLiveSession() {
       const retrievedMainGuide = JSONCookieUtils.getJSONCookie("Main-Guide");
       console.log("Retrieved cookie:", retrievedMainGuide);
       if (!retrievedMainGuide) {
-        setIsLoading(false);
-        return;
+        startLiveAduioSession();
       }
       const meeting = await checkAvailableMeeting(retrievedMainGuide.meeting.MeetingId, "Main-Guide");
       console.log('getMeetingResponse:', meeting);
@@ -377,7 +374,7 @@ function StartLiveSession() {
       setIsLoading(false);
     }
     getMeetingAttendeeInfoFromCookies();
-  }, [initializeMeetingSession]);
+  }, [initializeMeetingSession, startLiveAduioSession]);
 
   useEffect(() => {
     getAudioInputDevices();
@@ -437,20 +434,16 @@ function StartLiveSession() {
     if (!meetingSession) {
       return;
     }
-    console.log("enableMeetingTranscription selectedVoiceLanguage", selectedVoiceLanguage);
+    //console.log("enableMeetingTranscription selectedVoiceLanguage", selectedVoiceLanguage);
     console.log("enableMeetingTranscription meetingSession", meetingSession);
     const enableMeetingTranscription = async (meetingId, languageCode) => {
       console.log("enableLiveTranscription languageCode", languageCode);
       const startMeetingTranscriptionResponse = await startMeetingTranscription(meetingId, languageCode);
       console.log("enableLiveTranscription startMeetingTranscriptionResponse", startMeetingTranscriptionResponse);
     };
-    enableMeetingTranscription(meetingSession.configuration.meetingId, selectedVoiceLanguage);
-  }, [meetingSession, selectedVoiceLanguage]);
+    enableMeetingTranscription(meetingSession.configuration.meetingId, SPEAK_VOICE_LANGUAGES_KEY);
+  }, [meetingSession]);
 
-  useEffect(() => {
-    startLiveAduioSession();
-    setSelectedVoiceLanguage('ja-JP');
-  }, [startLiveAduioSession]);
   return (
     <>
       <Header count={participantsCount} meeting={meeting} channelID={channelID} userId={userId} chatSetting={valueChatSetting} userType={userType} />

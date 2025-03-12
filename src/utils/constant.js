@@ -3,6 +3,7 @@
 export const SPEAK_VOICE_LANGUAGES = [
     { key: "ja-JP", label: "日本語" },
 ]
+export const SPEAK_VOICE_LANGUAGES_KEY = "ja-JP"
 
 // Voice languages in enalish(default)
 export const LISTEN_VOICE_LANGUAGES = [
