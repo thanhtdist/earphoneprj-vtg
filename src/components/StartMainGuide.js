@@ -11,7 +11,7 @@ const StartMainGuide = () => {
       };
     const navigate = useNavigate();
     const handleClick = () => {
-        navigate('/guide', { state: { chatSetting:chatSetting } });
+        navigate('/guide', { state: { chatSetting:chatSetting, replace: true } });
     }
     return (
         <>

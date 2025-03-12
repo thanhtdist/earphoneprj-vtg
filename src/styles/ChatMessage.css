@@ -4,7 +4,7 @@
     margin-top: 20px;
     max-width: 100%;
     width: 100%;
-    height: 70%;
+    height: 80%;
     /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); */
     position: relative;
 }
@@ -12,8 +12,6 @@
 .chat-window {
     height: 90%; /* Increased height for better usability */
     overflow-y: auto; /* Allow scrolling */
-    /* border-bottom: 1px solid #ccc; */
-    /* padding: 10px; */
     margin-bottom: 10px; /* Space between messages and input */
     display: flex;
     flex-direction: column;
@@ -27,16 +25,14 @@
     flex-direction: column; /* Stack the two lines vertically */
 }
 
-.message-header {
+/* .message-header { */
     /* display: flex; */
     /* align-items: center;  */
     /* justify-content: end; */
     /* Align icon and name on the same line */
     /* margin-bottom: 4px;  */
     /* Add some space between the two lines */
-   
-
-}
+/* } */
 
 .message-header strong {
     margin-left: 8px; /* Space between icon and name */
@@ -116,13 +112,13 @@
     border-radius: 25px;
     padding: 8px;
     background-color: #fff;
-    max-width: 100%;
+    max-width: 94%;
 }
 
 .input-like-div {
     display: flex;
     flex-direction: column;
-    width: 100%;
+    width: 90%;
 }
 
 .input-like-div input {
@@ -140,6 +136,7 @@
     border-radius: 5px;
     background-color: #f1f1f1;
     font-size: 0.9rem;
+    width: 90%;
 }
 
 .file-name {

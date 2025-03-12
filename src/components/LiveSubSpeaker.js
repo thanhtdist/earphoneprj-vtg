@@ -56,7 +56,7 @@ function LiveSubSpeaker() {
 
   // State variables to store the channel ARN and user ARN
   const [meetingSession, setMeetingSession] = useState(null);
-  const [meeting, setMetting] = useState(null);
+  // const [meeting, setMetting] = useState(null);
   // const [attendee, setAttendee] = useState(null);
   const [selectedAudioInput, setSelectedAudioInput] = useState('');
   const [audioInputDevices, setAudioInputDevices] = useState([]);
@@ -69,7 +69,7 @@ function LiveSubSpeaker() {
   const [noMicroMsg, setNoMicoMsg] = useState(t('noMicroMsg'));
   //const [logger, setLogger] = useState(null);
   const [participantsCount, setParticipantsCount] = useState(0);
-  const userID = uuidv4();
+  
   // Function to transform the audio input device to Voice Focus Device/Echo Reduction
   const transformVoiceFocusDevice = async (meeting, attendee, logger) => {
     let transformer = null;
@@ -218,7 +218,7 @@ function LiveSubSpeaker() {
       // Generate unique user ID
       // User type
 
-
+      const userID = uuidv4();
       // Join the meeting from the meeting ID the host has created
       //const meeting = await getMeeting(meetingId);
       const meeting = await checkAvailableMeeting(meetingId, "Sub-Guide");
@@ -229,7 +229,7 @@ function LiveSubSpeaker() {
       initializeMeetingSession(meeting, attendee);
       const createAppUserAndJoinChannelResponse = await createAppUserAndJoinChannel(meeting.MeetingId, attendee.AttendeeId, userID, userType, channelId);
       console.log('createAppUserAndJoinChannelResponse:', createAppUserAndJoinChannelResponse);
-      setMetting(meeting);
+      // setMetting(meeting);
       //setAttendee(attendee);
       setChannelArn(createAppUserAndJoinChannelResponse.channelArn);
       setUserArn(createAppUserAndJoinChannelResponse.userArn);
@@ -252,7 +252,7 @@ function LiveSubSpeaker() {
     } finally {
       setIsLoading(false);
     }
-  }, [userID,meetingId, channelId, hostId, initializeMeetingSession, createAppUserAndJoinChannel]);
+  }, [meetingId, channelId, hostId, initializeMeetingSession, createAppUserAndJoinChannel]);
 
 
   // Function to toggle microphone on/off
@@ -325,8 +325,8 @@ function LiveSubSpeaker() {
       setMicroChecking('microChecking');
 
       // Check if there are no devices or if any device label is empty
-      // if (devices.length === 0 || devices.some(device => !device.label.trim())) {
-      if (devices.length === 0) {
+      if (devices.length === 0 || devices.some(device => !device.label.trim())) {
+      // if (devices.length === 0) {
         console.log('No audio input devices found');
         // Display a message after 5 seconds
         setTimeout(() => {
@@ -346,7 +346,7 @@ function LiveSubSpeaker() {
     setIsLoading(true);
     console.log("Retrieved cookie:", retrievedSubGuide);
     initializeMeetingSession(retrievedSubGuide.meeting, retrievedSubGuide.attendee);
-    setMetting(retrievedSubGuide.meeting);
+    // setMetting(retrievedSubGuide.meeting);
     // setAttendee(retrievedSubGuide.attendee);
     setUserArn(retrievedSubGuide.userArn);
     setChannelArn(retrievedSubGuide.channelArn);
@@ -447,9 +447,9 @@ function LiveSubSpeaker() {
   return (
     <>
       {/* <Participants count={participantsCount} /> */}
-      <Header count={participantsCount} meeting={meeting} channelID={channelId} userId={userID} chatSetting={chatSetting} userType={userType} />
+      <Header count={participantsCount}  chatSetting={chatSetting} userType={userType} />
       <div className="live-sub-container">
-        {/* <audio id="audioElementSub" controls autoPlay className="audio-player" style={{ display: (meeting && attendee) ? 'block' : 'none' }} /> */}
+        <audio id="audioElementSub"  className="audio-player" style={{ display:  'none' }} />
         <p className='title-sub-live'>
           {t('pageTitles.subGuide')}
         </p>
@@ -505,7 +505,7 @@ function LiveSubSpeaker() {
                   <div className="controls">
                     <div className='mic-button' onClick={toggleMicrophone}>
                       {isMicOn ?
-                        <IoMicCircle size={60} color="red" />
+                        <IoMicCircle size={60} color="#E57A00" />
                         : <IoMicOffCircleSharp size={60} color="gray" />}
                     </div>
                   </div>

@@ -401,12 +401,9 @@ function LiveViewer() {
       audioElementRef.current.pause();
     }
   }
-  // const text = " Năm 2004, nơi mục từ Vân Đài trong Từ điển Văn học (bộ mới), có đoạn viết, đại để như sau:Buổi đầu, đa phần thơ Vân Đài làm theo thể Đường luậtđa phần thơ Vân Đài làm theo thể Đường luậtđa phần thơ Vân Đài làm theo thể Đường luậtđa phần thơ Vân Đài làm theo thể Đường luậtđa phần thơ Vân Đài làm theo thể Đường luậtđa phần thơ Vân Đài làm theo thể Đường luậtđa phần thơ Vân Đài làm theo thể Đường luậtđa phần thơ Vân Đài làm theo thể Đường luậtNăm 2004, nơi mục từ Vân Đài trong Từ điển Văn học (bộ mới), có đoạn viết, đại để như sau:Buổi đầu, đa phần thơ Vân Đài làm theo thể Đường luậtđa phần thơ Vân Đài làm theo thể Đường luậtđa phần thơ Vân Đài làm theo thể Đường luậtđa phần thơ Vân Đài làm theo thể Đường luậtđa phần thơ Vân Đài làm theo thể Đường luậtđa phần thơ Vân Đài làm theo thể Đường luậtđa phần thơ Vân Đài làm theo thể Đường luậtđa phần thơ Vân Đài làm theo thể Đường luật";
   const isLongText = translatedListRef.current.join(' ').length > 300;
-  // const isLongText = text.length > 300;
   return (
     <>
-      {/* <Participants count={participantsCount} /> */}
       <Header count={participantsCount} meeting={meeting} channelID={channelId} userId={userID} chatSetting={chatSetting} userType={userType} />
       {/* <div className="live-viewer-container"> */}
       <div className={` ${meeting && attendee ? 'live-viewer-container' : 'live-viewer-container-center'}`}>
