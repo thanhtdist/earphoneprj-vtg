@@ -10,7 +10,7 @@
 }
 
 .chat-window {
-    height: 90%; /* Increased height for better usability */
+    height: 80%; /* Increased height for better usability */
     overflow-y: auto; /* Allow scrolling */
     margin-bottom: 10px; /* Space between messages and input */
     display: flex;
@@ -102,6 +102,7 @@
     width: 90%; /* Ensure it takes full width of the container */
     position: absolute;
     bottom: 0;
+    /* padding-bottom: 5%; */
 }
 
 .input-container {

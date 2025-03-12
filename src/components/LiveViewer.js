@@ -360,7 +360,7 @@ function LiveViewer() {
       }
 
       setTranscriptText((prev) => [...prev, currentText]);
-    } 
+    }
     // else {
     //   if (sourceLanguageCode === selectedVoiceLanguage) {
     //     const bindAudioElement = async () => {
@@ -465,11 +465,12 @@ function LiveViewer() {
               {/* <audio id='audioElementListener' ref={audioElementRef} >
               </audio> */}
             </div>
-            <div className='trans-box'>
-              <div style={{ textAlign: 'center' }}>
-                <p>{t('captureTranslations')}</p>
-              </div>
-              {/* <p>
+            {transcriptListRef.current.length > 0 && (
+              <div className='trans-box'>
+                <div style={{ textAlign: 'center' , fontWeight:'700'}}>
+                  <p>{t('captureTranslations')}</p>
+                </div>
+                {/* <p>
                 The host is speaking in{' '}
                 {LISTEN_VOICE_LANGUAGES.find((lang) => lang.key === sourceLanguageCode)?.label}.
               </p>
@@ -477,30 +478,32 @@ function LiveViewer() {
                 I am listening in{' '}
                 {LISTEN_VOICE_LANGUAGES.find((lang) => lang.key === selectedVoiceLanguage)?.label}.
               </p> */}
-              {translatedListRef.current.length > 0 && (
+                {translatedListRef.current.length > 0 && (
 
-                <div className='trans-text-box'>
-                  <div className={` ${isLongText ? 'long-text' : 'short-text'}`}></div>
-                  <span className='trans-text'>
-                    {t('translations')}: <span>{translatedListRef.current.join(' ')}</span>
-                  </span>
-                </div>
+                  <div className='trans-text-box'>
+                    <div className={` ${isLongText ? 'long-text' : 'short-text'}`}></div>
+                    <span className='trans-text'>
+                      {t('translations')}: <span>{translatedListRef.current.join(' ')}</span>
+                    </span>
+                  </div>
 
-              )}
-              {transcriptListRef.current.length > 0 && (
+                )}
+                {transcriptListRef.current.length > 0 && (
 
-                <div className='trans-text-box'>
-                  {/* <div className="blur-mask"></div> */}
-                  <div className={` ${isLongText ? 'long-text' : 'short-text'}`}></div>
-                  <span className='trans-text'>
-                    {t('transcriptions')}: <span>{transcriptListRef.current.join(' ')}</span>
-                  </span>
-                </div>
-              )}
-              <br />
+                  <div className='trans-text-box'>
+                    {/* <div className="blur-mask"></div> */}
+                    <div className={` ${isLongText ? 'long-text' : 'short-text'}`}></div>
+                    <span className='trans-text'>
+                      {t('transcriptions')}: <span>{transcriptListRef.current.join(' ')}</span>
+                    </span>
+                  </div>
+                )}
+                <br />
 
-              <br />
-            </div>
+                <br />
+              </div>
+            )}
+
             {/* <div>
               {channelArn && (
                 <ChatMessage
