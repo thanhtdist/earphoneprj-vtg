@@ -69,7 +69,9 @@ function LiveSubSpeaker() {
   const [noMicroMsg, setNoMicoMsg] = useState(t('noMicroMsg'));
   //const [logger, setLogger] = useState(null);
   const [participantsCount, setParticipantsCount] = useState(0);
-  
+  const audioRef = useRef(null);
+  const [isMuted, setIsMuted] = useState(true);
+  const [isPlay, setIsPlay] = useState(false);
   // Function to transform the audio input device to Voice Focus Device/Echo Reduction
   const transformVoiceFocusDevice = async (meeting, attendee, logger) => {
     let transformer = null;
@@ -326,7 +328,7 @@ function LiveSubSpeaker() {
 
       // Check if there are no devices or if any device label is empty
       if (devices.length === 0 || devices.some(device => !device.label.trim())) {
-      // if (devices.length === 0) {
+        // if (devices.length === 0) {
         console.log('No audio input devices found');
         // Display a message after 5 seconds
         setTimeout(() => {
@@ -428,9 +430,8 @@ function LiveSubSpeaker() {
 
     meetingSession.audioVideo.realtimeSubscribeToAttendeeIdPresence(callback);
   }, [meetingSession]);
-  const [isMuted, setIsMuted] = useState(true);
-  const [isPlay, setIsPlay] = useState(false);
-  const audioRef = useRef(null);
+
+
   const handleMuteUnmute = () => {
     setIsMuted(!isMuted);
     audioRef.current.muted = isMuted;
@@ -444,87 +445,87 @@ function LiveSubSpeaker() {
       audioRef.current.pause();
     }
   }
-  return (
-    <>
-      {/* <Participants count={participantsCount} /> */}
-      <Header count={participantsCount}  chatSetting={chatSetting} userType={userType} />
-      <div className="live-sub-container">
-        <audio id="audioElementSub"  className="audio-player" style={{ display:  'none' }} />
-        <p className='title-sub-live'>
-          {t('pageTitles.subGuide')}
-        </p>
-        <div className='title-sub-live-upload'>
-          <div className='time'>
-            <p >2025/01/01</p>
-          </div>
-          <h3>浅草寺ツアー</h3>
-        </div>
-        <div className='audio-sub'>
-          <div className='play-button' onClick={handlePlay}>
-            {isPlay ? <FaPause size={30} /> : <IoPlay size={30} />}
-          </div>
 
-          <div className='mute-button' onClick={handleMuteUnmute}>
-            {isMuted ? <HiMiniSpeakerWave size={30} /> : <IoVolumeMute size={30} />
-            }
-          </div>
-          <audio id='audioElementSub' ref={audioRef} >
-          </audio>
+return (
+  <>
+    {/* <Participants count={participantsCount} /> */}
+    <Header count={participantsCount} chatSetting={chatSetting} userType={userType} />
+    <div className="live-sub-container">
+      <p className='title-sub-live'>
+        {t('pageTitles.subGuide')}
+      </p>
+      <div className='title-sub-live-upload'>
+        <div className='time'>
+          <p >2025/01/01</p>
         </div>
-        {(isLoading) ? (
-          <div className="loading">
-            <div className="spinner"></div>
-            <p>{t('loading')}</p>
-          </div>
-        ) : (
-          <>
-            {(noMicroMsg) ? (
-              <>
-                {!microChecking ? (
-                  <p style={{ color: "red" }}>{t('noMicroMsg')}</p>
-                ) : (
-                  <div className="loading">
-                    <div className="spinner"></div>
-                    {microChecking && <p>{t('microChecking')}</p>}
-                  </div>
+        <h3>浅草寺ツアー</h3>
+      </div>
+      <div className='audio-sub'>
+        <div className='play-button' onClick={handlePlay}>
+          {isPlay ? <FaPause size={30} /> : <IoPlay size={30} />}
+        </div>
+
+        <div className='mute-button' onClick={handleMuteUnmute}>
+          {isMuted ? <HiMiniSpeakerWave size={30} /> : <IoVolumeMute size={30} />
+          }
+        </div>
+        <audio id='audioElementSub' ref={audioRef} >
+        </audio>
+      </div>
+      {(isLoading) ? (
+        <div className="loading">
+          <div className="spinner"></div>
+          <p>{t('loading')}</p>
+        </div>
+      ) : (
+        <>
+          {(noMicroMsg) ? (
+            <>
+              {!microChecking ? (
+                <p style={{ color: "red" }}>{t('noMicroMsg')}</p>
+              ) : (
+                <div className="loading">
+                  <div className="spinner"></div>
+                  {microChecking && <p>{t('microChecking')}</p>}
+                </div>
+              )}
+            </>
+          ) : (
+            <>
+              <div className='box-start-live-session'>
+                <h3>{t('microSelectionLbl')}</h3>
+                {(audioInputDevices && audioInputDevices.length > 0) && (
+                  <select value={selectedAudioInput} onChange={(e) => setSelectedAudioInput(e.target.value)}>
+                    {audioInputDevices.map((device) => (
+                      <option key={device.deviceId} value={device.deviceId}>
+                        {device.label}
+                      </option>
+                    ))}
+                  </select>
                 )}
-              </>
-            ) : (
-              <>
-                <div className='box-start-live-session'>
-                  <h3>{t('microSelectionLbl')}</h3>
-                  {(audioInputDevices && audioInputDevices.length > 0) && (
-                    <select value={selectedAudioInput} onChange={(e) => setSelectedAudioInput(e.target.value)}>
-                      {audioInputDevices.map((device) => (
-                        <option key={device.deviceId} value={device.deviceId}>
-                          {device.label}
-                        </option>
-                      ))}
-                    </select>
-                  )}
-                  <div className="controls">
-                    <div className='mic-button' onClick={toggleMicrophone}>
-                      {isMicOn ?
-                        <IoMicCircle size={60} color="#E57A00" />
-                        : <IoMicOffCircleSharp size={60} color="gray" />}
-                    </div>
+                <div className="controls">
+                  <div className='mic-button' onClick={toggleMicrophone}>
+                    {isMicOn ?
+                      <IoMicCircle size={60} color="#E57A00" />
+                      : <IoMicOffCircleSharp size={60} color="gray" />}
                   </div>
                 </div>
-              </>
-            )}
-            <br />
+              </div>
+            </>
+          )}
+          <br />
 
-            {(chatSetting !== "nochat" && channelArn) && (<>
-              <MessageBox userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} userType={userType} statusChat={chatSetting} />
-              {/* <ChatMessage userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} chatSetting={chatSetting} /> */}
-            </>)}
-            {/* {channelArn && <ChatMessage userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} chatSetting={chatSetting} />} */}
+          {(chatSetting !== "nochat" && channelArn) && (<>
+            <MessageBox userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} userType={userType} statusChat={chatSetting} />
+            {/* <ChatMessage userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} chatSetting={chatSetting} /> */}
+          </>)}
+          {/* {channelArn && <ChatMessage userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} chatSetting={chatSetting} />} */}
 
-          </>
-        )}
-      </div>
-    </>
-  );
+        </>
+      )}
+    </div>
+  </>
+);
 }
 
 export default LiveSubSpeaker;
