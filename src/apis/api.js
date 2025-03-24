@@ -1,5 +1,5 @@
 // This file contains the API functions to interact with the backend services
-import { get, post } from 'aws-amplify/api';
+import { get, post, put } from 'aws-amplify/api';
 import Config from '../utils/config';
 const { v4: uuid } = require('uuid');
 /**
@@ -318,3 +318,184 @@ export async function translateTextSpeech(inputText, sourceLanguageCode, targetL
     console.log('POST call translateTextSpeech failed: ', JSON.parse(error.response.body));
   }
 }
+
+/**
+ * Book a tour by the admin
+ * @param {json} data - The data of the tour to be created
+ * @returns {Promise<any>} The response data from the API call.
+ * @throws {Error} Logs the error details if the POST call fails.
+ */
+export async function createTour(data) {
+  try {
+    const restOperation = post({
+      apiName: 'TourVTGRestApi', // The name of the API defined in backend.ts
+      path: 'tours', // endpoint defined in backend.ts 
+      options: {
+        body: {
+          tourNumber: data.tourNumber,
+          tourName: data.tourName,
+          departureDate: data.departureDate,
+          returnDate: data.returnDate,
+          processingNumber: data.processingNumber,
+          acceptanceDate: data.acceptanceDate,
+          planningOfficeName: data.planningOfficeName,
+          planningSalesOfficeName: data.planningSalesOfficeName,
+          planningSalesOfficeTeamName: data.planningSalesOfficeTeamName,
+          contactPersonName: data.contactPersonName,
+          contactPersonEmail: data.contactPersonEmail,
+          numberOfDevices: data.numberOfDevices,
+          numberOfTransmitters: data.numberOfTransmitters,
+          qrCodeDestination: data.qrCodeDestination,
+          emailCustomer: data.emailCustomer,
+          phoneNumberCustomer: data.phoneNumberCustomer,
+          otherRemarks: data.otherRemarks,
+          meetingId: data.meetingId,
+          channelId: data.channelId
+        }
+      }
+    });
+
+    const { body } = await restOperation.response;
+    const response = await body.json();
+    return response.data;
+  } catch (error) {
+    console.log('POST call createTour failed: ', JSON.parse(error.response.body));
+  }
+
+}
+
+export async function createBatchTour(data) {
+  console.log('createBatchTour data', data);
+  try {
+    const restOperation = post({
+      apiName: 'TourVTGRestApi', // The name of the API defined in backend.ts
+      path: 'tours/batch', // endpoint defined in backend.ts 
+      options: {
+        body: data
+      }
+    });
+
+    const { body } = await restOperation.response;
+    const response = await body.json();
+    return response.data;
+  } catch (error) {
+    console.log('POST call createTour failed: ', JSON.parse(error.response.body));
+  }
+
+}
+
+/**
+ * Book a tour by the admin
+ * @param {json} data - The data of the tour to be created
+ * @returns {Promise<any>} The response data from the API call.
+ * @throws {Error} Logs the error details if the POST call fails.
+ */
+export async function updateTour(data) {
+  try {
+    const restOperation = put({
+      apiName: 'TourVTGRestApi', // The name of the API defined in backend.ts
+      path: 'tours/' + data.tourId, // endpoint defined in backend.ts 
+      options: {
+        body: {
+          tourId: data.tourId,
+          tourNumber: data.tourNumber,
+          tourName: data.tourName,
+          departureDate: data.departureDate,
+          returnDate: data.returnDate,
+          processingNumber: data.processingNumber,
+          acceptanceDate: data.acceptanceDate,
+          planningOfficeName: data.planningOfficeName,
+          planningSalesOfficeName: data.planningSalesOfficeName,
+          planningSalesOfficeTeamName: data.planningSalesOfficeTeamName,
+          contactPersonName: data.contactPersonName,
+          contactPersonEmail: data.contactPersonEmail,
+          numberOfDevices: data.numberOfDevices,
+          numberOfTransmitters: data.numberOfTransmitters,
+          qrCodeDestination: data.qrCodeDestination,
+          emailCustomer: data.emailCustomer,
+          phoneNumberCustomer: data.phoneNumberCustomer,
+          otherRemarks: data.otherRemarks
+        }
+      }
+    });
+
+    const { body } = await restOperation.response;
+    const response = await body.json();
+    return response.data;
+  } catch (error) {
+    console.log('POST call updateTour failed: ', JSON.parse(error.response.body));
+  }
+
+}
+
+/**
+ * 
+ * @param {json} data - The data of the tour to be listed: page, pageSize, query
+ * @returns {Promise<any>} The response data from the API call.
+ * @throws {Error} Logs the error details if the POST call fails.
+ */
+export async function listTours(data) {
+  try {
+    const restOperation = get({
+      apiName: 'TourVTGRestApi', // The name of the API defined in backend.ts
+      path: 'tours/?page=' + data.page + '&pageSize=' + data.pageSize, // endpoint defined in backend.ts, appInstanceArn is dynamically passed
+    });
+    const { body } = await restOperation.response;
+    const response = await body.json();
+    return response.data;
+  } catch (error) {
+    console.log('GET call listTours failed: ', JSON.parse(error.response.body));
+  }
+}
+
+/**
+ * 
+ * @param {string} tourId - The ID of the meeting.
+ * @returns {Promise<any>} The response data from the API call.
+ * @throws {Error} Logs the error details if the POST call fails.
+ */
+export async function getTour(tourId) {
+  try {
+    const restOperation = get({
+      apiName: 'TourVTGRestApi', // The name of the API defined in backend.ts
+      path: 'tours/' + tourId, // endpoint defined in backend.ts, tourId is dynamically passed
+    });
+    const { body } = await restOperation.response;
+    const response = await body.json();
+    return response.data;
+  } catch (error) {
+    console.log('GET call getTour failed: ', JSON.parse(error.response.body));
+  }
+}
+/**
+ * Book a tour by the admin
+ * @returns {Promise<any>} The response data from the API call.
+ * @throws {Error} Logs the error details if the POST call fails.
+ */
+export async function createUser(data) {
+  try {
+    const restOperation = post({
+      apiName: 'UserVTGRestApi', // The name of the API defined in backend.ts
+      path: 'users', // endpoint defined in backend.ts 
+      options: {
+        body: {
+          userName: data.userName,
+          email: data.email,
+          password: data.password,
+        }
+      }
+    });
+
+    const { body } = await restOperation.response;
+    const response = await body.json();
+    return response.data;
+  } catch (error) {
+    console.log('POST call createTour failed: ', JSON.parse(error.response.body));
+  }
+}
+
+/**
+ * Book a tour by the admin
+ * @returns {Promise<any>} The response data from the API call.
+ * @throws {Error} Logs the error details if the POST call fails.
+ */

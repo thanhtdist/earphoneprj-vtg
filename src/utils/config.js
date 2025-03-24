@@ -17,11 +17,12 @@ const Config = {
     // URL for the web app for participants to join listen to audio
     // appSubSpeakerURL: 'http://localhost:3000/sub-speaker/',
     // appViewerURL: 'http://localhost:3000/viewer/',
-    appSubSpeakerURL: 'https://voicetourguide.d32r8fcc1s6wpt.amplifyapp.com/sub-speaker/',
-    appViewerURL: 'https://voicetourguide.d32r8fcc1s6wpt.amplifyapp.com/viewer/',
+    appSpeakerURL: 'http://localhost:3000/guide/',
+    appSubSpeakerURL: 'http://localhost:3000/sub-speaker/',
+    appViewerURL: 'http://localhost:3000/viewer/',
     // S3 attchment bucket name
     attachmentBucketName: 'vtg-chat-attachments',
     // Write logs from client side to CloudWatch using API Gateway      
-    //cloudWatchLogRestApiVTGRestApi: 'https://4ipuok618b.execute-api.us-east-1.amazonaws.com/prod/'
+    cloudWatchLogRestApiVTGRestApi: 'https://4ipuok618b.execute-api.us-east-1.amazonaws.com/prod/'
 };
 export default Config;

@@ -21,6 +21,17 @@ import { listAttendee } from './functions/list-attendee/resource';
 import { addCloudWatchLogs } from './functions/add-cloud-watch-logs/resource';
 import { startMeetingTranscription } from './functions/start-meeting-transcription/resource';
 import { translateTextSpeech } from './functions/translate-text-speech/resource';
+import { createTour } from './functions/create-tour/resource';
+import { createUser } from './functions/create-user/resource';
+import { getTour } from './functions/get-tour/resource';
+import { listTour } from './functions/list-tour/resource';
+import { updateTour } from './functions/update-tour/resource';
+import { login } from './functions/login/resource';
+import { listAdmin } from './functions/list-admin/resource';
+import { createBatchTour } from './functions/create-batch-tour/resource';
+import { getAdmin } from './functions/get-admin/resource';
+import { updateAdmin } from './functions/update-admin/resource';
+import { deleteAdmin } from './functions/delete-admin/resource';
 /**
  * Define the backend resources 
  * - List lambda functions for audio voice (metting session) and chat(message session)
@@ -39,6 +50,17 @@ const backend = defineBackend({
   addCloudWatchLogs, // send logs to cloud watch
   startMeetingTranscription, // start meeting transcription
   translateTextSpeech, // translate text to speech
+  createTour, // create tour by the admin
+  createUser, // create user by the admin
+  getTour, // get tour by tourID
+  listTour, // list all tours
+  updateTour, // update tour by the admin,
+  login, //login admin
+  listAdmin,
+  createBatchTour,
+  getAdmin, // create batch tour by the admin
+  updateAdmin,
+  deleteAdmin,
 });
 
 /**
@@ -216,6 +238,103 @@ translatePath.addMethod("POST", new LambdaIntegration(
   backend.translateTextSpeech.resources.lambda
 ));
 
+// =============33. API Getway, Lambda function for Tour ===============
+// create a new REST API for audio voice
+const tourRestApi = new RestApi(apiStack, "TourVTGRestApi", {
+  restApiName: "TourVTGRestApi",
+  deploy: true,
+  deployOptions: {
+    stageName: "prod",
+  },
+  defaultCorsPreflightOptions: {
+    allowOrigins: Cors.ALL_ORIGINS, // Restrict this to domains you trust
+    allowMethods: Cors.ALL_METHODS, // Specify only the methods you need to allow
+    allowHeaders: Cors.DEFAULT_HEADERS, // Specify only the headers you need to allow
+  },
+});
+
+// create a new resource path(endpoint) for /tours
+const tourPath = tourRestApi.root.addResource("tours");
+// add POST method to create /tours with createTour Lambda integration
+tourPath.addMethod("POST", new LambdaIntegration(
+  backend.createTour.resources.lambda
+));
+
+// add GET method to /tours with listTour Lambda integration
+tourPath.addMethod("GET", new LambdaIntegration(
+  backend.listTour.resources.lambda
+));
+
+// add batch tour creation endpoint
+const tourBatchPath = tourPath.addResource("batch");
+// add POST method to create /tours/batch with createTour Lambda integration
+tourBatchPath.addMethod("POST", new LambdaIntegration(
+  backend.createBatchTour.resources.lambda
+));
+
+// create a dynamic {TourID} resource under /tours
+const tourIdPath = tourPath.addResource("{TourID}");
+// add GET method to /tours/{TourID} with getTour Lambda integration
+tourIdPath.addMethod("GET", new LambdaIntegration(
+  backend.getTour.resources.lambda
+));
+
+// add PUT method to /tours/{TourID} with updateTour Lambda integration
+tourIdPath.addMethod("PUT", new LambdaIntegration(
+  backend.updateTour.resources.lambda
+));
+
+// create user api
+const userRestApi = new RestApi(apiStack, "UserVTGRestApi", {
+  restApiName: "UserVTGRestApi",
+  deploy: true,
+  deployOptions: {
+    stageName: "prod",
+  },
+  defaultCorsPreflightOptions: {
+    allowOrigins: Cors.ALL_ORIGINS, // Restrict this to domains you trust
+    allowMethods: Cors.ALL_METHODS, // Specify only the methods you need to allow
+    allowHeaders: Cors.DEFAULT_HEADERS, // Specify only the headers you need to allow
+  },
+});
+
+// create a new resource path(endpoint) for /users
+const userPath = userRestApi.root.addResource("users");
+// add POST method to create /users with createTour Lambda integration
+userPath.addMethod("POST", new LambdaIntegration(
+  backend.createUser.resources.lambda
+));
+
+// add GET method to login by email
+// create a dynamic login resource under /users
+const userLoginLoginPath = userPath.addResource("login");
+// add GET method to /users/{login} with getTour Lambda integration
+userLoginLoginPath.addMethod("POST", new LambdaIntegration(
+  backend.login.resources.lambda
+));
+
+//get list admin
+userPath.addMethod("GET", new LambdaIntegration(
+  backend.listAdmin.resources.lambda
+));
+
+//update addmin
+userPath.addMethod("PUT", new LambdaIntegration(
+  backend.updateAdmin.resources.lambda
+));
+
+//update addmin
+userPath.addMethod("DELETE", new LambdaIntegration(
+  backend.deleteAdmin.resources.lambda
+));
+
+// add get detail admin
+const userIdPath = userPath.addResource("{UserID}");
+// add GET method to /users/{UserID} with getTour Lambda integration
+userIdPath.addMethod("GET", new LambdaIntegration(
+  backend.getAdmin.resources.lambda
+));
+
 // add outputs to the configuration file for calling APIs metadata in the frontend
 backend.addOutput({
   custom: {
@@ -244,6 +363,16 @@ backend.addOutput({
         endpoint: translateRestApi.url,
         region: Stack.of(translateRestApi).region,
         apiName: translateRestApi.restApiName,
+      },
+      [tourRestApi.restApiName]: {
+        endpoint: tourRestApi.url,
+        region: Stack.of(tourRestApi).region,
+        apiName: tourRestApi.restApiName,
+      },
+      [userRestApi.restApiName]: {
+        endpoint: userRestApi.url,
+        region: Stack.of(userRestApi).region,
+        apiName: userRestApi.restApiName,
       },
     },
   },

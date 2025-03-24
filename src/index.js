@@ -6,6 +6,8 @@ import reportWebVitals from './reportWebVitals';
 import { Amplify } from "aws-amplify"
 import outputs from "./amplify_outputs.json";
 import './i18n';
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.bundle.min";
 // Connect the Amplify backend resource from outputs file to the frontend
 Amplify.configure(outputs);
 
