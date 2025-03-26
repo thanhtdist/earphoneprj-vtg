@@ -13,42 +13,41 @@ export const handler: APIGatewayProxyHandler = async (event) => {
 
   try {
     // Parse body from API Gateway event
-    const {
-      userId, email, password
-    } = JSON.parse(event.body || '{}');
+    const {userId, userName, password} = JSON.parse(event.body || '{}');
 
-    console.log('Updating tour with userId: ', userId, 'email: ', email, 'password: ', password);
+    console.log('Updating user with userId: ', userId, 'userName: ', userName, 'password: ', password);
 
     // Input validation
-    if (!userId || !email || !password) {
-      console.error('Invalid input: Missing required fields.', { userId, email, password });
+    if (!userId || !userName || !password) {
+      console.error('Invalid input: Missing required fields.', { userId, userName, password });
       return {
         statusCode: 400,
-        body: JSON.stringify({ error: 'Invalid input:  userID,email, password are required.' }),
+        body: JSON.stringify({ error: 'Invalid input:  userID,userName, password are required.',userId, userName, password }),
         headers: Config.headers,
       };
     }
 
     // Update the tour item in DynamoDB
     const updateExpression = `
-      set ':email': email,
-      ':password': password, 
+      set userName = :userName,
+          password = :password,
+          updateDate = :updateDate
     `;
 
     const expressionAttributeValues = {
-      ':email': email,
+      ':userName': userName,
       ':password': password,
-
+      ':updateDate': new Date().toISOString()
     };
 
     await dynamoDB.update({
       TableName: "Users",
       Key: { userId },
       UpdateExpression: updateExpression,
-      ExpressionAttributeValues: expressionAttributeValues,
+      ExpressionAttributeValues: expressionAttributeValues
     }).promise();
 
-    console.log('Tour successfully updated: ', { userId, ...expressionAttributeValues });
+    console.log('user successfully updated: ', { userId, ...expressionAttributeValues });
 
     // Return success response
     return {

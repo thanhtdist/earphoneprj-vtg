@@ -91,7 +91,7 @@ const RegisterAdmin = () => {
                             </div>
                         </div>
                         <div className="text-center mt-5">
-                            <a href="manager_list.html" type="button" className="btn btn-outline-danger" style={{marginRight:'50px'}}>戻る</a>
+                            <a href="/admin_list" type="button" className="btn btn-outline-danger" style={{marginRight:'50px'}}>戻る</a>
                             <button type="submit" className="btn btn-danger">登録</button>
                         </div>
                     </form>

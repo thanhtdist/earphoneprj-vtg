@@ -33,7 +33,8 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       phoneNumberCustomer,
       otherRemarks,
       meetingId,
-      channelId
+      channelId,
+      chatRestriction
      } = JSON.parse(event.body || '{}');
 
     console.log('Creating tour with tourNumber: ', tourNumber, 'tourName: ', tourName);
@@ -70,6 +71,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       otherRemarks,
       meetingId,
       channelId,
+      chatRestriction: chatRestriction,
       createdAt: new Date().toISOString(),
       createdBy: 'admin',
       updatedAt: new Date().toISOString(),

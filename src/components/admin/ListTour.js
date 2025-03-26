@@ -1,114 +1,207 @@
 import React, { useState, useRef } from 'react';
 import {
     listTours,
-    createBatchTour
+    createBatchTour,
+    deleteTour
 } from '../../apis/api';
 import { useEffect } from 'react';
 import Sidebar from './Sidebar';
 import { Link } from 'react-router-dom';
+import Papa from 'papaparse';
+import { createMeetingAndChannel } from '../../utils/MeetingUtils';
+import ConfirmModal from '../popup/ConfirmModal';
+import { toast } from "react-toastify";
+import Loading from '../Loading';
 
 const ListTour = () => {
     const fileInputRef = useRef(null);
+    const [isLoading, setIsLoading] = useState(false);
     const [tours, setTours] = useState([]);
+    const [totalTours, setTotalTours] = useState(0);
+    // handle upload csv
+    const [showUploadConfirm, setShowUploadConfirm] = useState(false);
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+    const [selectedTour, setSelectedTour] = useState({ tourId: null, tourNumber: null });
+    const [query, setQuery] = useState('');
+    // Get list tours
+    const getListTour = async (data) => {
+        const listoursResponse = await listTours({
+            page: 1,
+            pageSize: 10,
+            query: data
+        });
+        console.log(listoursResponse);
+        setTours(listoursResponse.data);
+        setTotalTours(listoursResponse.count);
+    };
+    // Get list tours
     useEffect(() => {
-        const getListTour = async () => {
-            const listoursResponse = await listTours({
-                page: 1,
-                pageSize: 10
-            });
-            // console.log(listoursResponse);
-            setTours(listoursResponse);
-        };
-        getListTour();
+        getListTour('');
     }, []);
 
-    // export tours to csv
-    const exportToCSV = () => {
+    // Handle search change
+    const handleSearchChange = (e) => {
+        setQuery(e.target.value);
+    };
 
-        if (tours.length === 0) {
-            alert("No data found to export!");
-            return;
+    // Handle search click
+    const handleSearchClick = () => {
+        console.log("Search query:", query);
+        // Call API to search tours
+        getListTour(query);
+    };
+
+    // export tours to csv
+    const handleExportToCSV = () => {
+        try {
+            if (tours.length === 0) {
+                alert("No data found to export!");
+                return;
+            }
+
+            console.log("Tour export???", tours);
+
+            const csvRows = [];
+            const headers = [
+                "Tour number", "Processing number", "Tour name", "Application acceptance date and time",
+                "Planning office name", "Planning Sales Office", "Planning office team name",
+                "Name of person in charge", "Email address of person in charge",
+                "Number of terminal devices used", "Number of transmission devices required", "Departure date", "Return date",
+                "QR code delivery destination", "Email address", "Phone number", "Other notes"];
+            csvRows.push(headers.join(",")); // Add headers
+
+            tours.forEach((tour) => {
+                const values = [tour.tourNumber, tour.processingNumber, tour.tourName, tour.acceptanceDate,
+                tour.planningOfficeName, tour.planningSalesOfficeName, tour.planningSalesOfficeTeamName,
+                tour.contactPersonName, tour.contactPersonEmail,
+                tour.numberOfDevices, tour.numberOfTransmitters, tour.departureDate, tour.returnDate,
+                tour.qrCodeDestination, tour.emailCustomer, tour.phoneNumberCustomer, tour.otherRemarks
+                ];
+                csvRows.push(values.join(","));
+            });
+
+            const csvString = csvRows.join("\n");
+            const blob = new Blob([csvString], { type: "text/csv" });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "tours.csv";
+            a.click();
+            window.URL.revokeObjectURL(url);
+        } catch (error) {
+            console.log("Error exporting tours:", error); // Log error
         }
 
-        console.log("Tour export???", tours);
-
-        const csvRows = [];
-        const headers = [
-            "Tour number", "Processing number", "Tour name", "Application acceptance date and time",
-            "Planning office name", "Planning Sales Office", "Planning office team name",
-            "Name of person in charge", "Email address of person in charge",
-            "Number of terminal devices used", "Number of transmission devices required", "Departure date", "Return date",
-            "QR code delivery destination", "Email address", "Phone number", "Other notes"];
-        csvRows.push(headers.join(",")); // Add headers
-
-        tours.forEach((tour) => {
-            const values = [tour.tourNumber, tour.processingNumber, tour.tourName, tour.acceptanceDate,
-            tour.planningOfficeName, tour.planningSalesOfficeName, tour.planningSalesOfficeTeamName,
-            tour.contactPersonName, tour.contactPersonEmail,
-            tour.numberOfDevices, tour.numberOfTransmitters, tour.departureDate, tour.returnDate,
-            tour.qrCodeDestination, tour.emailCustomer, tour.phoneNumberCustomer, tour.otherRemarks
-            ];
-            csvRows.push(values.join(","));
-        });
-
-        const csvString = csvRows.join("\n");
-        const blob = new Blob([csvString], { type: "text/csv" });
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "tours.csv";
-        a.click();
-        window.URL.revokeObjectURL(url);
     };
+
+    // Upload CSV file to create batch tours
     const handleUploadCSV = (e) => {
         const file = e.target.files[0];
         if (!file) return;
-
-        const reader = new FileReader();
-        reader.onload = (event) => {
-            const content = event.target.result;
-            const lines = content.split("\n");
-            const headers = lines[0].split(",");
-            //const data = lines.slice(1).map((row) => row.split(","));
-            console.log("Headers:", headers);
-            // console.log("Data:", data);
-            // Skip the header row (lines[0]) and map each remaining row to an object
-            const parsedData = lines.slice(1).map((line) => {
-                const cols = line.split(",");
-                console.log("cols:", cols);
-                return {
-                    tourNumber: cols[0] || "",
-                    processingNumber: cols[1] || "",
-                    tourName: cols[2] || "",
-                    acceptanceDate: cols[3] || "",
-                    planningOfficeName: cols[4] || "",
-                    planningSalesOfficeName: cols[5] || "",
-                    planningSalesOfficeTeamName: cols[6] || "",
-                    contactPersonName: cols[7] || "", // guide name
-                    contactPersonEmail: cols[8] || "", // email of guide
-                    numberOfDevices: cols[9] || "",
-                    numberOfTransmitters: cols[10] || "",
-                    departureDate: cols[11] || "",
-                    returnDate: cols[12] || "",
-                    qrCodeDestination: cols[13] || "",
-                    emailCustomer: cols[14] || "",
-                    phoneNumberCustomer: cols[15] || "",
-                    otherRemarks: cols[16] || "admin"
-                    // ... map each column to the fields you need ...
-                };
-            });
-            console.log(parsedData);
-            callCreateBatchTour(parsedData);
-        };
-        reader.readAsText(file);
+        setSelectedFile(file);
+        setShowUploadConfirm(true);
     };
+    const confirmUploadCSV = (e) => {
+        // const file = e.target.files[0];
+        // if (!file) return;
+        setIsLoading(true);
+        Papa.parse(selectedFile, {
+            complete: async (results) => {
+                console.log("Parsed CSV:", results.data);
+                // Transform rows as needed
+                try {
+                    const parsedData = results.data.slice(1).map((cols) => {
+                        return {
+                            tourNumber: cols[0] || "",
+                            processingNumber: cols[1] || "",
+                            tourName: cols[2] || "",
+                            acceptanceDate: cols[3] || "",
+                            planningOfficeName: cols[4] || "",
+                            planningSalesOfficeName: cols[5] || "",
+                            planningSalesOfficeTeamName: cols[6] || "",
+                            contactPersonName: cols[7] || "",
+                            contactPersonEmail: cols[8] || "",
+                            numberOfDevices: cols[9] || "",
+                            numberOfTransmitters: cols[10] || "",
+                            departureDate: cols[11] || "",
+                            returnDate: cols[12] || "",
+                            qrCodeDestination: cols[13] || "",
+                            emailCustomer: cols[14] || "",
+                            phoneNumberCustomer: cols[15] || "",
+                            otherRemarks: cols[16] || "",
+                            chatRestriction: cols[17] || "allChat",
+                        };
+                    });
+                    // For each parsed tour, get a unique meeting and channel
+                    for (const tour of parsedData) {
+                        const response = await createMeetingAndChannel();
+                        tour.meetingId = response.meetingId || "";
+                        tour.channelId = response.channelId || "";
+                    }
+                    console.log("Parsed data:", parsedData);
+
+                    // Call create batch tour API
+                    callCreateBatchTour(parsedData);
+                } catch (error) {
+                    console.log("Error uploading CSV:", error);
+                } finally {
+                    setIsLoading(false);
+                }
+            },
+        });
+        setShowUploadConfirm(false);
+    };
+
+    // Handle CSV button click
     const handleCSVButtonClick = () => {
         fileInputRef.current.click(); // Gọi click trên input file ẩn
     };
+
+    // Handle delete tour
+    const handleDeleteTour = async (tourId, tourNumber) => {
+        setSelectedTour({ tourId: tourId, tourNumber: tourNumber });
+        setShowDeleteConfirm(true);
+    };
+
+    const handleCloseDeleteConfirm = () => {
+        setShowDeleteConfirm(false);
+    };
+
+    const handleDeleteConfirmed = async () => {
+        try {
+            setIsLoading(true);
+            setShowDeleteConfirm(false);
+            console.log("Deleting tour:", selectedTour.tourNumber);
+            const deleteTourResponse = await deleteTour(selectedTour);
+            console.log(deleteTourResponse);
+            toast.success(`Tour ${selectedTour.tourNumber} was deleted successfully.`, {
+                onClose: () => {
+                    window.location.reload();
+                },
+            });
+        } catch (error) {
+            console.log("Error deleting tour:", error); // Log error
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    // Call create batch tour API
     const callCreateBatchTour = async (tours) => {
-        console.log("createBatchTour", tours);
-        const response = await createBatchTour(tours);
-        console.log(response);
+        try {
+            console.log("createBatchTour", tours);
+            const createBatchTourResponse = await createBatchTour(tours);
+            console.log(createBatchTourResponse);
+            toast.success(`File ${selectedFile?.name} was uploaded successfully.`, {
+                onClose: () => {
+                    window.location.reload();
+                },
+            });
+        } catch (error) {
+            console.log("Error creating batch tour:", error); // Log error
+        }
+
     };
     return (
         <div>
@@ -146,8 +239,14 @@ const ListTour = () => {
 
                     <div className="d-flex mt-4 justify-content-between">
                         <div className="search-box d-flex col-4">
-                            <input type="text" className="form-control" id="search"></input>
-                            <button type="button" className="btn btn-secondary">
+                            <input type="text" className="form-control" id="search" onChange={handleSearchChange}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                        handleSearchClick();
+                                    }
+                                }}
+                            ></input>
+                            <button type="button" className="btn btn-secondary" onClick={handleSearchClick}>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 16 18" fill="none">
                                     <g clipPath="url(#clip0_2002_3291)">
                                         <path d="M11.7419 10.3431C12.7102 9.02181 13.1439 7.38361 12.9562 5.75627C12.7685 4.12893 11.9733 2.63246 10.7297 1.56625C9.48604 0.500045 7.88567 -0.0572725 6.24876 0.00580065C4.61184 0.0688738 3.05911 0.747686 1.90119 1.90643C0.743273 3.06518 0.0655718 4.6184 0.00366997 6.25536C-0.0582319 7.89231 0.500231 9.49228 1.56733 10.7352C2.63443 11.9781 4.13147 12.7722 5.75894 12.9587C7.38641 13.1452 9.0243 12.7104 10.3449 11.7411H10.3439C10.3739 11.7811 10.4059 11.8191 10.4419 11.8561L14.2919 15.7061C14.4794 15.8938 14.7338 15.9992 14.9991 15.9993C15.2643 15.9994 15.5188 15.8941 15.7064 15.7066C15.8941 15.5191 15.9995 15.2647 15.9996 14.9995C15.9997 14.7342 15.8944 14.4798 15.7069 14.2921L11.8569 10.4421C11.8212 10.4059 11.7827 10.3725 11.7419 10.3421V10.3431ZM11.9999 6.49912C11.9999 7.22139 11.8577 7.93659 11.5813 8.60388C11.3049 9.27117 10.8997 9.87749 10.389 10.3882C9.87829 10.8989 9.27197 11.3041 8.60468 11.5805C7.93739 11.8569 7.22219 11.9991 6.49992 11.9991C5.77765 11.9991 5.06245 11.8569 4.39516 11.5805C3.72787 11.3041 3.12156 10.8989 2.61083 10.3882C2.10011 9.87749 1.69498 9.27117 1.41858 8.60388C1.14218 7.93659 0.999921 7.22139 0.999921 6.49912C0.999921 5.04043 1.57938 3.64149 2.61083 2.61004C3.64228 1.57859 5.04123 0.999124 6.49992 0.999124C7.95861 0.999124 9.35756 1.57859 10.389 2.61004C11.4205 3.64149 11.9999 5.04043 11.9999 6.49912Z" fill="white" />
@@ -161,7 +260,7 @@ const ListTour = () => {
                             </button>
                         </div>
                         <div>
-                            <button className="btn btn-outline-dark" onClick={exportToCSV}>CSV出力</button>
+                            <button className="btn btn-outline-dark" onClick={handleExportToCSV}>CSV出力</button>
                         </div>
                     </div>
 
@@ -194,15 +293,17 @@ const ListTour = () => {
                                 {tours && tours.map((tour, index) => (
                                     <tr key={index}>
                                         <th className="sticky">
-                                            <button type="button" className="btn edit">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 18 20" fill="none">
-                                                    <path d="M12.8538 0.146271C12.76 0.0525356 12.6329 -0.00012207 12.5003 -0.00012207C12.3677 -0.00012207 12.2406 0.0525356 12.1468 0.146271L10.4998 1.79327L14.2068 5.50027L15.8538 3.85427C15.9004 3.80783 15.9373 3.75265 15.9625 3.6919C15.9877 3.63116 16.0007 3.56604 16.0007 3.50027C16.0007 3.4345 15.9877 3.36938 15.9625 3.30864C15.9373 3.24789 15.9004 3.19272 15.8538 3.14627L12.8538 0.146271ZM13.4998 6.20727L9.79281 2.50027L3.29281 9.00027H3.49981C3.63241 9.00027 3.75959 9.05295 3.85336 9.14672C3.94713 9.24049 3.99981 9.36766 3.99981 9.50027V10.0003H4.49981C4.63241 10.0003 4.75959 10.0529 4.85336 10.1467C4.94713 10.2405 4.99981 10.3677 4.99981 10.5003V11.0003H5.49981C5.63241 11.0003 5.75959 11.0529 5.85336 11.1467C5.94713 11.2405 5.99981 11.3677 5.99981 11.5003V12.0003H6.49981C6.63241 12.0003 6.75959 12.0529 6.85336 12.1467C6.94713 12.2405 6.99981 12.3677 6.99981 12.5003V12.7073L13.4998 6.20727ZM6.03181 13.6753C6.01076 13.6193 5.99993 13.56 5.99981 13.5003V13.0003H5.49981C5.3672 13.0003 5.24002 12.9476 5.14625 12.8538C5.05248 12.7601 4.99981 12.6329 4.99981 12.5003V12.0003H4.49981C4.3672 12.0003 4.24002 11.9476 4.14625 11.8538C4.05248 11.7601 3.99981 11.6329 3.99981 11.5003V11.0003H3.49981C3.3672 11.0003 3.24002 10.9476 3.14625 10.8538C3.05248 10.7601 2.99981 10.6329 2.99981 10.5003V10.0003H2.49981C2.44003 10.0002 2.38075 9.98933 2.32481 9.96827L2.14581 10.1463C2.09816 10.1943 2.06073 10.2514 2.03581 10.3143L0.0358061 15.3143C-0.000564594 15.4051 -0.0094681 15.5047 0.0101994 15.6006C0.0298668 15.6964 0.0772403 15.7844 0.146447 15.8536C0.215653 15.9228 0.303649 15.9702 0.399526 15.9899C0.495402 16.0095 0.594942 16.0006 0.685806 15.9643L5.68581 13.9643C5.74867 13.9393 5.80582 13.9019 5.85381 13.8543L6.03181 13.6763V13.6753Z" fill="#0D6EFD" />
-                                                </svg>
-                                                編集
-                                            </button>
+                                            <Link to={`/tour_detail?tourId=${tour.tourId}`}>
+                                                <button type="button" className="btn edit">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 18 20" fill="none">
+                                                        <path d="M12.8538 0.146271C12.76 0.0525356 12.6329 -0.00012207 12.5003 -0.00012207C12.3677 -0.00012207 12.2406 0.0525356 12.1468 0.146271L10.4998 1.79327L14.2068 5.50027L15.8538 3.85427C15.9004 3.80783 15.9373 3.75265 15.9625 3.6919C15.9877 3.63116 16.0007 3.56604 16.0007 3.50027C16.0007 3.4345 15.9877 3.36938 15.9625 3.30864C15.9373 3.24789 15.9004 3.19272 15.8538 3.14627L12.8538 0.146271ZM13.4998 6.20727L9.79281 2.50027L3.29281 9.00027H3.49981C3.63241 9.00027 3.75959 9.05295 3.85336 9.14672C3.94713 9.24049 3.99981 9.36766 3.99981 9.50027V10.0003H4.49981C4.63241 10.0003 4.75959 10.0529 4.85336 10.1467C4.94713 10.2405 4.99981 10.3677 4.99981 10.5003V11.0003H5.49981C5.63241 11.0003 5.75959 11.0529 5.85336 11.1467C5.94713 11.2405 5.99981 11.3677 5.99981 11.5003V12.0003H6.49981C6.63241 12.0003 6.75959 12.0529 6.85336 12.1467C6.94713 12.2405 6.99981 12.3677 6.99981 12.5003V12.7073L13.4998 6.20727ZM6.03181 13.6753C6.01076 13.6193 5.99993 13.56 5.99981 13.5003V13.0003H5.49981C5.3672 13.0003 5.24002 12.9476 5.14625 12.8538C5.05248 12.7601 4.99981 12.6329 4.99981 12.5003V12.0003H4.49981C4.3672 12.0003 4.24002 11.9476 4.14625 11.8538C4.05248 11.7601 3.99981 11.6329 3.99981 11.5003V11.0003H3.49981C3.3672 11.0003 3.24002 10.9476 3.14625 10.8538C3.05248 10.7601 2.99981 10.6329 2.99981 10.5003V10.0003H2.49981C2.44003 10.0002 2.38075 9.98933 2.32481 9.96827L2.14581 10.1463C2.09816 10.1943 2.06073 10.2514 2.03581 10.3143L0.0358061 15.3143C-0.000564594 15.4051 -0.0094681 15.5047 0.0101994 15.6006C0.0298668 15.6964 0.0772403 15.7844 0.146447 15.8536C0.215653 15.9228 0.303649 15.9702 0.399526 15.9899C0.495402 16.0095 0.594942 16.0006 0.685806 15.9643L5.68581 13.9643C5.74867 13.9393 5.80582 13.9019 5.85381 13.8543L6.03181 13.6763V13.6753Z" fill="#0D6EFD" />
+                                                    </svg>
+                                                    編集
+                                                </button>
+                                            </Link>
                                         </th>
                                         <th className="sticky2">
-                                            <button type="button" className="btn remove">
+                                            <button type="button" className="btn remove" onClick={() => handleDeleteTour(tour.tourId, tour.tourNumber)}>
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="22" viewBox="0 0 16 20" fill="none">
                                                     <path d="M5.50098 1H8.50098C8.63358 1 8.76076 1.05268 8.85453 1.14645C8.9483 1.24021 9.00098 1.36739 9.00098 1.5V2.5H5.00098V1.5C5.00098 1.36739 5.05366 1.24021 5.14742 1.14645C5.24119 1.05268 5.36837 1 5.50098 1ZM10.001 2.5V1.5C10.001 1.10218 9.84294 0.720644 9.56164 0.43934C9.28033 0.158035 8.8988 0 8.50098 0L5.50098 0C5.10315 0 4.72162 0.158035 4.44032 0.43934C4.15901 0.720644 4.00098 1.10218 4.00098 1.5V2.5H1.50698C1.50364 2.49997 1.50031 2.49997 1.49698 2.5H0.500977C0.368368 2.5 0.241191 2.55268 0.147423 2.64645C0.053655 2.74021 0.000976563 2.86739 0.000976562 3C0.000976563 3.13261 0.053655 3.25979 0.147423 3.35355C0.241191 3.44732 0.368368 3.5 0.500977 3.5H1.03898L1.89198 14.16C1.9322 14.6612 2.15973 15.1289 2.52925 15.4698C2.89877 15.8108 3.38317 16.0001 3.88598 16H10.116C10.6188 16.0001 11.1032 15.8108 11.4727 15.4698C11.8422 15.1289 12.0698 14.6612 12.11 14.16L12.963 3.5H13.501C13.6336 3.5 13.7608 3.44732 13.8545 3.35355C13.9483 3.25979 14.001 3.13261 14.001 3C14.001 2.86739 13.9483 2.74021 13.8545 2.64645C13.7608 2.55268 13.6336 2.5 13.501 2.5H12.506C12.5026 2.49997 12.4993 2.49997 12.496 2.5H10.001ZM11.959 3.5L11.113 14.08C11.0929 14.3306 10.9791 14.5644 10.7943 14.7349C10.6096 14.9054 10.3674 15.0001 10.116 15H3.88598C3.63457 15.0001 3.39237 14.9054 3.20761 14.7349C3.02285 14.5644 2.90909 14.3306 2.88898 14.08L2.04298 3.5H11.959ZM4.47198 4.5C4.60431 4.49235 4.73426 4.53756 4.83327 4.6257C4.93228 4.71383 4.99224 4.83767 4.99998 4.97L5.49998 13.47C5.50523 13.6008 5.45899 13.7284 5.37119 13.8255C5.28339 13.9225 5.16103 13.9813 5.03039 13.9892C4.89974 13.997 4.77122 13.9533 4.67242 13.8675C4.57362 13.7816 4.51243 13.6605 4.50198 13.53L4.00098 5.03C3.99692 4.96431 4.00586 4.89847 4.02731 4.83625C4.04875 4.77403 4.08226 4.71665 4.12593 4.66741C4.1696 4.61817 4.22255 4.57804 4.28176 4.54931C4.34098 4.52058 4.40528 4.50382 4.47098 4.5H4.47198ZM9.52998 4.5C9.59568 4.50382 9.65998 4.52058 9.71919 4.54931C9.7784 4.57804 9.83136 4.61817 9.87502 4.66741C9.91869 4.71665 9.9522 4.77403 9.97365 4.83625C9.99509 4.89847 10.004 4.96431 9.99998 5.03L9.49998 13.53C9.49731 13.5964 9.48141 13.6617 9.45322 13.7219C9.42502 13.7821 9.3851 13.8361 9.33578 13.8807C9.28647 13.9254 9.22875 13.9597 9.166 13.9817C9.10326 14.0037 9.03675 14.013 8.97037 14.009C8.90399 14.005 8.83908 13.9878 8.77943 13.9585C8.71977 13.9291 8.66658 13.8881 8.62296 13.8379C8.57935 13.7877 8.54618 13.7293 8.5254 13.6661C8.50463 13.603 8.49667 13.5363 8.50198 13.47L9.00198 4.97C9.00971 4.83767 9.06967 4.71383 9.16868 4.6257C9.26769 4.53756 9.39764 4.49235 9.52998 4.5ZM7.00098 4.5C7.13358 4.5 7.26076 4.55268 7.35453 4.64645C7.4483 4.74021 7.50098 4.86739 7.50098 5V13.5C7.50098 13.6326 7.4483 13.7598 7.35453 13.8536C7.26076 13.9473 7.13358 14 7.00098 14C6.86837 14 6.74119 13.9473 6.64742 13.8536C6.55366 13.7598 6.50098 13.6326 6.50098 13.5V5C6.50098 4.86739 6.55366 4.74021 6.64742 4.64645C6.74119 4.55268 6.86837 4.5 7.00098 4.5Z" fill="#DC3545" />
                                                 </svg>
@@ -257,11 +358,31 @@ const ListTour = () => {
                         </nav>
 
                         <div className="count text-center">
-                            <p>全5件</p>
+                            <p>全{totalTours}件</p>
                         </div>
+                        {isLoading && <Loading />}
                     </div>
                 </main>
             </div>
+            {showUploadConfirm && (
+                <ConfirmModal
+                    show={showUploadConfirm}
+                    bodyText={`Are you sure you want to upload this CSV: ${selectedFile?.name}?`}
+                    confirmName="Upload"
+                    handleConfirmed={confirmUploadCSV}
+                    handleCloseConfirm={() => setShowUploadConfirm(false)}
+                />
+            )}
+            {showDeleteConfirm === true && (
+                <ConfirmModal
+                    show={showDeleteConfirm}
+                    bodyText={`Are you sure you want to delete this tour: ${selectedTour?.tourNumber}?`}
+                    confirmName="Delete"
+                    handleConfirmed={handleDeleteConfirmed}
+                    handleCloseConfirm={handleCloseDeleteConfirm}
+                />
+            )}
+
         </div>
 
     );

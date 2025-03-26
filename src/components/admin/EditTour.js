@@ -70,6 +70,23 @@ const EditTour = () => {
         <div className="col-8 mx-auto my-5 p-5 bg-white">
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="form-group row mb-3">
+              <label htmlFor="chatRestriction" className="col-sm-3 col-form-label">チャットの制限</label>
+              <div className="col-sm-9">
+                <select id="chatRestriction" className="form-control"
+                  defaultValue={tour.chatRestriction}
+                  {...register("chatRestriction", { required: "チャットの制限を選択してください。" })}
+                >
+                  <option value=""></option>
+                  <option value="allChat">誰でもチャット可能</option>
+                  <option value="guideOnly">ガイドのみチャット可能</option>
+                  <option value="nochat">チャット無効</option>
+                </select>
+                {errors.chatRestriction && (
+                  <p style={{ color: "red" }}>{errors.chatRestriction.message}</p>
+                )}
+              </div>
+            </div>
+            <div className="form-group row mb-3">
               <label htmlFor="tourNumber" className="col-sm-3 col-form-label">ツアー番号</label>
               <div className="col-sm-9">
                 <input type="text" className="form-control" id="tourNumber" placeholder="例）X9411111"
@@ -227,7 +244,7 @@ const EditTour = () => {
               </div>
             </div>
             <div className="form-group row mb-3"></div>
-            <GenerateQRCode meetingId={tour.meetingId} channelId={tour.channelId} />
+            <GenerateQRCode meetingId={tour.meetingId} channelId={tour.channelId} chatSetting={tour.chatRestriction} />
             <div className="text-center mt-5">
               <Link to="/tour_list" type="submit" className="btn btn-outline-danger" style={{ "marginRight": "50px" }}>戻る</Link>
               <button type="submit" className="btn btn-danger">更新</button>

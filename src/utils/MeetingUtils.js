@@ -1,8 +1,12 @@
 
 import {
-    getMeeting
+    getMeeting,
+    createMeeting,
+    createAppInstanceUsers,
+    createChannel,
 } from '../apis/api';
 import JSONCookieUtils from './JSONCookieUtils';
+import { v4 as uuidv4 } from 'uuid';
 
 // Function to check if the meeting is available
 export const checkAvailableMeeting = async (meetingId, userType) => {
@@ -38,3 +42,19 @@ export const checkAvailableMeeting = async (meetingId, userType) => {
         return null;
     }
 }; // No dependencies as `getMeeting` and `JSONCookieUtils` are external
+
+// Create a new meeting and channel
+export  const createMeetingAndChannel = async () => {
+        const meeting = await createMeeting();
+        const meetingId = meeting.MeetingId;
+        console.log('Meeting created:', meeting);
+        const userID = uuidv4();
+        const userName = 'channelAdmin';
+        const userArn = await createAppInstanceUsers(userID, userName);
+        console.log('channelAdmin created:', userArn);
+        const channelArn = await createChannel(userArn);
+        console.log('channelArn created:', userArn);
+        const channelId = channelArn.split('/').pop();
+        console.log('channelId:', channelId);
+        return { meetingId, channelId };
+    }

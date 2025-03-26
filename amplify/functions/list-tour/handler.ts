@@ -14,6 +14,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
   // Extract page and pageSize from query parameters
   const page = parseInt(event.queryStringParameters?.page || '1', 10);
   const pageSize = parseInt(event.queryStringParameters?.pageSize || '10', 10);
+  const query = event.queryStringParameters?.query ? decodeURIComponent(event.queryStringParameters.query.trim()) : undefined;
 
   // Calculate the ExclusiveStartKey based on the page number
   let ExclusiveStartKey;
@@ -23,6 +24,10 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     const previousResult = await dynamoDB.scan({
       TableName: "Tours",
       Limit: previousPageSize,
+      FilterExpression: "deleteFlag = :deleteFlag",
+      ExpressionAttributeValues: {
+        ":deleteFlag": 0,
+      },
     }).promise();
     ExclusiveStartKey = previousResult.LastEvaluatedKey;
   }
@@ -30,11 +35,42 @@ export const handler: APIGatewayProxyHandler = async (event) => {
   try {
     console.log('Retrieving list of tours');
 
-    // Scan DynamoDB for tours with pagination
-    const result = await dynamoDB.scan({
+    // Scan DynamoDB for Tours with pagination and search query
+    let result;
+    if (query) {
+      result = await dynamoDB.scan({
+        TableName: "Tours",
+        Limit: pageSize,
+        ExclusiveStartKey,
+        FilterExpression: 'deleteFlag = :deleteFlag AND (contains(tourNumber, :query) OR contains(processingNumber, :query) OR contains(tourName, :query))',
+        // ExpressionAttributeNames: {
+        //   '#tourName': 'tourName',
+        // },
+        ExpressionAttributeValues: {
+          ':deleteFlag': 0,
+          ':query': query,
+        },
+      }).promise();
+    } else {
+      result = await dynamoDB.scan({
+        TableName: "Tours",
+        Limit: pageSize,
+        ExclusiveStartKey,
+        FilterExpression: "deleteFlag = :deleteFlag",
+        ExpressionAttributeValues: {
+          ":deleteFlag": 0,
+        },
+      }).promise();
+    }
+
+    // Additional call to get total tours
+    const totalScan = await dynamoDB.scan({
       TableName: "Tours",
-      Limit: pageSize,
-      ExclusiveStartKey,
+      Select: "COUNT",
+      FilterExpression: "deleteFlag = :deleteFlag",
+      ExpressionAttributeValues: {
+        ":deleteFlag": 0,
+      },
     }).promise();
 
     if (!result.Items || result.Items.length === 0) {
@@ -52,9 +88,12 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     return {
       statusCode: 200,
       body: JSON.stringify({
-        message: "Tours retrieved successfully",
-        data: result.Items,
-        lastEvaluatedKey: result.LastEvaluatedKey,
+        data: {
+          message: "Tours retrieved successfully",
+          data: result.Items,
+          count: totalScan.Count,
+          lastEvaluatedKey: result.LastEvaluatedKey,
+        }
       }),
       headers: Config.headers,
     };

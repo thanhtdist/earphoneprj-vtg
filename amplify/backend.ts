@@ -26,6 +26,7 @@ import { createUser } from './functions/create-user/resource';
 import { getTour } from './functions/get-tour/resource';
 import { listTour } from './functions/list-tour/resource';
 import { updateTour } from './functions/update-tour/resource';
+import { deleteTour } from './functions/delete-tour/resource';
 import { login } from './functions/login/resource';
 import { listAdmin } from './functions/list-admin/resource';
 import { createBatchTour } from './functions/create-batch-tour/resource';
@@ -61,6 +62,7 @@ const backend = defineBackend({
   getAdmin, // create batch tour by the admin
   updateAdmin,
   deleteAdmin,
+  deleteTour,
 });
 
 /**
@@ -283,6 +285,13 @@ tourIdPath.addMethod("GET", new LambdaIntegration(
 tourIdPath.addMethod("PUT", new LambdaIntegration(
   backend.updateTour.resources.lambda
 ));
+
+//delete Tour with delete_flag = 1
+const tourDeletePath = tourIdPath.addResource("delete");
+tourDeletePath.addMethod("PUT", new LambdaIntegration(
+  backend.deleteTour.resources.lambda
+));
+
 
 // create user api
 const userRestApi = new RestApi(apiStack, "UserVTGRestApi", {

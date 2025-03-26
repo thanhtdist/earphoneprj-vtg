@@ -350,7 +350,8 @@ export async function createTour(data) {
           phoneNumberCustomer: data.phoneNumberCustomer,
           otherRemarks: data.otherRemarks,
           meetingId: data.meetingId,
-          channelId: data.channelId
+          channelId: data.channelId,
+          chatRestriction: data.chatRestriction,
         }
       }
     });
@@ -364,6 +365,12 @@ export async function createTour(data) {
 
 }
 
+/**
+ * Create a batch tour by the admin
+ * @param {json} data - The list data of the tours to be created
+ * @returns {Promise<any>} The response data from the API call.
+ * @throws {Error} Logs the error details if the POST call fails.
+ */
 export async function createBatchTour(data) {
   console.log('createBatchTour data', data);
   try {
@@ -379,13 +386,13 @@ export async function createBatchTour(data) {
     const response = await body.json();
     return response.data;
   } catch (error) {
-    console.log('POST call createTour failed: ', JSON.parse(error.response.body));
+    console.log('POST call createBatchTour failed: ', JSON.parse(error.response.body));
   }
 
 }
 
 /**
- * Book a tour by the admin
+ * Update a tour by the admin
  * @param {json} data - The data of the tour to be created
  * @returns {Promise<any>} The response data from the API call.
  * @throws {Error} Logs the error details if the POST call fails.
@@ -414,7 +421,8 @@ export async function updateTour(data) {
           qrCodeDestination: data.qrCodeDestination,
           emailCustomer: data.emailCustomer,
           phoneNumberCustomer: data.phoneNumberCustomer,
-          otherRemarks: data.otherRemarks
+          otherRemarks: data.otherRemarks,
+          chatRestriction: data.chatRestriction,
         }
       }
     });
@@ -429,7 +437,34 @@ export async function updateTour(data) {
 }
 
 /**
- * 
+ * Delete a tour by the admin with delete flag = 1
+ * @param {json} data - The data of the tour to be created
+ * @returns {Promise<any>} The response data from the API call.
+ * @throws {Error} Logs the error details if the POST call fails.
+ */
+export async function deleteTour(data) {
+  try {
+    const restOperation = put({
+      apiName: 'TourVTGRestApi', // The name of the API defined in backend.ts
+      path: 'tours/' + data.tourId + "/delete", // endpoint defined in backend.ts 
+      // options: {
+      //   body: {
+      //     userId: data.userId,
+      //   }
+      // }
+    });
+
+    const { body } = await restOperation.response;
+    const response = await body.json();
+    return response.data;
+  } catch (error) {
+    console.log('POST call deleteTour(soft delete) failed: ', JSON.parse(error.response.body));
+  }
+
+}
+
+/**
+ * Get a list of tours
  * @param {json} data - The data of the tour to be listed: page, pageSize, query
  * @returns {Promise<any>} The response data from the API call.
  * @throws {Error} Logs the error details if the POST call fails.
@@ -438,7 +473,7 @@ export async function listTours(data) {
   try {
     const restOperation = get({
       apiName: 'TourVTGRestApi', // The name of the API defined in backend.ts
-      path: 'tours/?page=' + data.page + '&pageSize=' + data.pageSize, // endpoint defined in backend.ts, appInstanceArn is dynamically passed
+      path: 'tours/?page=' + data.page + '&pageSize=' + data.pageSize + '&query=' + encodeURIComponent(data.query), // endpoint defined in backend.ts, appInstanceArn is dynamically passed
     });
     const { body } = await restOperation.response;
     const response = await body.json();
@@ -449,7 +484,7 @@ export async function listTours(data) {
 }
 
 /**
- * 
+ * Get a detail of a tour
  * @param {string} tourId - The ID of the meeting.
  * @returns {Promise<any>} The response data from the API call.
  * @throws {Error} Logs the error details if the POST call fails.
@@ -468,7 +503,7 @@ export async function getTour(tourId) {
   }
 }
 /**
- * Book a tour by the admin
+ * Create a admin by the admin
  * @returns {Promise<any>} The response data from the API call.
  * @throws {Error} Logs the error details if the POST call fails.
  */
@@ -495,7 +530,83 @@ export async function createUser(data) {
 }
 
 /**
- * Book a tour by the admin
+ * Get list admin
  * @returns {Promise<any>} The response data from the API call.
  * @throws {Error} Logs the error details if the POST call fails.
  */
+export async function listAdmins(data) {
+  // try {
+  //   //encodeURIComponent
+  //   const restOperation = get({
+  //     apiName: 'UserVTGRestApi', // The name of the API defined in backend.ts
+  //     path: 'users', // endpoint defined in backend.ts 
+
+  //   });
+
+  //   const { body } = await restOperation.response;
+  //   const response = await body.json();
+  //   return response.data;
+  // } catch (error) {
+  //   console.log('POST call get list amdin failed: ', JSON.parse(error.response.body));
+  // }
+  try {
+    const restOperation = get({
+      apiName: 'UserVTGRestApi', // The name of the API defined in backend.ts
+      path: 'users/?page=' + data.page + '&pageSize=' + data.pageSize + '&query=' + encodeURIComponent(data.query), // endpoint defined in backend.ts, appInstanceArn is dynamically passed
+    });
+    const { body } = await restOperation.response;
+    const response = await body.json();
+    return response.data;
+  } catch (error) {
+    console.log('GET call listTours failed: ', JSON.parse(error.response.body));
+  }
+}
+
+/**
+ * Get detail admin
+ * @returns {Promise<any>} The response data from the API call.
+ * @throws {Error} Logs the error details if the POST call fails.
+ */
+export async function getDetailAdmin(userId) {
+  try {
+    const restOperation = get({
+      apiName: 'UserVTGRestApi', // The name of the API defined in backend.ts
+      path: 'users/' + userId, // endpoint defined in backend.ts 
+
+    });
+
+    const { body } = await restOperation.response;
+    const response = await body.json();
+    return response.data;
+  } catch (error) {
+    console.log('POST call get detail amdin failed: ', JSON.parse(error.response.body));
+  }
+}
+
+/**
+ * Update a admin
+ * @returns {Promise<any>} The response data from the API call.
+ * @throws {Error} Logs the error details if the POST call fails.
+ */
+export async function updateAdmin(data) {
+  try {
+    const restOperation = put({
+      apiName: 'UserVTGRestApi', // The name of the API defined in backend.ts
+      path: 'users', // endpoint defined in backend.ts 
+      options: {
+        body: {
+          userId: data.userId,
+          userName: data.userName,
+          password: data.password,
+        }
+      }
+    });
+    console.log("api data", data);
+
+    const { body } = await restOperation.response;
+    const response = await body.json();
+    return response.data;
+  } catch (error) {
+    console.log('PUT update admin false: ', JSON.parse(error.response.body));
+  }
+}

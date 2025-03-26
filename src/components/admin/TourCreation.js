@@ -1,15 +1,15 @@
 import React from 'react';
 import {
     createTour,
-    createMeeting,
-    createAppInstanceUsers,
-    createChannel
+    // createMeeting,
+    // createAppInstanceUsers,
+    // createChannel
 } from '../../apis/api';
 import '../../styles/Admin.css';
-import { v4 as uuidv4 } from 'uuid';
 import Sidebar from './Sidebar';
 import { useForm } from "react-hook-form";
 import { Link } from 'react-router-dom';
+import { createMeetingAndChannel } from '../../utils/MeetingUtils';
 
 const TourCreation = () => {
     const {
@@ -29,7 +29,7 @@ const TourCreation = () => {
             const response = await createMeetingAndChannel();
             console.log('Meeting and channel created:', response);
             data.meetingId = response.meetingId;
-            data.channelId = response.channelID;
+            data.channelId = response.channelId;
             console.log('Tour data:', data);
             // Create the tour with meetingId and channelId
             const createTourResponse = await createTour(data);
@@ -42,20 +42,20 @@ const TourCreation = () => {
     };
 
     // Create a new meeting and channel
-    const createMeetingAndChannel = async () => {
-        const meeting = await createMeeting();
-        const meetingId = meeting.MeetingId;
-        console.log('Meeting created:', meeting);
-        const userID = uuidv4();
-        const userName = 'channelAdmin';
-        const userArn = await createAppInstanceUsers(userID, userName);
-        console.log('channelAdmin created:', userArn);
-        const channelArn = await createChannel(userArn);
-        console.log('channelArn created:', userArn);
-        const channelID = channelArn.split('/').pop();
-        console.log('channelID:', channelID);
-        return { meetingId, channelID };
-    }
+    // const createMeetingAndChannel = async () => {
+    //     const meeting = await createMeeting();
+    //     const meetingId = meeting.MeetingId;
+    //     console.log('Meeting created:', meeting);
+    //     const userID = uuidv4();
+    //     const userName = 'channelAdmin';
+    //     const userArn = await createAppInstanceUsers(userID, userName);
+    //     console.log('channelAdmin created:', userArn);
+    //     const channelArn = await createChannel(userArn);
+    //     console.log('channelArn created:', userArn);
+    //     const channelID = channelArn.split('/').pop();
+    //     console.log('channelID:', channelID);
+    //     return { meetingId, channelID };
+    // }
 
     // const handleReturn = () => {
 
@@ -70,13 +70,19 @@ const TourCreation = () => {
                 <div className="col-8 mx-auto my-5 p-5 bg-white">
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <div className="form-group row mb-3">
-                            <label htmlFor="tourNumber" className="col-sm-3 col-form-label">チャットの制限</label>
+                            <label htmlFor="chatRestriction" className="col-sm-3 col-form-label">チャットの制限</label>
                             <div className="col-sm-9">
-                                <select  className="form-control">
+                                <select id="chatRestriction" className="form-control"
+                                    {...register("chatRestriction", { required: "チャットの制限を選択してください。" })}
+                                >
+                                    <option value=""></option>
                                     <option value="allChat">誰でもチャット可能</option>
                                     <option value="guideOnly">ガイドのみチャット可能</option>
                                     <option value="nochat">チャット無効</option>
                                 </select>
+                                {errors.chatRestriction && (
+                                    <p style={{ color: "red" }}>{errors.chatRestriction.message}</p>
+                                )}
                             </div>
                         </div>
                         <div className="form-group row mb-3">

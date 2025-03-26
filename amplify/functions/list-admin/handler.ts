@@ -3,7 +3,7 @@ import AWS from 'aws-sdk';
 import { Config } from '../config';
 
 /**
- * This function retrieves a list of Users from AWS DynamoDB with pagination.
+ * This function retrieves a list of Users from AWS DynamoDB with pagination and search functionality.
  * @param event - Contains the request context.
  * @returns Response with the list of Users or error.
  */
@@ -11,9 +11,10 @@ export const handler: APIGatewayProxyHandler = async (event) => {
   // Initialize DynamoDB client
   const dynamoDB = new AWS.DynamoDB.DocumentClient({ region: Config.region });
 
-  // Extract page and pageSize from query parameters
+  // Extract page, pageSize, and query from query parameters
   const page = parseInt(event.queryStringParameters?.page || '1', 10);
   const pageSize = parseInt(event.queryStringParameters?.pageSize || '10', 10);
+  const query = event.queryStringParameters?.query ? decodeURIComponent(event.queryStringParameters.query.trim()) : undefined;
 
   // Calculate the ExclusiveStartKey based on the page number
   let ExclusiveStartKey;
@@ -30,12 +31,34 @@ export const handler: APIGatewayProxyHandler = async (event) => {
   try {
     console.log('Retrieving list of Users');
 
-    // Scan DynamoDB for Users with pagination
-    const result = await dynamoDB.scan({
-      TableName: "Users",
-      Limit: pageSize,
-      ExclusiveStartKey,
-    }).promise();
+    // Scan DynamoDB for Users with pagination and search query
+    let result;
+    if (query) {
+      result = await dynamoDB.scan({
+        TableName: "Users",
+        Limit: pageSize,
+        ExclusiveStartKey,
+        FilterExpression: 'deleteFlag = :deleteFlag AND contains(#userName, :query)',
+        ExpressionAttributeNames: {
+          '#userName': 'userName', 
+        },
+        ExpressionAttributeValues: {
+          ':deleteFlag': 0,
+          ':query': query,
+        },
+      }).promise();
+    } else {
+      result = await dynamoDB.scan({
+        TableName: "Users",
+        Limit: pageSize,
+        ExclusiveStartKey,
+        FilterExpression: "deleteFlag = :deleteFlag",
+        ExpressionAttributeValues: {
+          ":deleteFlag": 0,
+        },
+      }).promise();
+    }
+
 
     if (!result.Items || result.Items.length === 0) {
       console.error('No Users found');

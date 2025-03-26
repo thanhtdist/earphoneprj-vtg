@@ -3,8 +3,8 @@ import AWS from 'aws-sdk';
 import { Config } from '../config';
 
 /**
- * This function updates an existing User in AWS DynamoDB.
- * @param event - Contains the request body with User details.
+ * This function updates an existing tour in AWS DynamoDB.
+ * @param event - Contains the request body with tour details.
  * @returns Response with success message or error.
  */
 export const handler: APIGatewayProxyHandler = async (event) => {
@@ -12,55 +12,47 @@ export const handler: APIGatewayProxyHandler = async (event) => {
   const dynamoDB = new AWS.DynamoDB.DocumentClient({ region: Config.region });
 
   try {
-    // Parse body from API Gateway event
-    const { 
-      userId,          
-     } = JSON.parse(event.body || '{}');
+    // Get tourId from path parameters
+    const tourId = event.pathParameters ? event.pathParameters.TourID : null;
 
-    console.log('Updating User with userId: ', userId, );
+    console.log('Updating tour with tourId: ', tourId);
 
     // Input validation
-    if (!userId ) {
-      console.error('Invalid input: Missing required fields.', { userId});
+    if (!tourId) {
+      console.error('Invalid input: Missing required fields.', { tourId });
       return {
         statusCode: 400,
-        body: JSON.stringify({ error: 'Invalid input: userId are required.' }),
+        body: JSON.stringify({ error: 'Invalid input: tourId is required.' }),
         headers: Config.headers,
       };
     }
 
-    // Update the User item in DynamoDB
-    const updateExpression = `
-      set deleteFlag = :deleteFlag,
-      updateDate = :updateDate        
-    `;
-
+    // Update the tour item in DynamoDB
+    const updateExpression = 'set deleteFlag = :deleteFlag';
     const expressionAttributeValues = {
-      ':deleteFlag': 1,
-      ':updateDate': new Date().toISOString()
-     
+      ':deleteFlag': 1
     };
 
     await dynamoDB.update({
-      TableName: "Users",
-      Key: { userId },
+      TableName: "Tours",
+      Key: { tourId },
       UpdateExpression: updateExpression,
       ExpressionAttributeValues: expressionAttributeValues,
     }).promise();
 
-    console.log('User successfully deleted: ', { userId, ...expressionAttributeValues });
+    console.log('Tour successfully updated: ', { tourId, ...expressionAttributeValues });
 
     // Return success response
     return {
       statusCode: 200,
       body: JSON.stringify({
-        message: "User deleted successfully",
-        data: { userId, ...expressionAttributeValues },
+        message: "Tour updated successfully",
+        data: { tourId, ...expressionAttributeValues },
       }),
       headers: Config.headers,
     };
   } catch (error: any) {
-    console.error('Failed to deleted User: ', { error, event });
+    console.error('Failed to update tour: ', { error, event });
 
     // Return error response
     return {

@@ -45,7 +45,8 @@ export const handler: APIGatewayProxyHandler = async (event) => {
         phoneNumberCustomer,
         otherRemarks,
         meetingId,
-        channelId
+        channelId,
+        chatRestriction
       } = tour;
 
       // Input validation
@@ -62,7 +63,6 @@ export const handler: APIGatewayProxyHandler = async (event) => {
             tourName,
             departureDate,
             returnDate,
-            createdAt: new Date().toISOString(),
             processingNumber,
             acceptanceDate,
             planningOfficeName,
@@ -77,7 +77,13 @@ export const handler: APIGatewayProxyHandler = async (event) => {
             phoneNumberCustomer,
             otherRemarks,
             meetingId,
-            channelId
+            channelId,
+            chatRestriction,
+            createdAt: new Date().toISOString(),
+            createdBy: 'admin',
+            updatedAt: new Date().toISOString(),
+            updatedBy: 'admin',
+            deleteFlag: 0,
           }
         }
       };

@@ -10,16 +10,21 @@ import EditTour from './components/admin/EditTour';
 import './styles/App.css';  // Importing the updated CSS for responsiveness
 import '@aws-amplify/ui-react/styles.css';
 import RegisterAdmin from './components/admin/RegisterAdmin';
-import DownloadQRCode from './components/admin/DownloadQRCode';
+import ListAdmin from './components/admin/ListAdmin';
+import UpdateAdmin from './components/admin/UpdateAdmin';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 function App() {
   return (
     <>
+      <ToastContainer position="top-right" autoClose={3000} />
       <Router>
         <div className="App">
           {/* <SettingMenu></SettingMenu> */}
           <Routes>
             {/* <Route path="/" element={<StartLiveSession />} /> */}
-            <Route path="/export_qrcode" element={<DownloadQRCode />} />
+            <Route path="/update_admin" element={<UpdateAdmin />} />
+            <Route path="/admin_list" element={<ListAdmin />} />
             <Route path="/register_admin" element={<RegisterAdmin />} />
             <Route path="/tour_detail" element={<EditTour />} />
             <Route path="/tour_list" element={<ListTour />} />
