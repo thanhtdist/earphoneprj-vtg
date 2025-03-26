@@ -361,6 +361,7 @@ export async function createTour(data) {
     return response.data;
   } catch (error) {
     console.log('POST call createTour failed: ', JSON.parse(error.response.body));
+    return JSON.parse(error.response.body);
   }
 
 }

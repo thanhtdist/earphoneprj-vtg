@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
     createTour,
     // createMeeting,
@@ -10,8 +10,11 @@ import Sidebar from './Sidebar';
 import { useForm } from "react-hook-form";
 import { Link } from 'react-router-dom';
 import { createMeetingAndChannel } from '../../utils/MeetingUtils';
+import { toast } from "react-toastify";
+import Loading from '../Loading';
 
 const TourCreation = () => {
+    const [isLoading, setIsLoading] = useState(false);
     const {
         register,
         handleSubmit,
@@ -20,6 +23,7 @@ const TourCreation = () => {
 
     const onSubmit = (data) => {
         //alert(JSON.stringify(data, null, 2)); // Display form data in an alert
+        setIsLoading(true);
         bookTour(data);
     };
 
@@ -35,9 +39,19 @@ const TourCreation = () => {
             const createTourResponse = await createTour(data);
             console.log('Tour created:', createTourResponse);
             // Redirect to the tour list page
-            window.location.href = "/tour_list";
+            if (createTourResponse && createTourResponse.error) {
+                toast.error(`Error creating tour ${data.tourNumber}: ${createTourResponse.error}`);
+            } else {
+                toast.success(`Tour ${data.tourNumber} was created successfully.`, {
+                    onClose: () => {
+                        window.location.href = "/tour_list";
+                    },
+                });
+            }
         } catch (error) {
             console.error('Error creating meeting, channel, or tour:', error);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -65,6 +79,7 @@ const TourCreation = () => {
         <div className="container-fluid">
             <div className="row py-4"></div>
             <Sidebar />
+            {isLoading && <Loading />}
             <main className="px-4 px-sm-5 my-2">
                 <h1>ツアー登録</h1>
                 <div className="col-8 mx-auto my-5 p-5 bg-white">
@@ -154,7 +169,7 @@ const TourCreation = () => {
                         <div className="form-group row mb-3">
                             <label htmlFor="contactPersonEmail" className="col-sm-3 col-form-label">ご担当者様<br />メールアドレス</label>
                             <div className="col-sm-9">
-                                <input type="text" className="form-control" id="contactPersonEmail" placeholder="例）kinoshita@ken-net.net"
+                                <input type="email" className="form-control" id="contactPersonEmail" placeholder="例）kinoshita@ken-net.net"
                                     {...register("contactPersonEmail")}
                                 />
                             </div>
@@ -162,7 +177,7 @@ const TourCreation = () => {
                         <div className="form-group row mb-3">
                             <label htmlFor="numberOfDevices" className="col-sm-3 col-form-label">利用端末数</label>
                             <div className="col-sm-9">
-                                <input type="text" className="form-control" id="numberOfDevices" placeholder="例）30"
+                                <input type="number" className="form-control" id="numberOfDevices" placeholder="例）30"
                                     {...register("numberOfDevices")}
                                 />
                             </div>
@@ -170,7 +185,7 @@ const TourCreation = () => {
                         <div className="form-group row mb-3">
                             <label htmlFor="numberOfTransmitters" className="col-sm-3 col-form-label">送信機必要端末数</label>
                             <div className="col-sm-9">
-                                <input type="text" className="form-control" id="numberOfTransmitters" placeholder="例）2"
+                                <input type="number" className="form-control" id="numberOfTransmitters" placeholder="例）2"
                                     {...register("numberOfTransmitters")}
                                 />
                             </div>
@@ -204,7 +219,7 @@ const TourCreation = () => {
                         <div className="form-group row mb-3">
                             <label htmlFor="emailCustomer" className="col-sm-3 col-form-label">メールアドレス</label>
                             <div className="col-sm-9">
-                                <input type="text" className="form-control" id="emailCustomer" placeholder=""
+                                <input type="email" className="form-control" id="emailCustomer" placeholder=""
                                     {...register("emailCustomer")}
                                 />
                             </div>
