@@ -311,22 +311,22 @@ const ListTour = () => {
                                             </button>
                                         </th>
                                         <td><Link to={`/tour_detail?tourId=${tour.tourId}`}>{tour.tourNumber}</Link></td>
-                                        <td>{tour.processNumber}</td>
+                                        <td>{tour.processingNumber}</td>
                                         <td>{tour.tourName}</td>
-                                        <td>{tour.applicationTime}</td>
-                                        <td>{tour.officeName}</td>
-                                        <td>{tour.otherOffice}</td>
-                                        <td>{tour.officeTeam}</td>
-                                        <td>{tour.contactPerson}</td>
-                                        <td>{tour.email}</td>
-                                        <td>{tour.deviceCount}</td>
-                                        <td>{tour.transmitterCount}</td>
+                                        <td>{tour.acceptanceDate}</td>
+                                        <td>{tour.planningOfficeName}</td>
+                                        <td>{tour.planningSalesOfficeName}</td>
+                                        <td>{tour.planningSalesOfficeTeamName}</td>
+                                        <td>{tour.contactPersonName}</td>
+                                        <td>{tour.contactPersonEmail}</td>
+                                        <td>{tour.numberOfDevices}</td>
+                                        <td>{tour.numberOfTransmitters}</td>
                                         <td>{tour.departureDate}</td>
                                         <td>{tour.returnDate}</td>
-                                        <td>{tour.qrDelivery}</td>
-                                        <td>{tour.additionalEmail}</td>
-                                        <td>{tour.phoneNumber}</td>
-                                        <td>{tour.notes}</td>
+                                        <td>{tour.qrCodeDestination}</td>
+                                        <td>{tour.emailCustomer}</td>
+                                        <td>{tour.phoneNumberCustomer}</td>
+                                        <td>{tour.otherRemarks}</td>
                                     </tr>
                                 ))}
                                 {/* {tours.length === 0 && (
