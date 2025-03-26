@@ -177,7 +177,7 @@ const ListTour = () => {
             console.log(deleteTourResponse);
             toast.success(`Tour ${selectedTour.tourNumber} was deleted successfully.`, {
                 onClose: () => {
-                    window.location.reload();
+                    //window.location.reload();
                 },
             });
         } catch (error) {

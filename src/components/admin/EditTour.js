@@ -9,6 +9,7 @@ import GenerateQRCode from './GenerateQRCode';
 import { useForm } from "react-hook-form";
 import { useSearchParams } from "react-router-dom";
 import { Link } from 'react-router-dom';
+import { toast } from "react-toastify";
 
 const EditTour = () => {
 
@@ -55,7 +56,16 @@ const EditTour = () => {
       const updateTourResponse = await updateTour(data);
       console.log('Tour updated:', updateTourResponse);
       // Redirect to the tour list page
-      window.location.href = "/tour_list";
+      //window.location.href = "/tour_list";
+      if (updateTourResponse && updateTourResponse.error) {
+        toast.error(`Error updating tour ${data.tourNumber}: ${updateTourResponse.error.message}`);
+      } else {
+        toast.success(`Tour ${data.tourNumber} was updated successfully.`, {
+          onClose: () => {
+            //window.location.href = "/tour_list";
+          },
+        });
+      }
     } catch (error) {
       console.error('Error update tour:', error);
     }
