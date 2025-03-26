@@ -35,7 +35,7 @@ const TourCreation = () => {
             const createTourResponse = await createTour(data);
             console.log('Tour created:', createTourResponse);
             // Redirect to the tour list page
-           //window.location.href = "/tour_list";
+            window.location.href = "/tour_list";
         } catch (error) {
             console.error('Error creating meeting, channel, or tour:', error);
         }

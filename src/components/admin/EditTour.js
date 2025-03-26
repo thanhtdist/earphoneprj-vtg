@@ -173,7 +173,7 @@ const EditTour = () => {
             <div className="form-group row mb-3">
               <label htmlFor="contactPersonEmail" className="col-sm-3 col-form-label">ご担当者様<br />メールアドレス</label>
               <div className="col-sm-9">
-                <input type="text" className="form-control" id="contactPersonEmail" placeholder="例）kinoshita@ken-net.net"
+                <input type="email" className="form-control" id="contactPersonEmail" placeholder="例）kinoshita@ken-net.net"
                   defaultValue={tour.contactPersonEmail}
                   {...register("contactPersonEmail")}
                 />
@@ -182,7 +182,7 @@ const EditTour = () => {
             <div className="form-group row mb-3">
               <label htmlFor="numberOfDevices" className="col-sm-3 col-form-label">利用端末数</label>
               <div className="col-sm-9">
-                <input type="text" className="form-control" id="numberOfDevices" placeholder="例）30"
+                <input type="number" className="form-control" id="numberOfDevices" placeholder="例）30"
                   defaultValue={tour.numberOfDevices}
                   {...register("numberOfDevices")}
                 />
@@ -191,7 +191,7 @@ const EditTour = () => {
             <div className="form-group row mb-3">
               <label htmlFor="numberOfTransmitters" className="col-sm-3 col-form-label">送信機必要端末数</label>
               <div className="col-sm-9">
-                <input type="text" className="form-control" id="numberOfTransmitters" placeholder="例）2"
+                <input type="number" className="form-control" id="numberOfTransmitters" placeholder="例）2"
                   defaultValue={tour.numberOfTransmitters}
                   {...register("numberOfTransmitters")}
                 />
@@ -229,7 +229,7 @@ const EditTour = () => {
             <div className="form-group row mb-3">
               <label htmlFor="emailCustomer" className="col-sm-3 col-form-label">メールアドレス</label>
               <div className="col-sm-9">
-                <input type="text" className="form-control" id="emailCustomer" placeholder=""
+                <input type="email" className="form-control" id="emailCustomer" placeholder=""
                   defaultValue={tour.emailCustomer}
                   {...register("emailCustomer")}
                 />

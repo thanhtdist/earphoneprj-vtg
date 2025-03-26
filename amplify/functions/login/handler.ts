@@ -14,19 +14,20 @@ export const handler: APIGatewayProxyHandler = async (event) => {
   try {
     // Get tourId from path parameters
     // const email = event.pathParameters ? event.pathParameters.email : null;
-    const {email} = JSON.parse(event.body || '{}');
-    if (!email) {
-      console.error('Invalid input: Missing email.');
+    const {email,password} = JSON.parse(event.body || '{}');
+    if (!email||!password) {
+      console.error('Invalid input: Missing email or password.');
       return {
         statusCode: 400,
-        body: JSON.stringify({ error: 'Invalid input: email is required.' }),
+        body: JSON.stringify({ error: 'Invalid input: email & password is required.' }),
         headers: Config.headers,
       };
     }
 
     console.log('Retrieving user with email: ', email);
     const userItem = {     
-      email,   
+      email,
+      password   
     };
     // Query DynamoDB for Users with email
     const result = await dynamoDB.get({
@@ -35,7 +36,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     }).promise();
 
     if (!result.Item) {
-      console.error('user not found: ', { email });
+      console.error('user not found: ', { email,password });
       return {
         statusCode: 404,
         body: JSON.stringify({ error: 'user not found.' }),

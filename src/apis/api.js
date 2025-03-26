@@ -432,6 +432,7 @@ export async function updateTour(data) {
     return response.data;
   } catch (error) {
     console.log('POST call updateTour failed: ', JSON.parse(error.response.body));
+    return JSON.parse(error.response.body);
   }
 
 }
@@ -609,4 +610,25 @@ export async function updateAdmin(data) {
   } catch (error) {
     console.log('PUT update admin false: ', JSON.parse(error.response.body));
   }
+}
+/**
+ * Delete a admin by other admin with delete flag = 1
+ * @param {json} data - The data of the tour to be created
+ * @returns {Promise<any>} The response data from the API call.
+ * @throws {Error} Logs the error details if the POST call fails.
+ */
+export async function deleteAdmin(userId) {
+  try {
+    const restOperation = put({
+      apiName: 'UserVTGRestApi', // The name of the API defined in backend.ts
+      path: 'users/' + userId + "/delete", // endpoint defined in backend.ts 
+    });
+
+    const { body } = await restOperation.response;
+    const response = await body.json();
+    return response.data;
+  } catch (error) {
+    console.log('post call delete user(soft delete) failed: ', JSON.parse(error.response.body));
+  }
+
 }

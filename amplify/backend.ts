@@ -60,9 +60,9 @@ const backend = defineBackend({
   listAdmin,
   createBatchTour,
   getAdmin, // create batch tour by the admin
-  updateAdmin,
-  deleteAdmin,
-  deleteTour,
+  updateAdmin, // update admin by the admin
+  deleteAdmin,  // delete admin by the admin
+  deleteTour, // delete tour by the admin
 });
 
 /**
@@ -317,7 +317,7 @@ userPath.addMethod("POST", new LambdaIntegration(
 // add GET method to login by email
 // create a dynamic login resource under /users
 const userLoginLoginPath = userPath.addResource("login");
-// add GET method to /users/{login} with getTour Lambda integration
+// add GET method to /users/{login} with getUser Lambda integration
 userLoginLoginPath.addMethod("POST", new LambdaIntegration(
   backend.login.resources.lambda
 ));
@@ -332,10 +332,6 @@ userPath.addMethod("PUT", new LambdaIntegration(
   backend.updateAdmin.resources.lambda
 ));
 
-//update addmin
-userPath.addMethod("DELETE", new LambdaIntegration(
-  backend.deleteAdmin.resources.lambda
-));
 
 // add get detail admin
 const userIdPath = userPath.addResource("{UserID}");
@@ -344,6 +340,11 @@ userIdPath.addMethod("GET", new LambdaIntegration(
   backend.getAdmin.resources.lambda
 ));
 
+//update addmin
+const adminDeletePath = userIdPath.addResource("delete");
+adminDeletePath.addMethod("PUT", new LambdaIntegration(
+  backend.deleteAdmin.resources.lambda
+));
 // add outputs to the configuration file for calling APIs metadata in the frontend
 backend.addOutput({
   custom: {

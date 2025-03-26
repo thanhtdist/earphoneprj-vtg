@@ -13,9 +13,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
 
   try {
     // Parse body from API Gateway event
-    const { 
-      userId,          
-     } = JSON.parse(event.body || '{}');
+    const userId = event.pathParameters ? event.pathParameters.UserID : null;
 
     console.log('Updating User with userId: ', userId, );
 
