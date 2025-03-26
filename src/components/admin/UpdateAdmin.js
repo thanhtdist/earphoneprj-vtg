@@ -20,14 +20,7 @@ const UpdateAdmin = () => {
         // console.log("cccccccc",data);
         handleUpdateAdmin(data);       
      };
-    const handleGetDetailAdmin = async () => {
-        try {
-            const getDetailResponse = await getDetailAdmin(userId);
-            setAdmin(getDetailResponse);
-        } catch (error) {
-            console.error("Call API get detail false:", error);
-        }
-    }
+   
     const handleUpdateAdmin = async (data) => {
         try {        
             const updateResponse = await updateAdmin(data);
@@ -40,8 +33,16 @@ const UpdateAdmin = () => {
     }
 
     useEffect(() => {
+        const handleGetDetailAdmin = async () => {
+            try {
+                const getDetailResponse = await getDetailAdmin(userId);
+                setAdmin(getDetailResponse);
+            } catch (error) {
+                console.error("Call API get detail false:", error);
+            }
+        }
         handleGetDetailAdmin();
-    }, []);
+    }, [userId]);
     useEffect(() => {
         if (admin) {
           reset(admin);
