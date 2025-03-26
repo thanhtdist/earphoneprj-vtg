@@ -195,7 +195,7 @@ const ListTour = () => {
             console.log(createBatchTourResponse);
             toast.success(`File ${selectedFile?.name} was uploaded successfully.`, {
                 onClose: () => {
-                    window.location.reload();
+                    //window.location.reload();
                 },
             });
         } catch (error) {
