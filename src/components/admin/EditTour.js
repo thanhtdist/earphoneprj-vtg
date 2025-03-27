@@ -10,13 +10,14 @@ import { useForm } from "react-hook-form";
 import { useSearchParams } from "react-router-dom";
 import { Link } from 'react-router-dom';
 import { toast } from "react-toastify";
+import Loading from '../Loading';
 
 const EditTour = () => {
 
   const [searchParams] = useSearchParams();
   const tourId = searchParams.get("tourId");
   console.log('Tour ID:', tourId);
-
+  const [isLoading, setIsLoading] = useState(false);
   const [tour, setTour] = useState([]);
 
   const {
@@ -28,9 +29,17 @@ const EditTour = () => {
 
   useEffect(() => {
     const getTourDetail = async () => {
-      const getTourDetailResponse = await getTour(tourId);
-      console.log(getTourDetailResponse);
-      setTour(getTourDetailResponse);
+      try {
+        setIsLoading(true);
+        const getTourDetailResponse = await getTour(tourId);
+        console.log(getTourDetailResponse);
+        setTour(getTourDetailResponse);
+      } catch (error) {
+        console.error('Error retrieving tour details:', error);
+        toast.error("Tour details could not be loaded.");
+      } finally {
+        setIsLoading(false);
+      }
     };
     getTourDetail();
   }, [tourId]);
@@ -45,6 +54,7 @@ const EditTour = () => {
 
   const onSubmit = (data) => {
     //alert(JSON.stringify(data, null, 2)); // Display form data in an alert
+    setIsLoading(true);
     callUpdateTour(data);
   };
 
@@ -68,6 +78,8 @@ const EditTour = () => {
       }
     } catch (error) {
       console.error('Error update tour:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -75,6 +87,7 @@ const EditTour = () => {
     <div className="container-fluid">
       <div className="row py-4"></div>
       <Sidebar />
+      {isLoading && <Loading />}
       <main className="px-4 px-sm-5 my-2">
         <h1>ツアー登録</h1>
         <div className="col-8 mx-auto my-5 p-5 bg-white">
@@ -85,6 +98,7 @@ const EditTour = () => {
                 <select id="chatRestriction" className="form-control"
                   defaultValue={tour.chatRestriction}
                   {...register("chatRestriction", { required: "チャットの制限を選択してください。" })}
+                  style={{ "maxWidth": "100%", "appearance": "listbox" }}
                 >
                   <option value=""></option>
                   <option value="allChat">誰でもチャット可能</option>

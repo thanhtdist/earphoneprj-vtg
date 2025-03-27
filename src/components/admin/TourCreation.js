@@ -89,6 +89,7 @@ const TourCreation = () => {
                             <div className="col-sm-9">
                                 <select id="chatRestriction" className="form-control"
                                     {...register("chatRestriction", { required: "チャットの制限を選択してください。" })}
+                                    style={{ "maxWidth": "100%", "appearance": "listbox" }}
                                 >
                                     <option value=""></option>
                                     <option value="allChat">誰でもチャット可能</option>
