@@ -77,7 +77,15 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       console.error('No tours found');
       return {
         statusCode: 404,
-        body: JSON.stringify({ error: 'No tours found.' }),
+        //body: JSON.stringify({ error: 'No tours found.' }),
+        body: JSON.stringify({
+          data: {
+            message: "No tours found.",
+            data: [],
+            count: 0,
+            lastEvaluatedKey: result.LastEvaluatedKey,
+          }
+        }),
         headers: Config.headers,
       };
     }

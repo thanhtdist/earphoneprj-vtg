@@ -1,21 +1,21 @@
 import type { APIGatewayProxyHandler } from 'aws-lambda';
 import AWS from 'aws-sdk';
 import { Config } from '../config';
+import bcrypt from 'bcryptjs';
 
 /**
- * This function retrieves a tour by tourId from AWS DynamoDB.
- * @param event - Contains the path parameters with tourId.
- * @returns Response with the tour details or error.
+ * This function retrieves a user by email from AWS DynamoDB and verifies the password.
+ * @param event - Contains the body with email and password.
+ * @returns Response with login success or error.
  */
 export const handler: APIGatewayProxyHandler = async (event) => {
   // Initialize DynamoDB client
   const dynamoDB = new AWS.DynamoDB.DocumentClient({ region: Config.region });
 
   try {
-    // Get tourId from path parameters
-    // const email = event.pathParameters ? event.pathParameters.email : null;
-    const {email,password} = JSON.parse(event.body || '{}');
-    if (!email||!password) {
+    // Parse email and password from the request body
+    const { email, password } = JSON.parse(event.body || '{}');
+    if (!email || !password) {
       console.error('Invalid input: Missing email or password.');
       return {
         statusCode: 400,
@@ -25,35 +25,59 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     }
 
     console.log('Retrieving user with email: ', email);
-    const userItem = {     
-      email,
-      password   
-    };
-    // Query DynamoDB for Users with email
-    const result = await dynamoDB.get({
+    // Query DynamoDB for the user with the provided email and deleteFlag=0
+    const result = await dynamoDB.query({
       TableName: "Users",
-      Key: userItem,
+      IndexName: "EmailIndex",  // Using GSI to query by email
+      KeyConditionExpression: "email = :email",
+      FilterExpression: "deleteFlag = :deleteFlag",
+      ExpressionAttributeValues: {
+        ":email": email,
+        ":deleteFlag": 0,
+      },
     }).promise();
 
-    if (!result.Item) {
-      console.error('user not found: ', { email,password });
+    if (!result.Items || result.Items.length === 0) {
+      console.error('User not found or deleted: ', { email });
       return {
         statusCode: 404,
-        body: JSON.stringify({ error: 'user not found.' }),
+        body: JSON.stringify({ error: 'User not found or deleted.' }),
         headers: Config.headers,
       };
     }
 
-    console.log('User successfully retrieved: ', result.Item);
+    const user = result.Items[0];
+    console.log('User successfully retrieved: ', user);
+
+    // Compare the provided password with the stored hashed password
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      console.error('Invalid password for user: ', { email });
+      return {
+        statusCode: 401,
+        body: JSON.stringify({ error: 'Invalid password.' }),
+        headers: Config.headers,
+      };
+    }
+
+    const cookie = `userInfo=${encodeURIComponent(JSON.stringify({
+      userId: user.userId,
+      username: user.username,
+      role: user.role
+    }))}; Path=/; HttpOnly; Secure; SameSite=None`;
 
     // Return success response
     return {
       statusCode: 200,
       body: JSON.stringify({
         message: "Login successfully",
-        data: result.Item,
+        data: user,
       }),
-      headers: Config.headers,
+      //headers: Config.headers,
+      headers: {
+        ...Config.headers,
+        'Set-Cookie': cookie,
+      },
     };
   } catch (error: any) {
     console.error('Failed to Login: ', { error, event });

@@ -5,6 +5,7 @@ import { deleteAdmin, listAdmins } from '../../apis/api';
 import { toast } from 'react-toastify';
 import ConfirmModal from '../popup/ConfirmModal';
 import Loading from '../Loading';
+import ReactPaginate from 'react-paginate';
 const ListAdmin = () => {
     const [listAdmin, setListAdmin] = useState([]);
     const [query, setQuery] = useState('');
@@ -12,10 +13,15 @@ const ListAdmin = () => {
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
     const [selectedAdmin, setSelectedAdmin] = useState({ userId: null, userName: null });
     const [isLoading, setIsLoading] = useState(false);
-
+    const [itemOffset, setItemOffset] = useState(0);
+    const itemsPerPage = 10;
+    const endOffset = itemOffset + itemsPerPage;
+    const currentItems = listAdmin.slice(itemOffset, endOffset);
+    const countPage = Math.ceil(listAdmin.length / itemsPerPage);
     // function get all list admin
     const handleGetListAdmin = async (data) => {
         try {
+            setIsLoading(true);
             const registerResponse = await listAdmins({
                 page: 1,
                 pagSize: 10,
@@ -23,7 +29,7 @@ const ListAdmin = () => {
             });
             setListAdmin(registerResponse);
             setCountList(registerResponse.length);
-            console.log("result List admin", registerResponse);
+            setIsLoading(false);
         } catch (error) {
             console.log("error get list admin ", error);
         }
@@ -42,7 +48,7 @@ const ListAdmin = () => {
     };
 
     // function display popup confirm delete message
-    const displayCofirmDelete = async(userId,userName) => {
+    const displayCofirmDelete = async (userId, userName) => {
         setShowDeleteConfirm(true);
         setSelectedAdmin({ userId: userId, userName: userName });
     }
@@ -70,6 +76,15 @@ const ListAdmin = () => {
     const handleCloseDeleteConfirm = () => {
         setShowDeleteConfirm(false);
     };
+    // const [currentPage, setCurrentPage] = useState(1);
+    // Invoke when user click to request another page.
+    const handlePageClick = (event) => { 
+        // const newPage = event.selected + 1; // `selected` bắt đầu từ 0
+        // setCurrentPage(newPage);           
+        const newOffset = event.selected * itemsPerPage % listAdmin.length;
+        setItemOffset(newOffset);
+    };
+
     return (
         <div>
             <div className="container-fluid">
@@ -115,7 +130,7 @@ const ListAdmin = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {listAdmin.map((admin, index) => (
+                                {currentItems.map((admin, index) => (
                                     <tr key={index}>
                                         <th className="sticky">
                                             <Link to={`/update_admin?userId=${admin.userId}`}>
@@ -129,8 +144,8 @@ const ListAdmin = () => {
                                             </Link>
                                         </th>
                                         <th className="sticky2">
-                                            <button type="button" className="btn remove" 
-                                            onClick={() =>displayCofirmDelete(admin.userId, admin.userName)}
+                                            <button type="button" className="btn remove"
+                                                onClick={() => displayCofirmDelete(admin.userId, admin.userName)}
                                             >
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="22" viewBox="0 0 16 20" fill="none">
                                                     <path d="M5.50098 1H8.50098C8.63358 1 8.76076 1.05268 8.85453 1.14645C8.9483 1.24021 9.00098 1.36739 9.00098 1.5V2.5H5.00098V1.5C5.00098 1.36739 5.05366 1.24021 5.14742 1.14645C5.24119 1.05268 5.36837 1 5.50098 1ZM10.001 2.5V1.5C10.001 1.10218 9.84294 0.720644 9.56164 0.43934C9.28033 0.158035 8.8988 0 8.50098 0L5.50098 0C5.10315 0 4.72162 0.158035 4.44032 0.43934C4.15901 0.720644 4.00098 1.10218 4.00098 1.5V2.5H1.50698C1.50364 2.49997 1.50031 2.49997 1.49698 2.5H0.500977C0.368368 2.5 0.241191 2.55268 0.147423 2.64645C0.053655 2.74021 0.000976563 2.86739 0.000976562 3C0.000976563 3.13261 0.053655 3.25979 0.147423 3.35355C0.241191 3.44732 0.368368 3.5 0.500977 3.5H1.03898L1.89198 14.16C1.9322 14.6612 2.15973 15.1289 2.52925 15.4698C2.89877 15.8108 3.38317 16.0001 3.88598 16H10.116C10.6188 16.0001 11.1032 15.8108 11.4727 15.4698C11.8422 15.1289 12.0698 14.6612 12.11 14.16L12.963 3.5H13.501C13.6336 3.5 13.7608 3.44732 13.8545 3.35355C13.9483 3.25979 14.001 3.13261 14.001 3C14.001 2.86739 13.9483 2.74021 13.8545 2.64645C13.7608 2.55268 13.6336 2.5 13.501 2.5H12.506C12.5026 2.49997 12.4993 2.49997 12.496 2.5H10.001ZM11.959 3.5L11.113 14.08C11.0929 14.3306 10.9791 14.5644 10.7943 14.7349C10.6096 14.9054 10.3674 15.0001 10.116 15H3.88598C3.63457 15.0001 3.39237 14.9054 3.20761 14.7349C3.02285 14.5644 2.90909 14.3306 2.88898 14.08L2.04298 3.5H11.959ZM4.47198 4.5C4.60431 4.49235 4.73426 4.53756 4.83327 4.6257C4.93228 4.71383 4.99224 4.83767 4.99998 4.97L5.49998 13.47C5.50523 13.6008 5.45899 13.7284 5.37119 13.8255C5.28339 13.9225 5.16103 13.9813 5.03039 13.9892C4.89974 13.997 4.77122 13.9533 4.67242 13.8675C4.57362 13.7816 4.51243 13.6605 4.50198 13.53L4.00098 5.03C3.99692 4.96431 4.00586 4.89847 4.02731 4.83625C4.04875 4.77403 4.08226 4.71665 4.12593 4.66741C4.1696 4.61817 4.22255 4.57804 4.28176 4.54931C4.34098 4.52058 4.40528 4.50382 4.47098 4.5H4.47198ZM9.52998 4.5C9.59568 4.50382 9.65998 4.52058 9.71919 4.54931C9.7784 4.57804 9.83136 4.61817 9.87502 4.66741C9.91869 4.71665 9.9522 4.77403 9.97365 4.83625C9.99509 4.89847 10.004 4.96431 9.99998 5.03L9.49998 13.53C9.49731 13.5964 9.48141 13.6617 9.45322 13.7219C9.42502 13.7821 9.3851 13.8361 9.33578 13.8807C9.28647 13.9254 9.22875 13.9597 9.166 13.9817C9.10326 14.0037 9.03675 14.013 8.97037 14.009C8.90399 14.005 8.83908 13.9878 8.77943 13.9585C8.71977 13.9291 8.66658 13.8881 8.62296 13.8379C8.57935 13.7877 8.54618 13.7293 8.5254 13.6661C8.50463 13.603 8.49667 13.5363 8.50198 13.47L9.00198 4.97C9.00971 4.83767 9.06967 4.71383 9.16868 4.6257C9.26769 4.53756 9.39764 4.49235 9.52998 4.5ZM7.00098 4.5C7.13358 4.5 7.26076 4.55268 7.35453 4.64645C7.4483 4.74021 7.50098 4.86739 7.50098 5V13.5C7.50098 13.6326 7.4483 13.7598 7.35453 13.8536C7.26076 13.9473 7.13358 14 7.00098 14C6.86837 14 6.74119 13.9473 6.64742 13.8536C6.55366 13.7598 6.50098 13.6326 6.50098 13.5V5C6.50098 4.86739 6.55366 4.74021 6.64742 4.64645C6.74119 4.55268 6.86837 4.5 7.00098 4.5Z" fill="#DC3545" />
@@ -151,27 +166,38 @@ const ListAdmin = () => {
                     <div className="mt-4">
                         <nav aria-label="Page navigation example">
                             <ul className="pagination justify-content-center">
-                                <li className="page-item">
-                                    <Link className="page-link" href="#" aria-label="Previous">
-                                        <span aria-hidden="true">&laquo;</span>
-                                    </Link>
-                                </li>
-                                <li className="page-item"><Link className="page-link" href="#">1</Link></li>
-                                <li className="page-item"><Link className="page-link" href="#">2</Link></li>
-                                <li className="page-item"><Link className="page-link" href="#">3</Link></li>
-                                <li className="page-item">
-                                    <Link className="page-link" href="#" aria-label="Next">
-                                        <span aria-hidden="true">&raquo;</span>
-                                    </Link>
-                                </li>
+                                <ReactPaginate
+                                    nextLabel=">"
+                                    onPageChange={handlePageClick}
+                                    pageRangeDisplayed={3}
+                                    marginPagesDisplayed={2}
+                                    pageCount={countPage}
+                                    previousLabel="<"
+                                    pageClassName="page-item"
+                                    pageLinkClassName="page-link"
+                                    previousClassName="page-item"
+                                    previousLinkClassName="page-link"
+                                    nextClassName="page-item"
+                                    nextLinkClassName="page-link"
+                                    breakLabel="..."
+                                    breakClassName="page-item"
+                                    breakLinkClassName="page-link"
+                                    containerClassName="pagination"
+                                    activeClassName="active"
+                                    renderOnZeroPageCount={null}
+                                    // forcePage={currentPage - 1}
+                                />
                             </ul>
                         </nav>
 
                         <div className="count text-center">
                             <p>全{countList}件</p>
                         </div>
-                         {isLoading && <Loading />}
                     </div>
+                    <div className="mt-4">
+
+                    </div>
+                    {isLoading && <Loading />}
                 </main>
             </div>
             {showDeleteConfirm === true && (

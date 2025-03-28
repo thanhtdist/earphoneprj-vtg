@@ -2,11 +2,11 @@ import type { APIGatewayProxyHandler } from 'aws-lambda';
 import AWS from 'aws-sdk';
 import { Config } from '../config';
 import { v4 as uuid } from 'uuid';
-import { createAttendee } from '../create-attendee/resource';
+import bcrypt from 'bcryptjs';
 
 /**
- * This function creates a new tour and stores it in AWS DynamoDB.
- * @param event - Contains the request body with tour details.
+ * This function creates a new user and stores it in AWS DynamoDB.
+ * @param event - Contains the request body with user details.
  * @returns Response with success message or error.
  */
 export const handler: APIGatewayProxyHandler = async (event) => {
@@ -29,21 +29,26 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       };
     }
 
-    // Create a new tour item for DynamoDB
+    // Generate a salt (optional, but recommended)
+    const saltRounds = 10;
+    const hashPassword = await bcrypt.hash(password, saltRounds);
+
+    // Create a new user item for DynamoDB
     const userItem = {
-      userId: uuid(), // Generate a unique tour ID
+      userId: uuid(), // Generate a unique user ID
       userName,
-      password,
+      password: hashPassword,
       email,
       createdAt: new Date().toISOString(),
       createdBy: 'admin',
       updatedAt: new Date().toISOString(),
       updatedBy: 'admin',
       deleteFlag: 0,
-      role: 0
+      role: 0,
+      active: 0
     };
 
-    // Store the tour in DynamoDB
+    // Store the user in DynamoDB
     await dynamoDB.put({
       TableName: "Users",
       Item: userItem,
@@ -55,13 +60,13 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     return {
       statusCode: 200,
       body: JSON.stringify({
-        message: "Tour created successfully",
+        message: "User created successfully",
         data: userItem,
       }),
       headers: Config.headers,
     };
   } catch (error: any) {
-    console.error('Failed to create tour: ', { error, event });
+    console.error('Failed to create user: ', { error, event });
 
     // Return error response
     return {

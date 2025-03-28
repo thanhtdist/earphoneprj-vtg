@@ -574,7 +574,7 @@ export async function getDetailAdmin(userId) {
     const restOperation = get({
       apiName: 'UserVTGRestApi', // The name of the API defined in backend.ts
       path: 'users/' + userId, // endpoint defined in backend.ts 
-
+      withCredentials: true
     });
 
     const { body } = await restOperation.response;
@@ -630,6 +630,71 @@ export async function deleteAdmin(userId) {
     return response.data;
   } catch (error) {
     console.log('post call delete user(soft delete) failed: ', JSON.parse(error.response.body));
+  }
+
+}
+
+/**
+ * Login a admin by email and password
+ * @param {json} data - The data of the tour to be created
+ * @returns {Promise<any>} The response data from the API call.
+ * @throws {Error} Logs the error details if the POST call fails.
+ */
+export async function loginAdmin(data) {
+  try {
+    const restOperation = post({
+      apiName: 'UserVTGRestApi', // The name of the API defined in backend.ts
+      path: 'users/login', // Endpoint defined in backend.ts
+      options: {
+        body: {
+          email: data.email,
+          password: data.password,
+        },
+      },
+      withCredentials: true, // Ensures the HttpOnly cookie is sent
+    });
+
+    const { statusCode, body } = await restOperation.response;
+    const response = await body.json();
+
+    return {
+      statusCode,
+      data: response.data,
+    };
+  } catch (error) {
+    const errorMessage = error.response?.body
+      ? JSON.parse(error.response.body)?.error || 'An unexpected error occurred'
+      : error.message;
+
+    console.error('POST call login failed:', errorMessage);
+
+    return {
+      statusCode: error.response?.statusCode || 500,
+      error: errorMessage,
+    };
+  }
+}
+
+/**
+ * Check auth in session
+ * @param {json} data - The data of the tour to be created
+ * @returns {Promise<any>} The response data from the API call.
+ * @throws {Error} Logs the error details if the POST call fails.
+ */
+export async function checkAuth() {
+  try {
+    const restOperation = get({
+      apiName: 'UserVTGRestApi', // The name of the API defined in backend.ts
+      path: 'users/auth', // endpoint defined in backend.ts 
+      withCredentials: true // Ensures the HttpOnly cookie is sent
+    });
+
+    const { body } = await restOperation.response;
+    const response = await body.json();
+    return response.data;
+  } catch (error) {
+    console.log('post call check Auth failed: ', JSON.parse(error.response.body));
+    return JSON.parse(error.response.body);
   }
 
 }

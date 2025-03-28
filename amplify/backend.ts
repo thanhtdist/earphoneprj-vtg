@@ -33,6 +33,8 @@ import { createBatchTour } from './functions/create-batch-tour/resource';
 import { getAdmin } from './functions/get-admin/resource';
 import { updateAdmin } from './functions/update-admin/resource';
 import { deleteAdmin } from './functions/delete-admin/resource';
+import { checkAuth } from './functions/check-auth/resource';
+import { activeAdmin } from './functions/active-admin/resource';
 /**
  * Define the backend resources 
  * - List lambda functions for audio voice (metting session) and chat(message session)
@@ -63,6 +65,8 @@ const backend = defineBackend({
   updateAdmin, // update admin by the admin
   deleteAdmin,  // delete admin by the admin
   deleteTour, // delete tour by the admin
+  checkAuth, // check auth
+  activeAdmin, // active admin by the admin
 });
 
 /**
@@ -314,11 +318,17 @@ userPath.addMethod("POST", new LambdaIntegration(
   backend.createUser.resources.lambda
 ));
 
+const userAuthPath = userPath.addResource("auth");
+// add GET method to /users/{login} with getUser Lambda integration
+userAuthPath.addMethod("GET", new LambdaIntegration(
+  backend.checkAuth.resources.lambda
+));
+
 // add GET method to login by email
 // create a dynamic login resource under /users
-const userLoginLoginPath = userPath.addResource("login");
+const userLoginPath = userPath.addResource("login");
 // add GET method to /users/{login} with getUser Lambda integration
-userLoginLoginPath.addMethod("POST", new LambdaIntegration(
+userLoginPath.addMethod("POST", new LambdaIntegration(
   backend.login.resources.lambda
 ));
 
@@ -344,6 +354,12 @@ userIdPath.addMethod("GET", new LambdaIntegration(
 const adminDeletePath = userIdPath.addResource("delete");
 adminDeletePath.addMethod("PUT", new LambdaIntegration(
   backend.deleteAdmin.resources.lambda
+));
+
+//update addmin
+const adminActivePath = userIdPath.addResource("active");
+adminActivePath.addMethod("PUT", new LambdaIntegration(
+  backend.activeAdmin.resources.lambda
 ));
 // add outputs to the configuration file for calling APIs metadata in the frontend
 backend.addOutput({

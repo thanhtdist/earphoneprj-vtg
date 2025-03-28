@@ -13,6 +13,8 @@ export const Config = {
     // The API Gateway endpoint for the API
     headers: {
         'Content-Type': 'application/json', // The content type for API Gateway responses
-        'Access-Control-Allow-Origin': '*', //  Enable CORS for all methods by allowing any origin
+       'Access-Control-Allow-Origin': '*', //  Enable CORS for all methods by allowing any origin
+        //'Access-Control-Allow-Origin': 'execute-api.us-east-1.amazonaws.com', //  execute-api.us-east-1.amazonaws.com
+        'Access-Control-Allow-Credentials': true // Allow credentials to be included in the request
     }
 };
