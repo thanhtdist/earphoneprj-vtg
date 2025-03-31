@@ -698,3 +698,32 @@ export async function checkAuth() {
   }
 
 }
+
+/**
+ * Active amdin by other admin 
+ * @param {json} data - The data of the tour to be created
+ * @returns {Promise<any>} The response data from the API call.
+ * @throws {Error} Logs the error details if the POST call fails.
+ */
+export async function activeAdmin(data) {
+  try {
+    const restOperation = put({
+      apiName: 'UserVTGRestApi', // The name of the API defined in backend.ts
+      path: 'users/active', // endpoint defined in backend.ts 
+      options: {
+        body: {
+          userId: data.userId,
+          active: data.active,
+        }
+      }
+    });
+    console.log("api data", data);
+
+    const { body } = await restOperation.response;
+    const response = await body.json();
+    return response.data;
+  } catch (error) {
+    console.log('PUT update admin false: ', JSON.parse(error.response.body));
+  }
+
+}

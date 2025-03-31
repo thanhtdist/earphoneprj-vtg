@@ -1,16 +1,17 @@
 import React, { useState, useRef } from 'react';
-import { 
+import {
     //QRCodeSVG, 
-    QRCodeCanvas } from 'qrcode.react';
+    QRCodeCanvas
+} from 'qrcode.react';
 import Config from '../../utils/config'; // Adjust the import path as needed
 import { FaRegCopy } from "react-icons/fa"; // Copy & double tick icons
 import { LiaCheckDoubleSolid } from "react-icons/lia";
 import { PiDownloadSimpleLight } from "react-icons/pi";
 
-const GenerateQRCode = ({ meetingId, channelId, userId = null, chatSetting = null }) => {
+const GenerateQRCode = ({ tourId, channelId=null, userId = null, chatRestriction = null }) => {
     const qrRef = useRef();
     const [copied, setCopied] = useState(false);
-    const urlToCopy = `${Config.appSpeakerURL}?meetingId=${meetingId}&channelId=${channelId}&chatSetting=${chatSetting}`;
+    const urlToCopy = `${Config.appGuideURL}?tourId=${tourId}&chatRestriction=${chatRestriction}`;
     // Copy URL to clipboard
     const handleCopy = () => {
         navigator.clipboard.writeText(urlToCopy).then(() => {
@@ -19,19 +20,7 @@ const GenerateQRCode = ({ meetingId, channelId, userId = null, chatSetting = nul
         });
     };
 
-    // Download QR code as SVG
-    // const handleDownloadQRCode = () => {
-    //     const svgData = new XMLSerializer().serializeToString(qrRef.current);
-    //     const blob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
-    //     const url = URL.createObjectURL(blob);
-    //     const link = document.createElement("a");
-    //     link.href = url;
-    //     link.download = "qrcode.svg";
-    //     document.body.appendChild(link);
-    //     link.click();
-    //     document.body.removeChild(link);
-    // };
-
+    // Download QR code as image(png)
     const handleDownloadQRCode = () => {
         const url = qrRef.current.toDataURL("image/png");
         const a = document.createElement("a");
@@ -40,21 +29,16 @@ const GenerateQRCode = ({ meetingId, channelId, userId = null, chatSetting = nul
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
-      };
+    };
 
     return (
         <div className="form-group row mb-3">
             <div className="col-sm-3">
                 <div className="qrCodeContent mb-3" style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                    {/* <QRCodeSVG
-                        ref={qrRef}
-                        value={`${Config.appSpeakerURL}?meetingId=${meetingId}&channelId=${channelId}&chatSetting=${chatSetting}`}
-                        size={256}
-                        level="H" /> */}
-                    
                     <QRCodeCanvas
                         ref={qrRef}
-                        value={`${Config.appSpeakerURL}?meetingId=${meetingId}&channelId=${channelId}&chatSetting=${chatSetting}`}
+                        //value={`${Config.appGuideURL}?tourId=${tourId}&channelId=${channelId}&chatRestriction=${chatRestriction}`}
+                        value={`${Config.appGuideURL}?tourId=${tourId}&chatRestriction=${chatRestriction}`}
                         size={256}
                         level="H"
                     />
@@ -85,7 +69,8 @@ const GenerateQRCode = ({ meetingId, channelId, userId = null, chatSetting = nul
                 <textarea
                     className="form-control"
                     rows="2"
-                    value={`${Config.appSpeakerURL}?meetingId=${meetingId}&channelId=${channelId}&chatSetting=${chatSetting}`}
+                    //value={`${Config.appGuideURL}?tourId=${tourId}&channelId=${channelId}&chatRestriction=${chatRestriction}`}
+                    value={`${Config.appGuideURL}?tourId=${tourId}&chatRestriction=${chatRestriction}`}
                     readOnly
                 />
             </div>

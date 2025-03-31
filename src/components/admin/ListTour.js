@@ -12,6 +12,7 @@ import { createMeetingAndChannel } from '../../utils/MeetingUtils';
 import ConfirmModal from '../popup/ConfirmModal';
 import { toast } from "react-toastify";
 import Loading from '../Loading';
+import ReactPaginate from 'react-paginate';
 
 const ListTour = () => {
     const fileInputRef = useRef(null);
@@ -24,6 +25,11 @@ const ListTour = () => {
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
     const [selectedTour, setSelectedTour] = useState({ tourId: null, tourNumber: null });
     const [query, setQuery] = useState('');
+    const [itemOffset, setItemOffset] = useState(0);
+    const itemsPerPage = 10;
+    const endOffset = itemOffset + itemsPerPage;
+    const currentItems = tours.slice(itemOffset, endOffset);
+    const countPage = Math.ceil(tours.length / itemsPerPage);
     // Get list tours
     const getListTour = async (data) => {
         const listoursResponse = await listTours({
@@ -203,6 +209,12 @@ const ListTour = () => {
         }
 
     };
+    const handlePageClick = (event) => {
+        // const newPage = event.selected + 1; // `selected` bắt đầu từ 0
+        // setCurrentPage(newPage);           
+        const newOffset = event.selected * itemsPerPage % tours.length;
+        setItemOffset(newOffset);
+    };
     return (
         <div>
             <div className="container-fluid">
@@ -210,7 +222,7 @@ const ListTour = () => {
                 <Sidebar />
                 <main className="px-4 px-sm-5 my-2">
                     <h1>ツアー管理</h1>
-                    <Link to="/tour_register" className="btn btn-danger mt-3">
+                    <Link to="/admin/tour/register" className="btn btn-danger mt-3">
                         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25" fill="none">
                             <g clipPath="url(#clip0_127_5011)">
                                 <path fillRule="evenodd" clipRule="evenodd" d="M13.25 17.0328C17.5172 15.9797 20.3125 12.2453 20.3125 7.8125C20.3125 5.7405 19.4894 3.75336 18.0243 2.28823C16.5591 0.8231 14.572 0 12.5 0C10.428 0 8.44086 0.8231 6.97573 2.28823C5.5106 3.75336 4.6875 5.7405 4.6875 7.8125C4.6875 12.2453 7.48281 15.9797 11.75 17.0328L11.3688 17.7937C11.3458 17.8397 11.3321 17.8898 11.3284 17.941C11.3248 17.9923 11.3313 18.0437 11.3475 18.0925C11.3803 18.191 11.4509 18.2723 11.5437 18.3188C11.6366 18.3652 11.744 18.3728 11.8425 18.34C11.941 18.3072 12.0223 18.2366 12.0687 18.1438L12.1312 18.0187C12.1453 18.2844 12.1688 18.5109 12.2109 18.7219C12.3172 19.2594 12.5359 19.6938 12.9109 20.4437L12.9312 20.4875C13.2625 21.1469 13.2156 21.8156 13.0094 22.4344C12.7984 23.0625 12.4375 23.6078 12.175 24.0016C12.1174 24.0878 12.0964 24.1933 12.1166 24.295C12.1368 24.3967 12.1966 24.4861 12.2828 24.5438C12.369 24.6014 12.4746 24.6224 12.5762 24.6021C12.6779 24.5819 12.7674 24.5221 12.825 24.4359L12.8313 24.425C13.0906 24.0375 13.5047 23.4156 13.75 22.6828C14 21.9344 14.0813 21.0406 13.6313 20.1375C13.2281 19.3328 13.0609 18.9937 12.9766 18.5688C12.9481 18.4196 12.9288 18.2687 12.9187 18.1172L12.9312 18.1438C12.9777 18.2366 13.059 18.3072 13.1575 18.34C13.256 18.3728 13.3634 18.3652 13.4563 18.3188C13.5491 18.2723 13.6197 18.191 13.6525 18.0925C13.6853 17.994 13.6777 17.8866 13.6313 17.7937L13.25 17.0328ZM6.8 5.24375C7.2408 4.26753 7.92485 3.42084 8.78664 2.78475C9.64844 2.14866 10.6591 1.74449 11.7219 1.61094C12.1469 1.55781 12.5 1.9125 12.5 2.34375C12.5 2.775 12.1469 3.11875 11.7219 3.19063C10.2375 3.44375 8.98906 4.40937 8.32656 5.71719C8.25344 5.87229 8.13885 6.00415 7.99546 6.09818C7.85206 6.19221 7.68546 6.24476 7.51406 6.25C6.97344 6.25 6.57813 5.73594 6.8 5.24375Z" fill="white" />
@@ -290,10 +302,10 @@ const ListTour = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {tours && tours.map((tour, index) => (
+                                {currentItems && currentItems.map((tour, index) => (
                                     <tr key={index}>
                                         <th className="sticky">
-                                            <Link to={`/tour_detail?tourId=${tour.tourId}`}>
+                                            <Link to={`/admin/tour/update?tourId=${tour.tourId}`}>
                                                 <button type="button" className="btn edit">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 18 20" fill="none">
                                                         <path d="M12.8538 0.146271C12.76 0.0525356 12.6329 -0.00012207 12.5003 -0.00012207C12.3677 -0.00012207 12.2406 0.0525356 12.1468 0.146271L10.4998 1.79327L14.2068 5.50027L15.8538 3.85427C15.9004 3.80783 15.9373 3.75265 15.9625 3.6919C15.9877 3.63116 16.0007 3.56604 16.0007 3.50027C16.0007 3.4345 15.9877 3.36938 15.9625 3.30864C15.9373 3.24789 15.9004 3.19272 15.8538 3.14627L12.8538 0.146271ZM13.4998 6.20727L9.79281 2.50027L3.29281 9.00027H3.49981C3.63241 9.00027 3.75959 9.05295 3.85336 9.14672C3.94713 9.24049 3.99981 9.36766 3.99981 9.50027V10.0003H4.49981C4.63241 10.0003 4.75959 10.0529 4.85336 10.1467C4.94713 10.2405 4.99981 10.3677 4.99981 10.5003V11.0003H5.49981C5.63241 11.0003 5.75959 11.0529 5.85336 11.1467C5.94713 11.2405 5.99981 11.3677 5.99981 11.5003V12.0003H6.49981C6.63241 12.0003 6.75959 12.0529 6.85336 12.1467C6.94713 12.2405 6.99981 12.3677 6.99981 12.5003V12.7073L13.4998 6.20727ZM6.03181 13.6753C6.01076 13.6193 5.99993 13.56 5.99981 13.5003V13.0003H5.49981C5.3672 13.0003 5.24002 12.9476 5.14625 12.8538C5.05248 12.7601 4.99981 12.6329 4.99981 12.5003V12.0003H4.49981C4.3672 12.0003 4.24002 11.9476 4.14625 11.8538C4.05248 11.7601 3.99981 11.6329 3.99981 11.5003V11.0003H3.49981C3.3672 11.0003 3.24002 10.9476 3.14625 10.8538C3.05248 10.7601 2.99981 10.6329 2.99981 10.5003V10.0003H2.49981C2.44003 10.0002 2.38075 9.98933 2.32481 9.96827L2.14581 10.1463C2.09816 10.1943 2.06073 10.2514 2.03581 10.3143L0.0358061 15.3143C-0.000564594 15.4051 -0.0094681 15.5047 0.0101994 15.6006C0.0298668 15.6964 0.0772403 15.7844 0.146447 15.8536C0.215653 15.9228 0.303649 15.9702 0.399526 15.9899C0.495402 16.0095 0.594942 16.0006 0.685806 15.9643L5.68581 13.9643C5.74867 13.9393 5.80582 13.9019 5.85381 13.8543L6.03181 13.6763V13.6753Z" fill="#0D6EFD" />
@@ -310,7 +322,7 @@ const ListTour = () => {
                                                 削除
                                             </button>
                                         </th>
-                                        <td><Link to={`/tour_detail?tourId=${tour.tourId}`}>{tour.tourNumber}</Link></td>
+                                        <td><Link to={`/admin/tour/update?tourId=${tour.tourId}`}>{tour.tourNumber}</Link></td>
                                         <td>{tour.processingNumber}</td>
                                         <td>{tour.tourName}</td>
                                         <td>{tour.acceptanceDate}</td>
@@ -341,7 +353,7 @@ const ListTour = () => {
                     <div className="mt-4">
                         <nav aria-label="Page navigation example">
                             <ul className="pagination justify-content-center">
-                                <li className="page-item">
+                                {/* <li className="page-item">
                                     <Link className="page-link" href="#" aria-label="Previous">
                                         <span aria-hidden="true">&laquo;</span>
                                     </Link>
@@ -353,7 +365,28 @@ const ListTour = () => {
                                     <Link className="page-link" href="#" aria-label="Next">
                                         <span aria-hidden="true">&raquo;</span>
                                     </Link>
-                                </li>
+                                </li> */}
+                                <ReactPaginate
+                                    nextLabel=">"
+                                    onPageChange={handlePageClick}
+                                    pageRangeDisplayed={3}
+                                    marginPagesDisplayed={2}
+                                    pageCount={countPage}
+                                    previousLabel="<"
+                                    pageClassName="page-item"
+                                    pageLinkClassName="page-link"
+                                    previousClassName="page-item"
+                                    previousLinkClassName="page-link"
+                                    nextClassName="page-item"
+                                    nextLinkClassName="page-link"
+                                    breakLabel="..."
+                                    breakClassName="page-item"
+                                    breakLinkClassName="page-link"
+                                    containerClassName="pagination"
+                                    activeClassName="active"
+                                    renderOnZeroPageCount={null}
+                                // forcePage={currentPage - 1}
+                                />
                             </ul>
                         </nav>
 

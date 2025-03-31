@@ -33,7 +33,7 @@ const Login = () => {
             console.log("loginAdminResponse", loginAdminResponse);
             if (loginAdminResponse.statusCode === 200) {
                 // Redirect to the admin page
-                navigate("/admin/tour_list");
+                navigate("/admin/tour");
             } else {
                 setError(messages.login.incorrectEmailPassword);
             }

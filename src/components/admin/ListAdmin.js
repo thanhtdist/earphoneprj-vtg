@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Sidebar from './Sidebar';
 import { Link } from 'react-router-dom';
-import { deleteAdmin, listAdmins } from '../../apis/api';
+import { deleteAdmin, listAdmins, activeAdmin} from '../../apis/api';
 import { toast } from 'react-toastify';
 import ConfirmModal from '../popup/ConfirmModal';
 import Loading from '../Loading';
@@ -11,7 +11,9 @@ const ListAdmin = () => {
     const [query, setQuery] = useState('');
     const [countList, setCountList] = useState(0);
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+    const [showActiveConfirm, setShowActiveConfirm] = useState(false);
     const [selectedAdmin, setSelectedAdmin] = useState({ userId: null, userName: null });
+    const [selectActiveAdmin, setSelectActiveAdmin] = useState({ userId: null, userName: null, password: null, active:null });
     const [isLoading, setIsLoading] = useState(false);
     const [itemOffset, setItemOffset] = useState(0);
     const itemsPerPage = 10;
@@ -40,10 +42,11 @@ const ListAdmin = () => {
     }, []);
 
     //function search admin by name 
-    const searchAdmin = () => {
+    const handleSearchClick = () => {
         handleGetListAdmin(query);
     }
-    const getValueQuery = (e) => {
+    // Handle search change
+    const handleSearchChange = (e) => {
         setQuery(e.target.value);
     };
 
@@ -62,7 +65,7 @@ const ListAdmin = () => {
             console.log("Call API delete success:", deleteResponse);
             toast.success(`User ${selectedAdmin.userName} was deleted successfully.`, {
                 onClose: () => {
-                    window.location.href = "/admin_list"
+                    window.location.href = "/admin"
                 },
             });
         } catch (error) {
@@ -75,16 +78,46 @@ const ListAdmin = () => {
     //function close popup confirm delete message
     const handleCloseDeleteConfirm = () => {
         setShowDeleteConfirm(false);
+        setShowActiveConfirm(false);
     };
     // const [currentPage, setCurrentPage] = useState(1);
     // Invoke when user click to request another page.
-    const handlePageClick = (event) => { 
+    const handlePageClick = (event) => {
         // const newPage = event.selected + 1; // `selected` bắt đầu từ 0
         // setCurrentPage(newPage);           
         const newOffset = event.selected * itemsPerPage % listAdmin.length;
         setItemOffset(newOffset);
     };
 
+    const [nameActive, setNameActive] = useState('');
+    const displayActivePopup = async (userId, active,userName) => {
+        console.log('aaaaaaaaa',userId);
+        console.log('vvvvvvvvv',active);
+        if(active === 1) {
+            setSelectActiveAdmin({ userId: userId, active: 0 ,userName});
+            setNameActive('Active');
+        }
+        else if(active === 0) {
+            setSelectActiveAdmin({ userId: userId, active: 1 ,userName});
+            setNameActive('Inactive');
+        }
+        // setSelectActiveAdmin({ userId: userId, active: active });
+        setShowActiveConfirm(true);
+    }
+    const handleClickActive = async () => {
+        try {
+            const updateResponse = await activeAdmin(selectActiveAdmin);
+            console.log("Call API update active success:", updateResponse);
+            toast.success(`User  was ${nameActive} successfully.`, {
+                onClose: () => {
+                    window.location.href = "/admin"
+                },
+            });
+        } catch (error) {
+            console.log("error click active error ", error);
+
+        }
+    }
     return (
         <div>
             <div className="container-fluid">
@@ -94,7 +127,7 @@ const ListAdmin = () => {
                 <nav></nav>
                 <main className="px-4 px-sm-5 my-2">
                     <h1>管理者一覧</h1>
-                    <Link to="/register_admin" className="btn btn-danger mt-3 mx-3">
+                    <Link to="/admin/register" className="btn btn-danger mt-3 mx-3">
                         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 30 28" fill="none">
                             <path d="M1.5625 21.875C1.5625 21.875 0 21.875 0 20.3125C0 18.75 1.5625 14.0625 9.375 14.0625C17.1875 14.0625 18.75 18.75 18.75 20.3125C18.75 21.875 17.1875 21.875 17.1875 21.875H1.5625ZM9.375 12.5C10.6182 12.5 11.8105 12.0061 12.6896 11.1271C13.5686 10.248 14.0625 9.0557 14.0625 7.8125C14.0625 6.5693 13.5686 5.37701 12.6896 4.49794C11.8105 3.61886 10.6182 3.125 9.375 3.125C8.1318 3.125 6.93951 3.61886 6.06044 4.49794C5.18136 5.37701 4.6875 6.5693 4.6875 7.8125C4.6875 9.0557 5.18136 10.248 6.06044 11.1271C6.93951 12.0061 8.1318 12.5 9.375 12.5Z" fill="white" />
                             <path fillRule="evenodd" clipRule="evenodd" d="M21.0938 7.8125C21.301 7.8125 21.4997 7.89481 21.6462 8.04132C21.7927 8.18784 21.875 8.38655 21.875 8.59375V10.9375H24.2188C24.426 10.9375 24.6247 11.0198 24.7712 11.1663C24.9177 11.3128 25 11.5115 25 11.7188C25 11.926 24.9177 12.1247 24.7712 12.2712C24.6247 12.4177 24.426 12.5 24.2188 12.5H21.875V14.8438C21.875 15.051 21.7927 15.2497 21.6462 15.3962C21.4997 15.5427 21.301 15.625 21.0938 15.625C20.8865 15.625 20.6878 15.5427 20.5413 15.3962C20.3948 15.2497 20.3125 15.051 20.3125 14.8438V12.5H17.9688C17.7615 12.5 17.5628 12.4177 17.4163 12.2712C17.2698 12.1247 17.1875 11.926 17.1875 11.7188C17.1875 11.5115 17.2698 11.3128 17.4163 11.1663C17.5628 11.0198 17.7615 10.9375 17.9688 10.9375H20.3125V8.59375C20.3125 8.38655 20.3948 8.18784 20.5413 8.04132C20.6878 7.89481 20.8865 7.8125 21.0938 7.8125Z" fill="white" />
@@ -103,8 +136,14 @@ const ListAdmin = () => {
                     </Link>
 
                     <div className="search-box mt-4 d-flex col-4">
-                        <input type="text" className="form-control" id="search" onChange={(e) => { getValueQuery(e) }}></input>
-                        <button type="button" className="btn btn-secondary" onClick={searchAdmin}>
+                        <input type="text" className="form-control" id="search" onChange={handleSearchChange}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    handleSearchClick();
+                                }
+                            }}
+                        ></input>
+                        <button type="button" className="btn btn-secondary" onClick={handleSearchClick}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 16 18" fill="none">
                                 <g clipPath="url(#clip0_2002_3291)">
                                     <path d="M11.7419 10.3431C12.7102 9.02181 13.1439 7.38361 12.9562 5.75627C12.7685 4.12893 11.9733 2.63246 10.7297 1.56625C9.48604 0.500045 7.88567 -0.0572725 6.24876 0.00580065C4.61184 0.0688738 3.05911 0.747686 1.90119 1.90643C0.743273 3.06518 0.0655718 4.6184 0.00366997 6.25536C-0.0582319 7.89231 0.500231 9.49228 1.56733 10.7352C2.63443 11.9781 4.13147 12.7722 5.75894 12.9587C7.38641 13.1452 9.0243 12.7104 10.3449 11.7411H10.3439C10.3739 11.7811 10.4059 11.8191 10.4419 11.8561L14.2919 15.7061C14.4794 15.8938 14.7338 15.9992 14.9991 15.9993C15.2643 15.9994 15.5188 15.8941 15.7064 15.7066C15.8941 15.5191 15.9995 15.2647 15.9996 14.9995C15.9997 14.7342 15.8944 14.4798 15.7069 14.2921L11.8569 10.4421C11.8212 10.4059 11.7827 10.3725 11.7419 10.3421V10.3431ZM11.9999 6.49912C11.9999 7.22139 11.8577 7.93659 11.5813 8.60388C11.3049 9.27117 10.8997 9.87749 10.389 10.3882C9.87829 10.8989 9.27197 11.3041 8.60468 11.5805C7.93739 11.8569 7.22219 11.9991 6.49992 11.9991C5.77765 11.9991 5.06245 11.8569 4.39516 11.5805C3.72787 11.3041 3.12156 10.8989 2.61083 10.3882C2.10011 9.87749 1.69498 9.27117 1.41858 8.60388C1.14218 7.93659 0.999921 7.22139 0.999921 6.49912C0.999921 5.04043 1.57938 3.64149 2.61083 2.61004C3.64228 1.57859 5.04123 0.999124 6.49992 0.999124C7.95861 0.999124 9.35756 1.57859 10.389 2.61004C11.4205 3.64149 11.9999 5.04043 11.9999 6.49912Z" fill="white" />
@@ -133,7 +172,7 @@ const ListAdmin = () => {
                                 {currentItems.map((admin, index) => (
                                     <tr key={index}>
                                         <th className="sticky">
-                                            <Link to={`/update_admin?userId=${admin.userId}`}>
+                                            <Link to={`/admin/update?userId=${admin.userId}`}>
                                                 {/* <button value={admin.userId} onClick={clickEdit} type="button" className="btn edit"> */}
                                                 <button type="button" className="btn edit">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 18 20" fill="none">
@@ -156,7 +195,11 @@ const ListAdmin = () => {
                                         <td><a href="manager_detail.html"
                                             style={{ color: 'black', textDecoration: 'none' }}>{admin.userName}</a></td>
                                         <td className='email-admin'>{admin.email}</td>
-                                        <td>有効</td>
+                                        <td>{admin.active ===0 ? 'Active':'Inactive'}</td>
+                                        <td>
+                                            <button type="button" className="btn btn-primary" onClick={() =>displayActivePopup(admin.userId,admin.active,admin.userName)}>{admin.active === 0 ? 'Active':'Inactive'}</button>
+
+                                        </td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -185,7 +228,7 @@ const ListAdmin = () => {
                                     containerClassName="pagination"
                                     activeClassName="active"
                                     renderOnZeroPageCount={null}
-                                    // forcePage={currentPage - 1}
+                                // forcePage={currentPage - 1}
                                 />
                             </ul>
                         </nav>
@@ -206,6 +249,15 @@ const ListAdmin = () => {
                     bodyText={`Are you sure you want to delete this user: ${selectedAdmin.userName} ?`}
                     confirmName="Delete"
                     handleConfirmed={handleDeleteAdmin}
+                    handleCloseConfirm={handleCloseDeleteConfirm}
+                />
+            )}
+             {showActiveConfirm === true && (
+                <ConfirmModal
+                    show={showActiveConfirm}
+                    bodyText={`Are you sure you want to ${nameActive} this user: ${selectActiveAdmin.userName} ?`}
+                    confirmName={nameActive}
+                    handleConfirmed={handleClickActive}
                     handleCloseConfirm={handleCloseDeleteConfirm}
                 />
             )}

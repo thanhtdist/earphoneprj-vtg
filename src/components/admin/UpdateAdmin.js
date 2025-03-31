@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import Sidebar from './Sidebar';
-// import { useLocation } from 'react-router-dom';
 import { getDetailAdmin, updateAdmin } from '../../apis/api';
 import { useSearchParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
+import { Link } from 'react-router-dom';
 
 const UpdateAdmin = () => {
     const [searchParams] = useSearchParams();
@@ -17,18 +18,23 @@ const UpdateAdmin = () => {
         formState: { errors },
     } = useForm();
     const onSubmit = (data) => {
-        // console.log("cccccccc",data);
-        handleUpdateAdmin(data);       
-     };
-   
+        handleUpdateAdmin(data);
+    };
+
+    //function update infomation of admin
     const handleUpdateAdmin = async (data) => {
-        try {        
+        try {
             const updateResponse = await updateAdmin(data);
             console.log("Call API update success:", updateResponse);
+            toast.success(`User ${admin.userName} was updated successfully.`, {
+                onClose: () => {
+                    window.location.href = "/admin"
+                },
+            });
             setAdmin(updateResponse);
-            window.location.href = "/admin_list";
         } catch (error) {
-            console.error("Call API update false:", error);
+            // console.error("Call API update false:", error);
+            alert("Call API update false:", error);
         }
     }
 
@@ -38,16 +44,17 @@ const UpdateAdmin = () => {
                 const getDetailResponse = await getDetailAdmin(userId);
                 setAdmin(getDetailResponse);
             } catch (error) {
-                console.error("Call API get detail false:", error);
+                // console.error("Call API get detail false:", error);
+                alert("Call API get detail false:", error);
             }
         }
         handleGetDetailAdmin();
     }, [userId]);
     useEffect(() => {
         if (admin) {
-          reset(admin);
+            reset(admin);
         }
-      }, [admin, reset]);
+    }, [admin, reset]);
     return (
         <>
             <div className="container-fluid">
@@ -63,8 +70,8 @@ const UpdateAdmin = () => {
                             <div className="form-group row mb-3">
                                 <label htmlFor="inputName" className="col-sm-3 col-form-label">名前</label>
                                 <div className="col-sm-9">
-                                    <input type="name" className="form-control" id="inputName" defaultValue={admin.userName}  
-                                     {...register("userName", { required: "名前を入力してください。" })}
+                                    <input type="name" className="form-control" id="inputName" defaultValue={admin.userName}
+                                        {...register("userName", { required: "名前を入力してください。" })}
                                     />
                                     {errors.userName && <p style={{ color: "red" }}>{errors.userName.message}</p>}
                                 </div>
@@ -72,14 +79,14 @@ const UpdateAdmin = () => {
                             <div className="form-group row mb-3">
                                 <label htmlFor="inputEmail" className="col-sm-3 col-form-label">メールアドレス</label>
                                 <div className="col-sm-9">
-                                    <input type="email" className="form-control" id="inputEmail" defaultValue={admin.email} disabled/>                    
+                                    <input type="email" className="form-control" id="inputEmail" defaultValue={admin.email} disabled />
                                 </div>
                             </div>
                             <div className="form-group row mb-3">
                                 <label htmlFor="inputPassword" className="col-sm-3 col-form-label">パスワード</label>
                                 <div className="col-sm-9">
-                                    <input type="text" className="form-control" id="InputPassword" 
-                                     {...register("password", { required: "パスワードを入力してください。" })}
+                                    <input type="text" className="form-control" id="InputPassword"
+                                        {...register("password", { required: "パスワードを入力してください。" })}
                                     />
                                     {errors.password && <p style={{ color: "red" }}>{errors.password.message}</p>}
                                 </div>
@@ -87,20 +94,20 @@ const UpdateAdmin = () => {
                             <div className="form-group row mb-3">
                                 <label htmlFor="inputPasswordConfirm" className="col-sm-3 col-form-label">パスワード(確認)</label>
                                 <div className="col-sm-9">
-                                    <input type="text" className="form-control" id="InputPasswordConfirm" 
-                                     {...register("passwordConfirm", { 
-                                        required: "パスワード(確認)を入力してください。" ,
-                                        validate: {
-                                            sameAsConfirmation: value => value === watch('password') || 'パスワードとパスワード（確認用）が異なります。',
-                                        }
-                                     })}
+                                    <input type="text" className="form-control" id="InputPasswordConfirm"
+                                        {...register("passwordConfirm", {
+                                            required: "パスワード(確認)を入力してください。",
+                                            validate: {
+                                                sameAsConfirmation: value => value === watch('password') || 'パスワードとパスワード（確認用）が異なります。',
+                                            }
+                                        })}
                                     />
-                                     {errors.passwordConfirm && <p style={{ color: "red" }}>{errors.passwordConfirm.message}</p>}
+                                    {errors.passwordConfirm && <p style={{ color: "red" }}>{errors.passwordConfirm.message}</p>}
                                 </div>
                             </div>
                             <div className="text-center mt-5">
-                                <a href="manager_list.html" type="submit" className="btn btn-outline-danger" style={{ marginRight: '50px' }}>戻る</a>
-                                <button type="submit" className="btn btn-danger">登録</button>
+                                <Link to="/admin" type="submit" className="btn btn-outline-danger" style={{ "marginRight": "50px" }}>戻る</Link>
+                                <button type="submit" className="btn btn-danger">更新</button>
                             </div>
                         </form>
                     </div>

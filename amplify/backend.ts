@@ -357,7 +357,7 @@ adminDeletePath.addMethod("PUT", new LambdaIntegration(
 ));
 
 //update addmin
-const adminActivePath = userIdPath.addResource("active");
+const adminActivePath = userPath.addResource("active");
 adminActivePath.addMethod("PUT", new LambdaIntegration(
   backend.activeAdmin.resources.lambda
 ));
