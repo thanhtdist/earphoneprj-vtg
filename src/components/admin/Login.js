@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useNavigate } from "react-router-dom";
+//import { useNavigate } from "react-router-dom";
 import {
     loginAdmin
-} from '../../apis/api';
+} from '../../apis/admin';
 import Loading from '../Loading';
 import { messages } from '../../messages';
+import { useAuth } from "../admin/auth/AuthContext";
 
 const Login = () => {
-    const navigate = useNavigate();
+    const { login, logout, isAuthenticated } = useAuth();
+    //const navigate = useNavigate();
     const {
         register,
         handleSubmit,
@@ -32,8 +34,15 @@ const Login = () => {
             const loginAdminResponse = await loginAdmin(data);
             console.log("loginAdminResponse", loginAdminResponse);
             if (loginAdminResponse.statusCode === 200) {
-                // Redirect to the admin page
-                navigate("/admin/tour");
+                // Remove cookies if they exist
+                logout();
+                // Set new cookies with the new tokens
+                login(loginAdminResponse.data.accessToken, loginAdminResponse.data.refreshToken);
+                //console.log("login tesst", tesst);
+               // navigate("/admin/tour");
+                //window.location.href = "/admin/tour";
+
+                console.log("Login isAuthenticated", isAuthenticated);
             } else {
                 setError(messages.login.incorrectEmailPassword);
             }

@@ -1,29 +1,32 @@
 import React, { useEffect, useState } from 'react';
 import Sidebar from './Sidebar';
-import { getDetailAdmin, updateAdmin } from '../../apis/api';
+import { getDetailAdmin, updateAdmin } from '../../apis/admin';
 import { useSearchParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
+import Loading from '../Loading';
 
 const UpdateAdmin = () => {
     const [searchParams] = useSearchParams();
     const userId = searchParams.get("userId");
     const [admin, setAdmin] = useState({});
+    const [isLoading, setIsLoading] = useState(false);
     const {
         register,
         handleSubmit,
-        watch,
         reset,
+        watch,
         formState: { errors },
     } = useForm();
-    const onSubmit = (data) => {
+    const onSubmit = (data) => {       
         handleUpdateAdmin(data);
     };
 
     //function update infomation of admin
     const handleUpdateAdmin = async (data) => {
         try {
+            setIsLoading(true);
             const updateResponse = await updateAdmin(data);
             console.log("Call API update success:", updateResponse);
             toast.success(`User ${admin.userName} was updated successfully.`, {
@@ -31,6 +34,7 @@ const UpdateAdmin = () => {
                     window.location.href = "/admin"
                 },
             });
+            setIsLoading(false);
             setAdmin(updateResponse);
         } catch (error) {
             // console.error("Call API update false:", error);
@@ -52,7 +56,8 @@ const UpdateAdmin = () => {
     }, [userId]);
     useEffect(() => {
         if (admin) {
-            reset(admin);
+            const { password, ...rest } = admin; // Loại bỏ password
+            reset(rest);
         }
     }, [admin, reset]);
     return (
@@ -85,8 +90,8 @@ const UpdateAdmin = () => {
                             <div className="form-group row mb-3">
                                 <label htmlFor="inputPassword" className="col-sm-3 col-form-label">パスワード</label>
                                 <div className="col-sm-9">
-                                    <input type="text" className="form-control" id="InputPassword"
-                                        {...register("password", { required: "パスワードを入力してください。" })}
+                                    <input type="password" className="form-control" id="InputPassword"
+                                        {...register("password", )}
                                     />
                                     {errors.password && <p style={{ color: "red" }}>{errors.password.message}</p>}
                                 </div>
@@ -94,9 +99,9 @@ const UpdateAdmin = () => {
                             <div className="form-group row mb-3">
                                 <label htmlFor="inputPasswordConfirm" className="col-sm-3 col-form-label">パスワード(確認)</label>
                                 <div className="col-sm-9">
-                                    <input type="text" className="form-control" id="InputPasswordConfirm"
+                                    <input type="password" className="form-control" id="InputPasswordConfirm"
                                         {...register("passwordConfirm", {
-                                            required: "パスワード(確認)を入力してください。",
+                                            // required: "パスワード(確認)を入力してください。",
                                             validate: {
                                                 sameAsConfirmation: value => value === watch('password') || 'パスワードとパスワード（確認用）が異なります。',
                                             }
@@ -111,6 +116,7 @@ const UpdateAdmin = () => {
                             </div>
                         </form>
                     </div>
+                    {isLoading && <Loading />}
                 </main>
             </div>
 

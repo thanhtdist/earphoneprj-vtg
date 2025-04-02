@@ -22,7 +22,7 @@ import { addCloudWatchLogs } from './functions/add-cloud-watch-logs/resource';
 import { startMeetingTranscription } from './functions/start-meeting-transcription/resource';
 import { translateTextSpeech } from './functions/translate-text-speech/resource';
 import { createTour } from './functions/create-tour/resource';
-import { createUser } from './functions/create-user/resource';
+import { createAdmin } from './functions/create-admin/resource';
 import { getTour } from './functions/get-tour/resource';
 import { listTour } from './functions/list-tour/resource';
 import { updateTour } from './functions/update-tour/resource';
@@ -35,6 +35,7 @@ import { updateAdmin } from './functions/update-admin/resource';
 import { deleteAdmin } from './functions/delete-admin/resource';
 import { checkAuth } from './functions/check-auth/resource';
 import { activeAdmin } from './functions/active-admin/resource';
+import { refreshToken } from './functions/refresh-token/resource';
 /**
  * Define the backend resources 
  * - List lambda functions for audio voice (metting session) and chat(message session)
@@ -54,7 +55,6 @@ const backend = defineBackend({
   startMeetingTranscription, // start meeting transcription
   translateTextSpeech, // translate text to speech
   createTour, // create tour by the admin
-  createUser, // create user by the admin
   getTour, // get tour by tourID
   listTour, // list all tours
   updateTour, // update tour by the admin,
@@ -62,11 +62,13 @@ const backend = defineBackend({
   listAdmin,
   createBatchTour,
   getAdmin, // create batch tour by the admin
+  createAdmin, // create user by the admin
   updateAdmin, // update admin by the admin
   deleteAdmin,  // delete admin by the admin
   deleteTour, // delete tour by the admin
   checkAuth, // check auth
   activeAdmin, // active admin by the admin
+  refreshToken, // refresh token by the admin
 });
 
 /**
@@ -315,13 +317,19 @@ const userRestApi = new RestApi(apiStack, "UserVTGRestApi", {
 const userPath = userRestApi.root.addResource("users");
 // add POST method to create /users with createTour Lambda integration
 userPath.addMethod("POST", new LambdaIntegration(
-  backend.createUser.resources.lambda
+  backend.createAdmin.resources.lambda
 ));
 
 const userAuthPath = userPath.addResource("auth");
 // add GET method to /users/{login} with getUser Lambda integration
 userAuthPath.addMethod("GET", new LambdaIntegration(
   backend.checkAuth.resources.lambda
+));
+
+const userRefreshTokenPath = userPath.addResource("refreshToken");
+// add GET method to /users/{login} with getUser Lambda integration
+userRefreshTokenPath.addMethod("GET", new LambdaIntegration(
+  backend.refreshToken.resources.lambda
 ));
 
 // add GET method to login by email

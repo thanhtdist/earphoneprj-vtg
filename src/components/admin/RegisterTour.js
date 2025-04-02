@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import {
     createTour,
-    createMeeting,
+    //createMeeting,
     // createAppInstanceUsers,
     // createChannel
-} from '../../apis/api';
+} from '../../apis/admin';
 import '../../styles/Admin.css';
 import Sidebar from './Sidebar';
 import { useForm } from "react-hook-form";
 import { Link } from 'react-router-dom';
-import { createMeetingAndChannel } from '../../utils/MeetingUtils';
+//import { createMeetingAndChannel } from '../../utils/MeetingUtils';
 import { toast } from "react-toastify";
 import Loading from '../Loading';
 
@@ -34,9 +34,9 @@ const RegisterTour = () => {
             // console.log('Meeting and channel created:', response);
             // data.meetingId = response.meetingId;
             // data.channelId = response.channelId;
-            const meeting = await createMeeting();
-            data.meetingId = meeting.MeetingId;
-            console.log('Tour data:', data);
+            // const meeting = await createMeeting();
+            // data.meetingId = meeting.MeetingId;
+            // console.log('Tour data:', data);
             // Create the tour with meetingId and channelId
             const createTourResponse = await createTour(data);
             console.log('Tour created:', createTourResponse);

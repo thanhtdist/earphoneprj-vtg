@@ -13,7 +13,8 @@ import RegisterAdmin from './components/admin/RegisterAdmin';
 import ListAdmin from './components/admin/ListAdmin';
 import UpdateAdmin from './components/admin/UpdateAdmin';
 import Login from './components/admin/Login';
-//import ProtectedRoute from './components/admin/auth/ProtectedRoute';
+import ProtectedRoute from './components/admin/auth/ProtectedRoute';
+import AdminLayout from "./components/admin/AdminLayout";
 import { AuthProvider } from './components/admin/auth/AuthContext';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -27,21 +28,38 @@ function App() {
             {/* <SettingMenu></SettingMenu> */}
             <Routes>
               {/* Admin Router */}
-              <Route path="/admin" element={<ListAdmin />} />
+              {/* <Route path="/admin" element={<ProtectedRoute element={<ListAdmin />} />} /> */}
+              {/* <Route path="/admin" element={<ListAdmin />} /> */}
               <Route path="/admin/login" element={<Login />} />
               <Route path="/admin/register" element={<RegisterAdmin />} />
               {/* <Route path="/update_admin" element={<ProtectedRoute element={<UpdateAdmin />} />} /> */}
               <Route path="/admin/update" element={<UpdateAdmin />} />
               {/* Tour Router */}
-              {/* <Route path="/admin/tour_list" element={<ProtectedRoute element={<ListTour />} />} /> */}
-              <Route path="/admin/tour" element={<ListTour />} />
-              <Route path="/admin/tour/register" element={<RegisterTour />} />
-              <Route path="/admin/tour/update/" element={<UpdateTour />} />
+              {/* <Route path="/admin/tour" element={<ProtectedRoute element={<ListTour />} />} /> */}
+              {/* <Route path="/admin/tour" element={<ListTour />} /> */}
+              {/* <Route path="/admin/tour" element={<ListTour />} /> */}
+              <Route path="/admin/tour/register" element={<ProtectedRoute element={<RegisterTour />} />} />
+              {/* <Route path="/admin/tour/register" element={<RegisterTour />} /> */}
+              {/* <Route path="/admin/tour/update/" element={<UpdateTour />} /> */}
               {/* Puplic router */}
               <Route path="/" element={<StartMainGuide />} />
               <Route path="/guide" element={<StartLiveSession />} />
               <Route path="/sub-guide" element={<LiveSubSpeaker />} />
               <Route path="/viewer" element={<LiveViewer />} />
+              {/* Wrap these routes with AdminLayout */}
+              <Route element={<AdminLayout />}>
+                <Route path="/admin" element={<ListAdmin />} />
+                <Route path="/admin/tour" element={<ListTour />} />
+                <Route path="/admin/tour/update" element={<UpdateTour />} />
+              </Route>
+
+              {/* <Route element={<AdminLayout />}>
+                <Route path="/admin" element={<ProtectedRoute element={<ListAdmin />} />} />
+                <Route path="/admin/tour" element={<ProtectedRoute element={<ListTour />} />} />
+                <Route path="/admin/tour/updatex" element={<UpdateTour />} />
+              </Route> */}
+
+
             </Routes>
           </div>
         </Router>

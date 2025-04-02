@@ -1,7 +1,7 @@
 import type { APIGatewayProxyHandler } from 'aws-lambda';
 import AWS from 'aws-sdk';
 import { Config } from '../config';
-
+import { verifyAuth } from '../auth/verifyAuth'; // Import auth function
 /**
  * This function retrieves a user by userId from AWS DynamoDB.
  * @param event - Contains the path parameters with userId.
@@ -12,9 +12,16 @@ export const handler: APIGatewayProxyHandler = async (event) => {
   const dynamoDB = new AWS.DynamoDB.DocumentClient({ region: Config.region });
 
   try {
+
+    // Authenticate the user
+    const authHeader = event.headers?.Authorization || '';
+    console.log('Auth Header: ', authHeader);
+    const user = await verifyAuth(authHeader);
+    console.log('Authenticated User:', user);
+
     // Get userId from path parameters
     const userId = event.pathParameters ? event.pathParameters.UserID : null;
-    
+
     if (!userId) {
       console.error('Invalid input: Missing userId.');
       return {

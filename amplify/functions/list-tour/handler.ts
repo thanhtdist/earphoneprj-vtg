@@ -1,6 +1,7 @@
 import type { APIGatewayProxyHandler } from 'aws-lambda';
 import AWS from 'aws-sdk';
 import { Config } from '../config';
+import { verifyAuth } from '../auth/verifyAuth';
 
 /**
  * This function retrieves a list of tours from AWS DynamoDB with pagination.
@@ -34,6 +35,12 @@ export const handler: APIGatewayProxyHandler = async (event) => {
 
   try {
     console.log('Retrieving list of tours');
+
+    // Authenticate the user
+    const authHeader = event.headers?.Authorization || '';
+    console.log('Auth Header: ', authHeader);
+    const user = await verifyAuth(authHeader);
+    console.log('Authenticated User:', user);
 
     // Scan DynamoDB for Tours with pagination and search query
     let result;
@@ -76,7 +83,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     if (!result.Items || result.Items.length === 0) {
       console.error('No tours found');
       return {
-        statusCode: 404,
+        statusCode: 200,
         //body: JSON.stringify({ error: 'No tours found.' }),
         body: JSON.stringify({
           data: {

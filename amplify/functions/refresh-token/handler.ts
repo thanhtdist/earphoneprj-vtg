@@ -1,47 +1,44 @@
 import type { APIGatewayProxyHandler } from 'aws-lambda';
 import AWS from 'aws-sdk';
 import { Config } from '../config';
-// import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
 /**
- * This function retrieves a user by email from AWS DynamoDB and verifies the password.
- * @param event - Contains the body with email and password.
- * @returns Response with login success or error.
+ * This function handles token refresh logic.
+ * @param event - Contains the body with the refresh token.
+ * @returns Response with a new access token or an error.
  */
 export const handler: APIGatewayProxyHandler = async (event) => {
-  // Initialize DynamoDB client
   const dynamoDB = new AWS.DynamoDB.DocumentClient({ region: Config.region });
+
   try {
     const rawToken = event.headers.Authorization || '';
-    const token = rawToken.replace(/^Bearer\s+/, '');
-    console.log('Token (cleaned): ', token);
-    // Check if token is provided
-    if (!token) {
+    const refreshToken = rawToken.replace(/^Bearer\s+/, '');
+    console.log('Refresh Token (cleaned): ', refreshToken);
+
+    if (!refreshToken) {
       return {
         statusCode: 401,
-        body: JSON.stringify({ message: 'Missing token' }),
+        body: JSON.stringify({ message: 'Missing refresh token' }),
         headers: Config.headers,
       };
     }
 
-    // The secret key should be the same as the one used to sign the token
-    console.log('Verifying token...', Config.jwtSecret);
-    // Verify token and check expiration
+    // Decode the refresh token with verification to extract userId
     let decoded: any;
     try {
-      decoded = jwt.verify(token, Config.jwtSecret);
+      decoded = jwt.verify(refreshToken, Config.refreshSecret);
+      console.log('Decoded refresh token: ', decoded);
     } catch (error) {
       return {
         statusCode: 401,
-        body: JSON.stringify({ message: 'Invalid or expired token' }),
+        body: JSON.stringify({ message: 'Invalid refresh token' }),
         headers: Config.headers,
       };
     }
-    // Check if userId exists in DB
+
     const userId = decoded?.userId;
-    console.log('userId: ', userId);
-    // Check if userId is present in the token payload
+    console.log('Extracted userId: ', userId);
     if (!userId) {
       return {
         statusCode: 401,
@@ -50,20 +47,19 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       };
     }
 
+    // Fetch user from DynamoDB
     const result = await dynamoDB.query({
       TableName: "Users",
       KeyConditionExpression: "userId = :userId",
       FilterExpression: "deleteFlag = :deleteFlag",
       ExpressionAttributeValues: {
         ":userId": userId,
-        ":deleteFlag": 0
-      }
+        ":deleteFlag": 0,
+      },
     }).promise();
-
-    console.log('DynamoDB result: ', result);
+    console.log('DynamoDB query result: ', result);
 
     if (!result.Items || result.Items.length === 0) {
-      console.error('User not found: ', { userId });
       return {
         statusCode: 404,
         body: JSON.stringify({ error: 'User not found.' }),
@@ -71,25 +67,26 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       };
     }
 
-    // Return user info
+    // Assuming the first item is the user we want
+    const user = result.Items[0];
+
+    // Generate a new access token
+    const newAccessToken = jwt.sign({ userId: user.userId }, Config.jwtSecret, { expiresIn: '5m' });
+    const newRefreshToken = jwt.sign({ userId: user.userId }, Config.refreshSecret, { expiresIn: '7d' });
+
     return {
       statusCode: 200,
       body: JSON.stringify({
         data: {
-          message: "Check auth retrieved successfully",
-          data: {
-            userId: result.Items[0].userId,
-            userName: result.Items[0].userName,
-            email: result.Items[0].email,
-          }
-        }
-
+          message: "Token refreshed successfully",
+          accessToken: newAccessToken,
+          refreshToken: newRefreshToken,
+        },
       }),
       headers: Config.headers,
     };
   } catch (error: any) {
-    console.error('Failed to check auth: ', { error, event });
-    // Return error response
+    console.error('Failed to refresh token: ', { error, event });
     return {
       statusCode: 500,
       body: JSON.stringify({ error: error.message || 'Internal Server Error' }),

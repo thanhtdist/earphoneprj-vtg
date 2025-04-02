@@ -97,7 +97,7 @@ body{
 }
  
 .sidebar .nav-link {
-  color: #333;
+  /* color: #333; */
 }
  
 .sidebar .nav-link.active {
@@ -199,3 +199,11 @@ button.remove{
     z-index: -1;  
     border-right: 1px solid #dee2e6;
 }
+.email-admin{
+    text-align: left;
+}
+.disabled-link {
+    pointer-events: none;
+    opacity: 0.5;
+    cursor: not-allowed;
+  }

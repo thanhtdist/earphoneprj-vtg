@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {
   getTour,
   updateTour
-} from '../../apis/api';
+} from '../../apis/admin';
 import '../../styles/Admin.css';
 import Sidebar from './Sidebar';
 import GenerateQRCode from './GenerateQRCode';
@@ -32,7 +32,7 @@ const UpdateTour = () => {
       try {
         setIsLoading(true);
         const getTourDetailResponse = await getTour(tourId);
-        console.log(getTourDetailResponse);
+        console.log("getTourDetailResponse", getTourDetailResponse);
         setTour(getTourDetailResponse);
       } catch (error) {
         console.error('Error retrieving tour details:', error);
@@ -92,6 +92,38 @@ const UpdateTour = () => {
         <h1>ツアー登録</h1>
         <div className="col-8 mx-auto my-5 p-5 bg-white">
           <form onSubmit={handleSubmit(onSubmit)}>
+            {/* <div className="form-group row mb-3">
+              <label htmlFor="tourStatus" className="col-sm-3 col-form-label">現在のステータス: </label>
+              <div className="col-sm-9">
+                <div className="form-check">
+                  <input
+                    className="form-check-input"
+                    type="radio"
+                    id="statusTest"
+                    value="test"
+                    {...register("tourTestStatus", { required: "ステータスを選択してください。" })}
+                    defaultChecked={tour.tourTestStatus === "test"}
+                  />
+                  <label className="form-check-label" htmlFor="statusTest">
+                  テスト稼働
+                  </label>
+                </div>
+                <div className="form-check">
+                  <input
+                    className="form-check-input"
+                    type="radio"
+                    id="statusProduction"
+                    value="production"
+                    {...register("tourTestStatus", { required: "ステータスを選択してください。" })}
+                    defaultChecked={tour.tourTestStatus === "production"}
+                  />
+                  <label className="form-check-label" htmlFor="statusProduction">
+                  本番稼働
+                  </label>
+                </div>
+                {errors.tourTestStatus && <p style={{ color: "red" }}>{errors.tourTestStatus.message}</p>}
+              </div>
+            </div> */}
             <div className="form-group row mb-3">
               <label htmlFor="chatRestriction" className="col-sm-3 col-form-label">チャットの制限</label>
               <div className="col-sm-9">

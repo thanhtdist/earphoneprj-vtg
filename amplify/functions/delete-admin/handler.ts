@@ -1,7 +1,7 @@
 import type { APIGatewayProxyHandler } from 'aws-lambda';
 import AWS from 'aws-sdk';
 import { Config } from '../config';
-
+import { verifyAuth } from '../auth/verifyAuth'; // Import auth function
 /**
  * This function updates an existing User in AWS DynamoDB.
  * @param event - Contains the request body with User details.
@@ -12,14 +12,20 @@ export const handler: APIGatewayProxyHandler = async (event) => {
   const dynamoDB = new AWS.DynamoDB.DocumentClient({ region: Config.region });
 
   try {
+    // Authenticate the user
+    const authHeader = event.headers?.Authorization || '';
+    console.log('Auth Header: ', authHeader);
+    const user = await verifyAuth(authHeader);
+    console.log('Authenticated User:', user);
+
     // Parse body from API Gateway event
     const userId = event.pathParameters ? event.pathParameters.UserID : null;
 
-    console.log('Updating User with userId: ', userId, );
+    console.log('Updating User with userId: ', userId,);
 
     // Input validation
-    if (!userId ) {
-      console.error('Invalid input: Missing required fields.', { userId});
+    if (!userId) {
+      console.error('Invalid input: Missing required fields.', { userId });
       return {
         statusCode: 400,
         body: JSON.stringify({ error: 'Invalid input: userId are required.' }),
@@ -30,13 +36,15 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     // Update the User item in DynamoDB
     const updateExpression = `
       set deleteFlag = :deleteFlag,
-      updateDate = :updateDate        
+      updatedBy = :updatedBy,
+      updatedAt = :updatedAt       
     `;
 
     const expressionAttributeValues = {
       ':deleteFlag': 1,
-      ':updateDate': new Date().toISOString()
-     
+      ':updatedBy': user.userId, // Replace with actual user who is updating
+      ':updatedAt': new Date().toISOString()
+
     };
 
     await dynamoDB.update({

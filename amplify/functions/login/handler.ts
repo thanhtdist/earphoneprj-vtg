@@ -2,6 +2,7 @@ import type { APIGatewayProxyHandler } from 'aws-lambda';
 import AWS from 'aws-sdk';
 import { Config } from '../config';
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 
 /**
  * This function retrieves a user by email from AWS DynamoDB and verifies the password.
@@ -60,24 +61,30 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       };
     }
 
-    const cookie = `userInfo=${encodeURIComponent(JSON.stringify({
-      userId: user.userId,
-      username: user.username,
-      role: user.role
-    }))}; Path=/; HttpOnly; Secure; SameSite=None`;
+    // const cookie = `userInfo=${encodeURIComponent(JSON.stringify({
+    //   userId: user.userId,
+    //   username: user.username,
+    //   role: user.role
+    // }))}; Path=/; HttpOnly; Secure; SameSite=None`;
+    // Generate tokens
+    const accessToken = jwt.sign({ userId: user.userId }, Config.jwtSecret, { expiresIn: '5m' });
+    const refreshToken = jwt.sign({ userId: user.userId }, Config.refreshSecret, { expiresIn: '7d' });
 
     // Return success response
     return {
       statusCode: 200,
       body: JSON.stringify({
         message: "Login successfully",
-        data: user,
+        data: {
+          accessToken,
+          refreshToken,
+        },
       }),
-      //headers: Config.headers,
-      headers: {
-        ...Config.headers,
-        'Set-Cookie': cookie,
-      },
+      headers: Config.headers,
+      // headers: {
+      //   ...Config.headers,
+      //   'Set-Cookie': cookie,
+      // },
     };
   } catch (error: any) {
     console.error('Failed to Login: ', { error, event });

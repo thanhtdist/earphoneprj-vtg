@@ -1,6 +1,7 @@
 import type { APIGatewayProxyHandler } from 'aws-lambda';
 import AWS from 'aws-sdk';
 import { Config } from '../config';
+import { verifyAuth } from '../auth/verifyAuth'; // Import auth function
 
 /**
  * This function retrieves a list of Users from AWS DynamoDB with pagination and search functionality.
@@ -29,6 +30,13 @@ export const handler: APIGatewayProxyHandler = async (event) => {
   }
 
   try {
+
+    // Authenticate the user
+    const authHeader = event.headers?.Authorization || '';
+    console.log('Auth Header: ', authHeader);
+    const user = await verifyAuth(authHeader);
+    console.log('Authenticated User:', user);
+
     console.log('Retrieving list of Users');
 
     // Scan DynamoDB for Users with pagination and search query
@@ -40,7 +48,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
         ExclusiveStartKey,
         FilterExpression: 'deleteFlag = :deleteFlag AND contains(#userName, :query)',
         ExpressionAttributeNames: {
-          '#userName': 'userName', 
+          '#userName': 'userName',
         },
         ExpressionAttributeValues: {
           ':deleteFlag': 0,

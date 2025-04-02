@@ -1,7 +1,7 @@
 import React from 'react';
 import {
     createUser
-} from '../../apis/api';
+} from '../../apis/admin';
 import { useForm } from 'react-hook-form';
 import Sidebar from './Sidebar';
 

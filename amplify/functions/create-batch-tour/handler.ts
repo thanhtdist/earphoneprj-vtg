@@ -2,6 +2,7 @@ import type { APIGatewayProxyHandler } from 'aws-lambda';
 import AWS from 'aws-sdk';
 import { Config } from '../config';
 import { v4 as uuid } from 'uuid';
+import { verifyAuth } from '../auth/verifyAuth'; // Import auth function
 
 /**
  * This function creates new tours and stores them in AWS DynamoDB.
@@ -13,6 +14,12 @@ export const handler: APIGatewayProxyHandler = async (event) => {
   const dynamoDB = new AWS.DynamoDB.DocumentClient({ region: Config.region });
 
   try {
+    // Authenticate the user
+    const authHeader = event.headers?.Authorization || '';
+    console.log('Auth Header: ', authHeader);
+    const user = await verifyAuth(authHeader);
+    console.log('Authenticated User:', user);
+
     // Parse body from API Gateway event
     const tours = JSON.parse(event.body || '[]');
 
@@ -80,9 +87,9 @@ export const handler: APIGatewayProxyHandler = async (event) => {
             channelId,
             chatRestriction,
             createdAt: new Date().toISOString(),
-            createdBy: 'admin',
-            updatedAt: new Date().toISOString(),
-            updatedBy: 'admin',
+            createdBy: user.userId, // Replace with actual user who is creating
+            updatedAt: '',
+            updatedBy: '',
             deleteFlag: 0,
           }
         }

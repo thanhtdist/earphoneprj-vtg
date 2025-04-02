@@ -3,7 +3,7 @@ import {
     listTours,
     createBatchTour,
     deleteTour
-} from '../../apis/api';
+} from '../../apis/admin';
 import { useEffect } from 'react';
 import Sidebar from './Sidebar';
 import { Link } from 'react-router-dom';
@@ -13,8 +13,11 @@ import ConfirmModal from '../popup/ConfirmModal';
 import { toast } from "react-toastify";
 import Loading from '../Loading';
 import ReactPaginate from 'react-paginate';
+import { useAuth } from "../admin/auth/AuthContext";
 
 const ListTour = () => {
+    const { user } = useAuth();
+    console.log("ListTour user", user);
     const fileInputRef = useRef(null);
     const [isLoading, setIsLoading] = useState(false);
     const [tours, setTours] = useState([]);
@@ -37,7 +40,7 @@ const ListTour = () => {
             pageSize: 10,
             query: data
         });
-        console.log(listoursResponse);
+        console.log("listoursResponse", listoursResponse);
         setTours(listoursResponse.data);
         setTotalTours(listoursResponse.count);
     };

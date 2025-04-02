@@ -1,6 +1,7 @@
 import type { APIGatewayProxyHandler } from 'aws-lambda';
 import AWS from 'aws-sdk';
 import { Config } from '../config';
+import { verifyAuth } from '../auth/verifyAuth'; // Import auth function
 
 /**
  * This function updates an existing tour in AWS DynamoDB.
@@ -12,6 +13,13 @@ export const handler: APIGatewayProxyHandler = async (event) => {
   const dynamoDB = new AWS.DynamoDB.DocumentClient({ region: Config.region });
 
   try {
+
+    // Authenticate the user
+    const authHeader = event.headers?.Authorization || '';
+    console.log('Auth Header: ', authHeader);
+    const user = await verifyAuth(authHeader);
+    console.log('Authenticated User:', user);
+
     // Get tourId from path parameters
     const tourId = event.pathParameters ? event.pathParameters.TourID : null;
 
@@ -28,9 +36,14 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     }
 
     // Update the tour item in DynamoDB
-    const updateExpression = 'set deleteFlag = :deleteFlag';
+    const updateExpression = `
+      set deleteFlag = :deleteFlag,
+      updatedBy = :updatedBy,
+      updatedAt = :updatedAt   `;
     const expressionAttributeValues = {
-      ':deleteFlag': 1
+      ':deleteFlag': 1,
+      ':updatedBy': user.userId, // Replace with actual user who is updating
+      ':updatedAt': new Date().toISOString()
     };
 
     await dynamoDB.update({

@@ -1,6 +1,7 @@
 import type { APIGatewayProxyHandler } from 'aws-lambda';
 import AWS from 'aws-sdk';
 import { Config } from '../config';
+import { verifyAuth } from '../auth/verifyAuth'; // Import auth function
 
 /**
  * This function retrieves a tour by tourId from AWS DynamoDB.
@@ -12,6 +13,13 @@ export const handler: APIGatewayProxyHandler = async (event) => {
   const dynamoDB = new AWS.DynamoDB.DocumentClient({ region: Config.region });
 
   try {
+
+    // Authenticate the user
+    const authHeader = event.headers?.Authorization || '';
+    console.log('Auth Header: ', authHeader);
+    const user = await verifyAuth(authHeader);
+    console.log('Authenticated User:', user);
+
     // Get tourId from path parameters
     const tourId = event.pathParameters ? event.pathParameters.TourID : null;
 

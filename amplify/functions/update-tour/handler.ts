@@ -1,6 +1,7 @@
 import type { APIGatewayProxyHandler } from 'aws-lambda';
 import AWS from 'aws-sdk';
 import { Config } from '../config';
+import { verifyAuth } from '../auth/verifyAuth'; // Import auth function
 
 /**
  * This function updates an existing tour in AWS DynamoDB.
@@ -12,12 +13,18 @@ export const handler: APIGatewayProxyHandler = async (event) => {
   const dynamoDB = new AWS.DynamoDB.DocumentClient({ region: Config.region });
 
   try {
+
+    // Authenticate the user
+    const authHeader = event.headers?.Authorization || '';
+    console.log('Auth Header: ', authHeader);
+    const user = await verifyAuth(authHeader);
+    console.log('Authenticated User:', user);
     // Parse body from API Gateway event
-    const { 
+    const {
       tourId,
-      tourNumber, 
-      tourName, 
-      departureDate, 
+      tourNumber,
+      tourName,
+      departureDate,
       returnDate,
       processingNumber,
       acceptanceDate,
@@ -32,7 +39,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       emailCustomer,
       phoneNumberCustomer,
       otherRemarks
-     } = JSON.parse(event.body || '{}');
+    } = JSON.parse(event.body || '{}');
 
     console.log('Updating tour with tourId: ', tourId, 'tourNumber: ', tourNumber, 'tourName: ', tourName);
 
@@ -64,7 +71,9 @@ export const handler: APIGatewayProxyHandler = async (event) => {
           qrCodeDestination = :qrCodeDestination,
           emailCustomer = :emailCustomer,
           phoneNumberCustomer = :phoneNumberCustomer,
-          otherRemarks = :otherRemarks
+          otherRemarks = :otherRemarks,
+          updatedBy = :updatedBy,
+          updatedAt = :updatedAt
     `;
 
     const expressionAttributeValues = {
@@ -84,7 +93,9 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       ':qrCodeDestination': qrCodeDestination,
       ':emailCustomer': emailCustomer,
       ':phoneNumberCustomer': phoneNumberCustomer,
-      ':otherRemarks': otherRemarks
+      ':otherRemarks': otherRemarks,
+      ':updatedBy': user.userId, // Replace with actual user who is updating
+      ':updatedAt': new Date().toISOString()
     };
 
     await dynamoDB.update({
