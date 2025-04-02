@@ -13,7 +13,7 @@ import RegisterAdmin from './components/admin/RegisterAdmin';
 import ListAdmin from './components/admin/ListAdmin';
 import UpdateAdmin from './components/admin/UpdateAdmin';
 import Login from './components/admin/Login';
-import ProtectedRoute from './components/admin/auth/ProtectedRoute';
+//import ProtectedRoute from './components/admin/auth/ProtectedRoute';
 import AdminLayout from "./components/admin/AdminLayout";
 import { AuthProvider } from './components/admin/auth/AuthContext';
 import { ToastContainer } from 'react-toastify';
