@@ -60,7 +60,9 @@ const AdminLayout = () => {
                 className="flex justify-between items-center bg-gray-800 text-white p-4"
                 style={{ float: "right" }}
             >
-                <div className="relative">
+                <div className="relative" 
+                  onMouseLeave={() => setShowUserMenu(false)}
+                >
                     <button
                         onClick={() => setShowUserMenu(!showUserMenu)}
                         className="flex items-center space-x-2 border-none bg-transparent focus:outline-none"

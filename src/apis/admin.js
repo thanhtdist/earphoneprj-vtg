@@ -242,7 +242,6 @@ export async function getDetailAdmin(userId) {
     const restOperation = await getWithAuth({
       apiName: 'UserVTGRestApi', // The name of the API defined in backend.ts
       path: 'users/' + userId, // endpoint defined in backend.ts 
-      withCredentials: true
     });
 
     const { body } = await restOperation.response;
@@ -319,7 +318,6 @@ export async function loginAdmin(data) {
           password: data.password,
         },
       },
-      withCredentials: true, // Ensures the HttpOnly cookie is sent
     });
 
     const { statusCode, body } = await restOperation.response;
