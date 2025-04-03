@@ -10,8 +10,11 @@
 }
 
 .btn-confirm {
-    background-color: red;
-    border: red;
+    background-color: #C60226;
+    border: #C60226;
     border-radius: 25px;
-    color: white;
+    color: #FAFAFA;
+    height: 40px;
+    font-size: 18px;
+    font-weight: bold;
 }

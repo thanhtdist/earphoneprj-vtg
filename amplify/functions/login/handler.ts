@@ -67,7 +67,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     //   role: user.role
     // }))}; Path=/; HttpOnly; Secure; SameSite=None`;
     // Generate tokens
-    const accessToken = jwt.sign({ userId: user.userId }, Config.jwtSecret, { expiresIn: '5m' });
+    const accessToken = jwt.sign({ userId: user.userId }, Config.jwtSecret, { expiresIn: '15m' });
     const refreshToken = jwt.sign({ userId: user.userId }, Config.refreshSecret, { expiresIn: '7d' });
 
     // Return success response

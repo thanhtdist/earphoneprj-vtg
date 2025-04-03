@@ -11,14 +11,14 @@ const StartMainGuide = () => {
       };
     const navigate = useNavigate();
     const handleClick = () => {
-        navigate('/guide', { state: { chatSetting:chatSetting, replace: true } });
+        navigate(`/guide?chatSetting=${chatSetting}`);
     }
     return (
         <>
         <Header/>
             <div className='chat-setting-container'>
                 <div>
-                    <p style={{textAlign:'center', fontWeight:'700'}}>{t('chatSettingLbl')}</p>
+                    <p style={{textAlign:'center', fontWeight:'700',fontSize:'20px'}}>{t('chatSettingLbl')}</p>
                 </div>
                 <div>
                     <select className='selectFile' value={chatSetting} onChange={handleChatSettingChange}>

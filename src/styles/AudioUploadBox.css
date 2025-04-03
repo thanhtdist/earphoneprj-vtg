@@ -20,7 +20,7 @@
     height: 100%;
     width: 60%;
     cursor: pointer;
-    color: red;
+    color: #C60226;
     border: 2px dashed #ccc;
     padding: 5px;
   }
@@ -72,18 +72,24 @@
 
 /* Error Message */
 .error-message {
-  color: red;
+  color: #C60226;
   margin-top: 8px;
 }
 .box-start-live-session{
     width: 100%;
     border: 1px solid outset;
     box-shadow: 0 6px 5px rgba(0, 0, 0, 0.2);
-    border-radius: 10px;
-    margin-bottom: 10px;
+    border-radius: 15px;
+    margin-bottom: 10px;  
+    background-color:#FAFAFA;
 }
 .selectFile{
   border-radius: 25px;
-  border: 1px solid red;
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+  border: 1px solid #C60226;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0);
+  height:47px;
+  background-color: #FAFAFA;
+  padding: 12px 15px;
+  /* font-weight: bold; */
+  justify-self: center;
 }

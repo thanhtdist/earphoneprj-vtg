@@ -50,7 +50,7 @@ function StartLiveSession() {
   console.log('i18n', i18n);
   console.log('t', t);
   // Use navigate to add params for meeting and channel
- const navigate = useNavigate();
+  const navigate = useNavigate();
 
   // States to manage the meeting session
   const [channelArn, setChannelArn] = useState('');
@@ -74,9 +74,10 @@ function StartLiveSession() {
   const transcriptListRef = useRef([]);
   //get value chatSetting from ChatSetting.js
   const location = useLocation();
-  const { state } = location;
-  const valueChatSetting = state?.chatSetting
-
+  // const { state } = location;
+  // const valueChatSetting = state?.chatSetting
+  const queryParams = new URLSearchParams(location.search);
+  const valueChatSetting = queryParams.get('chatSetting');
   const [isMuted, setIsMuted] = useState(true);
   const [isPlay, setIsPlay] = useState(false);
   const audioRef = useRef(null);
@@ -251,7 +252,7 @@ function StartLiveSession() {
 
   useEffect(() => {
     if (meeting && channelID) {
-      navigate(`/guide?meetingId=${meeting.MeetingId}&channelId=${channelID}`, { state: { chatSetting:valueChatSetting } });
+      navigate(`/guide?chatSetting=${valueChatSetting}&meetingId=${meeting.MeetingId}&channelId=${channelID}`);
     }
   }, [meeting, channelID, valueChatSetting, navigate]);
 
@@ -337,7 +338,7 @@ function StartLiveSession() {
 
       // Check if there are no devices or if any device label is empty
       if (devices.length === 0 || devices.some(device => !device.label.trim())) {
-      //if (devices.length === 0) {
+        //if (devices.length === 0) {
         console.log('No audio input devices found');
         // Display a message after 5 seconds
         setTimeout(() => {
@@ -455,8 +456,10 @@ function StartLiveSession() {
           <div className='time'>
             <p >2025/01/01</p>
           </div>
+          <div className='nameTour'>
+            <span>浅草寺ツアー</span>
+          </div>
 
-          <h3>浅草寺ツアー</h3>
         </div>
         <div className='audio'>
           <div className='playButton' onClick={handlePlay}>
@@ -497,7 +500,7 @@ function StartLiveSession() {
             ) : (
               <>
                 <div className='box-start-live-session'>
-                  <h3>{t('microSelectionLbl')}</h3>
+                  <h3 className='title-box'>{t('microSelectionLbl')}</h3>
                   {(audioInputDevices && audioInputDevices.length > 0) && (
                     <select className='selectFile' value={selectedAudioInput} onChange={(e) => setSelectedAudioInput(e.target.value)}>
                       {audioInputDevices.map((device) => (

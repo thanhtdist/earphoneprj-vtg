@@ -71,7 +71,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     const user = result.Items[0];
 
     // Generate a new access token
-    const newAccessToken = jwt.sign({ userId: user.userId }, Config.jwtSecret, { expiresIn: '5m' });
+    const newAccessToken = jwt.sign({ userId: user.userId }, Config.jwtSecret, { expiresIn: '15m' });
     const newRefreshToken = jwt.sign({ userId: user.userId }, Config.refreshSecret, { expiresIn: '7d' });
 
     return {

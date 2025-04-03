@@ -1,5 +1,5 @@
 // This file contains the API functions to interact with the backend services
-import { get, post } from 'aws-amplify/api';
+import { get, post, put } from 'aws-amplify/api';
 import Config from '../utils/config';
 
 const { v4: uuid } = require('uuid');
@@ -318,5 +318,51 @@ export async function translateTextSpeech(inputText, sourceLanguageCode, targetL
     return response.data;
   } catch (error) {
     console.log('POST call translateTextSpeech failed: ', JSON.parse(error.response.body));
+  }
+}
+
+/**
+ * Get a meetingId by tourId
+ * @param {string} tourId - The ID of the tour.
+ * @returns {Promise<any>} The response data from the API call.
+ * @throws {Error} Logs the error details if the POST call fails.
+ */
+export async function getMeetingByTourId(tourId) {
+  try {
+    const restOperation = get({
+      // The name of the API defined in backend.ts
+      path: `meetings/tours/${encodeURIComponent(tourId)}`, // endpoint defined in backend.ts, tourId is dynamically passed
+    });
+    const { body } = await restOperation.response;
+    const response = await body.json();
+    return response.data;
+  } catch (error) {
+    // const errorResponse = JSON.parse(error.response.body);
+    // console.log('GET call getMeeting failed: ', errorResponse);
+    // throw new Error('GET call getMeeting failed: ', JSON.parse(error.response.body));
+    throw error.response.body;
+  }
+}
+
+/**
+ * Update a meetingId by tourId
+ * @param {string} tourId - The ID of the tour.
+ * @returns {Promise<any>} The response data from the API call.
+ * @throws {Error} Logs the error details if the POST call fails.
+ */
+export async function updateMeetingByTourId(tourId) {
+  try {
+    const restOperation = put({
+      // The name of the API defined in backend.ts
+      path: `meetings/tours/${encodeURIComponent(tourId)}`, // endpoint defined in backend.ts, tourId is dynamically passed
+    });
+    const { body } = await restOperation.response;
+    const response = await body.json();
+    return response.data;
+  } catch (error) {
+    // const errorResponse = JSON.parse(error.response.body);
+    // console.log('GET call getMeeting failed: ', errorResponse);
+    // throw new Error('GET call getMeeting failed: ', JSON.parse(error.response.body));
+    throw error.response.body;
   }
 }

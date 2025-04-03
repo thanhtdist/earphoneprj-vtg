@@ -36,7 +36,7 @@ export const AuthProvider = ({ children }) => {
   const login = useCallback((accessToken, refreshToken) => {
     Cookies.set("accessToken", accessToken, {
       //expires: 15 / (60 * 24), // 15 minutes
-      expires: 5 / (60 * 24), // 15 minutes
+      expires: 15 / (60 * 24), // 15 minutes
       // secure: true,
       // sameSite: "strict",
       // path: "/"

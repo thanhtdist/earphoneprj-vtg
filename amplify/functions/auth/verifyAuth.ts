@@ -18,12 +18,13 @@ export const verifyAuth = async (authHeader?: string) => {
   try {
     decoded = jwt.verify(token, Config.jwtSecret);
   } catch (error) {
-    throw new Error('Invalid or expired token');
+    //throw new Error('Invalid or expired token');
+    throw Object.assign(new Error('Invalid or expired token'), { statusCode: 401 });
   }
 
   const userId = decoded?.userId;
   if (!userId) {
-    throw new Error('Invalid token payload');
+    throw Object.assign(new Error('Invalid token payload'), { statusCode: 401 });
   }
 
   // Initialize DynamoDB client
@@ -41,7 +42,7 @@ export const verifyAuth = async (authHeader?: string) => {
   }).promise();
 
   if (!result.Items || result.Items.length === 0) {
-    throw new Error('User not found');
+    throw Object.assign(new Error('User not found'), { statusCode: 404 });
   }
 
   return result.Items[0]; // Return user details
