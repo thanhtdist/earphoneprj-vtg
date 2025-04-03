@@ -240,8 +240,8 @@ const AudioUploadBox = ({ meetingSession, logger }) => {
         <>
             <div className="box-start-live-session">
                 <div className="box-start-live-session-container">
-                <h3>{t('playVoiceLbl')}</h3>
-                <select className="selectFile" value={voiceFileType} onChange={handleVoiceFileTypeChange}>
+                <h3 className="title-box">{t('playVoiceLbl')}</h3>
+                <select className="selectFile" style={{border:"1px solid #C60226"}} value={voiceFileType} onChange={handleVoiceFileTypeChange}>
                     <option value="instruction">{t('playVoiceOptions.instruction')}</option>
                     <option value="closingSpeech">{t('playVoiceOptions.closingSpeech')}</option>
                 </select>

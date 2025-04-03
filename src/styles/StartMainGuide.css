@@ -1,5 +1,6 @@
 .chat-setting-container {
     margin-top: 20px;
+    /* justify-self: center; */
 }
 
 .btn {
@@ -7,6 +8,7 @@
     /* justify-self: center; */
     justify-content: center;
     align-items: center;
+    width: 100%;
 }
 
 .btn-confirm {
@@ -17,4 +19,8 @@
     height: 40px;
     font-size: 18px;
     font-weight: bold;
+}
+.selected{
+    display: flex;
+    justify-content: space-evenly;
 }

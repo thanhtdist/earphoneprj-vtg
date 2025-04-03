@@ -20,8 +20,8 @@ const StartMainGuide = () => {
                 <div>
                     <p style={{textAlign:'center', fontWeight:'700',fontSize:'20px'}}>{t('chatSettingLbl')}</p>
                 </div>
-                <div>
-                    <select className='selectFile' value={chatSetting} onChange={handleChatSettingChange}>
+                <div className='selected'> 
+                    <select className='selectFile' style={{border:"1px solid #C60226"}} value={chatSetting} onChange={handleChatSettingChange}>
                         <option value="allChat">{t('chatSettingOptions.allChat')}</option>
                         <option value="guideOnly">{t('chatSettingOptions.onlyGuideChat')}</option>
                         <option value="nochat">{t('chatSettingOptions.noChat')}</option>

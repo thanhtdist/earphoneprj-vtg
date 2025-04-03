@@ -65,7 +65,7 @@ function Header({ count = null, meeting = null, channelID = null, userId = null,
                         <span className="close-btn" style={{border:'2px solid red',backgroundColor:'red'}} onClick={closePopup}>&times;</span>
                         <div className='contentQR'>
                             <h3>{t('generateQRCodeLbl')}</h3>
-                            <select className='selectFile' value={selectedQR} onChange={handleQRSelectionChange}>
+                            <select className='selectFile' style={{border:"1px solid #C60226"}} value={selectedQR} onChange={handleQRSelectionChange}>
                                 <option value="subSpeaker">{t('generateQRCodeOptions.subGuide')}</option>
                                 <option value="listener">{t('generateQRCodeOptions.listener')}</option>
                             </select>

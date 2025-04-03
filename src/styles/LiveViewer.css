@@ -99,6 +99,7 @@
   border-radius: 25px;
   border: 1px solid #16A085;
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+  justify-self: center;
 }
 .box-selected-language{
   width: 100%;
@@ -106,6 +107,7 @@
   box-shadow: 0 6px 5px rgba(0, 0, 0, 0.2);
   border-radius: 10px;
   margin-bottom: 10px;
+  padding: 20px;
 }
 .live-viewer-title{
   display: contents;
