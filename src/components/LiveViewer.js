@@ -39,14 +39,16 @@ function LiveViewer() {
   console.log('tourId:', tourId);
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  const meetingId = queryParams.get('meetingId');
-  const channelId = queryParams.get('channelId');
+  // const meetingId = queryParams.get('meetingId');
+  // const channelId = queryParams.get('channelId');
   const hostId = queryParams.get('hostId');
   const chatSetting = queryParams.get('chatSetting');
 
   const { t, i18n } = useTranslation();
 
   const [meetingSession, setMeetingSession] = useState(null);
+  const [meetingId, setMeetingId] = useState(null);
+  const [channelId, setChannelId] = useState(null);
   const [meeting, setMeeting] = useState(null);
   const [attendee, setAttendee] = useState(null);
   const [channelArn, setChannelArn] = useState('');
@@ -160,18 +162,20 @@ function LiveViewer() {
   );
 
   const joinMeeting = useCallback(
-    async () => {
+    async (meetingData, channelId) => {
       setIsLoading(true);
       try {
-        if (!meetingId || !channelId || !hostId) {
-          alert('Meeting ID, Channel ID, and Host ID are required');
-          return;
-        }
+        // if (!meetingId || !channelId || !hostId) {
+        //   alert('Meeting ID, Channel ID, and Host ID are required');
+        //   return;
+        // }
 
+        console.log('meeting:', meetingData);
+        console.log('channelId:', channelId);
 
-
-        const meetingData = await checkAvailableMeeting(meetingId, userType);
-        if (!meetingData) return;
+        // const meetingData = await checkAvailableMeeting(meetingId, userType);
+        // console.log('meetingData:', meetingData);
+        // if (!meetingData) return;
 
         const attendeeData = await createAttendee(
           meetingData.MeetingId,
@@ -218,13 +222,13 @@ function LiveViewer() {
     ]
   );
 
-  const joinAudioSession = useCallback(
-    async () => {
+  const joinAudioSession2 = useCallback(
+    async (meeting, channelId) => {
       try {
         const retrievedUser = JSONCookieUtils.getJSONCookie('User');
         if (retrievedUser) {
           const isMeetingMatched =
-            retrievedUser.meeting.MeetingId === meetingId;
+            retrievedUser.meeting.MeetingId === meeting.meetingId;
           const isChannelMatched =
             retrievedUser.channelArn === `${Config.appInstanceArn}/channel/${channelId}`;
 
@@ -239,14 +243,12 @@ function LiveViewer() {
             }
           }
         }
-        joinMeeting();
+        joinMeeting(meeting, channelId);
       } catch (error) {
         console.error('Error processing the User cookie:', error);
       }
     },
     [
-      meetingId,
-      channelId,
       getMeetingAttendeeInfoFromCookies,
       joinMeeting,
     ]
@@ -409,69 +411,123 @@ function LiveViewer() {
       audioElementRef.current.pause();
     }
   }
-  // Meeting exired
-  useEffect(() => {
+  // // Meeting exired
+  // useEffect(() => {
 
-    // Step 1: Check if the meeting is existed in tour
-    // call getMeetingByTourId API to check if the meeting is existed in tour
-    // Step 2: If the meeting is existed, set the meeting and attendee in the state
-    // Join meeting and set the meeting session in the state
+  //   // Step 1: Check if the meeting is existed in tour
+  //   // call getMeetingByTourId API to check if the meeting is existed in tour
+  //   // Step 2: If the meeting is existed, set the meeting and attendee in the state
+  //   // Join meeting and set the meeting session in the state
 
-    // Step 3: Else Create a new meeting and set the meeting and attendee in the state
-    // Step 3-1: Update the tour with the meetingId: updateMeetingByTourId APIdât
-    // Step 3-2: Set the meeting and attendee in the state
-    try {
+  //   // Step 3: Else Create a new meeting and set the meeting and attendee in the state
+  //   // Step 3-1: Update the tour with the meetingId: updateMeetingByTourId APIdât
+  //   // Step 3-2: Set the meeting and attendee in the state
+  //   try {
 
-      console.log("tourId", tourId);
+  //     console.log("tourId", tourId);
 
-      const callGetMeetingByTourId = async (tourId) => {
-        const getMeetingByTourIdResponse = await getMeetingByTourId(tourId);
-        console.log('getMeetingByTourIdResponse', getMeetingByTourIdResponse);
-        if (getMeetingByTourIdResponse.statusCode === 200) {
-          setChatRestriction(getMeetingByTourIdResponse.data.chatRestriction);
-          console.log('Meeting found:', getMeetingByTourIdResponse.data.meetingId);
+  //     const callGetMeetingByTourId = async (tourId) => {
+  //       const getMeetingByTourIdResponse = await getMeetingByTourId(tourId);
+  //       console.log('getMeetingByTourIdResponse', getMeetingByTourIdResponse);
+  //       if (getMeetingByTourIdResponse.statusCode === 200) {
+  //         setChatRestriction(getMeetingByTourIdResponse.data.chatRestriction);
+  //         console.log('Meeting found:', getMeetingByTourIdResponse.data.meetingId);
 
-          if (getMeetingByTourIdResponse.data.meetingId) {
-            // const meeting = await checkAvailableMeeting(getMeetingByTourIdResponse.data.meetingId, "Main-Guide");
-            // console.log('checkAvailableMeeting:', meeting);
-            // if (!meeting) return;
-            // const attendee = await createAttendee(meeting.MeetingId, `${userType}|${Date.now()}`);
-            // console.log('Attendee created:', attendee);
-            // initializeMeetingSession(meeting, attendee);
-            // setMetting(meeting);
-            // setAttendee(attendee);
-            console.log("Meeting Existed in Tour");
-            const checkAvailableMeetingResponse = await getMeeting(getMeetingByTourIdResponse.data.meetingId);
-            console.log('checkAvailableMeeting:', checkAvailableMeetingResponse);
-            console.log('checkAvailableMeeting statusCode:', checkAvailableMeetingResponse.statusCode);
-            if (checkAvailableMeetingResponse.statusCode === 404) {
-              //toast.info('Guide does not start, please wait...');
-              alert('Guide does not start, please wait...');
-            } else if (checkAvailableMeetingResponse.statusCode === 200) {
-              // Join the meeting again and set the meeting session in the state
-              // const attendee = await createAttendee(getMeetingByTourIdResponse.data.meetingId, `${userType}|${Date.now()}`)
-              console.log('Meeting not expired:', checkAvailableMeetingResponse);
-              console.log('State Attendee:', attendee);
-              console.log('State Meeting:', meeting);
-              initializeMeetingSession(meeting, attendee);
-            } else {
-              console.log('Meeting error:', checkAvailableMeetingResponse);
-            }
-          } else {
-            alert('Guide does not start, please wait...');
-          }
+  //         if (getMeetingByTourIdResponse.data.meetingId) {
+  //           // const meeting = await checkAvailableMeeting(getMeetingByTourIdResponse.data.meetingId, "Main-Guide");
+  //           // console.log('checkAvailableMeeting:', meeting);
+  //           // if (!meeting) return;
+  //           // const attendee = await createAttendee(meeting.MeetingId, `${userType}|${Date.now()}`);
+  //           // console.log('Attendee created:', attendee);
+  //           // initializeMeetingSession(meeting, attendee);
+  //           // setMetting(meeting);
+  //           // setAttendee(attendee);
+  //           console.log("Meeting Existed in Tour");
+  //           const checkAvailableMeetingResponse = await getMeeting(getMeetingByTourIdResponse.data.meetingId);
+  //           console.log('checkAvailableMeeting:', checkAvailableMeetingResponse);
+  //           console.log('checkAvailableMeeting statusCode:', checkAvailableMeetingResponse.statusCode);
+  //           if (checkAvailableMeetingResponse.statusCode === 404) {
+  //             //toast.info('Guide does not start, please wait...');
+  //             alert('Guide does not start, please wait...');
+  //           } else if (checkAvailableMeetingResponse.statusCode === 200) {
+  //             // Join the meeting again and set the meeting session in the state
+  //             // const attendee = await createAttendee(getMeetingByTourIdResponse.data.meetingId, `${userType}|${Date.now()}`)
+  //             console.log('Meeting not expired:', checkAvailableMeetingResponse);
+  //             const retrievedUser = JSONCookieUtils.getJSONCookie('User');
+  //             getMeetingAttendeeInfoFromCookies(retrievedUser);
+  //           } else {
+  //             console.log('Meeting error:', checkAvailableMeetingResponse);
+  //           }
+  //         } else {
+  //           alert('Guide does not start, please wait...');
+  //         }
+  //       } else {
+  //         // alert('Tour not found, please check the tour ID.');
+  //         console.log('Tour not found, please check the tour ID.');
+  //         toast.error('Tour not found, please check the tour ID.');
+  //       }
+  //     }
+  //     callGetMeetingByTourId(tourId);
+  //   } catch (error) {
+  //     console.error('Error checking meeting:', error);
+  //   }
+
+  // }, [tourId, initializeMeetingSession, meeting, attendee]);
+
+
+  const joinAudioSession = useCallback(async () => {
+
+    const getMeetingByTourIdResponse = await getMeetingByTourId(tourId);
+    console.log('getMeetingByTourIdResponse', getMeetingByTourIdResponse);
+    if (getMeetingByTourIdResponse.statusCode === 200) {
+      setMeetingId(getMeetingByTourIdResponse.data.meetingId);
+      setChannelId(getMeetingByTourIdResponse.data.channelId);
+      setChatRestriction(getMeetingByTourIdResponse.data.chatRestriction);
+      console.log('Meeting found:', getMeetingByTourIdResponse.data.meetingId);
+
+      if (getMeetingByTourIdResponse.data.meetingId) {
+        // const meeting = await checkAvailableMeeting(getMeetingByTourIdResponse.data.meetingId, "Main-Guide");
+        // console.log('checkAvailableMeeting:', meeting);
+        // if (!meeting) return;
+        // const attendee = await createAttendee(meeting.MeetingId, `${userType}|${Date.now()}`);
+        // console.log('Attendee created:', attendee);
+        // initializeMeetingSession(meeting, attendee);
+        // setMetting(meeting);
+        // setAttendee(attendee);
+        console.log("Meeting Existed in Tour");
+        const checkAvailableMeetingResponse = await getMeeting(getMeetingByTourIdResponse.data.meetingId);
+        console.log('checkAvailableMeeting:', checkAvailableMeetingResponse);
+        console.log('checkAvailableMeeting statusCode:', checkAvailableMeetingResponse.statusCode);
+        if (checkAvailableMeetingResponse.statusCode === 404) {
+          //toast.info('Guide does not start, please wait...');
+          alert('Guide does not start, please wait...');
+        } else if (checkAvailableMeetingResponse.statusCode === 200) {
+          // Join the meeting again and set the meeting session in the state
+          // const attendee = await createAttendee(getMeetingByTourIdResponse.data.meetingId, `${userType}|${Date.now()}`)
+          console.log('Meeting not expired:', checkAvailableMeetingResponse);
+          // const retrievedUser = JSONCookieUtils.getJSONCookie('User');
+          // if(!retrievedUser) {
+          //   joinMeeting();
+          // } else {
+          //   getMeetingAttendeeInfoFromCookies(retrievedUser);
+          // }
+          joinAudioSession2(checkAvailableMeetingResponse.data, getMeetingByTourIdResponse.data.channelId);
+
         } else {
-          // alert('Tour not found, please check the tour ID.');
-          console.log('Tour not found, please check the tour ID.');
-          toast.error('Tour not found, please check the tour ID.');
+          console.log('Meeting error:', checkAvailableMeetingResponse);
         }
+      } else {
+        alert('Guide does not start, please wait...');
       }
-      callGetMeetingByTourId(tourId);
-    } catch (error) {
-      console.error('Error checking meeting:', error);
+    } else {
+      // alert('Tour not found, please check the tour ID.');
+      console.log('Tour not found, please check the tour ID.');
+      toast.error('Tour not found, please check the tour ID.');
     }
+  }, [getMeetingAttendeeInfoFromCookies]);
 
-  }, [tourId, initializeMeetingSession, meeting, attendee]);
+
+
   const isLongText = translatedListRef.current.join(' ').length > 300;
   return (
     <>
