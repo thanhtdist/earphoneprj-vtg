@@ -7,7 +7,7 @@ import '../styles/Header.css';
 import { useTranslation } from 'react-i18next';
 import Config from '../utils/config';
 
-function Header({ count = null, meeting = null, channelID = null, userId = null, chatSetting = null, userType = null }) {
+function Header({ tourId, count = null, userType = null }) {
     const { t } = useTranslation();
     const [openQRCode, setOpenQRCode] = useState(false);
     const [selectedQR, setSelectedQR] = useState('listener');
@@ -20,7 +20,7 @@ function Header({ count = null, meeting = null, channelID = null, userId = null,
     const handleQRSelectionChange = (e) => {
         setSelectedQR(e.target.value);
     };
-    const style =()=>{
+    const style = () => {
         if (userType === "Guide") {
             return {
                 color: 'red'
@@ -38,20 +38,20 @@ function Header({ count = null, meeting = null, channelID = null, userId = null,
 
             }
         }
-       
+
     }
     return (
         // <div className='containerHeader' style={style()}>
-            <div className={`${count !== null ? 'container-header' : 'container-header-startguide'}`} style={style()} >
+        <div className={`${count !== null ? 'container-header' : 'container-header-startguide'}`} style={style()} >
             {count !== null && <Participants count={count}></Participants>}
-            
+
             <div className='rightMenu'>
                 {userType === "Guide" && (
                     <div className='qrCode' onClick={openPopup}>
                         <BsQrCode className='icon' size={35} />
                         <span>{t('headerSettings.qrCode')}</span>
                     </div>
-                 )} 
+                )}
 
                 <div className='selectLanguage'>
                     {/* <GrLanguage className='icon' size={24} /> */}
@@ -59,13 +59,13 @@ function Header({ count = null, meeting = null, channelID = null, userId = null,
                     <span>{t('headerSettings.language')}</span>
                 </div>
             </div>
-            {openQRCode === true && meeting &&
+            {openQRCode === true && tourId &&
                 <div className="popup">
                     <div className="popup-content">
-                        <span className="close-btn" style={{border:'2px solid red',backgroundColor:'red'}} onClick={closePopup}>&times;</span>
+                        <span className="close-btn" style={{ border: '2px solid red', backgroundColor: 'red' }} onClick={closePopup}>&times;</span>
                         <div className='contentQR'>
                             <h3>{t('generateQRCodeLbl')}</h3>
-                            <select className='selectFile' style={{border:"1px solid #C60226"}} value={selectedQR} onChange={handleQRSelectionChange}>
+                            <select className='selectFile' style={{ border: "1px solid #C60226" }} value={selectedQR} onChange={handleQRSelectionChange}>
                                 <option value="subSpeaker">{t('generateQRCodeOptions.subGuide')}</option>
                                 <option value="listener">{t('generateQRCodeOptions.listener')}</option>
                             </select>
@@ -73,9 +73,11 @@ function Header({ count = null, meeting = null, channelID = null, userId = null,
                                 <>
                                     <div className='qrCodeContainer'>
                                         <div className="qrCodeContent">
-                                            <QRCodeSVG value={`${Config.appSubSpeakerURL}?meetingId=${meeting.MeetingId}&channelId=${channelID}&hostId=${userId}&chatSetting=${chatSetting}`} size={256} level="H" />
+                                            <QRCodeSVG value={`${Config.appSubSpeakerURL}?tourId=${tourId}`} size={256} level="H" />
                                         </div>
-                                        <a className='link' target="_blank" rel="noopener noreferrer" style={{ color: 'red' }} href={`${Config.appSubSpeakerURL}?meetingId=${meeting.MeetingId}&channelId=${channelID}&hostId=${userId}&chatSetting=${chatSetting}`}>
+                                        <a className='link' target="_blank" rel="noopener noreferrer" style={{ color: 'red' }}
+                                            href={`${Config.appSubGuideURL}?tourId=${tourId}`}
+                                        >
                                             {t('scanQRCodeTxt.subGuide')}
                                         </a>
                                     </div>
@@ -84,9 +86,11 @@ function Header({ count = null, meeting = null, channelID = null, userId = null,
                                 <>
                                     <div className='qrCodeContainer'>
                                         <div className="qrCodeContent">
-                                            <QRCodeSVG value={`${Config.appViewerURL}?meetingId=${meeting.MeetingId}&channelId=${channelID}&hostId=${userId}&chatSetting=${chatSetting}`} size={256} level="H" />
+                                            <QRCodeSVG value={`${Config.appViewerURL}?tourId=${tourId}`} size={256} level="H" />
                                         </div>
-                                        <a className='link' target="_blank" rel="noopener noreferrer" style={{ color: 'red' }} href={`${Config.appViewerURL}?meetingId=${meeting.MeetingId}&channelId=${channelID}&hostId=${userId}&chatSetting=${chatSetting}`}>
+                                        <a className='link' target="_blank" rel="noopener noreferrer" style={{ color: 'red' }}
+                                            href={`${Config.appViewerURL}?tourId=${tourId}`}
+                                        >
                                             {t('scanQRCodeTxt.listener')}
                                         </a>
                                     </div>

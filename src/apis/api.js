@@ -202,12 +202,23 @@ export async function getMeeting(meetingId) {
     });
     const { body } = await restOperation.response;
     const response = await body.json();
-    return response.data;
+    return {
+      statusCode: 200, // The status code of the response
+      data: response.data 
+    }
   } catch (error) {
-    // const errorResponse = JSON.parse(error.response.body);
+    const errorResponse = JSON.parse(error.response.body);
     // console.log('GET call getMeeting failed: ', errorResponse);
     // throw new Error('GET call getMeeting failed: ', JSON.parse(error.response.body));
-    throw error.response.body;
+    console.log('Get call getMeeting failed: ',errorResponse);
+    // Handle "Meeting not found" error specifically
+    if (errorResponse?.error?.includes('not found')) {
+      return {
+        statusCode: 404, // Set the status code to 404 for "not found"
+        data: null // Set the data to null to indicate that the meeting was not found
+      }
+    }
+    return null; // Return null to indicate failure
   }
 }
 

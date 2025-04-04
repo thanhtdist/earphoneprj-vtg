@@ -5,6 +5,8 @@ import {
   addChannelMembership,
   listAttendee,
   translateTextSpeech,
+  getMeetingByTourId,
+  getMeeting,
 } from '../apis/api';
 import {
   DefaultDeviceController,
@@ -29,7 +31,11 @@ import { IoVolumeMute } from "react-icons/io5";
 // import { IoMicCircle, IoMicOffCircleSharp } from "react-icons/io5";
 import { FaPause } from "react-icons/fa6";
 import MessageBox from './MessageBox';
+import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 function LiveViewer() {
+  // Get the params from the URL
+  const { tourId } = useParams(); // Extracts 'tourId' from the URL
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const meetingId = queryParams.get('meetingId');
@@ -53,6 +59,7 @@ function LiveViewer() {
   const [selectedVoiceLanguage, setSelectedVoiceLanguage] = useState(
     LISTEN_VOICE_LANGUAGES.find((lang) => lang.key.startsWith(i18n.language))?.key || 'ja-JP'
   );
+  const [chatRestriction, setChatRestriction] = useState(null);
   //const [isJoinAudio, setIsJoinAudio] = useState(false);
   // Replace local variables with refs
   const transcriptListRef = useRef([]);
@@ -401,6 +408,69 @@ function LiveViewer() {
       audioElementRef.current.pause();
     }
   }
+  // Meeting exired
+  useEffect(() => {
+
+    // Step 1: Check if the meeting is existed in tour
+    // call getMeetingByTourId API to check if the meeting is existed in tour
+    // Step 2: If the meeting is existed, set the meeting and attendee in the state
+    // Join meeting and set the meeting session in the state
+
+    // Step 3: Else Create a new meeting and set the meeting and attendee in the state
+    // Step 3-1: Update the tour with the meetingId: updateMeetingByTourId APIdât
+    // Step 3-2: Set the meeting and attendee in the state
+    try {
+
+      console.log("tourId", tourId);
+
+      const callGetMeetingByTourId = async (tourId) => {
+        const getMeetingByTourIdResponse = await getMeetingByTourId(tourId);
+        console.log('getMeetingByTourIdResponse', getMeetingByTourIdResponse);
+        if (getMeetingByTourIdResponse.statusCode === 200) {
+          setChatRestriction(getMeetingByTourIdResponse.data.chatRestriction);
+          console.log('Meeting found:', getMeetingByTourIdResponse.data.meetingId);
+
+          if (getMeetingByTourIdResponse.data.meetingId) {
+            // const meeting = await checkAvailableMeeting(getMeetingByTourIdResponse.data.meetingId, "Main-Guide");
+            // console.log('checkAvailableMeeting:', meeting);
+            // if (!meeting) return;
+            // const attendee = await createAttendee(meeting.MeetingId, `${userType}|${Date.now()}`);
+            // console.log('Attendee created:', attendee);
+            // initializeMeetingSession(meeting, attendee);
+            // setMetting(meeting);
+            // setAttendee(attendee);
+            console.log("Meeting Existed in Tour");
+            const checkAvailableMeetingResponse = await getMeeting(getMeetingByTourIdResponse.data.meetingId);
+            console.log('checkAvailableMeeting:', checkAvailableMeetingResponse);
+            console.log('checkAvailableMeeting statusCode:', checkAvailableMeetingResponse.statusCode);
+            if (checkAvailableMeetingResponse.statusCode === 404) {
+              //toast.info('Guide does not start, please wait...');
+              alert('Guide does not start, please wait...');
+            } else if (checkAvailableMeetingResponse.statusCode === 200) {
+              // Join the meeting again and set the meeting session in the state
+              // const attendee = await createAttendee(getMeetingByTourIdResponse.data.meetingId, `${userType}|${Date.now()}`)
+              console.log('Meeting not expired:', checkAvailableMeetingResponse);
+              console.log('State Attendee:', attendee);
+              console.log('State Meeting:', meeting);
+              initializeMeetingSession(meeting, attendee);
+            } else {
+              console.log('Meeting error:', checkAvailableMeetingResponse);
+            }
+          } else {
+            alert('Guide does not start, please wait...');
+          }
+        } else {
+          // alert('Tour not found, please check the tour ID.');
+          console.log('Tour not found, please check the tour ID.');
+          toast.error('Tour not found, please check the tour ID.');
+        }
+      }
+      callGetMeetingByTourId(tourId);
+    } catch (error) {
+      console.error('Error checking meeting:', error);
+    }
+
+  }, [tourId, initializeMeetingSession, meeting, attendee]);
   const isLongText = translatedListRef.current.join(' ').length > 300;
   return (
     <>
@@ -467,7 +537,7 @@ function LiveViewer() {
             </div>
             {transcriptListRef.current.length > 0 && (
               <div className='trans-box'>
-                <div style={{ textAlign: 'center' , fontWeight:'700'}}>
+                <div style={{ textAlign: 'center', fontWeight: '700' }}>
                   <p>{t('captureTranslations')}</p>
                 </div>
                 {/* <p>
@@ -514,7 +584,7 @@ function LiveViewer() {
                 />
               )}
             </div> */}
-            {chatSetting !== "nochat" && (<MessageBox userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} userType={userType} statusChat={chatSetting} />)}
+            {chatRestriction !== "nochat" && (<MessageBox userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} userType={userType} statusChat={chatRestriction} />)}
           </>
         )}
       </div>

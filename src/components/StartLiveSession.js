@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import {
+  getMeeting,
   createMeeting,
   createAttendee,
   createAppInstanceUsers,
@@ -23,7 +24,7 @@ import AudioUploadBox from './AudioUploadBox';
 import Config from '../utils/config';
 import metricReport from '../utils/MetricReport';
 //import { getPOSTLogger } from '../utils/MeetingLogger';
-import { checkAvailableMeeting } from '../utils/MeetingUtils';
+//import { checkAvailableMeeting } from '../utils/MeetingUtils';
 import JSONCookieUtils from '../utils/JSONCookieUtils';
 import { v4 as uuidv4 } from 'uuid';
 import { useTranslation } from 'react-i18next';
@@ -38,6 +39,7 @@ import { FaPause } from "react-icons/fa6";
 import { useLocation } from 'react-router-dom';
 //import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
 // import { uploadFileToS3 } from '../services/S3Service';
 
@@ -75,6 +77,7 @@ function StartLiveSession() {
   const [logger, setLogger] = useState(null);
   const [participantsCount, setParticipantsCount] = useState(0);
   const [transcripts, setTranscriptions] = useState([]);
+  const [chatRestriction, setChatRestriction] = useState(null);
   // Replace local variables with refs
   const transcriptListRef = useRef([]);
   //get value chatSetting from ChatSetting.js
@@ -88,48 +91,6 @@ function StartLiveSession() {
   const audioRef = useRef(null);
   const userType = `Guide`;
 
-  // Meeting exired
-  useEffect(() => {
-
-    // Step 1: Check if the meeting is existed in tour
-    // call getMeetingByTourId API to check if the meeting is existed in tour
-    // Step 2: If the meeting is existed, set the meeting and attendee in the state
-    // Join meeting and set the meeting session in the state
-
-    // Step 3: Else Create a new meeting and set the meeting and attendee in the state
-    // Step 3-1: Update the tour with the meetingId: updateMeetingByTourId APIdât
-    // Step 3-2: Set the meeting and attendee in the state
-    try {
-
-      console.log("tourId", tourId);
-
-      const callGetMeetingByTourId = async (tourId) => {
-        const getMeetingByTourIdResponse = await getMeetingByTourId(tourId);
-        console.log('getMeetingByTourIdResponse', getMeetingByTourIdResponse);
-        if (getMeetingByTourIdResponse.statusCode === 200) {
-          console.log('Meeting found:', getMeetingByTourIdResponse.data.meetingId);
-          if (getMeetingByTourIdResponse.data.meetingId) {
-            // const meeting = await checkAvailableMeeting(getMeetingByTourIdResponse.data.meetingId, "Main-Guide");
-            // console.log('checkAvailableMeeting:', meeting);
-            // if (!meeting) return;
-            // const attendee = await createAttendee(meeting.MeetingId, `${userType}|${Date.now()}`);
-            // console.log('Attendee created:', attendee);
-            // initializeMeetingSession(meeting, attendee);
-            // setMetting(meeting);
-            // setAttendee(attendee);
-            console.log("Meeting Existed in Tour");
-          } else {
-            console.log('Meeting not found, creating a new one...');
-            startLiveAduioSession();
-          }
-        }
-      }
-      callGetMeetingByTourId(tourId);
-    } catch (error) {
-      console.error('Error checking meeting:', error);
-    }
-
-  }, [tourId]);
   const handleMuteUnmute = () => {
     setIsMuted(!isMuted);
     audioRef.current.muted = isMuted;
@@ -312,14 +273,14 @@ function StartLiveSession() {
 
       // Set the JSON cookie for 1 day
       JSONCookieUtils.setJSONCookie("Main-Guide", mainGuide, 1);
-      console.log("Cookie set for 1 day!");
+      console.log("Cookie set Main-Guide for 1 day!");
 
     } catch (error) {
       console.error('Error starting meeting:', error);
     } finally {
       setIsLoading(false);
     }
-  }, [initializeMeetingSession, userType]);
+  }, [initializeMeetingSession, userType, tourId]);
 
   // useEffect(() => {
   //   if (meeting && channelID) {
@@ -448,6 +409,21 @@ function StartLiveSession() {
   //   getMeetingAttendeeInfoFromCookies();
   // }, [initializeMeetingSession, startLiveAduioSession]);
 
+  // Get the meeting and attendee information from the cookies
+  useEffect(() => {
+    const mainGuide = JSONCookieUtils.getJSONCookie("Main-Guide");
+    console.log("Retrieved cookie:", mainGuide);
+    if (mainGuide) {
+      console.log("mainGuide:", mainGuide);
+      setMetting(mainGuide.meeting);
+      setAttendee(mainGuide.attendee);
+      setUserArn(mainGuide.userArn);
+      setUserId(mainGuide.userArn.split('/').pop());
+      setChannelArn(mainGuide.channelArn);
+      setChannelID(mainGuide.channelArn.split('/').pop());
+    }
+  }, []);
+
   useEffect(() => {
     getAudioInputDevices();
   }, [getAudioInputDevices]);
@@ -516,9 +492,77 @@ function StartLiveSession() {
     enableMeetingTranscription(meetingSession.configuration.meetingId, SPEAK_VOICE_LANGUAGES_KEY);
   }, [meetingSession]);
 
+
+  // Meeting exired
+  useEffect(() => {
+
+    // Step 1: Check if the meeting is existed in tour
+    // call getMeetingByTourId API to check if the meeting is existed in tour
+    // Step 2: If the meeting is existed, set the meeting and attendee in the state
+    // Join meeting and set the meeting session in the state
+
+    // Step 3: Else Create a new meeting and set the meeting and attendee in the state
+    // Step 3-1: Update the tour with the meetingId: updateMeetingByTourId APIdât
+    // Step 3-2: Set the meeting and attendee in the state
+    try {
+
+      console.log("tourId", tourId);
+
+      const callGetMeetingByTourId = async (tourId) => {
+        const getMeetingByTourIdResponse = await getMeetingByTourId(tourId);
+        console.log('getMeetingByTourIdResponse', getMeetingByTourIdResponse);
+        if (getMeetingByTourIdResponse.statusCode === 200) {
+          setChatRestriction(getMeetingByTourIdResponse.data.chatRestriction);
+          console.log('Meeting found:', getMeetingByTourIdResponse.data.meetingId);
+          
+          if (getMeetingByTourIdResponse.data.meetingId) {
+            // const meeting = await checkAvailableMeeting(getMeetingByTourIdResponse.data.meetingId, "Main-Guide");
+            // console.log('checkAvailableMeeting:', meeting);
+            // if (!meeting) return;
+            // const attendee = await createAttendee(meeting.MeetingId, `${userType}|${Date.now()}`);
+            // console.log('Attendee created:', attendee);
+            // initializeMeetingSession(meeting, attendee);
+            // setMetting(meeting);
+            // setAttendee(attendee);
+            console.log("Meeting Existed in Tour");
+            const checkAvailableMeetingResponse = await getMeeting(getMeetingByTourIdResponse.data.meetingId);
+            console.log('checkAvailableMeeting:', checkAvailableMeetingResponse);
+            console.log('checkAvailableMeeting statusCode:', checkAvailableMeetingResponse.statusCode);
+            if (checkAvailableMeetingResponse.statusCode === 404) {
+              console.log("Meeting expired, creating a new one...");
+              startLiveAduioSession();
+            } else if (checkAvailableMeetingResponse.statusCode === 200) {
+              // Join the meeting again and set the meeting session in the state
+              // const attendee = await createAttendee(getMeetingByTourIdResponse.data.meetingId, `${userType}|${Date.now()}`)
+              console.log('Meeting not expired:', checkAvailableMeetingResponse);
+              console.log('State Attendee:', attendee);
+              console.log('State Meeting:', meeting);
+              initializeMeetingSession(meeting, attendee);
+            } else {
+              console.log('Meeting error:', checkAvailableMeetingResponse);
+            }
+          } else {
+            console.log('Meeting not found, creating a new one...');
+            startLiveAduioSession();
+          }
+        } else {
+          // alert('Tour not found, please check the tour ID.');
+          console.log('Tour not found, please check the tour ID.');
+          toast.error('Tour not found, please check the tour ID.');
+        }
+      }
+      callGetMeetingByTourId(tourId);
+    } catch (error) {
+      console.error('Error checking meeting:', error);
+    }
+
+  }, [tourId, initializeMeetingSession, startLiveAduioSession, meeting, attendee]);
+
+  console.log("chatRestriction", chatRestriction);
+
   return (
     <>
-      <Header count={participantsCount} meeting={meeting} channelID={channelID} userId={userId} chatSetting={valueChatSetting} userType={userType} />
+      <Header tourId={tourId} count={participantsCount} userType={userType} />
       <div className="container">
         <p className='titleLiveSession'>
           {t('pageTitles.guide')}
@@ -593,8 +637,8 @@ function StartLiveSession() {
             )}
           </>
         )}
-        {valueChatSetting !== "nochat" && (
-          <MessageBox userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} userType={userType} statusChat={valueChatSetting} />
+        {chatRestriction !== "nochat" && (
+          <MessageBox userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} userType={userType} statusChat={chatRestriction} />
         )}
       </div>
     </>
