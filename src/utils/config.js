@@ -15,12 +15,12 @@ const Config = {
     accessKeyId: process.env.REACT_APP_MY_APP_AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.REACT_APP_MY_APP_AWS_SECRET_ACCESS_KEY,
     // URL for the web app for participants to join listen to audio
-    appGuideURL: 'http:localhost:3000/guide',
-    appSubGuideURL: 'http://localhost:3000/sub-guide/',
-    appViewerURL: 'http://localhost:3000/viewer/',
-    // appGuideURL: 'https://vtg-admin.d2rl061pfg6j3s.amplifyapp.com/guide/',
-    // appSubGuideURL: 'https://vtg-admin.d2rl061pfg6j3s.amplifyapp.com//sub-speaker/',
-    // appViewerURL: 'https://vtg-admin.d2rl061pfg6j3s.amplifyapp.com//viewer/',
+    // appGuideURL: 'http:localhost:3000/guide',
+    // appSubGuideURL: 'http://localhost:3000/sub-guide/',
+    // appViewerURL: 'http://localhost:3000/viewer/',
+    appGuideURL: 'https://vtg-admin.d2rl061pfg6j3s.amplifyapp.com/guide/',
+    appSubGuideURL: 'https://vtg-admin.d2rl061pfg6j3s.amplifyapp.com//sub-speaker/',
+    appViewerURL: 'https://vtg-admin.d2rl061pfg6j3s.amplifyapp.com//viewer/',
     // S3 attchment bucket name
     attachmentBucketName: 'vtg-chat-attachments',
     // Write logs from client side to CloudWatch using API Gateway      
