@@ -44,8 +44,8 @@ function App() {
               {/* Puplic router */}
               <Route path="/" element={<StartMainGuide />} />
               <Route path="/guide/:tourId" element={<StartLiveSession />} />
-              <Route path="/sub-guide" element={<LiveSubSpeaker />} />
-              <Route path="/viewer" element={<LiveViewer />} />
+              <Route path="/sub-guide/:tourId" element={<LiveSubSpeaker />} />
+              <Route path="/viewer/:tourId" element={<LiveViewer />} />
               {/* Wrap these routes with AdminLayout */}
               <Route path="/admin/login" element={<Login />} />
               <Route element={<AdminLayout />}>
