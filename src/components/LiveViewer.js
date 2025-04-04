@@ -413,7 +413,7 @@ function LiveViewer() {
         </div>
         {!meeting && !attendee && (
           <div className="box-selected-language">
-            <h3>
+            <h3 className='title-box'>
               {t('voiceLanguageLbl.listening')}
             </h3>
             <select

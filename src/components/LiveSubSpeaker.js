@@ -458,7 +458,7 @@ return (
         <div className='time'>
           <p >2025/01/01</p>
         </div>
-        <h3>浅草寺ツアー</h3>
+        <h3 className='nameTour'>浅草寺ツアー</h3>
       </div>
       <div className='audio-sub'>
         <div className='play-button' onClick={handlePlay}>
@@ -493,7 +493,7 @@ return (
           ) : (
             <>
               <div className='box-start-live-session'>
-                <h3>{t('microSelectionLbl')}</h3>
+                <h3 className='title-box'>{t('microSelectionLbl')}</h3>
                 {(audioInputDevices && audioInputDevices.length > 0) && (
                   <select className='selectFile' style={{border:"1px solid #E57A00"}} value={selectedAudioInput} onChange={(e) => setSelectedAudioInput(e.target.value)}>
                     {audioInputDevices.map((device) => (

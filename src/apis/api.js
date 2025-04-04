@@ -331,16 +331,21 @@ export async function getMeetingByTourId(tourId) {
   try {
     const restOperation = get({
       // The name of the API defined in backend.ts
-      path: `meetings/tours/${encodeURIComponent(tourId)}`, // endpoint defined in backend.ts, tourId is dynamically passed
+      apiName: 'TourVTGRestApi',
+      path: `tours/${encodeURIComponent(tourId)}/meeting`, // endpoint defined in backend.ts, tourId is dynamically passed
     });
-    const { body } = await restOperation.response;
+    const { body, statusCode } = await restOperation.response;
     const response = await body.json();
-    return response.data;
+    return {
+      statusCode: statusCode, // The status code of the response
+      data: response.data
+    };
   } catch (error) {
     // const errorResponse = JSON.parse(error.response.body);
     // console.log('GET call getMeeting failed: ', errorResponse);
     // throw new Error('GET call getMeeting failed: ', JSON.parse(error.response.body));
-    throw error.response.body;
+    // 
+    console.log('POST call getMeetingByTourId failed: ', error);
   }
 }
 
@@ -350,19 +355,30 @@ export async function getMeetingByTourId(tourId) {
  * @returns {Promise<any>} The response data from the API call.
  * @throws {Error} Logs the error details if the POST call fails.
  */
-export async function updateMeetingByTourId(tourId) {
+export async function updateMeetingByTourId(data) {
   try {
     const restOperation = put({
       // The name of the API defined in backend.ts
-      path: `meetings/tours/${encodeURIComponent(tourId)}`, // endpoint defined in backend.ts, tourId is dynamically passed
+      apiName: 'TourVTGRestApi',
+      path: `tours/${encodeURIComponent(data.tourId)}/meeting`, // endpoint defined in backend.ts, tourId is dynamically passed
+      options: {
+        body: {
+          meetingId: data.meetingId, // The external ID of the user, it is userId of participant joined the meeting
+          channelId: data.channelId, // The external ID of the user, it is userId of participant joined the meeting
+        }
+      }
     });
-    const { body } = await restOperation.response;
+    const { body, statusCode } = await restOperation.response;
     const response = await body.json();
-    return response.data;
+    return {
+      statusCode: statusCode, // The status code of the response
+      data: response.data
+    };
   } catch (error) {
     // const errorResponse = JSON.parse(error.response.body);
     // console.log('GET call getMeeting failed: ', errorResponse);
     // throw new Error('GET call getMeeting failed: ', JSON.parse(error.response.body));
-    throw error.response.body;
+    //throw error.response.body;
+    console.log('POST call updateMeetingByTourId failed: ', error);
   }
 }

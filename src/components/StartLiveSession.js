@@ -6,6 +6,8 @@ import {
   createChannel,
   addChannelMembership,
   startMeetingTranscription,
+  getMeetingByTourId,
+  updateMeetingByTourId,
 } from '../apis/api';
 import {
   DefaultDeviceController,
@@ -34,7 +36,8 @@ import { IoVolumeMute } from "react-icons/io5";
 import { IoMicCircle, IoMicOffCircleSharp } from "react-icons/io5";
 import { FaPause } from "react-icons/fa6";
 import { useLocation } from 'react-router-dom';
-import { useNavigate } from "react-router-dom";
+//import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 // import { uploadFileToS3 } from '../services/S3Service';
 
@@ -45,12 +48,14 @@ import { useNavigate } from "react-router-dom";
  * The main speaker can also chat with the sub-speaker or listener
  */
 function StartLiveSession() {
+  // Get the params from the URL
+  const { tourId } = useParams(); // Extracts 'tourId' from the URL
   // Use translation
   const { t, i18n } = useTranslation();
   console.log('i18n', i18n);
   console.log('t', t);
   // Use navigate to add params for meeting and channel
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
 
   // States to manage the meeting session
   const [channelArn, setChannelArn] = useState('');
@@ -82,6 +87,49 @@ function StartLiveSession() {
   const [isPlay, setIsPlay] = useState(false);
   const audioRef = useRef(null);
   const userType = `Guide`;
+
+  // Meeting exired
+  useEffect(() => {
+
+    // Step 1: Check if the meeting is existed in tour
+    // call getMeetingByTourId API to check if the meeting is existed in tour
+    // Step 2: If the meeting is existed, set the meeting and attendee in the state
+    // Join meeting and set the meeting session in the state
+
+    // Step 3: Else Create a new meeting and set the meeting and attendee in the state
+    // Step 3-1: Update the tour with the meetingId: updateMeetingByTourId APIdât
+    // Step 3-2: Set the meeting and attendee in the state
+    try {
+
+      console.log("tourId", tourId);
+
+      const callGetMeetingByTourId = async (tourId) => {
+        const getMeetingByTourIdResponse = await getMeetingByTourId(tourId);
+        console.log('getMeetingByTourIdResponse', getMeetingByTourIdResponse);
+        if (getMeetingByTourIdResponse.statusCode === 200) {
+          console.log('Meeting found:', getMeetingByTourIdResponse.data.meetingId);
+          if (getMeetingByTourIdResponse.data.meetingId) {
+            // const meeting = await checkAvailableMeeting(getMeetingByTourIdResponse.data.meetingId, "Main-Guide");
+            // console.log('checkAvailableMeeting:', meeting);
+            // if (!meeting) return;
+            // const attendee = await createAttendee(meeting.MeetingId, `${userType}|${Date.now()}`);
+            // console.log('Attendee created:', attendee);
+            // initializeMeetingSession(meeting, attendee);
+            // setMetting(meeting);
+            // setAttendee(attendee);
+            console.log("Meeting Existed in Tour");
+          } else {
+            console.log('Meeting not found, creating a new one...');
+            startLiveAduioSession();
+          }
+        }
+      }
+      callGetMeetingByTourId(tourId);
+    } catch (error) {
+      console.error('Error checking meeting:', error);
+    }
+
+  }, [tourId]);
   const handleMuteUnmute = () => {
     setIsMuted(!isMuted);
     audioRef.current.muted = isMuted;
@@ -206,6 +254,21 @@ function StartLiveSession() {
 
   }, []);
 
+  // Function to update MeetingId, Channel Id
+  const updateMeetingIdAndChannelId = async (data) => {
+    try {
+      const response = await updateMeetingByTourId(data);
+      console.log('updateMeetingByTourId response:', response);
+      if (response.statusCode === 200) {
+        console.log('Meeting updated successfully:', response.data);
+      } else {
+        console.error('Error updating meeting:', response.statusCode, response.data);
+      }
+    } catch (error) {
+      console.error('Error updating meeting:', error);
+    }
+  };
+
   // Function to start a live audio session
   const startLiveAduioSession = useCallback(async () => {
     setIsLoading(true);
@@ -214,7 +277,6 @@ function StartLiveSession() {
     console.log("Cookie deleted successfully!");
     try {
       const userID = uuidv4();
-      setUserId(userID);
       const userName = `Guide`;
       const meeting = await createMeeting();
       console.log('Meeting created:', meeting);
@@ -224,6 +286,15 @@ function StartLiveSession() {
       // Initialize the meeting session such as meeting session
       initializeMeetingSession(meeting, attendee);
       const createAppUserAndChannelResponse = await createAppUserAndChannel(userID, userName);
+      console.log('ChannelID created:', createAppUserAndChannelResponse.channelID);
+      // Update table tour with the meetingId and channelId
+      const data = {
+        tourId: tourId,
+        meetingId: meeting.MeetingId,
+        channelId: createAppUserAndChannelResponse.channelID,
+      };
+      await updateMeetingIdAndChannelId(data);
+      setUserId(userID);
       setMetting(meeting);
       setAttendee(attendee);
       setUserArn(createAppUserAndChannelResponse.userArn);
@@ -250,11 +321,11 @@ function StartLiveSession() {
     }
   }, [initializeMeetingSession, userType]);
 
-  useEffect(() => {
-    if (meeting && channelID) {
-      navigate(`/guide?chatSetting=${valueChatSetting}&meetingId=${meeting.MeetingId}&channelId=${channelID}`);
-    }
-  }, [meeting, channelID, valueChatSetting, navigate]);
+  // useEffect(() => {
+  //   if (meeting && channelID) {
+  //     navigate(`/guide?chatSetting=${valueChatSetting}&meetingId=${meeting.MeetingId}&channelId=${channelID}`);
+  //   }
+  // }, [meeting, channelID, valueChatSetting, navigate]);
 
 
   // Function to toggle microphone on/off
@@ -354,28 +425,28 @@ function StartLiveSession() {
   }, [meetingSession]);
 
   // Get meeting, attendee, and user information from the cookies
-  useEffect(() => {
-    const getMeetingAttendeeInfoFromCookies = async () => {
-      const retrievedMainGuide = JSONCookieUtils.getJSONCookie("Main-Guide");
-      console.log("Retrieved cookie:", retrievedMainGuide);
-      if (!retrievedMainGuide) {
-        startLiveAduioSession();
-      }
-      const meeting = await checkAvailableMeeting(retrievedMainGuide.meeting.MeetingId, "Main-Guide");
-      console.log('getMeetingResponse:', meeting);
-      if (!meeting) return;
-      console.log("Retrieved cookie:", retrievedMainGuide);
-      initializeMeetingSession(retrievedMainGuide.meeting, retrievedMainGuide.attendee);
-      setMetting(retrievedMainGuide.meeting);
-      setAttendee(retrievedMainGuide.attendee);
-      setUserArn(retrievedMainGuide.userArn);
-      setUserId(retrievedMainGuide.userArn.split('/').pop());
-      setChannelArn(retrievedMainGuide.channelArn);
-      setChannelID(retrievedMainGuide.channelArn.split('/').pop());
-      setIsLoading(false);
-    }
-    getMeetingAttendeeInfoFromCookies();
-  }, [initializeMeetingSession, startLiveAduioSession]);
+  // useEffect(() => {
+  //   const getMeetingAttendeeInfoFromCookies = async () => {
+  //     const retrievedMainGuide = JSONCookieUtils.getJSONCookie("Main-Guide");
+  //     console.log("Retrieved cookie:", retrievedMainGuide);
+  //     if (!retrievedMainGuide) {
+  //       startLiveAduioSession();
+  //     }
+  //     const meeting = await checkAvailableMeeting(retrievedMainGuide.meeting.MeetingId, "Main-Guide");
+  //     console.log('getMeetingResponse:', meeting);
+  //     if (!meeting) return;
+  //     console.log("Retrieved cookie:", retrievedMainGuide);
+  //     initializeMeetingSession(retrievedMainGuide.meeting, retrievedMainGuide.attendee);
+  //     setMetting(retrievedMainGuide.meeting);
+  //     setAttendee(retrievedMainGuide.attendee);
+  //     setUserArn(retrievedMainGuide.userArn);
+  //     setUserId(retrievedMainGuide.userArn.split('/').pop());
+  //     setChannelArn(retrievedMainGuide.channelArn);
+  //     setChannelID(retrievedMainGuide.channelArn.split('/').pop());
+  //     setIsLoading(false);
+  //   }
+  //   getMeetingAttendeeInfoFromCookies();
+  // }, [initializeMeetingSession, startLiveAduioSession]);
 
   useEffect(() => {
     getAudioInputDevices();
@@ -502,7 +573,7 @@ function StartLiveSession() {
                 <div className='box-start-live-session'>
                   <h3 className='title-box'>{t('microSelectionLbl')}</h3>
                   {(audioInputDevices && audioInputDevices.length > 0) && (
-                    <select className='selectFile' style={{border:"1px solid #C60226"}} value={selectedAudioInput} onChange={(e) => setSelectedAudioInput(e.target.value)}>
+                    <select className='selectFile' style={{ border: "1px solid #C60226" }} value={selectedAudioInput} onChange={(e) => setSelectedAudioInput(e.target.value)}>
                       {audioInputDevices.map((device) => (
                         <option key={device.deviceId} value={device.deviceId}>
                           {device.label}

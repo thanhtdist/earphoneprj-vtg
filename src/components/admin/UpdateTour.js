@@ -300,7 +300,7 @@ const UpdateTour = () => {
               </div>
             </div>
             <div className="form-group row mb-3"></div>
-            <GenerateQRCode tourId={tour.tourId} chatRestriction={tour.chatRestriction} />
+            <GenerateQRCode tourId={tour.tourId} />
             <div className="text-center mt-5">
               <Link to="/admin/tour" type="submit" className="btn btn-outline-danger" style={{ "marginRight": "50px" }}>戻る</Link>
               <button type="submit" className="btn btn-danger">更新</button>

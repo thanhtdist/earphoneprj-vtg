@@ -41,7 +41,7 @@ const Login = () => {
                 //console.log("login tesst", tesst);
                // navigate("/admin/tour");
                 //window.location.href = "/admin/tour";
-
+                window.location.href = "/admin/tour";
                 console.log("Login isAuthenticated", isAuthenticated);
             } else {
                 setError(messages.login.incorrectEmailPassword);

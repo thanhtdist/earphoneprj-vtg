@@ -49,7 +49,6 @@ export const AuthProvider = ({ children }) => {
     });
     //setIsAuthenticated(true);
     callCheckAuth();
-    window.location.href = "/admin/tour";
 
   }, [callCheckAuth]); // Placeholder for login function
 

@@ -27,7 +27,7 @@ const StartMainGuide = () => {
                         <option value="nochat">{t('chatSettingOptions.noChat')}</option>
                     </select>
                 </div>
-                <div className='btn'>                
+                <div className='btn-chat-setting'>                
                     <button className="btn-confirm"  onClick={handleClick}>{t('startGuidePage.startBtn')}</button>
                         
                </div>

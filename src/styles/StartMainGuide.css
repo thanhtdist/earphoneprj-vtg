@@ -3,12 +3,13 @@
     /* justify-self: center; */
 }
 
-.btn {
+.btn-chat-setting {
     display: flex;
     /* justify-self: center; */
     justify-content: center;
     align-items: center;
     width: 100%;
+    margin-top: 10px;
 }
 
 .btn-confirm {

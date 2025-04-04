@@ -8,10 +8,11 @@ import { FaRegCopy } from "react-icons/fa"; // Copy & double tick icons
 import { LiaCheckDoubleSolid } from "react-icons/lia";
 import { PiDownloadSimpleLight } from "react-icons/pi";
 
-const GenerateQRCode = ({ tourId, channelId=null, userId = null, chatRestriction = null }) => {
+const GenerateQRCode = ({ tourId, channelId = null, userId = null, chatRestriction = null }) => {
     const qrRef = useRef();
     const [copied, setCopied] = useState(false);
-    const urlToCopy = `${Config.appGuideURL}?tourId=${tourId}&chatRestriction=${chatRestriction}`;
+    // const urlToCopy = `${Config.appGuideURL}?tourId=${tourId}&chatRestriction=${chatRestriction}`;
+    const urlToCopy = `${Config.appGuideURL}/${tourId}`; // Adjusted URL for QR code
     // Copy URL to clipboard
     const handleCopy = () => {
         navigator.clipboard.writeText(urlToCopy).then(() => {
@@ -38,7 +39,8 @@ const GenerateQRCode = ({ tourId, channelId=null, userId = null, chatRestriction
                     <QRCodeCanvas
                         ref={qrRef}
                         //value={`${Config.appGuideURL}?tourId=${tourId}&channelId=${channelId}&chatRestriction=${chatRestriction}`}
-                        value={`${Config.appGuideURL}?tourId=${tourId}&chatRestriction=${chatRestriction}`}
+                        //value={`${Config.appGuideURL}?tourId=${tourId}&chatRestriction=${chatRestriction}`}
+                        value={`${Config.appGuideURL}/${tourId}`}
                         size={256}
                         level="H"
                     />
@@ -70,7 +72,8 @@ const GenerateQRCode = ({ tourId, channelId=null, userId = null, chatRestriction
                     className="form-control"
                     rows="2"
                     //value={`${Config.appGuideURL}?tourId=${tourId}&channelId=${channelId}&chatRestriction=${chatRestriction}`}
-                    value={`${Config.appGuideURL}?tourId=${tourId}&chatRestriction=${chatRestriction}`}
+                    // value={`${Config.appGuideURL}?tourId=${tourId}&chatRestriction=${chatRestriction}`}
+                    value={`${Config.appGuideURL}/${tourId}`}
                     readOnly
                 />
             </div>

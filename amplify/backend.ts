@@ -36,6 +36,9 @@ import { deleteAdmin } from './functions/delete-admin/resource';
 import { checkAuth } from './functions/check-auth/resource';
 import { activeAdmin } from './functions/active-admin/resource';
 import { refreshToken } from './functions/refresh-token/resource';
+import { getMeetingByTourId } from './functions/get-meeting-by-tourid/resource';
+import { updateMeetingByTourId } from './functions/update-meeting-by-tourid/resource'
+
 /**
  * Define the backend resources 
  * - List lambda functions for audio voice (metting session) and chat(message session)
@@ -69,6 +72,8 @@ const backend = defineBackend({
   checkAuth, // check auth
   activeAdmin, // active admin by the admin
   refreshToken, // refresh token by the admin
+  getMeetingByTourId, // get meeting by tourID
+  updateMeetingByTourId
 });
 
 /**
@@ -121,6 +126,8 @@ attendeesPath.addMethod("GET", new LambdaIntegration(
 meetingIdPath.addResource("transcription").addMethod("POST", new LambdaIntegration(
   backend.startMeetingTranscription.resources.lambda
 ));
+
+
 
 // =============2. API Getway, Lambda function for CHAT ===============
 // 2.1. Add app instance user API
@@ -296,6 +303,17 @@ tourIdPath.addMethod("PUT", new LambdaIntegration(
 const tourDeletePath = tourIdPath.addResource("delete");
 tourDeletePath.addMethod("PUT", new LambdaIntegration(
   backend.deleteTour.resources.lambda
+));
+
+// add GET method for /tours/{TourID}/meeting with getMeetingByTourId Lambda integration
+const meetingByTourIdPath = tourIdPath.addResource("meeting");
+meetingByTourIdPath.addMethod("GET", new LambdaIntegration(
+  backend.getMeetingByTourId.resources.lambda
+));
+
+// add PUT method for /tours/{TourID}/meeting with getMeetingByTourId Lambda integration
+meetingByTourIdPath.addMethod("PUT", new LambdaIntegration(
+  backend.updateMeetingByTourId.resources.lambda
 ));
 
 
