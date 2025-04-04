@@ -36,6 +36,7 @@ import { toast } from "react-toastify";
 function LiveViewer() {
   // Get the params from the URL
   const { tourId } = useParams(); // Extracts 'tourId' from the URL
+  console.log('tourId:', tourId);
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const meetingId = queryParams.get('meetingId');

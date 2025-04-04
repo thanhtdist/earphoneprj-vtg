@@ -73,10 +73,10 @@ function Header({ tourId, count = null, userType = null }) {
                                 <>
                                     <div className='qrCodeContainer'>
                                         <div className="qrCodeContent">
-                                            <QRCodeSVG value={`${Config.appSubSpeakerURL}?tourId=${tourId}`} size={256} level="H" />
+                                            <QRCodeSVG value={`${Config.appSubSpeakerURL}/${tourId}`} size={256} level="H" />
                                         </div>
                                         <a className='link' target="_blank" rel="noopener noreferrer" style={{ color: 'red' }}
-                                            href={`${Config.appSubGuideURL}?tourId=${tourId}`}
+                                            href={`${Config.appSubGuideURL}/${tourId}`}
                                         >
                                             {t('scanQRCodeTxt.subGuide')}
                                         </a>
@@ -86,10 +86,10 @@ function Header({ tourId, count = null, userType = null }) {
                                 <>
                                     <div className='qrCodeContainer'>
                                         <div className="qrCodeContent">
-                                            <QRCodeSVG value={`${Config.appViewerURL}?tourId=${tourId}`} size={256} level="H" />
+                                            <QRCodeSVG value={`${Config.appViewerURL}/${tourId}`} size={256} level="H" />
                                         </div>
                                         <a className='link' target="_blank" rel="noopener noreferrer" style={{ color: 'red' }}
-                                            href={`${Config.appViewerURL}?tourId=${tourId}`}
+                                            href={`${Config.appViewerURL}/${tourId}`}
                                         >
                                             {t('scanQRCodeTxt.listener')}
                                         </a>

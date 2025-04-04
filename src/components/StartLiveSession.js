@@ -85,7 +85,7 @@ function StartLiveSession() {
   // const { state } = location;
   // const valueChatSetting = state?.chatSetting
   const queryParams = new URLSearchParams(location.search);
-  const valueChatSetting = queryParams.get('chatSetting');
+  // const valueChatSetting = queryParams.get('chatSetting');
   const [isMuted, setIsMuted] = useState(true);
   const [isPlay, setIsPlay] = useState(false);
   const audioRef = useRef(null);
