@@ -622,8 +622,8 @@ function StartLiveSession() {
             console.log('checkAvailableMeeting statusCode:', checkAvailableMeetingResponse.statusCode);
             if (checkAvailableMeetingResponse.statusCode === 404) {
               console.log("Meeting expired, creating a new one...");
-              //startLiveAduioSession();
-              rejoinLiveAduioSession();
+              startLiveAduioSession();
+              //rejoinLiveAduioSession();
             } else if (checkAvailableMeetingResponse.statusCode === 200) {
               // Join the meeting again and set the meeting session in the state
               // const attendee = await createAttendee(getMeetingByTourIdResponse.data.meetingId, `${userType}|${Date.now()}`)
