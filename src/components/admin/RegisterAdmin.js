@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
     createUser
 } from '../../apis/admin';
 import { useForm } from 'react-hook-form';
 import Sidebar from './Sidebar';
-
+import { toast } from 'react-toastify';
+import Loading from '../Loading';
 const RegisterAdmin = () => {
+    const [isLoading, setIsLoading] = useState(false);
     const {
         register,
         handleSubmit,
@@ -20,8 +22,16 @@ const RegisterAdmin = () => {
     };
     const handleRegisterAdmin = async (data) => {
         try {
+            setIsLoading(true);
             const registerResponse = await createUser(data);
-            console.log("result registerResponse", registerResponse);
+            console.log("result registerResponse", registerResponse); 
+            setIsLoading(false);           
+            toast.success(`Admin was created successfully.`, {
+                onClose: () => {
+                    window.location.href = "/admin"
+                },
+            });
+            
         } catch (error) {
             console.log("error Register response ", error);
         }
@@ -97,6 +107,7 @@ const RegisterAdmin = () => {
                     </form>
                 </div>
             </main>
+            {isLoading && <Loading />}
         </div >
     );
 };

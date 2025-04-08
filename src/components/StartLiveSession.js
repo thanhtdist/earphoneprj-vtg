@@ -298,26 +298,32 @@ function StartLiveSession() {
     try {
       const retrievedMainGuide = JSONCookieUtils.getJSONCookie("Main-Guide");
       console.log("Retrieved cookie:", retrievedMainGuide);
+
+      if(!retrievedMainGuide) {
+        console.log("No cookie found, creating a new meeting...");
+        startLiveAduioSession();
+        return;
+      }
       const userID = retrievedMainGuide.userArn.split('/').pop();
       //const userName = `Guide`;
       const meeting = await createMeeting();
       console.log('Meeting created:', meeting);
+      const attendee = await createAttendee(meeting.MeetingId, `${userType}|${Date.now()}`);
       console.log('attendee', attendee);
-      //const attendee = await createAttendee(meeting.MeetingId, `${userType}|${Date.now()}`);
-      const attendee = retrievedMainGuide.attendee;
+      //const attendee = retrievedMainGuide.attendee;
       console.log('Attendee created:', attendee);
 
       // Initialize the meeting session such as meeting session
       initializeMeetingSession(meeting, attendee);
       // const createAppUserAndChannelResponse = await createAppUserAndChannel(userID, userName);
       // console.log('ChannelID created:', createAppUserAndChannelResponse.channelID);
-      // // Update table tour with the meetingId and channelId
-      // const data = {
-      //   tourId: tourId,
-      //   meetingId: meeting.MeetingId,
-      //   channelId: createAppUserAndChannelResponse.channelID,
-      // };
-      // await updateMeetingIdAndChannelId(data);
+      // Update table tour with the meetingId and channelId
+      const data = {
+        tourId: tourId,
+        meetingId: meeting.MeetingId,
+        channelId: retrievedMainGuide.channelArn.split('/').pop(),
+      };
+      await updateMeetingIdAndChannelId(data);
       setUserId(userID);
       setMetting(meeting);
       setAttendee(attendee);
@@ -494,9 +500,9 @@ function StartLiveSession() {
   const getMeetingAttendeeInfoFromCookies = useCallback(async () => {
     const retrievedMainGuide = JSONCookieUtils.getJSONCookie("Main-Guide");
     console.log("Retrieved cookie:", retrievedMainGuide);
-    // if (!retrievedMainGuide) {
-    //   startLiveAduioSession();
-    // }
+    if (!retrievedMainGuide) {
+      startLiveAduioSession();
+    }
     // const meeting = await checkAvailableMeeting(retrievedMainGuide.meeting.MeetingId, "Main-Guide");
     // console.log('getMeetingResponse:', meeting);
     // if (!meeting) return;
@@ -644,7 +650,7 @@ function StartLiveSession() {
       console.error('Error checking meeting:', error);
     }
 
-  }, [tourId, initializeMeetingSession, startLiveAduioSession, getMeetingAttendeeInfoFromCookies]);
+  }, [tourId, initializeMeetingSession, startLiveAduioSession, getMeetingAttendeeInfoFromCookies, rejoinLiveAduioSession]);
 
   console.log("chatRestriction", chatRestriction);
 
