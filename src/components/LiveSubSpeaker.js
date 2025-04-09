@@ -4,6 +4,8 @@ import {
   createAppInstanceUsers,
   addChannelMembership,
   listAttendee,
+  getMeetingByTourId,
+  getMeeting,
 } from '../apis/api';
 import {
   DefaultDeviceController,
@@ -30,21 +32,26 @@ import { IoVolumeMute } from "react-icons/io5";
 import { FaPause } from "react-icons/fa6";
 import { IoMicCircle, IoMicOffCircleSharp } from "react-icons/io5";
 import MessageBox from './MessageBox';
+import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 /**
  *  Component to start a live audio session for the sub speaker
  * The sub speaker can talk & listen to the audio from the main speaker
  * The sub speaker can also chat with the main speaker and other listeners
  */
 function LiveSubSpeaker() {
+  // Get the params from the URL
+  const { tourId } = useParams(); // Extracts 'tourId' from the URL
+  console.log('tourId:', tourId);
   // Get the meeting ID and channel ID from the URL query parameters
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  // Use for audio voice
-  const meetingId = queryParams.get('meetingId');
-  // Use for chat
-  const channelId = queryParams.get('channelId');
-  // Use for list channel membership
-  const hostId = queryParams.get('hostId');
+  // // Use for audio voice
+  // const meetingId = queryParams.get('meetingId');
+  // // Use for chat
+  // const channelId = queryParams.get('channelId');
+  // // Use for list channel membership
+  // const hostId = queryParams.get('hostId');
 
   // Hidden chat input based on chatSetting with chatSetting = 'guideOnly'
   const chatSetting = queryParams.get('chatSetting');
@@ -56,6 +63,7 @@ function LiveSubSpeaker() {
 
   // State variables to store the channel ARN and user ARN
   const [meetingSession, setMeetingSession] = useState(null);
+  const [chatRestriction, setChatRestriction] = useState(null);
   // const [meeting, setMetting] = useState(null);
   // const [attendee, setAttendee] = useState(null);
   const [selectedAudioInput, setSelectedAudioInput] = useState('');
@@ -204,17 +212,17 @@ function LiveSubSpeaker() {
   }, []);
   const userType = 'Sub-Guide';
   // Function to join the meeting
-  const joinMeeting = useCallback(async () => {
+  const joinMeeting = useCallback(async (meetingData, channelId) => {
     setIsLoading(true);
     try {
-      if (!meetingId || !channelId || !hostId) {
-        alert('Meeting ID, Channel ID, and hostId are required');
-        return;
-      }
+      // if (!meetingId || !channelId || !hostId) {
+      //   alert('Meeting ID, Channel ID, and hostId are required');
+      //   return;
+      // }
 
       // Get host user ID from the host ID
-      const hostUserArn = `${Config.appInstanceArn}/user/${hostId}`;
-      console.log('hostUserArn:', hostUserArn);
+      // const hostUserArn = `${Config.appInstanceArn}/user/${hostId}`;
+      // console.log('hostUserArn:', hostUserArn);
 
       // Generate a unique user ID and name for the host
       // Generate unique user ID
@@ -223,13 +231,13 @@ function LiveSubSpeaker() {
       const userID = uuidv4();
       // Join the meeting from the meeting ID the host has created
       //const meeting = await getMeeting(meetingId);
-      const meeting = await checkAvailableMeeting(meetingId, "Sub-Guide");
-      if (!meeting) return;
-      console.log('Meeting:', meeting);
-      const attendee = await createAttendee(meeting.MeetingId, `${userType}|${Date.now()}`);
+      // const meeting = await checkAvailableMeeting(meetingId, "Sub-Guide");
+      // if (!meeting) return;
+      // console.log('Meeting:', meeting);
+      const attendee = await createAttendee(meetingData.MeetingId, `${userType}|${Date.now()}`);
       console.log('Attendee created:', attendee);
-      initializeMeetingSession(meeting, attendee);
-      const createAppUserAndJoinChannelResponse = await createAppUserAndJoinChannel(meeting.MeetingId, attendee.AttendeeId, userID, userType, channelId);
+      initializeMeetingSession(meetingData, attendee);
+      const createAppUserAndJoinChannelResponse = await createAppUserAndJoinChannel(meetingData.MeetingId, attendee.AttendeeId, userID, userType, channelId);
       console.log('createAppUserAndJoinChannelResponse:', createAppUserAndJoinChannelResponse);
       // setMetting(meeting);
       //setAttendee(attendee);
@@ -239,14 +247,14 @@ function LiveSubSpeaker() {
       // Storage the Sub-Guide information in the cookies
       // Define your data
       const subGuide = {
-        meeting: meeting,
+        meeting: meetingData,
         attendee: attendee,
         userArn: createAppUserAndJoinChannelResponse.userArn,
         channelArn: createAppUserAndJoinChannelResponse.channelArn,
       };
 
       // Set the JSON cookie for 1 day
-      JSONCookieUtils.setJSONCookie("Sub-Guide", subGuide, 1);
+      JSONCookieUtils.setJSONCookie("Sub-Guide" + tourId, subGuide, 1);
       console.log("Cookie set for 1 day!");
 
     } catch (error) {
@@ -254,7 +262,7 @@ function LiveSubSpeaker() {
     } finally {
       setIsLoading(false);
     }
-  }, [meetingId, channelId, hostId, initializeMeetingSession, createAppUserAndJoinChannel]);
+  }, [initializeMeetingSession, createAppUserAndJoinChannel, tourId]);
 
 
   // Function to toggle microphone on/off
@@ -370,40 +378,84 @@ function LiveSubSpeaker() {
   //     }
   //   }
   // }, [joinMeeting, meetingId, channelId, hostId, getMeetingAttendeeInfoFromCookies]);
-  useEffect(() => {
-    const checkMatch = async () => {
+  const joinAudioSession2 = useCallback(
+    async (meeting, channelId) => {
       try {
         // Retrieve and parse the "Sub-Guide" cookie
-        const retrievedSubGuide = JSONCookieUtils.getJSONCookie("Sub-Guide");
+        const retrievedSubGuide = JSONCookieUtils.getJSONCookie("Sub-Guide" + tourId);
         console.log("Retrieved cookie:", retrievedSubGuide);
-        if (!retrievedSubGuide) {
-          console.log("Sub-Guide cookie not found");
-          joinMeeting();
-          return;
+        if (retrievedSubGuide) {
+          // Validate the retrieved cookie structure
+          const isMeetingMatched = retrievedSubGuide.meeting.MeetingId === meeting.MeetingId;
+          const isChannelMatched = retrievedSubGuide.channelArn === `${Config.appInstanceArn}/channel/${channelId}`;
+          const isMatched = isMeetingMatched && isChannelMatched;
+          if (isMatched) {
+            console.log("Sub-Guide cookie matched the current meeting and channel");
+            // Call checkMatchedMeeting only once and store the result
+            const meetingData = await checkAvailableMeeting(retrievedSubGuide.meeting.MeetingId, "Sub-Guide");
+            console.log('getMeetingResponse:', meetingData);
+            if (meetingData) {
+              getMeetingAttendeeInfoFromCookies(retrievedSubGuide);
+              return;
+            }
+          }
         }
-        // Validate the retrieved cookie structure
-        const isMeetingMatched = retrievedSubGuide.meeting.MeetingId === meetingId;
-        const isChannelMatched = retrievedSubGuide.channelArn === `${Config.appInstanceArn}/channel/${channelId}`;
-        const isMatched = isMeetingMatched && isChannelMatched;
-        if (isMatched) {
-          console.log("Sub-Guide cookie matched the current meeting and channel");
-          // Call checkMatchedMeeting only once and store the result
-          const meeting = await checkAvailableMeeting(retrievedSubGuide.meeting.MeetingId, "Sub-Guide");
-          console.log('getMeetingResponse:', meeting);
-          if (!meeting) return;
-          getMeetingAttendeeInfoFromCookies(retrievedSubGuide);
+        joinMeeting(meeting, channelId);
 
-        } else {
-          console.log("Sub-Guide cookie did not match the current meeting and channel");
-          joinMeeting();
-        }
       } catch (error) {
         console.error("Error processing the Sub-Guide cookie:", error);
       }
-    };
+    },
+    [
+      getMeetingAttendeeInfoFromCookies,
+      joinMeeting,
+      tourId
+    ]
+  );
+  // Function to join the audio session
+  // This function is called when the component mounts and when the tourId changes
+  const joinAudioSession = useCallback(async () => {
 
-    checkMatch(); // Execute the async function
-  }, [joinMeeting, hostId, meetingId, channelId, getMeetingAttendeeInfoFromCookies]);
+    const getMeetingByTourIdResponse = await getMeetingByTourId(tourId);
+    console.log('getMeetingByTourIdResponse', getMeetingByTourIdResponse);
+    if (getMeetingByTourIdResponse.statusCode === 200) {
+      setChatRestriction(getMeetingByTourIdResponse.data.chatRestriction);
+      console.log('Meeting found:', getMeetingByTourIdResponse.data.meetingId);
+
+      if (getMeetingByTourIdResponse.data.meetingId) {
+        console.log("Meeting Existed in Tour");
+        const checkAvailableMeetingResponse = await getMeeting(getMeetingByTourIdResponse.data.meetingId);
+        console.log('checkAvailableMeeting:', checkAvailableMeetingResponse);
+        console.log('checkAvailableMeeting statusCode:', checkAvailableMeetingResponse.statusCode);
+        if (checkAvailableMeetingResponse.statusCode === 404) {
+          //toast.info('Guide does not start, please wait...');
+          alert('Guide does not start, please wait...');
+        } else if (checkAvailableMeetingResponse.statusCode === 200) {
+          // Join the meeting again and set the meeting session in the state
+          console.log('Meeting not expired:', checkAvailableMeetingResponse);
+          console.log('Check checkAvailableMeetingResponse:', checkAvailableMeetingResponse.data);
+          joinAudioSession2(checkAvailableMeetingResponse.data, getMeetingByTourIdResponse.data.channelId);
+
+        } else {
+          console.log('Meeting error:', checkAvailableMeetingResponse);
+        }
+      } else {
+        alert('Guide does not start, please wait...');
+      }
+    } else {
+      // alert('Tour not found, please check the tour ID.');
+      console.log('Tour not found, please check the tour ID.');
+      toast.error('Tour not found, please check the tour ID.');
+    }
+  }, [joinAudioSession2, tourId]);
+
+  // Get the tour ID from the URL query parameters
+  useEffect(() => {
+    joinAudioSession(); // Call the async function
+    // Execute the async function
+  }, [joinMeeting, getMeetingAttendeeInfoFromCookies, joinAudioSession, tourId]);
+
+
 
 
   useEffect(() => {
@@ -446,88 +498,88 @@ function LiveSubSpeaker() {
     }
   }
 
-return (
-  <>
-    {/* <Participants count={participantsCount} /> */}
-    <Header count={participantsCount} chatSetting={chatSetting} userType={userType} />
-    <div className="live-sub-container">
-      <p className='title-sub-live'>
-        {t('pageTitles.subGuide')}
-      </p>
-      <div className='title-sub-live-upload'>
-        <div className='time'>
-          <p >2025/01/01</p>
+  return (
+    <>
+      {/* <Participants count={participantsCount} /> */}
+      <Header count={participantsCount} chatSetting={chatSetting} userType={userType} />
+      <div className="live-sub-container">
+        <p className='title-sub-live'>
+          {t('pageTitles.subGuide')}
+        </p>
+        <div className='title-sub-live-upload'>
+          <div className='time'>
+            <p >2025/01/01</p>
+          </div>
+          <h3 className='nameTour'>浅草寺ツアー</h3>
         </div>
-        <h3 className='nameTour'>浅草寺ツアー</h3>
-      </div>
-      <div className='audio-sub'>
-        <div className='play-button' onClick={handlePlay}>
-          {isPlay ? <FaPause size={30} /> : <IoPlay size={30} />}
-        </div>
+        <div className='audio-sub'>
+          <div className='play-button' onClick={handlePlay}>
+            {isPlay ? <FaPause size={30} /> : <IoPlay size={30} />}
+          </div>
 
-        <div className='mute-button' onClick={handleMuteUnmute}>
-          {isMuted ? <HiMiniSpeakerWave size={30} /> : <IoVolumeMute size={30} />
-          }
+          <div className='mute-button' onClick={handleMuteUnmute}>
+            {isMuted ? <HiMiniSpeakerWave size={30} /> : <IoVolumeMute size={30} />
+            }
+          </div>
+          <audio id='audioElementSub' ref={audioRef} >
+          </audio>
         </div>
-        <audio id='audioElementSub' ref={audioRef} >
-        </audio>
-      </div>
-      {(isLoading) ? (
-        <div className="loading">
-          <div className="spinner"></div>
-          <p>{t('loading')}</p>
-        </div>
-      ) : (
-        <>
-          {(noMicroMsg) ? (
-            <>
-              {!microChecking ? (
-                <p style={{ color: "red" }}>{t('noMicroMsg')}</p>
-              ) : (
-                <div className="loading">
-                  <div className="spinner"></div>
-                  {microChecking && <p>{t('microChecking')}</p>}
-                </div>
-              )}
-            </>
-          ) : (
-            <>
-              <div className='box-start-live-session'>
-                <h3 className='title-box'>{t('microSelectionLbl')}</h3>
-                {(audioInputDevices && audioInputDevices.length > 0) && (
-                  <div className="select-container">
-                  <select className='selectFile' style={{border:"1px solid #E57A00"}} value={selectedAudioInput} onChange={(e) => setSelectedAudioInput(e.target.value)}>
-                    {audioInputDevices.map((device) => (
-                      <option key={device.deviceId} value={device.deviceId}>
-                        {device.label}
-                      </option>
-                    ))}
-                  </select>
+        {(isLoading) ? (
+          <div className="loading">
+            <div className="spinner"></div>
+            <p>{t('loading')}</p>
+          </div>
+        ) : (
+          <>
+            {(noMicroMsg) ? (
+              <>
+                {!microChecking ? (
+                  <p style={{ color: "red" }}>{t('noMicroMsg')}</p>
+                ) : (
+                  <div className="loading">
+                    <div className="spinner"></div>
+                    {microChecking && <p>{t('microChecking')}</p>}
                   </div>
                 )}
-                <div className="controls">
-                  <div className='mic-button' onClick={toggleMicrophone}>
-                    {isMicOn ?
-                      <IoMicCircle size={60} color="#E57A00" />
-                      : <IoMicOffCircleSharp size={60} color="gray" />}
+              </>
+            ) : (
+              <>
+                <div className='box-start-live-session'>
+                  <h3 className='title-box'>{t('microSelectionLbl')}</h3>
+                  {(audioInputDevices && audioInputDevices.length > 0) && (
+                    <div className="select-container">
+                      <select className='selectFile' style={{ border: "1px solid #E57A00" }} value={selectedAudioInput} onChange={(e) => setSelectedAudioInput(e.target.value)}>
+                        {audioInputDevices.map((device) => (
+                          <option key={device.deviceId} value={device.deviceId}>
+                            {device.label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
+                  <div className="controls">
+                    <div className='mic-button' onClick={toggleMicrophone}>
+                      {isMicOn ?
+                        <IoMicCircle size={60} color="#E57A00" />
+                        : <IoMicOffCircleSharp size={60} color="gray" />}
+                    </div>
                   </div>
                 </div>
-              </div>
-            </>
-          )}
-          <br />
+              </>
+            )}
+            <br />
 
-          {(chatSetting !== "nochat" && channelArn) && (<>
-            <MessageBox userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} userType={userType} statusChat={chatSetting} />
-            {/* <ChatMessage userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} chatSetting={chatSetting} /> */}
-          </>)}
-          {/* {channelArn && <ChatMessage userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} chatSetting={chatSetting} />} */}
+            {(chatRestriction !== "nochat" && channelArn) && (<>
+              <MessageBox userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} userType={userType} statusChat={chatRestriction} />
+              {/* <ChatMessage userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} chatSetting={chatSetting} /> */}
+            </>)}
+            {/* {channelArn && <ChatMessage userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} chatSetting={chatSetting} />} */}
 
-        </>
-      )}
-    </div>
-  </>
-);
+          </>
+        )}
+      </div>
+    </>
+  );
 }
 
 export default LiveSubSpeaker;

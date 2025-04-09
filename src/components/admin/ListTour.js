@@ -17,11 +17,12 @@ import { useAuth } from "../admin/auth/AuthContext";
 
 const ListTour = () => {
     const { user } = useAuth();
-    console.log("ListTour user", user);
+    // console.log("ListTour user", user);
     const fileInputRef = useRef(null);
     const [isLoading, setIsLoading] = useState(false);
     const [tours, setTours] = useState([]);
     const [totalTours, setTotalTours] = useState(0);
+    const [currentPage, setCurrentPage] = useState(1);
     // handle upload csv
     const [showUploadConfirm, setShowUploadConfirm] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
@@ -32,21 +33,23 @@ const ListTour = () => {
     const itemsPerPage = 10;
     const endOffset = itemOffset + itemsPerPage;
     const currentItems = tours.slice(itemOffset, endOffset);
-    const countPage = Math.ceil(tours.length / itemsPerPage);
+    const countPage = Math.ceil(totalTours / itemsPerPage);
     // Get list tours
-    const getListTour = async (data) => {
+    const getListTour = async (page=null,data=null) => {
+        setIsLoading(true);
         const listoursResponse = await listTours({
-            page: 1,
+            page: page,
             pageSize: 10,
             query: data
         });
         console.log("listoursResponse", listoursResponse);
         setTours(listoursResponse.data);
         setTotalTours(listoursResponse.count);
+        setIsLoading(false);
     };
     // Get list tours
     useEffect(() => {
-        getListTour('');
+        getListTour(1,'');
     }, []);
 
     // Handle search change
@@ -58,6 +61,7 @@ const ListTour = () => {
     const handleSearchClick = () => {
         console.log("Search query:", query);
         // Call API to search tours
+        // setItemOffset(0);
         getListTour(query);
     };
 
@@ -213,8 +217,12 @@ const ListTour = () => {
 
     };
     const handlePageClick = (event) => {
-        // const newPage = event.selected + 1; // `selected` bắt đầu từ 0
-        // setCurrentPage(newPage);           
+        const newPage = event.selected + 1; // `selected` bắt đầu từ 0
+        setCurrentPage(newPage);  
+        console.log("Page clicked:", newPage);
+        // Call API to get tours for the selected page
+        
+        getListTour(newPage, '');         
         const newOffset = event.selected * itemsPerPage % tours.length;
         setItemOffset(newOffset);
     };
@@ -305,7 +313,7 @@ const ListTour = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {currentItems && currentItems.map((tour, index) => (
+                                {tours && tours.map((tour, index) => (
                                     <tr key={index}>
                                         <th className="sticky">
                                             <Link to={`/admin/tour/update?tourId=${tour.tourId}`}>
@@ -388,6 +396,7 @@ const ListTour = () => {
                                     containerClassName="pagination"
                                     activeClassName="active"
                                     renderOnZeroPageCount={null}
+                                    // forcePage={Math.floor(itemOffset / itemsPerPage)}
                                 // forcePage={currentPage - 1}
                                 />
                             </ul>

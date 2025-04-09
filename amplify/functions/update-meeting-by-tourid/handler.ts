@@ -42,16 +42,12 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     // Update the tour item in DynamoDB
     const updateExpression = `
       set meetingId = :meetingId,
-          channelId = :channelId,
-          updatedBy = :updatedBy,
-          updatedAt = :updatedAt
+          channelId = :channelId
     `;
 
     const expressionAttributeValues = {
       ':meetingId': meetingId,
-      ':channelId': channelId,
-      ':updatedBy': 0, // Replace with actual user who is updating, guide user
-      ':updatedAt': new Date().toISOString()
+      ':channelId': channelId
     };
 
     await dynamoDB.update({

@@ -475,20 +475,10 @@ function LiveViewer() {
     const getMeetingByTourIdResponse = await getMeetingByTourId(tourId);
     console.log('getMeetingByTourIdResponse', getMeetingByTourIdResponse);
     if (getMeetingByTourIdResponse.statusCode === 200) {
-      //setMeetingId(getMeetingByTourIdResponse.data.meetingId);
-      //setChannelId(getMeetingByTourIdResponse.data.channelId);
       setChatRestriction(getMeetingByTourIdResponse.data.chatRestriction);
       console.log('Meeting found:', getMeetingByTourIdResponse.data.meetingId);
 
       if (getMeetingByTourIdResponse.data.meetingId) {
-        // const meeting = await checkAvailableMeeting(getMeetingByTourIdResponse.data.meetingId, "Main-Guide");
-        // console.log('checkAvailableMeeting:', meeting);
-        // if (!meeting) return;
-        // const attendee = await createAttendee(meeting.MeetingId, `${userType}|${Date.now()}`);
-        // console.log('Attendee created:', attendee);
-        // initializeMeetingSession(meeting, attendee);
-        // setMetting(meeting);
-        // setAttendee(attendee);
         console.log("Meeting Existed in Tour");
         const checkAvailableMeetingResponse = await getMeeting(getMeetingByTourIdResponse.data.meetingId);
         console.log('checkAvailableMeeting:', checkAvailableMeetingResponse);
