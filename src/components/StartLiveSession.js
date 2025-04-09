@@ -36,7 +36,7 @@ import { HiMiniSpeakerWave } from "react-icons/hi2";
 import { IoVolumeMute } from "react-icons/io5";
 import { IoMicCircle, IoMicOffCircleSharp } from "react-icons/io5";
 import { FaPause } from "react-icons/fa6";
-import { useLocation } from 'react-router-dom';
+//import { useLocation } from 'react-router-dom';
 //import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -61,7 +61,7 @@ function StartLiveSession() {
 
   // States to manage the meeting session
   const [channelArn, setChannelArn] = useState('');
-  const [channelID, setChannelID] = useState('');
+  //const [channelID, setChannelID] = useState('');
   const [meetingSession, setMeetingSession] = useState(null);
   const [meeting, setMetting] = useState(null);
   const [attendee, setAttendee] = useState(null);
@@ -69,7 +69,7 @@ function StartLiveSession() {
   const [audioInputDevices, setAudioInputDevices] = useState([]);
   const [userArn, setUserArn] = useState('');
   const [isLoading, setIsLoading] = useState(true);
-  const [userId, setUserId] = useState('');
+  //const [userId, setUserId] = useState('');
   const [isMicOn, setIsMicOn] = useState(false); // State for microphone status
   const [transformVFD, setTransformVFD] = useState(null);
   const [microChecking, setMicroChecking] = useState(t('microChecking'));
@@ -81,7 +81,7 @@ function StartLiveSession() {
   // Replace local variables with refs
   const transcriptListRef = useRef([]);
   //get value chatSetting from ChatSetting.js
-  const location = useLocation();
+ /// const location = useLocation();
   // const { state } = location;
   // const valueChatSetting = state?.chatSetting
   //const queryParams = new URLSearchParams(location.search);
@@ -238,7 +238,7 @@ function StartLiveSession() {
   const startLiveAduioSession = useCallback(async () => {
     setIsLoading(true);
     // Delete the cookie
-    JSONCookieUtils.deleteCookie("Main-Guide");
+    JSONCookieUtils.deleteCookie("Main-Guide" + tourId);
     console.log("Cookie deleted successfully!");
     try {
       const userID = uuidv4();
@@ -259,12 +259,12 @@ function StartLiveSession() {
         channelId: createAppUserAndChannelResponse.channelID,
       };
       await updateMeetingIdAndChannelId(data);
-      setUserId(userID);
+      //setUserId(userID);
       setMetting(meeting);
       setAttendee(attendee);
       setUserArn(createAppUserAndChannelResponse.userArn);
       setChannelArn(createAppUserAndChannelResponse.channelArn);
-      setChannelID(createAppUserAndChannelResponse.channelID);
+      //setChannelID(createAppUserAndChannelResponse.channelID);
 
       // Storage the Guide information in the cookies
       // Define your data
@@ -276,7 +276,7 @@ function StartLiveSession() {
       };
 
       // Set the JSON cookie for 1 day
-      JSONCookieUtils.setJSONCookie("Main-Guide", mainGuide, 1);
+      JSONCookieUtils.setJSONCookie("Main-Guide"+ tourId, mainGuide, 1);
       console.log("Cookie set Main-Guide for 1 day!");
 
     } catch (error) {
@@ -296,15 +296,15 @@ function StartLiveSession() {
     // console.log("Retrieved cookie:", retrievedMainGuide);
     // if (!retrievedMainGuide) {
     try {
-      const retrievedMainGuide = JSONCookieUtils.getJSONCookie("Main-Guide");
+      const retrievedMainGuide = JSONCookieUtils.getJSONCookie("Main-Guide" + tourId);
       console.log("Retrieved cookie:", retrievedMainGuide);
 
-      if(!retrievedMainGuide) {
+      if (!retrievedMainGuide) {
         console.log("No cookie found, creating a new meeting...");
         startLiveAduioSession();
         return;
       }
-      const userID = retrievedMainGuide.userArn.split('/').pop();
+      //const userID = retrievedMainGuide.userArn.split('/').pop();
       //const userName = `Guide`;
       const meeting = await createMeeting();
       console.log('Meeting created:', meeting);
@@ -324,12 +324,12 @@ function StartLiveSession() {
         channelId: retrievedMainGuide.channelArn.split('/').pop(),
       };
       await updateMeetingIdAndChannelId(data);
-      setUserId(userID);
+     // setUserId(userID);
       setMetting(meeting);
       setAttendee(attendee);
       setUserArn(retrievedMainGuide.userArn);
       setChannelArn(retrievedMainGuide.channelArn);
-      setChannelID(retrievedMainGuide.channelArn.split('/').pop());
+      //setChannelID(retrievedMainGuide.channelArn.split('/').pop());
 
       // Storage the Guide information in the cookies
       // Define your data
@@ -353,7 +353,7 @@ function StartLiveSession() {
     } finally {
       setIsLoading(false);
     }
-  }, [initializeMeetingSession, userType, tourId]);
+  }, [initializeMeetingSession, startLiveAduioSession, userType, tourId]);
 
   // useEffect(() => {
   //   if (meeting && channelID) {
@@ -458,50 +458,13 @@ function StartLiveSession() {
     }
   }, [meetingSession]);
 
-  // Get meeting, attendee, and user information from the cookies
-  // useEffect(() => {
-  //   const getMeetingAttendeeInfoFromCookies = async () => {
-  //     const retrievedMainGuide = JSONCookieUtils.getJSONCookie("Main-Guide");
-  //     console.log("Retrieved cookie:", retrievedMainGuide);
-  //     if (!retrievedMainGuide) {
-  //       startLiveAduioSession();
-  //     }
-  //     const meeting = await checkAvailableMeeting(retrievedMainGuide.meeting.MeetingId, "Main-Guide");
-  //     console.log('getMeetingResponse:', meeting);
-  //     if (!meeting) return;
-  //     console.log("Retrieved cookie:", retrievedMainGuide);
-  //     initializeMeetingSession(retrievedMainGuide.meeting, retrievedMainGuide.attendee);
-  //     setMetting(retrievedMainGuide.meeting);
-  //     setAttendee(retrievedMainGuide.attendee);
-  //     setUserArn(retrievedMainGuide.userArn);
-  //     setUserId(retrievedMainGuide.userArn.split('/').pop());
-  //     setChannelArn(retrievedMainGuide.channelArn);
-  //     setChannelID(retrievedMainGuide.channelArn.split('/').pop());
-  //     setIsLoading(false);
-  //   }
-  //   getMeetingAttendeeInfoFromCookies();
-  // }, [initializeMeetingSession, startLiveAduioSession]);
-
-  // Get the meeting and attendee information from the cookies
-  // useEffect(() => {
-  //   const mainGuide = JSONCookieUtils.getJSONCookie("Main-Guide");
-  //   console.log("Retrieved cookie:", mainGuide);
-  //   if (mainGuide) {
-  //     console.log("mainGuide:", mainGuide);
-  //     setMetting(mainGuide.meeting);
-  //     setAttendee(mainGuide.attendee);
-  //     setUserArn(mainGuide.userArn);
-  //     setUserId(mainGuide.userArn.split('/').pop());
-  //     setChannelArn(mainGuide.channelArn);
-  //     setChannelID(mainGuide.channelArn.split('/').pop());
-  //   }
-  // }, []);
-
+  // Function to get the meeting and attendee information from the cookies
   const getMeetingAttendeeInfoFromCookies = useCallback(async () => {
-    const retrievedMainGuide = JSONCookieUtils.getJSONCookie("Main-Guide");
+    const retrievedMainGuide = JSONCookieUtils.getJSONCookie("Main-Guide" + tourId);
     console.log("Retrieved cookie:", retrievedMainGuide);
     if (!retrievedMainGuide) {
       startLiveAduioSession();
+      return;
     }
     // const meeting = await checkAvailableMeeting(retrievedMainGuide.meeting.MeetingId, "Main-Guide");
     // console.log('getMeetingResponse:', meeting);
@@ -510,11 +473,11 @@ function StartLiveSession() {
     setMetting(retrievedMainGuide.meeting);
     setAttendee(retrievedMainGuide.attendee);
     setUserArn(retrievedMainGuide.userArn);
-    setUserId(retrievedMainGuide.userArn.split('/').pop());
+    //setUserId(retrievedMainGuide.userArn.split('/').pop());
     setChannelArn(retrievedMainGuide.channelArn);
-    setChannelID(retrievedMainGuide.channelArn.split('/').pop());
+    //setChannelID(retrievedMainGuide.channelArn.split('/').pop());
     setIsLoading(false);
-  }, [initializeMeetingSession]);
+  }, [initializeMeetingSession, startLiveAduioSession, tourId]);
 
   useEffect(() => {
     getAudioInputDevices();

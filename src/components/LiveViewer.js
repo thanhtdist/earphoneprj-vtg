@@ -21,7 +21,6 @@ import metricReport from '../utils/MetricReport';
 import JSONCookieUtils from '../utils/JSONCookieUtils';
 import { checkAvailableMeeting } from '../utils/MeetingUtils';
 import { v4 as uuidv4 } from 'uuid';
-import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { LISTEN_VOICE_LANGUAGES, JA_LISTEN_VOICE_LANGUAGES } from '../utils/constant';
 import Header from './Header';
@@ -37,18 +36,8 @@ function LiveViewer() {
   // Get the params from the URL
   const { tourId } = useParams(); // Extracts 'tourId' from the URL
   console.log('tourId:', tourId);
-  const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-  // const meetingId = queryParams.get('meetingId');
-  // const channelId = queryParams.get('channelId');
-  const hostId = queryParams.get('hostId');
-  const chatSetting = queryParams.get('chatSetting');
-
   const { t, i18n } = useTranslation();
-
   const [meetingSession, setMeetingSession] = useState(null);
-  const [meetingId, setMeetingId] = useState(null);
-  const [channelId, setChannelId] = useState(null);
   const [meeting, setMeeting] = useState(null);
   const [attendee, setAttendee] = useState(null);
   const [channelArn, setChannelArn] = useState('');
@@ -63,7 +52,6 @@ function LiveViewer() {
     LISTEN_VOICE_LANGUAGES.find((lang) => lang.key.startsWith(i18n.language))?.key || 'ja-JP'
   );
   const [chatRestriction, setChatRestriction] = useState(null);
-  //const [isJoinAudio, setIsJoinAudio] = useState(false);
   // Replace local variables with refs
   const transcriptListRef = useRef([]);
   const transcriptList2Ref = useRef([]);
@@ -204,7 +192,7 @@ function LiveViewer() {
           channelArn,
         };
 
-        JSONCookieUtils.setJSONCookie('User', user, 1);
+        JSONCookieUtils.setJSONCookie('User' + tourId, user, 1);
 
       } catch (error) {
         console.error('Error joining the meeting:', error);
@@ -214,21 +202,27 @@ function LiveViewer() {
     },
     [
       userID,
-      meetingId,
-      channelId,
-      hostId,
       initializeMeetingSession,
       createAppUserAndJoinChannel,
+      tourId
     ]
   );
 
   const joinAudioSession2 = useCallback(
     async (meeting, channelId) => {
       try {
-        const retrievedUser = JSONCookieUtils.getJSONCookie('User');
+        const retrievedUser = JSONCookieUtils.getJSONCookie('User' + tourId);
+        console.log('Check retrievedUser:', retrievedUser);
+        console.log('Check retrievedUser meeting:', retrievedUser?.meeting);
+        console.log('Check retrievedUser channel:', retrievedUser?.channelArn);
+        console.log('Check Input channelId:', channelId);
+        console.log('Check Input meeting:', meeting.MeetingId);
+        console.log('Check retrievedUser meetingId:', retrievedUser?.meeting.MeetingId);
+        console.log('Check retrievedUser channelId:', retrievedUser?.channelArn.split('/').pop());
+        console.log('Check retrievedUser channelId:', `${Config.appInstanceArn}/channel/${channelId}`);
         if (retrievedUser) {
           const isMeetingMatched =
-            retrievedUser.meeting.MeetingId === meeting.meetingId;
+            retrievedUser.meeting.MeetingId === meeting.MeetingId;
           const isChannelMatched =
             retrievedUser.channelArn === `${Config.appInstanceArn}/channel/${channelId}`;
 
@@ -251,6 +245,7 @@ function LiveViewer() {
     [
       getMeetingAttendeeInfoFromCookies,
       joinMeeting,
+      tourId
     ]
   );
 
@@ -480,8 +475,8 @@ function LiveViewer() {
     const getMeetingByTourIdResponse = await getMeetingByTourId(tourId);
     console.log('getMeetingByTourIdResponse', getMeetingByTourIdResponse);
     if (getMeetingByTourIdResponse.statusCode === 200) {
-      setMeetingId(getMeetingByTourIdResponse.data.meetingId);
-      setChannelId(getMeetingByTourIdResponse.data.channelId);
+      //setMeetingId(getMeetingByTourIdResponse.data.meetingId);
+      //setChannelId(getMeetingByTourIdResponse.data.channelId);
       setChatRestriction(getMeetingByTourIdResponse.data.chatRestriction);
       console.log('Meeting found:', getMeetingByTourIdResponse.data.meetingId);
 
@@ -503,14 +498,8 @@ function LiveViewer() {
           alert('Guide does not start, please wait...');
         } else if (checkAvailableMeetingResponse.statusCode === 200) {
           // Join the meeting again and set the meeting session in the state
-          // const attendee = await createAttendee(getMeetingByTourIdResponse.data.meetingId, `${userType}|${Date.now()}`)
           console.log('Meeting not expired:', checkAvailableMeetingResponse);
-          // const retrievedUser = JSONCookieUtils.getJSONCookie('User');
-          // if(!retrievedUser) {
-          //   joinMeeting();
-          // } else {
-          //   getMeetingAttendeeInfoFromCookies(retrievedUser);
-          // }
+          console.log('Check checkAvailableMeetingResponse:', checkAvailableMeetingResponse.data);
           joinAudioSession2(checkAvailableMeetingResponse.data, getMeetingByTourIdResponse.data.channelId);
 
         } else {
@@ -524,14 +513,14 @@ function LiveViewer() {
       console.log('Tour not found, please check the tour ID.');
       toast.error('Tour not found, please check the tour ID.');
     }
-  }, [getMeetingAttendeeInfoFromCookies]);
+  }, [joinAudioSession2, tourId]);
 
 
 
   const isLongText = translatedListRef.current.join(' ').length > 300;
   return (
     <>
-      <Header count={participantsCount} meeting={meeting} channelID={channelId} userId={userID} chatSetting={chatSetting} userType={userType} />
+      <Header count={participantsCount} tourId={tourId} userType={userType} />
       {/* <div className="live-viewer-container"> */}
       <div className={` ${meeting && attendee ? 'live-viewer-container' : 'live-viewer-container-center'}`}>
         <div className='live-viewer-title'>
