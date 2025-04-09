@@ -253,7 +253,7 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null, userT
   }, [initializeMessagingSession, channelArn, userArn, sessionId]);
   const styleButton = () => {
     if (userType === "Guide") {
-      return  'red'     
+      return  '#C60226'     
     }
     else if (userType === "User") {
       return  '#16A085'

@@ -23,7 +23,7 @@ function Header({ tourId, count = null, userType = null }) {
     const style = () => {
         if (userType === "Guide") {
             return {
-                color: 'red'
+                color: '#C60226'
             }
         }
         else if (userType === "User") {
@@ -65,10 +65,12 @@ function Header({ tourId, count = null, userType = null }) {
                         <span className="close-btn" style={{ border: '2px solid red', backgroundColor: 'red' }} onClick={closePopup}>&times;</span>
                         <div className='contentQR'>
                             <h3>{t('generateQRCodeLbl')}</h3>
+                            <div className="select-container">
                             <select className='selectFile' style={{ border: "1px solid #C60226" }} value={selectedQR} onChange={handleQRSelectionChange}>
                                 <option value="subSpeaker">{t('generateQRCodeOptions.subGuide')}</option>
                                 <option value="listener">{t('generateQRCodeOptions.listener')}</option>
                             </select>
+                            </div>
                             {selectedQR === 'subSpeaker' ? (
                                 <>
                                     <div className='qrCodeContainer'>

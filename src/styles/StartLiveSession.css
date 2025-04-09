@@ -123,8 +123,8 @@ select {
 }
 
 .titleLiveSession {
-  border: 1px solid red;
-  color: red;
+  border: 1px solid #C60226;
+  color: #C60226;
   border-radius: 25px;
   width: 60%;
   text-align: center;

@@ -495,6 +495,7 @@ return (
               <div className='box-start-live-session'>
                 <h3 className='title-box'>{t('microSelectionLbl')}</h3>
                 {(audioInputDevices && audioInputDevices.length > 0) && (
+                  <div className="select-container">
                   <select className='selectFile' style={{border:"1px solid #E57A00"}} value={selectedAudioInput} onChange={(e) => setSelectedAudioInput(e.target.value)}>
                     {audioInputDevices.map((device) => (
                       <option key={device.deviceId} value={device.deviceId}>
@@ -502,6 +503,7 @@ return (
                       </option>
                     ))}
                   </select>
+                  </div>
                 )}
                 <div className="controls">
                   <div className='mic-button' onClick={toggleMicrophone}>

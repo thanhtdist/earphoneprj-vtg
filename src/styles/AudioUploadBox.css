@@ -90,6 +90,10 @@
   height:47px;
   background-color: #FAFAFA;
   padding: 12px 15px;
-  /* font-weight: bold; */
-  justify-self: center;
+  
+}
+.select-container{
+  display: flex;
+  justify-content: center; /* Căn giữa theo chiều ngang */
+  align-items: center;
 }

@@ -29,7 +29,7 @@ const MessageBox = ({ userArn, sessionId, channelArn, userType, statusChat }) =>
     const styleIcon = () => {
         if (userType === "Guide") {
             return {
-                color: 'red'
+                color: '#C60226'
             }
         }
         else if (userType === "User") {
@@ -46,8 +46,8 @@ const MessageBox = ({ userArn, sessionId, channelArn, userType, statusChat }) =>
     const styleCloseButton = () => {
         if (userType === "Guide") {
             return {
-                border: '2px solid red',
-                backgroundColor: 'red'
+                border: '2px solid #C60226',
+                backgroundColor: '#C60226'
             }
         }
         else if (userType === "User") {
