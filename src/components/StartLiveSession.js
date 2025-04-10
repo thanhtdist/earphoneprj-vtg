@@ -286,7 +286,9 @@ function StartLiveSession() {
     }
   }, [initializeMeetingSession, userType, tourId]);
 
+  // Function to rejoin a live audio session after the meeting has expired
   const rejoinLiveAduioSession = useCallback(async () => {
+    console.log('rejoinLiveAduioSession tourId:', tourId);
     setIsLoading(true);
     // // Delete the cookie
     // JSONCookieUtils.deleteCookie("Main-Guide");
@@ -318,6 +320,8 @@ function StartLiveSession() {
       // const createAppUserAndChannelResponse = await createAppUserAndChannel(userID, userName);
       // console.log('ChannelID created:', createAppUserAndChannelResponse.channelID);
       // Update table tour with the meetingId and channelId
+      console.log('rejoinLiveAduioSession.ChannelId', retrievedMainGuide.channelArn.split('/').pop());
+      console.log('rejoinLiveAduioSession.MeetingId', meeting.MeetingId);
       const data = {
         tourId: tourId,
         meetingId: meeting.MeetingId,
@@ -568,8 +572,7 @@ function StartLiveSession() {
         console.log('getMeetingByTourIdResponse', getMeetingByTourIdResponse);
         if (getMeetingByTourIdResponse.statusCode === 200) {
           setChatRestriction(getMeetingByTourIdResponse.data.chatRestriction);
-          console.log('Meeting found:', getMeetingByTourIdResponse.data.meetingId);
-
+          console.log('Meeting ID response:', getMeetingByTourIdResponse.data.meetingId);
           if (getMeetingByTourIdResponse.data.meetingId) {
             // const meeting = await checkAvailableMeeting(getMeetingByTourIdResponse.data.meetingId, "Main-Guide");
             // console.log('checkAvailableMeeting:', meeting);
@@ -584,13 +587,13 @@ function StartLiveSession() {
             console.log('checkAvailableMeeting:', checkAvailableMeetingResponse);
             console.log('checkAvailableMeeting statusCode:', checkAvailableMeetingResponse.statusCode);
             if (checkAvailableMeetingResponse.statusCode === 404) {
-              console.log("Meeting expired, creating a new one...");
+              console.log("Meeting expired in AWS Chime, creating a new meeting, attendee and use same channel...");
               startLiveAduioSession();
               //rejoinLiveAduioSession();
             } else if (checkAvailableMeetingResponse.statusCode === 200) {
               // Join the meeting again and set the meeting session in the state
               // const attendee = await createAttendee(getMeetingByTourIdResponse.data.meetingId, `${userType}|${Date.now()}`)
-              console.log('Meeting not expired:', checkAvailableMeetingResponse);
+              console.log('Meeting not expired, get cookie, continue meeting:', checkAvailableMeetingResponse);
               // console.log('State Attendee:', attendee);
               // console.log('State Meeting:', meeting);
               // initializeMeetingSession(meeting, attendee);
@@ -599,7 +602,7 @@ function StartLiveSession() {
               console.log('Meeting error:', checkAvailableMeetingResponse);
             }
           } else {
-            console.log('Meeting not found, creating a new one...');
+            console.log('Meeting not found in Tours, creating a new one...');
             startLiveAduioSession();
           }
         } else {
