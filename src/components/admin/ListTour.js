@@ -8,7 +8,7 @@ import { useEffect } from 'react';
 import Sidebar from './Sidebar';
 import { Link } from 'react-router-dom';
 import Papa from 'papaparse';
-import { createMeetingAndChannel } from '../../utils/MeetingUtils';
+//import { createMeetingAndChannel } from '../../utils/MeetingUtils';
 import ConfirmModal from '../popup/ConfirmModal';
 import { toast } from "react-toastify";
 import Loading from '../Loading';
@@ -147,12 +147,12 @@ const ListTour = () => {
                         };
                     });
                     // For each parsed tour, get a unique meeting and channel
-                    for (const tour of parsedData) {
-                        const response = await createMeetingAndChannel();
-                        tour.meetingId = response.meetingId || "";
-                        tour.channelId = response.channelId || "";
-                    }
-                    console.log("Parsed data:", parsedData);
+                    // for (const tour of parsedData) {
+                    //     const response = await createMeetingAndChannel();
+                    //     tour.meetingId = response.meetingId || "";
+                    //     tour.channelId = response.channelId || "";
+                    // }
+                    // console.log("Parsed data:", parsedData);
 
                     // Call create batch tour API
                     callCreateBatchTour(parsedData);

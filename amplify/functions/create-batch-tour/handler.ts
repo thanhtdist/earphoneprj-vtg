@@ -51,8 +51,6 @@ export const handler: APIGatewayProxyHandler = async (event) => {
         emailCustomer,
         phoneNumberCustomer,
         otherRemarks,
-        meetingId,
-        channelId,
         chatRestriction
       } = tour;
 
@@ -83,8 +81,8 @@ export const handler: APIGatewayProxyHandler = async (event) => {
             emailCustomer,
             phoneNumberCustomer,
             otherRemarks,
-            meetingId,
-            channelId,
+            meetingId: '',
+            channelId: '',
             chatRestriction,
             createdAt: new Date().toISOString(),
             createdBy: user.userId, // Replace with actual user who is creating
