@@ -12,6 +12,10 @@ export const handler: APIGatewayProxyHandler = async (event) => {
   // Initialize DynamoDB client
   const dynamoDB = new AWS.DynamoDB.DocumentClient({ region: Config.region });
 
+  // Create a new Chime SDK Meeting instance
+  const meetingChime = new AWS.ChimeSDKMeetings({ region: Config.region });
+  //const messageChime = new AWS.ChimeSDKMessaging({ region: Config.message_region });
+
   try {
 
     // Authenticate the user
@@ -33,6 +37,20 @@ export const handler: APIGatewayProxyHandler = async (event) => {
         body: JSON.stringify({ error: 'Invalid input: tourId is required.' }),
         headers: Config.headers,
       };
+    }
+
+    // Get MeetingId for the tour with the specified tourId
+    const result = await dynamoDB.get({
+      TableName: "Tours",
+      Key: { tourId },
+    }).promise();
+    console.log('Tour retrieved: ', result.Item?.meetingId);
+    if(result.Item?.meetingId) {
+      // Delete the meeting using the Chime SDK
+      const meetingId = result.Item.meetingId;
+      console.log('Deleting meeting with meetingId: ', meetingId);
+      await meetingChime.deleteMeeting({ MeetingId: meetingId }).promise();
+      console.log('Meeting deleted successfully: ', meetingId);
     }
 
     // Update the tour item in DynamoDB

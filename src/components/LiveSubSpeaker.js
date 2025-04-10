@@ -23,7 +23,6 @@ import { getPOSTLogger } from '../utils/MeetingLogger';
 import { checkAvailableMeeting } from '../utils/MeetingUtils';
 import JSONCookieUtils from '../utils/JSONCookieUtils';
 import { v4 as uuidv4 } from 'uuid';
-import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import Header from './Header';
 import { IoPlay } from "react-icons/io5";
@@ -43,19 +42,6 @@ function LiveSubSpeaker() {
   // Get the params from the URL
   const { tourId } = useParams(); // Extracts 'tourId' from the URL
   console.log('tourId:', tourId);
-  // Get the meeting ID and channel ID from the URL query parameters
-  const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-  // // Use for audio voice
-  // const meetingId = queryParams.get('meetingId');
-  // // Use for chat
-  // const channelId = queryParams.get('channelId');
-  // // Use for list channel membership
-  // const hostId = queryParams.get('hostId');
-
-  // Hidden chat input based on chatSetting with chatSetting = 'guideOnly'
-  const chatSetting = queryParams.get('chatSetting');
-
   // Use translation
   const { t, i18n } = useTranslation();
   console.log('i18n', i18n);

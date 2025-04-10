@@ -81,7 +81,7 @@ function StartLiveSession() {
   // Replace local variables with refs
   const transcriptListRef = useRef([]);
   //get value chatSetting from ChatSetting.js
- /// const location = useLocation();
+  /// const location = useLocation();
   // const { state } = location;
   // const valueChatSetting = state?.chatSetting
   //const queryParams = new URLSearchParams(location.search);
@@ -276,7 +276,7 @@ function StartLiveSession() {
       };
 
       // Set the JSON cookie for 1 day
-      JSONCookieUtils.setJSONCookie("Main-Guide"+ tourId, mainGuide, 1);
+      JSONCookieUtils.setJSONCookie("Main-Guide" + tourId, mainGuide, 1);
       console.log("Cookie set Main-Guide for 1 day!");
 
     } catch (error) {
@@ -328,7 +328,7 @@ function StartLiveSession() {
         channelId: retrievedMainGuide.channelArn.split('/').pop(),
       };
       await updateMeetingIdAndChannelId(data);
-     // setUserId(userID);
+      // setUserId(userID);
       setMetting(meeting);
       setAttendee(attendee);
       setUserArn(retrievedMainGuide.userArn);
@@ -345,12 +345,12 @@ function StartLiveSession() {
       };
 
       // Delete the cookie
-      JSONCookieUtils.deleteCookie("Main-Guide");
-      console.log("Cookie deleted successfully!");
+      JSONCookieUtils.deleteCookie("Main-Guide" + tourId);
+      console.log("rejoinLiveAduioSession Cookie deleted successfully!");
 
       // Set the JSON cookie for 1 day
-      JSONCookieUtils.setJSONCookie("Main-Guide", mainGuide, 1);
-      console.log("Cookie set Main-Guide for 1 day!");
+      JSONCookieUtils.setJSONCookie("Main-Guide" + tourId, mainGuide, 1);
+      console.log("rejoinLiveAduioSession Cookie set Main-Guide for 1 day!");
 
     } catch (error) {
       console.error('Error starting meeting:', error);
@@ -678,13 +678,13 @@ function StartLiveSession() {
                   <h3 className='title-box'>{t('microSelectionLbl')}</h3>
                   {(audioInputDevices && audioInputDevices.length > 0) && (
                     <div className="select-container">
-                    <select className='selectFile' style={{ border: "1px solid #C60226" }} value={selectedAudioInput} onChange={(e) => setSelectedAudioInput(e.target.value)}>
-                      {audioInputDevices.map((device) => (
-                        <option key={device.deviceId} value={device.deviceId}>
-                          {device.label}
-                        </option>
-                      ))}
-                    </select>
+                      <select className='selectFile' style={{ border: "1px solid #C60226" }} value={selectedAudioInput} onChange={(e) => setSelectedAudioInput(e.target.value)}>
+                        {audioInputDevices.map((device) => (
+                          <option key={device.deviceId} value={device.deviceId}>
+                            {device.label}
+                          </option>
+                        ))}
+                      </select>
                     </div>
                   )}
                   <div className="controls">

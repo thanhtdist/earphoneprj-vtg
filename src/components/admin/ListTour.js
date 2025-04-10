@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import {
     listTours,
     createBatchTour,
@@ -13,10 +13,8 @@ import ConfirmModal from '../popup/ConfirmModal';
 import { toast } from "react-toastify";
 import Loading from '../Loading';
 import ReactPaginate from 'react-paginate';
-import { useAuth } from "../admin/auth/AuthContext";
 
 const ListTour = () => {
-    const { user } = useAuth();
     // console.log("ListTour user", user);
     const fileInputRef = useRef(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -29,28 +27,29 @@ const ListTour = () => {
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
     const [selectedTour, setSelectedTour] = useState({ tourId: null, tourNumber: null });
     const [query, setQuery] = useState('');
-    const [itemOffset, setItemOffset] = useState(0);
+    //const [itemOffset, setItemOffset] = useState(0);
     const itemsPerPage = 10;
-    const endOffset = itemOffset + itemsPerPage;
-    const currentItems = tours.slice(itemOffset, endOffset);
+    //const endOffset = itemOffset + itemsPerPage;
+    //const currentItems = tours.slice(itemOffset, endOffset);
     const countPage = Math.ceil(totalTours / itemsPerPage);
     // Get list tours
-    const getListTour = async (page=null,data=null) => {
+    const getListTour = useCallback(async (data, page = 1) => {
         setIsLoading(true);
         const listoursResponse = await listTours({
             page: page,
             pageSize: 10,
-            query: data
+            query: data,
         });
-        console.log("listoursResponse", listoursResponse);
+        console.log("listoursResponse xxx", listoursResponse);
         setTours(listoursResponse.data);
         setTotalTours(listoursResponse.count);
         setIsLoading(false);
-    };
+    }, []);
+
     // Get list tours
     useEffect(() => {
-        getListTour(1,'');
-    }, []);
+        getListTour('');
+    }, [getListTour]);
 
     // Handle search change
     const handleSearchChange = (e) => {
@@ -217,14 +216,15 @@ const ListTour = () => {
 
     };
     const handlePageClick = (event) => {
-        const newPage = event.selected + 1; // `selected` bắt đầu từ 0
-        setCurrentPage(newPage);  
-        console.log("Page clicked:", newPage);
+        const newPage = event.selected + 1; // `selected` starts from 0
+        //setCurrentPage(newPage);
+        console.log("handlePageClick Current query:", query);
+        console.log("handlePageClick Page clicked:", newPage);
         // Call API to get tours for the selected page
-        
-        getListTour(newPage, '');         
-        const newOffset = event.selected * itemsPerPage % tours.length;
-        setItemOffset(newOffset);
+        setCurrentPage(newPage);
+        getListTour(query, newPage);
+        //const newOffset = event.selected * itemsPerPage % tours.length;
+        //setItemOffset(newOffset);
     };
     return (
         <div>
@@ -396,7 +396,8 @@ const ListTour = () => {
                                     containerClassName="pagination"
                                     activeClassName="active"
                                     renderOnZeroPageCount={null}
-                                    // forcePage={Math.floor(itemOffset / itemsPerPage)}
+                                    forcePage={currentPage - 1}
+                                // forcePage={Math.floor(itemOffset / itemsPerPage)}
                                 // forcePage={currentPage - 1}
                                 />
                             </ul>
