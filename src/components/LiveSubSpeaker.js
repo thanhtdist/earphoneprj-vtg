@@ -501,7 +501,7 @@ function LiveSubSpeaker() {
   return (
     <>
       {/* <Participants count={participantsCount} /> */}
-      <Header count={participantsCount} chatSetting={chatSetting} userType={userType} />
+      <Header count={participantsCount} tourId={tourId} userType={userType} />
       <div className="live-sub-container">
         <p className='title-sub-live'>
           {t('pageTitles.subGuide')}

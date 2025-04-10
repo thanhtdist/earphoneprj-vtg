@@ -75,7 +75,7 @@ function Header({ tourId, count = null, userType = null }) {
                                 <>
                                     <div className='qrCodeContainer'>
                                         <div className="qrCodeContent">
-                                            <QRCodeSVG value={`${Config.appSubSpeakerURL}/${tourId}`} size={256} level="H" />
+                                            <QRCodeSVG value={`${Config.appSubGuideURL}/${tourId}`} size={256} level="H" />
                                         </div>
                                         <a className='link' target="_blank" rel="noopener noreferrer" style={{ color: 'red' }}
                                             href={`${Config.appSubGuideURL}/${tourId}`}
