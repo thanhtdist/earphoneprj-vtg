@@ -244,7 +244,7 @@ const RegisterTour = () => {
                             </div>
                         </div>
                         <div className="text-center mt-5">
-                            <Link href="/admin/tour" type="submit" className="btn btn-outline-danger" style={{ "marginRight": "50px" }}>戻る</Link>
+                            <Link to="/admin/tour" type="submit" className="btn btn-outline-danger" style={{ "marginRight": "50px" }}>戻る</Link>
                             <button type="submit" className="btn btn-danger">登録</button>
                         </div>
                     </form>

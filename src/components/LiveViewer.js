@@ -28,15 +28,17 @@ import { IoPlay } from "react-icons/io5";
 import { HiMiniSpeakerWave } from "react-icons/hi2";
 import { IoVolumeMute } from "react-icons/io5";
 // import { IoMicCircle, IoMicOffCircleSharp } from "react-icons/io5";
-import { FaPause } from "react-icons/fa6";
 import MessageBox from './MessageBox';
 import { useParams } from "react-router-dom";
-import { toast } from "react-toastify";
+import NotFound from './NotFound';
+import TourTitle from './TourTitle';
+
 function LiveViewer() {
   // Get the params from the URL
   const { tourId } = useParams(); // Extracts 'tourId' from the URL
   console.log('tourId:', tourId);
   const { t, i18n } = useTranslation();
+  const [tour, setTour] = useState(undefined);
   const [meetingSession, setMeetingSession] = useState(null);
   const [meeting, setMeeting] = useState(null);
   const [attendee, setAttendee] = useState(null);
@@ -406,76 +408,15 @@ function LiveViewer() {
       audioElementRef.current.pause();
     }
   }
-  // // Meeting exired
-  // useEffect(() => {
 
-  //   // Step 1: Check if the meeting is existed in tour
-  //   // call getMeetingByTourId API to check if the meeting is existed in tour
-  //   // Step 2: If the meeting is existed, set the meeting and attendee in the state
-  //   // Join meeting and set the meeting session in the state
-
-  //   // Step 3: Else Create a new meeting and set the meeting and attendee in the state
-  //   // Step 3-1: Update the tour with the meetingId: updateMeetingByTourId APIdât
-  //   // Step 3-2: Set the meeting and attendee in the state
-  //   try {
-
-  //     console.log("tourId", tourId);
-
-  //     const callGetMeetingByTourId = async (tourId) => {
-  //       const getMeetingByTourIdResponse = await getMeetingByTourId(tourId);
-  //       console.log('getMeetingByTourIdResponse', getMeetingByTourIdResponse);
-  //       if (getMeetingByTourIdResponse.statusCode === 200) {
-  //         setChatRestriction(getMeetingByTourIdResponse.data.chatRestriction);
-  //         console.log('Meeting found:', getMeetingByTourIdResponse.data.meetingId);
-
-  //         if (getMeetingByTourIdResponse.data.meetingId) {
-  //           // const meeting = await checkAvailableMeeting(getMeetingByTourIdResponse.data.meetingId, "Main-Guide");
-  //           // console.log('checkAvailableMeeting:', meeting);
-  //           // if (!meeting) return;
-  //           // const attendee = await createAttendee(meeting.MeetingId, `${userType}|${Date.now()}`);
-  //           // console.log('Attendee created:', attendee);
-  //           // initializeMeetingSession(meeting, attendee);
-  //           // setMetting(meeting);
-  //           // setAttendee(attendee);
-  //           console.log("Meeting Existed in Tour");
-  //           const checkAvailableMeetingResponse = await getMeeting(getMeetingByTourIdResponse.data.meetingId);
-  //           console.log('checkAvailableMeeting:', checkAvailableMeetingResponse);
-  //           console.log('checkAvailableMeeting statusCode:', checkAvailableMeetingResponse.statusCode);
-  //           if (checkAvailableMeetingResponse.statusCode === 404) {
-  //             //toast.info('Guide does not start, please wait...');
-  //             alert('Guide does not start, please wait...');
-  //           } else if (checkAvailableMeetingResponse.statusCode === 200) {
-  //             // Join the meeting again and set the meeting session in the state
-  //             // const attendee = await createAttendee(getMeetingByTourIdResponse.data.meetingId, `${userType}|${Date.now()}`)
-  //             console.log('Meeting not expired:', checkAvailableMeetingResponse);
-  //             const retrievedUser = JSONCookieUtils.getJSONCookie('User');
-  //             getMeetingAttendeeInfoFromCookies(retrievedUser);
-  //           } else {
-  //             console.log('Meeting error:', checkAvailableMeetingResponse);
-  //           }
-  //         } else {
-  //           alert('Guide does not start, please wait...');
-  //         }
-  //       } else {
-  //         // alert('Tour not found, please check the tour ID.');
-  //         console.log('Tour not found, please check the tour ID.');
-  //         toast.error('Tour not found, please check the tour ID.');
-  //       }
-  //     }
-  //     callGetMeetingByTourId(tourId);
-  //   } catch (error) {
-  //     console.error('Error checking meeting:', error);
-  //   }
-
-  // }, [tourId, initializeMeetingSession, meeting, attendee]);
-
-
+  // Function to join the audio session
   const joinAudioSession = useCallback(async () => {
 
     const getMeetingByTourIdResponse = await getMeetingByTourId(tourId);
     console.log('getMeetingByTourIdResponse', getMeetingByTourIdResponse);
-    if (getMeetingByTourIdResponse.statusCode === 200) {
+    if (getMeetingByTourIdResponse?.statusCode === 200) {
       setChatRestriction(getMeetingByTourIdResponse.data.chatRestriction);
+      setTour(getMeetingByTourIdResponse.data);
       console.log('Meeting found:', getMeetingByTourIdResponse.data.meetingId);
 
       if (getMeetingByTourIdResponse.data.meetingId) {
@@ -501,22 +442,32 @@ function LiveViewer() {
     } else {
       // alert('Tour not found, please check the tour ID.');
       console.log('Tour not found, please check the tour ID.');
-      toast.error('Tour not found, please check the tour ID.');
+      // toast.error('Tour not found, please check the tour ID.');
+      setTour(null);
     }
   }, [joinAudioSession2, tourId]);
 
-
-
+  // Handle long text for translations and transcriptions
   const isLongText = translatedListRef.current.join(' ').length > 300;
+
+  // Check if the tour exists, if not, show a not found page
+  if (tour === null) {
+    return <NotFound />;
+  }
+
   return (
     <>
       <Header count={participantsCount} tourId={tourId} userType={userType} />
       {/* <div className="live-viewer-container"> */}
       <div className={` ${meeting && attendee ? 'live-viewer-container' : 'live-viewer-container-center'}`}>
-        <div className='live-viewer-title'>
-          <span>2025年1月1日</span>
+        {/* <div className='live-viewer-title'>
+          <div className='time'>
+            <span>2025年1月1日</span>
+          </div>
+
           <span className='name-tour'>浅草寺ツアー</span>
-        </div>
+        </div> */}
+        <TourTitle tour={tour} />
         {!meeting && !attendee && (
           <div className="box-selected-language">
             <h3 className='title-box'>
@@ -559,15 +510,17 @@ function LiveViewer() {
           )
         ) : (
           <>
-            <div className='audio'>
-              <div className='playButton' onClick={handlePlay}>
-                {isPlay ? <FaPause size={30} /> : <IoPlay size={30} />}
-              </div>
+            <div className='audioViewer'>
+              <button className={` ${isPlay ? 'pauseButtonViewer' : 'playButtonViewer'}`} onClick={handlePlay}>
+                {/* {isPlay ? <FaPause size={30} /> : <IoPlay size={30} />} */}
+                <IoPlay size={30} />
+                <span className="startText">スタート</span>
+              </button>
 
-              <div className='muteButton' onClick={handleMuteUnmute}>
+              <button className='soundButton' onClick={handleMuteUnmute}>
                 {isMuted ? <HiMiniSpeakerWave size={30} /> : <IoVolumeMute size={30} />
                 }
-              </div>
+              </button>
               {/* <audio id='audioElementListener' ref={audioElementRef} >
               </audio> */}
             </div>

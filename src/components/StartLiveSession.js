@@ -34,12 +34,13 @@ import MessageBox from './MessageBox';
 import { IoPlay } from "react-icons/io5";
 import { HiMiniSpeakerWave } from "react-icons/hi2";
 import { IoVolumeMute } from "react-icons/io5";
-import { IoMicCircle, IoMicOffCircleSharp } from "react-icons/io5";
+import { IoMicCircle } from "react-icons/io5";
 import { FaPause } from "react-icons/fa6";
 //import { useLocation } from 'react-router-dom';
 //import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
-import { toast } from "react-toastify";
+import NotFound from './NotFound';
+import TourTitle from './TourTitle';
 
 // import { uploadFileToS3 } from '../services/S3Service';
 
@@ -78,6 +79,7 @@ function StartLiveSession() {
   const [participantsCount, setParticipantsCount] = useState(0);
   const [transcripts, setTranscriptions] = useState([]);
   const [chatRestriction, setChatRestriction] = useState(null);
+  const [tour, setTour] = useState(undefined);
   // Replace local variables with refs
   const transcriptListRef = useRef([]);
   //get value chatSetting from ChatSetting.js
@@ -446,8 +448,8 @@ function StartLiveSession() {
       setMicroChecking('microChecking');
 
       // Check if there are no devices or if any device label is empty
-      if (devices.length === 0 || devices.some(device => !device.label.trim())) {
-        //if (devices.length === 0) {
+      // if (devices.length === 0 || devices.some(device => !device.label.trim())) {
+      if (devices.length === 0) {
         console.log('No audio input devices found');
         // Display a message after 5 seconds
         setTimeout(() => {
@@ -570,8 +572,9 @@ function StartLiveSession() {
       const callGetMeetingByTourId = async (tourId) => {
         const getMeetingByTourIdResponse = await getMeetingByTourId(tourId);
         console.log('getMeetingByTourIdResponse', getMeetingByTourIdResponse);
-        if (getMeetingByTourIdResponse.statusCode === 200) {
+        if (getMeetingByTourIdResponse?.statusCode === 200) {
           setChatRestriction(getMeetingByTourIdResponse.data.chatRestriction);
+          setTour(getMeetingByTourIdResponse.data);
           console.log('Meeting ID response:', getMeetingByTourIdResponse.data.meetingId);
           if (getMeetingByTourIdResponse.data.meetingId) {
             // const meeting = await checkAvailableMeeting(getMeetingByTourIdResponse.data.meetingId, "Main-Guide");
@@ -608,7 +611,8 @@ function StartLiveSession() {
         } else {
           // alert('Tour not found, please check the tour ID.');
           console.log('Tour not found, please check the tour ID.');
-          toast.error('Tour not found, please check the tour ID.');
+          //toast.error('Tour not found, please check the tour ID.');
+          setTour(null);
         }
       }
       callGetMeetingByTourId(tourId);
@@ -619,6 +623,10 @@ function StartLiveSession() {
   }, [tourId, initializeMeetingSession, startLiveAduioSession, getMeetingAttendeeInfoFromCookies, rejoinLiveAduioSession]);
 
   console.log("chatRestriction", chatRestriction);
+  // Check if the tour exists, if not, show a not found page
+  if (tour === null) {
+    return <NotFound />;
+  }
 
   return (
     <>
@@ -627,15 +635,15 @@ function StartLiveSession() {
         <p className='titleLiveSession'>
           {t('pageTitles.guide')}
         </p>
-        <div className='titleFileUpload'>
+        {/* <div className='titleFileUpload'>
           <div className='time'>
-            <p >2025/01/01</p>
+            <span>{tour?.departureDate}</span>
           </div>
           <div className='nameTour'>
-            <span>浅草寺ツアー</span>
+            <span>{tour?.tourName}</span>
           </div>
-
-        </div>
+        </div> */}
+        <TourTitle tour={tour} />
         <div className='audio'>
           <div className='playButton' onClick={handlePlay}>
             {isPlay ? <FaPause size={30} /> : <IoPlay size={30} />}
@@ -661,7 +669,7 @@ function StartLiveSession() {
         ) : (
           <>
             {meetingSession && (<AudioUploadBox meetingSession={meetingSession} logger={logger} />)}
-            {(noMicroMsg) ? (
+            {(!noMicroMsg) ? (
               <>
                 {!microChecking ? (
                   <p style={{ color: "red" }}>{t('noMicroMsg')}</p>
@@ -689,9 +697,10 @@ function StartLiveSession() {
                   )}
                   <div className="controls">
                     <div className='mic-button' onClick={toggleMicrophone}>
-                      {isMicOn ?
-                        <IoMicCircle size={60} color="red" />
-                        : <IoMicOffCircleSharp size={60} color="gray" />}
+                      {/* {!isMicOn ? */}
+                      <IoMicCircle size={33} color="#C60226" />
+                      {/* : <IoMicOffCircleSharp size={33} color="gray" />} */}
+                      <span className="mic-text">スタート</span>
                     </div>
                   </div>
                 </div>

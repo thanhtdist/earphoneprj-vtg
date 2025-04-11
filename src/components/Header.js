@@ -49,7 +49,12 @@ function Header({ tourId, count = null, userType = null }) {
                 {userType === "Guide" && (
                     <div className='qrCode' onClick={openPopup}>
                         <BsQrCode className='icon' size={35} />
-                        <span>{t('headerSettings.qrCode')}</span>
+                        {/* <span>{t('headerSettings.qrCode')}</span> */}
+                        <div className='qrText'>
+                            <span>お客様用</span>
+                            <span>QRコードを表示</span>
+                        </div>
+                        
                     </div>
                 )}
 
@@ -62,7 +67,7 @@ function Header({ tourId, count = null, userType = null }) {
             {openQRCode === true && tourId &&
                 <div className="popup">
                     <div className="popup-content">
-                        <span className="close-btn" style={{ border: '2px solid red', backgroundColor: 'red' }} onClick={closePopup}>&times;</span>
+                        <span className="close-btn" style={{ border: '2px solid #C60226', backgroundColor: '#C60226' }} onClick={closePopup}>&times;</span>
                         <div className='contentQR'>
                             <h3>{t('generateQRCodeLbl')}</h3>
                             <div className="select-container">
@@ -77,10 +82,12 @@ function Header({ tourId, count = null, userType = null }) {
                                         <div className="qrCodeContent">
                                             <QRCodeSVG value={`${Config.appSubGuideURL}/${tourId}`} size={256} level="H" />
                                         </div>
-                                        <a className='link' target="_blank" rel="noopener noreferrer" style={{ color: 'red' }}
+                                        <a className='link' target="_blank" rel="noopener noreferrer" 
                                             href={`${Config.appSubGuideURL}/${tourId}`}
                                         >
-                                            {t('scanQRCodeTxt.subGuide')}
+                                            {/* {t('scanQRCodeTxt.subGuide')} */}
+                                            <span>QRコードをサブガイドのスマートフォンで</span>
+                                            <span>読み取ってください</span>
                                         </a>
                                     </div>
                                 </>
@@ -90,10 +97,12 @@ function Header({ tourId, count = null, userType = null }) {
                                         <div className="qrCodeContent">
                                             <QRCodeSVG value={`${Config.appViewerURL}/${tourId}`} size={256} level="H" />
                                         </div>
-                                        <a className='link' target="_blank" rel="noopener noreferrer" style={{ color: 'red' }}
+                                        <a className='link' target="_blank" rel="noopener noreferrer" 
                                             href={`${Config.appViewerURL}/${tourId}`}
                                         >
-                                            {t('scanQRCodeTxt.listener')}
+                                            {/* {t('scanQRCodeTxt.listener')} */}
+                                            <span>QRコードをリスナーのスマートフォンで</span>
+                                            <span>読み取ってください</span>
                                         </a>
                                     </div>
                                 </>

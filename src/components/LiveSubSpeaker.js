@@ -32,7 +32,8 @@ import { FaPause } from "react-icons/fa6";
 import { IoMicCircle, IoMicOffCircleSharp } from "react-icons/io5";
 import MessageBox from './MessageBox';
 import { useParams } from "react-router-dom";
-import { toast } from "react-toastify";
+import NotFound from './NotFound';
+import TourTitle from './TourTitle';
 /**
  *  Component to start a live audio session for the sub speaker
  * The sub speaker can talk & listen to the audio from the main speaker
@@ -48,6 +49,7 @@ function LiveSubSpeaker() {
   console.log('t', t);
 
   // State variables to store the channel ARN and user ARN
+  const [tour, setTour] = useState(undefined);
   const [meetingSession, setMeetingSession] = useState(null);
   const [chatRestriction, setChatRestriction] = useState(null);
   // const [meeting, setMetting] = useState(null);
@@ -404,8 +406,9 @@ function LiveSubSpeaker() {
 
     const getMeetingByTourIdResponse = await getMeetingByTourId(tourId);
     console.log('getMeetingByTourIdResponse', getMeetingByTourIdResponse);
-    if (getMeetingByTourIdResponse.statusCode === 200) {
+    if (getMeetingByTourIdResponse?.statusCode === 200) {
       setChatRestriction(getMeetingByTourIdResponse.data.chatRestriction);
+      setTour(getMeetingByTourIdResponse.data);
       console.log('Meeting found:', getMeetingByTourIdResponse.data.meetingId);
 
       if (getMeetingByTourIdResponse.data.meetingId) {
@@ -431,7 +434,8 @@ function LiveSubSpeaker() {
     } else {
       // alert('Tour not found, please check the tour ID.');
       console.log('Tour not found, please check the tour ID.');
-      toast.error('Tour not found, please check the tour ID.');
+      //toast.error('Tour not found, please check the tour ID.');
+      setTour(null);
     }
   }, [joinAudioSession2, tourId]);
 
@@ -440,9 +444,6 @@ function LiveSubSpeaker() {
     joinAudioSession(); // Call the async function
     // Execute the async function
   }, [joinMeeting, getMeetingAttendeeInfoFromCookies, joinAudioSession, tourId]);
-
-
-
 
   useEffect(() => {
     getAudioInputDevices();
@@ -484,6 +485,11 @@ function LiveSubSpeaker() {
     }
   }
 
+  // Check if the tour exists, if not, show a not found page
+  if (tour === null) {
+    return <NotFound />;
+  }
+
   return (
     <>
       {/* <Participants count={participantsCount} /> */}
@@ -492,12 +498,13 @@ function LiveSubSpeaker() {
         <p className='title-sub-live'>
           {t('pageTitles.subGuide')}
         </p>
-        <div className='title-sub-live-upload'>
+        {/* <div className='title-sub-live-upload'>
           <div className='time'>
             <p >2025/01/01</p>
           </div>
           <h3 className='nameTour'>浅草寺ツアー</h3>
-        </div>
+        </div> */}
+        <TourTitle tour={tour} />
         <div className='audio-sub'>
           <div className='play-button' onClick={handlePlay}>
             {isPlay ? <FaPause size={30} /> : <IoPlay size={30} />}

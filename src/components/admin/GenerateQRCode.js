@@ -41,7 +41,7 @@ const GenerateQRCode = ({ tourId, channelId = null, userId = null, chatRestricti
                         //value={`${Config.appGuideURL}?tourId=${tourId}&channelId=${channelId}&chatRestriction=${chatRestriction}`}
                         //value={`${Config.appGuideURL}?tourId=${tourId}&chatRestriction=${chatRestriction}`}
                         value={`${Config.appGuideURL}/${tourId}`}
-                        size={256}
+                        size={128}
                         level="H"
                     />
                 </div>
