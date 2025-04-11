@@ -25,6 +25,10 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     const previousResult = await dynamoDB.scan({
       TableName: "Users",
       Limit: previousPageSize,
+      FilterExpression: "deleteFlag = :deleteFlag",
+      ExpressionAttributeValues: {
+        ":deleteFlag": 0,
+      },
     }).promise();
     ExclusiveStartKey = previousResult.LastEvaluatedKey;
   }
@@ -66,13 +70,29 @@ export const handler: APIGatewayProxyHandler = async (event) => {
         },
       }).promise();
     }
-
+    // Additional call to get total user
+    const totalScan = await dynamoDB.scan({
+      TableName: "Users",
+      Select: "COUNT",
+      FilterExpression: "deleteFlag = :deleteFlag",
+      ExpressionAttributeValues: {
+        ":deleteFlag": 0,
+      },
+    }).promise();
 
     if (!result.Items || result.Items.length === 0) {
-      console.error('No Users found');
+      console.error('No users found');
       return {
-        statusCode: 404,
-        body: JSON.stringify({ error: 'No Users found.' }),
+        statusCode: 200,
+        //body: JSON.stringify({ error: 'No tours found.' }),
+        body: JSON.stringify({
+          data: {
+            message: "No users found.",
+            data: [],
+            count: 0,
+            lastEvaluatedKey: result.LastEvaluatedKey,
+          }
+        }),
         headers: Config.headers,
       };
     }
@@ -83,9 +103,12 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     return {
       statusCode: 200,
       body: JSON.stringify({
-        message: "Users retrieved successfully",
-        data: result.Items,
-        lastEvaluatedKey: result.LastEvaluatedKey,
+        data: {
+          message: "Users retrieved successfully",
+          data: result.Items,
+          count: totalScan.Count,
+          lastEvaluatedKey: result.LastEvaluatedKey,
+        }
       }),
       headers: Config.headers,
     };
