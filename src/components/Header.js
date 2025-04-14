@@ -48,7 +48,7 @@ function Header({ tourId, count = null, userType = null }) {
             <div className='rightMenu'>
                 {userType === "Guide" && (
                     <div className='qrCode' onClick={openPopup}>
-                        <BsQrCode className='icon' size={35} />
+                        <BsQrCode className='icon' size={30} />
                         {/* <span>{t('headerSettings.qrCode')}</span> */}
                         {/* <div className='qrText'>
                             <span>お客様用</span>
@@ -84,7 +84,7 @@ function Header({ tourId, count = null, userType = null }) {
                                         <div className="qrCodeContent">
                                             <QRCodeSVG value={`${Config.appSubGuideURL}/${tourId}`} size={256} level="H" />
                                         </div>
-                                        <div style={{ textAlign: "center", fontWeight: "bold"  }}>
+                                        <div style={{ textAlign: "center" }}>
                                             <a style={{ display: "unset" }} className='link' target="_blank" rel="noopener noreferrer"
                                                 href={`${Config.appSubGuideURL}/${tourId}`}
                                             >
@@ -103,7 +103,7 @@ function Header({ tourId, count = null, userType = null }) {
                                         <div className="qrCodeContent">
                                             <QRCodeSVG value={`${Config.appViewerURL}/${tourId}`} size={256} level="H" />
                                         </div>
-                                        <div style={{ textAlign: "center" , fontWeight: "bold" }}>
+                                        <div style={{ textAlign: "center" }}>
                                             <a style={{ display: "unset" }} className='link' target="_blank" rel="noopener noreferrer"
                                                 href={`${Config.appViewerURL}/${tourId}`}
                                             >

@@ -156,10 +156,10 @@ select {
   padding:11px 20px;
   font-size: 20px;
   margin: 10px 0 10px 0;
+  width: 40%;
 }
 .mic-button-off {
   border: 1px solid #C60226;
-  width: fit-content;  
   color: #C60226;  
 }
 .mic-button-on {

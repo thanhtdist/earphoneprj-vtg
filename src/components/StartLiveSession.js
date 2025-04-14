@@ -698,9 +698,9 @@ function StartLiveSession() {
                   <div className="controls">
                     <div className={`mic-button ${!isMicOn ? 'mic-button-off' : 'mic-button-on'}`} onClick={toggleMicrophone}>
                       {/* {!isMicOn ? */}
-                        <IoMicCircle size={33} />
+                        <IoMicCircle size={30} />
                         {/* : <IoMicOffCircleSharp size={33} color="gray" />} */}
-                        <span className="mic-text">スタート</span>
+                        <span className="mic-text">{isMicOn ? 'スタート' : '停止'}</span>
                     </div>
                   </div>
                 </div>
