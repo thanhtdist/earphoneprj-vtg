@@ -18,8 +18,8 @@
     "listener": "ユーザー用QRコード"
   },
   "scanQRCodeTxt": {
-    "subGuide": "QRスキャンしてサブガイドとして参加",
-    "listener": " QRスキャンしてユーザーとして参加"
+    "subGuide": "QRコードをサブガイドのスマートフォンで<br>読み取ってください",
+    "listener": "QRコードをリスナーのスマートフォンで<br>読み取ってください"
   },
   "messagePlaceholder": "メッセージを入力してください...",
   "userNameDisplay": {
@@ -49,7 +49,7 @@
   },
   "captureTranslations": "キャプチャー",
   "headerSettings": {
-    "qrCode": "QRコード",
+    "qrCode": "お客様用<br>QRコードを表示",
     "language": "言語設定"
   },
   "pageTitles": {

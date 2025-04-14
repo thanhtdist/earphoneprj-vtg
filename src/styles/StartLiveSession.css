@@ -150,13 +150,22 @@ select {
   margin: 5px 0 0 0;
 }
 
-.mic-button {
+.mic-button{
   align-items: center;
-  border: 1px solid #C60226;
-  width: fit-content;
   border-radius: 25px;
   padding:11px 20px;
-  /* color: white; */
+  font-size: 20px;
+  margin: 10px 0 10px 0;
+}
+.mic-button-off {
+  border: 1px solid #C60226;
+  width: fit-content;  
+  color: #C60226;  
+}
+.mic-button-on {
+  align-items: center;
+  background-color: #C60226;
+  color: white; 
 }
 .controls{
   display: flex;

@@ -50,11 +50,13 @@ function Header({ tourId, count = null, userType = null }) {
                     <div className='qrCode' onClick={openPopup}>
                         <BsQrCode className='icon' size={35} />
                         {/* <span>{t('headerSettings.qrCode')}</span> */}
-                        <div className='qrText'>
+                        {/* <div className='qrText'>
                             <span>お客様用</span>
                             <span>QRコードを表示</span>
+                        </div> */}
+                        <div className='qrText' style={{ textAlign: "center" }}>
+                            <span dangerouslySetInnerHTML={{ __html: t('headerSettings.qrCode') }} />
                         </div>
-                        
                     </div>
                 )}
 
@@ -71,10 +73,10 @@ function Header({ tourId, count = null, userType = null }) {
                         <div className='contentQR'>
                             <h3>{t('generateQRCodeLbl')}</h3>
                             <div className="select-container">
-                            <select className='selectFile' style={{ border: "1px solid #C60226" }} value={selectedQR} onChange={handleQRSelectionChange}>
-                                <option value="subSpeaker">{t('generateQRCodeOptions.subGuide')}</option>
-                                <option value="listener">{t('generateQRCodeOptions.listener')}</option>
-                            </select>
+                                <select className='selectFile' style={{ border: "1px solid #C60226" }} value={selectedQR} onChange={handleQRSelectionChange}>
+                                    <option value="subSpeaker">{t('generateQRCodeOptions.subGuide')}</option>
+                                    <option value="listener">{t('generateQRCodeOptions.listener')}</option>
+                                </select>
                             </div>
                             {selectedQR === 'subSpeaker' ? (
                                 <>
@@ -82,13 +84,17 @@ function Header({ tourId, count = null, userType = null }) {
                                         <div className="qrCodeContent">
                                             <QRCodeSVG value={`${Config.appSubGuideURL}/${tourId}`} size={256} level="H" />
                                         </div>
-                                        <a className='link' target="_blank" rel="noopener noreferrer" 
-                                            href={`${Config.appSubGuideURL}/${tourId}`}
-                                        >
-                                            {/* {t('scanQRCodeTxt.subGuide')} */}
-                                            <span>QRコードをサブガイドのスマートフォンで</span>
-                                            <span>読み取ってください</span>
-                                        </a>
+                                        <div style={{ textAlign: "center" }}>
+                                            <a style={{ display: "unset" }} className='link' target="_blank" rel="noopener noreferrer"
+                                                href={`${Config.appSubGuideURL}/${tourId}`}
+                                            >
+                                                {/* {t('scanQRCodeTxt.subGuide')} */}
+                                                {/* <span>QRコードをサブガイドのスマートフォンで</span>
+                                                <span>読み取ってください</span> */}
+                                                <span dangerouslySetInnerHTML={{ __html: t('scanQRCodeTxt.subGuide') }} />
+                                            </a>
+                                        </div>
+
                                     </div>
                                 </>
                             ) : (
@@ -97,13 +103,17 @@ function Header({ tourId, count = null, userType = null }) {
                                         <div className="qrCodeContent">
                                             <QRCodeSVG value={`${Config.appViewerURL}/${tourId}`} size={256} level="H" />
                                         </div>
-                                        <a className='link' target="_blank" rel="noopener noreferrer" 
-                                            href={`${Config.appViewerURL}/${tourId}`}
-                                        >
-                                            {/* {t('scanQRCodeTxt.listener')} */}
-                                            <span>QRコードをリスナーのスマートフォンで</span>
-                                            <span>読み取ってください</span>
-                                        </a>
+                                        <div style={{ textAlign: "center" }}>
+                                            <a style={{ display: "unset" }} className='link' target="_blank" rel="noopener noreferrer"
+                                                href={`${Config.appViewerURL}/${tourId}`}
+                                            >
+                                                {/* {t('scanQRCodeTxt.listener')} */}
+                                                <span dangerouslySetInnerHTML={{ __html: t('scanQRCodeTxt.listener') }} />
+                                                {/* <span>QRコードをリスナーのスマートフォンで</span>
+                                            <span>読み取ってください</span> */}
+                                            </a>
+                                        </div>
+
                                     </div>
                                 </>
                             )}

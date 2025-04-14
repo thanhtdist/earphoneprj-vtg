@@ -98,11 +98,11 @@
     /* Stack items vertically */
     align-items: stretch; /* Make children take full width */
     gap: 10px;
-    margin-top: 10px;
     width: 90%; /* Ensure it takes full width of the container */
     position: absolute;
     bottom: 0;
     /* padding-bottom: 5%; */
+    margin-bottom:15px; 
 }
 
 .input-container {

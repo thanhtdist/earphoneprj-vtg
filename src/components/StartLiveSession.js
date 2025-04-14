@@ -669,7 +669,7 @@ function StartLiveSession() {
         ) : (
           <>
             {meetingSession && (<AudioUploadBox meetingSession={meetingSession} logger={logger} />)}
-            {(!noMicroMsg) ? (
+            {(noMicroMsg) ? (
               <>
                 {!microChecking ? (
                   <p style={{ color: "red" }}>{t('noMicroMsg')}</p>
@@ -694,13 +694,13 @@ function StartLiveSession() {
                         ))}
                       </select>
                     </div>
-                  )}
+                  )} 
                   <div className="controls">
-                    <div className='mic-button' onClick={toggleMicrophone}>
+                    <div className={`mic-button ${!isMicOn ? 'mic-button-off' : 'mic-button-on'}`} onClick={toggleMicrophone}>
                       {/* {!isMicOn ? */}
-                      <IoMicCircle size={33} color="#C60226" />
-                      {/* : <IoMicOffCircleSharp size={33} color="gray" />} */}
-                      <span className="mic-text">スタート</span>
+                        <IoMicCircle size={33} />
+                        {/* : <IoMicOffCircleSharp size={33} color="gray" />} */}
+                        <span className="mic-text">スタート</span>
                     </div>
                   </div>
                 </div>

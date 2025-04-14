@@ -30,7 +30,8 @@ const ListAdmin = () => {
                 pagSize: 10,
                 query: data
             });
-            setListAdmin(registerResponse);
+            console.log("Call API get list admin success:", registerResponse);
+            setListAdmin(registerResponse.data);
             setCountList(registerResponse.length);
             setIsLoading(false);
         } catch (error) {
