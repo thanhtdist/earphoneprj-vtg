@@ -22,36 +22,36 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     // Get tourName and departureDate from query parameters
     // const tourName = event.queryStringParameters?.tourName;
     // const departureDate = event.queryStringParameters?.departureDate;
-    const { tourName, departureDate } = JSON.parse(event.body || '{}');
+    const { tourNumber, departureDate } = JSON.parse(event.body || '{}');
 
-    if (!tourName || !departureDate) {
-      console.error('Invalid input: Missing tourName or departureDate.');
+    if (!tourNumber || !departureDate) {
+      console.error('Invalid input: Missing tourNumber or departureDate.');
       return {
         statusCode: 400,
-        body: JSON.stringify({ error: 'Invalid input: tourName and departureDate are required.' }),
+        body: JSON.stringify({ error: 'Invalid input: tourNumber and departureDate are required.' }),
         headers: Config.headers,
       };
     }
 
-    console.log('Retrieving tour with tourName and departureDate: ', { tourName, departureDate });
+    console.log('Retrieving tour with tourNumber and departureDate: ', { tourNumber, departureDate });
 
     // Query DynamoDB for the tour with the specified tourName and departureDate
     const result = await dynamoDB.query({
       TableName: "Tours",
-      IndexName: "tourName-departureDate-index", // Ensure you have a GSI for tourName and departureDate
-      KeyConditionExpression: "#tourName = :tourName AND #departureDate = :departureDate",
+      IndexName: "tourNumber-departureDate-index", // Ensure you have a GSI for tourName and departureDate
+      KeyConditionExpression: "#tourNumber = :tourNumber AND #departureDate = :departureDate",
       ExpressionAttributeNames: {
-        "#tourName": "tourName",
+        "#tourNumber": "tourNumber",
         "#departureDate": "departureDate",
       },
       ExpressionAttributeValues: {
-        ":tourName": tourName,
+        ":tourNumber": tourNumber,
         ":departureDate": departureDate,
       },
     }).promise();
 
     if (!result.Items || result.Items.length === 0) {
-      console.error('Tour not found: ', { tourName, departureDate });
+      console.error('Tour not found: ', { tourNumber, departureDate });
       return {
         statusCode: 404,
         body: JSON.stringify({ error: 'Tour not found.' }),

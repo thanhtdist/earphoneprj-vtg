@@ -1,0 +1,39 @@
+.container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 300px;
+}
+
+.button {
+    background-color: #d32f2f;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+.input-field {
+    margin-bottom: 15px;
+}
+.input-field label {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+.input-field input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+.input-field .calendar-icon {
+    position: absolute;
+    right: 10px;
+    top: 35px;
+    width: 20px;
+    height: 20px;
+}

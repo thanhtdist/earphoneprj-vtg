@@ -514,7 +514,7 @@ function LiveViewer() {
               <div className={` ${!isPlay ? 'pauseButtonViewer' : 'playButtonViewer'}`} onClick={handlePlay}>
                 {/* {isPlay ? <FaPause size={30} /> : <IoPlay size={30} />} */}
                 <IoPlay size={30} />
-                <span className="startText">スタート</span>
+                <span className="startText">{!isPlay ? '停止' : 'スタート'}</span>
               </div>
 
               <div className='soundButton' onClick={handleMuteUnmute}>

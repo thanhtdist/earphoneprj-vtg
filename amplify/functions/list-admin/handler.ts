@@ -17,6 +17,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
   const pageSize = parseInt(event.queryStringParameters?.pageSize || '10', 10);
   const query = event.queryStringParameters?.query ? decodeURIComponent(event.queryStringParameters.query.trim()) : undefined;
 
+  console.log('Query Parameters:', { page, pageSize, query });
   // Calculate the ExclusiveStartKey based on the page number
   let ExclusiveStartKey;
   if (page > 1) {
@@ -44,32 +45,37 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     console.log('Retrieving list of Users');
 
     // Scan DynamoDB for Users with pagination and search query
+    let items: any[] = [];
     let result;
-    if (query) {
-      result = await dynamoDB.scan({
-        TableName: "Users",
-        Limit: pageSize,
-        // ExclusiveStartKey,
-        FilterExpression: 'deleteFlag = :deleteFlag AND contains(#userName, :query)',
-        ExpressionAttributeNames: {
-          '#userName': 'userName',
-        },
-        ExpressionAttributeValues: {
-          ':deleteFlag': 0,
-          ':query': query,
-        },
-      }).promise();
-    } else {
-      result = await dynamoDB.scan({
-        TableName: "Users",
-        Limit: pageSize,
-        // ExclusiveStartKey,
-        FilterExpression: "deleteFlag = :deleteFlag",
-        ExpressionAttributeValues: {
-          ":deleteFlag": 0,
-        },
-      }).promise();
-    }
+    do {     
+      if (query) {
+        result = await dynamoDB.scan({
+          TableName: "Users",
+          Limit: pageSize,
+          // ExclusiveStartKey,
+          FilterExpression: 'deleteFlag = :deleteFlag AND contains(#userName, :query)',
+          ExpressionAttributeNames: {
+            '#userName': 'userName',
+          },
+          ExpressionAttributeValues: {
+            ':deleteFlag': 0,
+            ':query': query,
+          },
+        }).promise();
+      } else {
+        result = await dynamoDB.scan({
+          TableName: "Users",
+          Limit: pageSize,
+          // ExclusiveStartKey,
+          FilterExpression: "deleteFlag = :deleteFlag",
+          ExpressionAttributeValues: {
+            ":deleteFlag": 0,
+          },
+        }).promise();
+      }
+      items = items.concat(result.Items || []);
+      ExclusiveStartKey = result.LastEvaluatedKey;
+    } while (items.length < pageSize && ExclusiveStartKey);
     // Additional call to get total user
     const totalScan = await dynamoDB.scan({
       TableName: "Users",

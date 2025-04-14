@@ -7029,3 +7029,3019 @@
 }
 [get-meeting-by-tourid] 11:16:31 AM END RequestId: 94fd2eb2-dccf-4dc9-a868-ccfbcd18fde0
 [get-meeting-by-tourid] 11:16:31 AM REPORT RequestId: 94fd2eb2-dccf-4dc9-a868-ccfbcd18fde0	Duration: 630.61 ms	Billed Duration: 631 ms	Memory Size: 512 MB	Max Memory Used: 316 MB	Init Duration: 904.31 ms
+[check-auth] 2:23:13 PM INIT_START Runtime Version: nodejs:18.v63	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:ad007b64e69135315cba0d95ed797867707d928d1128edf4fa17a926a71f1718
+[check-auth] 2:23:14 PM START RequestId: 91f31b13-6b7e-4707-84ff-daf1a0be8636 Version: $LATEST
+[check-auth] 2:23:14 PM 2025-04-14T07:23:14.660Z	91f31b13-6b7e-4707-84ff-daf1a0be8636	INFO	Token (cleaned):  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGNiNDNjNy1mYzU0LTQwNGUtODJhZi02NmIyZGFkMzE1ZGUiLCJpYXQiOjE3NDQ2MTUzOTEsImV4cCI6MTc0NDYxNjI5MX0.enM0lkrMi17WK11-_pINkXbHxqVCVL-HPZ9UxlLX26Y
+[check-auth] 2:23:14 PM 2025-04-14T07:23:14.661Z	91f31b13-6b7e-4707-84ff-daf1a0be8636	INFO	Verifying token... a5e3696b23ce9b6e96af822f26b757d52c64b9a8e29351b9fee039dfb2d35600
+[check-auth] 2:23:14 PM 2025-04-14T07:23:14.680Z	91f31b13-6b7e-4707-84ff-daf1a0be8636	INFO	userId:  64cb43c7-fc54-404e-82af-66b2dad315de
+[check-auth] 2:23:15 PM 2025-04-14T07:23:15.262Z	91f31b13-6b7e-4707-84ff-daf1a0be8636	INFO	DynamoDB result:  {
+  Items: [
+    {
+      password: '$2b$10$Fk8hSSFK9yWlmyCSdMBkfuaPNnfBiNoeOxzJxnhMOkDbsyMq9v0JO',
+      active: 0,
+      deleteFlag: 0,
+      role: 0,
+      userId: '64cb43c7-fc54-404e-82af-66b2dad315de',
+      updatedAt: '2025-03-28T07:24:56.336Z',
+      userName: 'admin',
+      createdAt: '2025-03-28T07:24:56.336Z',
+      updatedBy: 'admin',
+      email: 'info-admin@gmail.com',
+      createdBy: 'admin'
+    }
+  ],
+  Count: 1,
+  ScannedCount: 1
+}
+[check-auth] 2:23:15 PM END RequestId: 91f31b13-6b7e-4707-84ff-daf1a0be8636
+[check-auth] 2:23:15 PM REPORT RequestId: 91f31b13-6b7e-4707-84ff-daf1a0be8636	Duration: 648.21 ms	Billed Duration: 649 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 939.61 ms
+[refresh-token] 2:23:10 PM INIT_START Runtime Version: nodejs:18.v63	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:ad007b64e69135315cba0d95ed797867707d928d1128edf4fa17a926a71f1718
+[refresh-token] 2:23:11 PM START RequestId: f3e03ca5-f863-4298-9420-2cdd1201ef87 Version: $LATEST
+[refresh-token] 2:23:11 PM 2025-04-14T07:23:11.260Z	f3e03ca5-f863-4298-9420-2cdd1201ef87	INFO	Refresh Token (cleaned):  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGNiNDNjNy1mYzU0LTQwNGUtODJhZi02NmIyZGFkMzE1ZGUiLCJpYXQiOjE3NDQ2MTM1MzMsImV4cCI6MTc0NTIxODMzM30.KSkvxbVWnbQ6Q3e0K3HihYrFMHmxFHGU3csJscWCxBM
+[refresh-token] 2:23:11 PM 2025-04-14T07:23:11.277Z	f3e03ca5-f863-4298-9420-2cdd1201ef87	INFO	Decoded refresh token:  {
+  userId: '64cb43c7-fc54-404e-82af-66b2dad315de',
+  iat: 1744613533,
+  exp: 1745218333
+}
+[refresh-token] 2:23:11 PM 2025-04-14T07:23:11.279Z	f3e03ca5-f863-4298-9420-2cdd1201ef87	INFO	Extracted userId:  64cb43c7-fc54-404e-82af-66b2dad315de
+[refresh-token] 2:23:11 PM 2025-04-14T07:23:11.877Z	f3e03ca5-f863-4298-9420-2cdd1201ef87	INFO	DynamoDB query result:  {
+  Items: [
+    {
+      password: '$2b$10$Fk8hSSFK9yWlmyCSdMBkfuaPNnfBiNoeOxzJxnhMOkDbsyMq9v0JO',
+      active: 0,
+      deleteFlag: 0,
+      role: 0,
+      userId: '64cb43c7-fc54-404e-82af-66b2dad315de',
+      updatedAt: '2025-03-28T07:24:56.336Z',
+      userName: 'admin',
+      createdAt: '2025-03-28T07:24:56.336Z',
+      updatedBy: 'admin',
+      email: 'info-admin@gmail.com',
+      createdBy: 'admin'
+    }
+  ],
+  Count: 1,
+  ScannedCount: 1
+}
+[refresh-token] 2:23:11 PM END RequestId: f3e03ca5-f863-4298-9420-2cdd1201ef87
+[refresh-token] 2:23:11 PM REPORT RequestId: f3e03ca5-f863-4298-9420-2cdd1201ef87	Duration: 660.19 ms	Billed Duration: 661 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 938.47 ms
+[list-admin] 2:26:28 PM INIT_START Runtime Version: nodejs:18.v63	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:ad007b64e69135315cba0d95ed797867707d928d1128edf4fa17a926a71f1718
+[list-admin] 2:26:29 PM START RequestId: dcbd0726-3f6a-463c-8ccc-8a3f5ab8215c Version: $LATEST
+[list-admin] 2:26:29 PM 2025-04-14T07:26:29.398Z	dcbd0726-3f6a-463c-8ccc-8a3f5ab8215c	INFO	Auth Header:  Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGNiNDNjNy1mYzU0LTQwNGUtODJhZi02NmIyZGFkMzE1ZGUiLCJpYXQiOjE3NDQ2MTQwODcsImV4cCI6MTc0NDYxNDk4N30.Aa1DOaW-Uic2h1RuzhXJCf7RT_zNCww_AGzuzGc6IG4
+[list-admin] 2:26:29 PM 2025-04-14T07:26:29.435Z	dcbd0726-3f6a-463c-8ccc-8a3f5ab8215c	ERROR	Failed to retrieve Users:  {
+  error: Error: Invalid or expired token
+      at v$ (file:///var/task/index.mjs:37:51811)
+      at Runtime.amt [as handler] (file:///var/task/index.mjs:37:52881)
+      at Runtime.handleOnceNonStreaming (file:///var/runtime/index.mjs:1173:29) {
+    statusCode: 401
+  },
+  event: {
+    resource: '/users',
+    path: '/users',
+    httpMethod: 'GET',
+    headers: {
+      Accept: '*/*',
+      'Accept-Encoding': 'gzip, deflate, br',
+      Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGNiNDNjNy1mYzU0LTQwNGUtODJhZi02NmIyZGFkMzE1ZGUiLCJpYXQiOjE3NDQ2MTQwODcsImV4cCI6MTc0NDYxNDk4N30.Aa1DOaW-Uic2h1RuzhXJCf7RT_zNCww_AGzuzGc6IG4',
+      'Cache-Control': 'no-cache',
+      'CloudFront-Forwarded-Proto': 'https',
+      'CloudFront-Is-Desktop-Viewer': 'true',
+      'CloudFront-Is-Mobile-Viewer': 'false',
+      'CloudFront-Is-SmartTV-Viewer': 'false',
+      'CloudFront-Is-Tablet-Viewer': 'false',
+      'CloudFront-Viewer-ASN': '45899',
+      'CloudFront-Viewer-Country': 'VN',
+      Host: 'jmkfjlxu63.execute-api.us-east-1.amazonaws.com',
+      'Postman-Token': 'eee455f6-5253-4b43-a10c-505bb9becc89',
+      'User-Agent': 'PostmanRuntime/7.43.3',
+      Via: '1.1 c1bd4c89f1f6daf71922ce6048514b9e.cloudfront.net (CloudFront)',
+      'X-Amz-Cf-Id': 'RhcWh4xqbYn3fZI2cSap3MivplNZzF9iyf9wA8IR61zDy-SmthTBkw==',
+      'X-Amzn-Trace-Id': 'Root=1-67fcb8a4-50702f5c0ac859666b78538c',
+      'X-Forwarded-For': '14.161.12.17, 15.158.13.55',
+      'X-Forwarded-Port': '443',
+      'X-Forwarded-Proto': 'https'
+    },
+    multiValueHeaders: {
+      Accept: [Array],
+      'Accept-Encoding': [Array],
+      Authorization: [Array],
+      'Cache-Control': [Array],
+      'CloudFront-Forwarded-Proto': [Array],
+      'CloudFront-Is-Desktop-Viewer': [Array],
+      'CloudFront-Is-Mobile-Viewer': [Array],
+      'CloudFront-Is-SmartTV-Viewer': [Array],
+      'CloudFront-Is-Tablet-Viewer': [Array],
+      'CloudFront-Viewer-ASN': [Array],
+      'CloudFront-Viewer-Country': [Array],
+      Host: [Array],
+      'Postman-Token': [Array],
+      'User-Agent': [Array],
+      Via: [Array],
+      'X-Amz-Cf-Id': [Array],
+      'X-Amzn-Trace-Id': [Array],
+      'X-Forwarded-For': [Array],
+      'X-Forwarded-Port': [Array],
+      'X-Forwarded-Proto': [Array]
+    },
+    queryStringParameters: { page: '1', pageSize: '10', query: '' },
+    multiValueQueryStringParameters: { page: [Array], pageSize: [Array], query: [Array] },
+    pathParameters: null,
+    stageVariables: null,
+    requestContext: {
+      resourceId: '3rsr17',
+      resourcePath: '/users',
+      httpMethod: 'GET',
+      extendedRequestId: 'JAHJtFgqoAMEJmw=',
+      requestTime: '14/Apr/2025:07:26:28 +0000',
+      path: '/prod/users',
+      accountId: '647755634525',
+      protocol: 'HTTP/1.1',
+      stage: 'prod',
+      domainPrefix: 'jmkfjlxu63',
+      requestTimeEpoch: 1744615588157,
+      requestId: '6267842a-2800-485d-a893-0f9ff26ebbab',
+      identity: [Object],
+      domainName: 'jmkfjlxu63.execute-api.us-east-1.amazonaws.com',
+      deploymentId: 'sf0sq6',
+      apiId: 'jmkfjlxu63'
+    },
+    body: null,
+    isBase64Encoded: false
+  }
+}
+[list-admin] 2:26:29 PM END RequestId: dcbd0726-3f6a-463c-8ccc-8a3f5ab8215c
+[list-admin] 2:26:29 PM REPORT RequestId: dcbd0726-3f6a-463c-8ccc-8a3f5ab8215c	Duration: 57.86 ms	Billed Duration: 58 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 977.17 ms
+[check-auth] 2:26:37 PM INIT_START Runtime Version: nodejs:18.v63	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:ad007b64e69135315cba0d95ed797867707d928d1128edf4fa17a926a71f1718
+[check-auth] 2:26:38 PM START RequestId: 8ac0e020-04fe-457c-8ccc-a357583c21c2 Version: $LATEST
+[check-auth] 2:26:38 PM 2025-04-14T07:26:38.282Z	8ac0e020-04fe-457c-8ccc-a357583c21c2	INFO	Token (cleaned):  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGNiNDNjNy1mYzU0LTQwNGUtODJhZi02NmIyZGFkMzE1ZGUiLCJpYXQiOjE3NDQ2MTQwODcsImV4cCI6MTc0NDYxNDk4N30.Aa1DOaW-Uic2h1RuzhXJCf7RT_zNCww_AGzuzGc6IG4
+[check-auth] 2:26:38 PM 2025-04-14T07:26:38.283Z	8ac0e020-04fe-457c-8ccc-a357583c21c2	INFO	Verifying token... a5e3696b23ce9b6e96af822f26b757d52c64b9a8e29351b9fee039dfb2d35600
+[check-auth] 2:26:38 PM END RequestId: 8ac0e020-04fe-457c-8ccc-a357583c21c2
+[check-auth] 2:26:38 PM REPORT RequestId: 8ac0e020-04fe-457c-8ccc-a357583c21c2	Duration: 45.16 ms	Billed Duration: 46 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 931.16 ms
+[check-auth] 2:26:39 PM START RequestId: 8c786d1f-24b3-41cd-a9ac-7fd6bbc6a759 Version: $LATEST
+[check-auth] 2:26:39 PM 2025-04-14T07:26:39.643Z	8c786d1f-24b3-41cd-a9ac-7fd6bbc6a759	INFO	Token (cleaned):  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGNiNDNjNy1mYzU0LTQwNGUtODJhZi02NmIyZGFkMzE1ZGUiLCJpYXQiOjE3NDQ2MTQwODcsImV4cCI6MTc0NDYxNDk4N30.Aa1DOaW-Uic2h1RuzhXJCf7RT_zNCww_AGzuzGc6IG4
+[check-auth] 2:26:39 PM 2025-04-14T07:26:39.643Z	8c786d1f-24b3-41cd-a9ac-7fd6bbc6a759	INFO	Verifying token... a5e3696b23ce9b6e96af822f26b757d52c64b9a8e29351b9fee039dfb2d35600
+[check-auth] 2:26:39 PM END RequestId: 8c786d1f-24b3-41cd-a9ac-7fd6bbc6a759
+[check-auth] 2:26:39 PM REPORT RequestId: 8c786d1f-24b3-41cd-a9ac-7fd6bbc6a759	Duration: 3.29 ms	Billed Duration: 4 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[list-tour] 2:26:52 PM INIT_START Runtime Version: nodejs:18.v63	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:ad007b64e69135315cba0d95ed797867707d928d1128edf4fa17a926a71f1718
+[list-tour] 2:26:53 PM START RequestId: d34f1b19-3a5e-4ea2-8633-69cc09eefd2c Version: $LATEST
+[list-tour] 2:26:53 PM 2025-04-14T07:26:53.786Z	d34f1b19-3a5e-4ea2-8633-69cc09eefd2c	INFO	Retrieving list of tours
+[list-tour] 2:26:55 PM END RequestId: d34f1b19-3a5e-4ea2-8633-69cc09eefd2c
+[list-tour] 2:26:55 PM REPORT RequestId: d34f1b19-3a5e-4ea2-8633-69cc09eefd2c	Duration: 1591.98 ms	Billed Duration: 1592 ms	Memory Size: 512 MB	Max Memory Used: 321 MB	Init Duration: 904.72 ms
+[login] 2:26:46 PM INIT_START Runtime Version: nodejs:18.v63	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:ad007b64e69135315cba0d95ed797867707d928d1128edf4fa17a926a71f1718
+[login] 2:26:47 PM START RequestId: a731184b-babd-4f95-bedb-86205ebc4bf0 Version: $LATEST
+[login] 2:26:47 PM 2025-04-14T07:26:47.245Z	a731184b-babd-4f95-bedb-86205ebc4bf0	INFO	Retrieving user with email:  info-admin@gmail.com
+[login] 2:26:47 PM 2025-04-14T07:26:47.864Z	a731184b-babd-4f95-bedb-86205ebc4bf0	INFO	User successfully retrieved:  {
+  password: '$2b$10$Fk8hSSFK9yWlmyCSdMBkfuaPNnfBiNoeOxzJxnhMOkDbsyMq9v0JO',
+  active: 0,
+  deleteFlag: 0,
+  role: 0,
+  updatedAt: '2025-03-28T07:24:56.336Z',
+  userId: '64cb43c7-fc54-404e-82af-66b2dad315de',
+  userName: 'admin',
+  createdAt: '2025-03-28T07:24:56.336Z',
+  updatedBy: 'admin',
+  email: 'info-admin@gmail.com',
+  createdBy: 'admin'
+}
+[login] 2:26:48 PM END RequestId: a731184b-babd-4f95-bedb-86205ebc4bf0
+[login] 2:26:48 PM REPORT RequestId: a731184b-babd-4f95-bedb-86205ebc4bf0	Duration: 1112.34 ms	Billed Duration: 1113 ms	Memory Size: 512 MB	Max Memory Used: 323 MB	Init Duration: 974.27 ms
+[check-auth] 2:26:50 PM START RequestId: d328f5de-5d8e-42c4-9f06-926a7ecd3527 Version: $LATEST
+[check-auth] 2:26:50 PM 2025-04-14T07:26:50.464Z	d328f5de-5d8e-42c4-9f06-926a7ecd3527	INFO	Token (cleaned):  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGNiNDNjNy1mYzU0LTQwNGUtODJhZi02NmIyZGFkMzE1ZGUiLCJpYXQiOjE3NDQ2MTU2MDgsImV4cCI6MTc0NDYxNTkwOH0.coJ-KLeOCF-CwxWc4nxkPH_-XwmtOvhkLB-bOOkW6wg
+[check-auth] 2:26:50 PM 2025-04-14T07:26:50.464Z	d328f5de-5d8e-42c4-9f06-926a7ecd3527	INFO	Verifying token... a5e3696b23ce9b6e96af822f26b757d52c64b9a8e29351b9fee039dfb2d35600
+[check-auth] 2:26:50 PM 2025-04-14T07:26:50.482Z	d328f5de-5d8e-42c4-9f06-926a7ecd3527	INFO	userId:  64cb43c7-fc54-404e-82af-66b2dad315de
+[check-auth] 2:26:51 PM 2025-04-14T07:26:51.061Z	d328f5de-5d8e-42c4-9f06-926a7ecd3527	INFO	DynamoDB result:  {
+  Items: [
+    {
+      password: '$2b$10$Fk8hSSFK9yWlmyCSdMBkfuaPNnfBiNoeOxzJxnhMOkDbsyMq9v0JO',
+      active: 0,
+      deleteFlag: 0,
+      role: 0,
+      userId: '64cb43c7-fc54-404e-82af-66b2dad315de',
+      updatedAt: '2025-03-28T07:24:56.336Z',
+      userName: 'admin',
+      createdAt: '2025-03-28T07:24:56.336Z',
+      updatedBy: 'admin',
+      email: 'info-admin@gmail.com',
+      createdBy: 'admin'
+    }
+  ],
+  Count: 1,
+  ScannedCount: 1
+}
+[check-auth] 2:26:51 PM END RequestId: d328f5de-5d8e-42c4-9f06-926a7ecd3527
+[check-auth] 2:26:51 PM REPORT RequestId: d328f5de-5d8e-42c4-9f06-926a7ecd3527	Duration: 659.38 ms	Billed Duration: 660 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[list-admin] 2:27:05 PM START RequestId: 7c15cf58-6855-498e-87b5-d4e2d3898642 Version: $LATEST
+[list-admin] 2:27:05 PM 2025-04-14T07:27:05.896Z	7c15cf58-6855-498e-87b5-d4e2d3898642	INFO	Auth Header:  Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGNiNDNjNy1mYzU0LTQwNGUtODJhZi02NmIyZGFkMzE1ZGUiLCJpYXQiOjE3NDQ2MTU2MDgsImV4cCI6MTc0NDYxNTkwOH0.coJ-KLeOCF-CwxWc4nxkPH_-XwmtOvhkLB-bOOkW6wg
+[list-admin] 2:27:06 PM 2025-04-14T07:27:06.576Z	7c15cf58-6855-498e-87b5-d4e2d3898642	INFO	Authenticated User: {
+  password: '$2b$10$Fk8hSSFK9yWlmyCSdMBkfuaPNnfBiNoeOxzJxnhMOkDbsyMq9v0JO',
+  active: 0,
+  deleteFlag: 0,
+  role: 0,
+  userId: '64cb43c7-fc54-404e-82af-66b2dad315de',
+  updatedAt: '2025-03-28T07:24:56.336Z',
+  userName: 'admin',
+  createdAt: '2025-03-28T07:24:56.336Z',
+  updatedBy: 'admin',
+  email: 'info-admin@gmail.com',
+  createdBy: 'admin'
+}
+[list-admin] 2:27:06 PM 2025-04-14T07:27:06.576Z	7c15cf58-6855-498e-87b5-d4e2d3898642	INFO	Retrieving list of Users
+[list-admin] 2:27:07 PM 2025-04-14T07:27:07.074Z	7c15cf58-6855-498e-87b5-d4e2d3898642	ERROR	Failed to retrieve Users:  {
+  error: ValidationException: Query condition missed key schema element: userId
+      at constructor.aY (file:///var/task/index.mjs:2:5258)
+      at constructor.callListeners (file:///var/task/index.mjs:2:48814)
+      at constructor.emit (file:///var/task/index.mjs:2:48522)
+      at constructor.emitEvent (file:///var/task/index.mjs:3:28487)
+      at constructor.t (file:///var/task/index.mjs:3:24043)
+      at jl.runTo (file:///var/task/index.mjs:3:1217)
+      at file:///var/task/index.mjs:3:1429
+      at constructor.<anonymous> (file:///var/task/index.mjs:3:24258)
+      at constructor.<anonymous> (file:///var/task/index.mjs:3:28542)
+      at constructor.callListeners (file:///var/task/index.mjs:2:48919) {
+    code: 'ValidationException',
+    '[__type]': 'See error.__type for details.',
+    time: 2025-04-14T07:27:07.073Z,
+    requestId: 'CJEPQGRA2FBVBA5CVESUOQLB13VV4KQNSO5AEMVJF66Q9ASUAAJG',
+    statusCode: 400,
+    retryable: false,
+    retryDelay: 27.765628322071876
+  },
+  event: {
+    resource: '/users',
+    path: '/users',
+    httpMethod: 'GET',
+    headers: {
+      Accept: '*/*',
+      'Accept-Encoding': 'gzip, deflate, br',
+      Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGNiNDNjNy1mYzU0LTQwNGUtODJhZi02NmIyZGFkMzE1ZGUiLCJpYXQiOjE3NDQ2MTU2MDgsImV4cCI6MTc0NDYxNTkwOH0.coJ-KLeOCF-CwxWc4nxkPH_-XwmtOvhkLB-bOOkW6wg',
+      'Cache-Control': 'no-cache',
+      'CloudFront-Forwarded-Proto': 'https',
+      'CloudFront-Is-Desktop-Viewer': 'true',
+      'CloudFront-Is-Mobile-Viewer': 'false',
+      'CloudFront-Is-SmartTV-Viewer': 'false',
+      'CloudFront-Is-Tablet-Viewer': 'false',
+      'CloudFront-Viewer-ASN': '45899',
+      'CloudFront-Viewer-Country': 'VN',
+      Host: 'jmkfjlxu63.execute-api.us-east-1.amazonaws.com',
+      'Postman-Token': 'a97b2118-69dd-4afe-811b-24f10ab78ec9',
+      'User-Agent': 'PostmanRuntime/7.43.3',
+      Via: '1.1 c1bd4c89f1f6daf71922ce6048514b9e.cloudfront.net (CloudFront)',
+      'X-Amz-Cf-Id': 'cJi1rSHr9P1VkVqyd5kXH5JUldSb23prYKkneTDaTMi9cVYde1IQ6A==',
+      'X-Amzn-Trace-Id': 'Root=1-67fcb8c9-1203ae0d0082ebe2369c08ef',
+      'X-Forwarded-For': '14.161.12.17, 15.158.13.54',
+      'X-Forwarded-Port': '443',
+      'X-Forwarded-Proto': 'https'
+    },
+    multiValueHeaders: {
+      Accept: [Array],
+      'Accept-Encoding': [Array],
+      Authorization: [Array],
+      'Cache-Control': [Array],
+      'CloudFront-Forwarded-Proto': [Array],
+      'CloudFront-Is-Desktop-Viewer': [Array],
+      'CloudFront-Is-Mobile-Viewer': [Array],
+      'CloudFront-Is-SmartTV-Viewer': [Array],
+      'CloudFront-Is-Tablet-Viewer': [Array],
+      'CloudFront-Viewer-ASN': [Array],
+      'CloudFront-Viewer-Country': [Array],
+      Host: [Array],
+      'Postman-Token': [Array],
+      'User-Agent': [Array],
+      Via: [Array],
+      'X-Amz-Cf-Id': [Array],
+      'X-Amzn-Trace-Id': [Array],
+      'X-Forwarded-For': [Array],
+      'X-Forwarded-Port': [Array],
+      'X-Forwarded-Proto': [Array]
+    },
+    queryStringParameters: { page: '1', pageSize: '10', query: '' },
+    multiValueQueryStringParameters: { page: [Array], pageSize: [Array], query: [Array] },
+    pathParameters: null,
+    stageVariables: null,
+    requestContext: {
+      resourceId: '3rsr17',
+      resourcePath: '/users',
+      httpMethod: 'GET',
+      extendedRequestId: 'JAHPmF6yoAMEmPw=',
+      requestTime: '14/Apr/2025:07:27:05 +0000',
+      path: '/prod/users',
+      accountId: '647755634525',
+      protocol: 'HTTP/1.1',
+      stage: 'prod',
+      domainPrefix: 'jmkfjlxu63',
+      requestTimeEpoch: 1744615625854,
+      requestId: '67eab49b-608d-410c-9ddf-8366c8dd58b7',
+      identity: [Object],
+      domainName: 'jmkfjlxu63.execute-api.us-east-1.amazonaws.com',
+      deploymentId: 'sf0sq6',
+      apiId: 'jmkfjlxu63'
+    },
+    body: null,
+    isBase64Encoded: false
+  }
+}
+[list-admin] 2:27:07 PM END RequestId: 7c15cf58-6855-498e-87b5-d4e2d3898642
+[list-admin] 2:27:07 PM REPORT RequestId: 7c15cf58-6855-498e-87b5-d4e2d3898642	Duration: 1206.09 ms	Billed Duration: 1207 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[check-auth] 2:28:59 PM START RequestId: 1d8f267e-f748-456e-8c5c-aa03a90babf8 Version: $LATEST
+[check-auth] 2:28:59 PM 2025-04-14T07:28:59.922Z	1d8f267e-f748-456e-8c5c-aa03a90babf8	INFO	Token (cleaned):  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGNiNDNjNy1mYzU0LTQwNGUtODJhZi02NmIyZGFkMzE1ZGUiLCJpYXQiOjE3NDQ2MTUzOTEsImV4cCI6MTc0NDYxNjI5MX0.enM0lkrMi17WK11-_pINkXbHxqVCVL-HPZ9UxlLX26Y
+[check-auth] 2:28:59 PM 2025-04-14T07:28:59.923Z	1d8f267e-f748-456e-8c5c-aa03a90babf8	INFO	Verifying token... a5e3696b23ce9b6e96af822f26b757d52c64b9a8e29351b9fee039dfb2d35600
+[check-auth] 2:28:59 PM 2025-04-14T07:28:59.924Z	1d8f267e-f748-456e-8c5c-aa03a90babf8	INFO	userId:  64cb43c7-fc54-404e-82af-66b2dad315de
+[check-auth] 2:29:00 PM 2025-04-14T07:29:00.461Z	1d8f267e-f748-456e-8c5c-aa03a90babf8	INFO	DynamoDB result:  {
+  Items: [
+    {
+      password: '$2b$10$Fk8hSSFK9yWlmyCSdMBkfuaPNnfBiNoeOxzJxnhMOkDbsyMq9v0JO',
+      active: 0,
+      deleteFlag: 0,
+      role: 0,
+      userId: '64cb43c7-fc54-404e-82af-66b2dad315de',
+      updatedAt: '2025-03-28T07:24:56.336Z',
+      userName: 'admin',
+      createdAt: '2025-03-28T07:24:56.336Z',
+      updatedBy: 'admin',
+      email: 'info-admin@gmail.com',
+      createdBy: 'admin'
+    }
+  ],
+  Count: 1,
+  ScannedCount: 1
+}
+[check-auth] 2:29:00 PM END RequestId: 1d8f267e-f748-456e-8c5c-aa03a90babf8
+[check-auth] 2:29:00 PM REPORT RequestId: 1d8f267e-f748-456e-8c5c-aa03a90babf8	Duration: 597.18 ms	Billed Duration: 598 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[check-auth] 2:30:12 PM INIT_START Runtime Version: nodejs:18.v63	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:ad007b64e69135315cba0d95ed797867707d928d1128edf4fa17a926a71f1718
+[check-auth] 2:38:26 PM INIT_START Runtime Version: nodejs:18.v63	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:ad007b64e69135315cba0d95ed797867707d928d1128edf4fa17a926a71f1718
+[check-auth] 2:38:27 PM START RequestId: 1f496dac-b36c-4f18-a37d-5e50b84f6927 Version: $LATEST
+[check-auth] 2:38:27 PM 2025-04-14T07:38:27.732Z	1f496dac-b36c-4f18-a37d-5e50b84f6927	INFO	Token (cleaned):  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGNiNDNjNy1mYzU0LTQwNGUtODJhZi02NmIyZGFkMzE1ZGUiLCJpYXQiOjE3NDQ2MTYzMDYsImV4cCI6MTc0NDYxNzIwNn0.ijxtlcwGy_rAEv2XOGVP7M4hDNfEo0m4LCryl5GKDyM
+[check-auth] 2:38:27 PM 2025-04-14T07:38:27.733Z	1f496dac-b36c-4f18-a37d-5e50b84f6927	INFO	Verifying token... a5e3696b23ce9b6e96af822f26b757d52c64b9a8e29351b9fee039dfb2d35600
+[check-auth] 2:38:27 PM 2025-04-14T07:38:27.752Z	1f496dac-b36c-4f18-a37d-5e50b84f6927	INFO	userId:  64cb43c7-fc54-404e-82af-66b2dad315de
+[check-auth] 2:38:28 PM 2025-04-14T07:38:28.337Z	1f496dac-b36c-4f18-a37d-5e50b84f6927	INFO	DynamoDB result:  {
+  Items: [
+    {
+      password: '$2b$10$Fk8hSSFK9yWlmyCSdMBkfuaPNnfBiNoeOxzJxnhMOkDbsyMq9v0JO',
+      active: 0,
+      deleteFlag: 0,
+      role: 0,
+      userId: '64cb43c7-fc54-404e-82af-66b2dad315de',
+      updatedAt: '2025-03-28T07:24:56.336Z',
+      userName: 'admin',
+      createdAt: '2025-03-28T07:24:56.336Z',
+      updatedBy: 'admin',
+      email: 'info-admin@gmail.com',
+      createdBy: 'admin'
+    }
+  ],
+  Count: 1,
+  ScannedCount: 1
+}
+[check-auth] 2:38:28 PM END RequestId: 1f496dac-b36c-4f18-a37d-5e50b84f6927
+[check-auth] 2:38:28 PM REPORT RequestId: 1f496dac-b36c-4f18-a37d-5e50b84f6927	Duration: 645.37 ms	Billed Duration: 646 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 753.64 ms
+[refresh-token] 2:38:24 PM INIT_START Runtime Version: nodejs:18.v63	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:ad007b64e69135315cba0d95ed797867707d928d1128edf4fa17a926a71f1718
+[refresh-token] 2:38:25 PM START RequestId: f64235cd-c9c6-4629-8578-0aba1c5fd27f Version: $LATEST
+[refresh-token] 2:38:25 PM 2025-04-14T07:38:25.539Z	f64235cd-c9c6-4629-8578-0aba1c5fd27f	INFO	Refresh Token (cleaned):  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGNiNDNjNy1mYzU0LTQwNGUtODJhZi02NmIyZGFkMzE1ZGUiLCJpYXQiOjE3NDQ2MTUzOTEsImV4cCI6MTc0NTIyMDE5MX0.i22lIZm7M0gy9mpG6fB8bYxnvW3A9KfW1Ad0UGBbiGc
+[refresh-token] 2:38:25 PM 2025-04-14T07:38:25.556Z	f64235cd-c9c6-4629-8578-0aba1c5fd27f	INFO	Decoded refresh token:  {
+  userId: '64cb43c7-fc54-404e-82af-66b2dad315de',
+  iat: 1744615391,
+  exp: 1745220191
+}
+[refresh-token] 2:38:25 PM 2025-04-14T07:38:25.558Z	f64235cd-c9c6-4629-8578-0aba1c5fd27f	INFO	Extracted userId:  64cb43c7-fc54-404e-82af-66b2dad315de
+[refresh-token] 2:38:26 PM 2025-04-14T07:38:26.136Z	f64235cd-c9c6-4629-8578-0aba1c5fd27f	INFO	DynamoDB query result:  {
+  Items: [
+    {
+      password: '$2b$10$Fk8hSSFK9yWlmyCSdMBkfuaPNnfBiNoeOxzJxnhMOkDbsyMq9v0JO',
+      active: 0,
+      deleteFlag: 0,
+      role: 0,
+      userId: '64cb43c7-fc54-404e-82af-66b2dad315de',
+      updatedAt: '2025-03-28T07:24:56.336Z',
+      userName: 'admin',
+      createdAt: '2025-03-28T07:24:56.336Z',
+      updatedBy: 'admin',
+      email: 'info-admin@gmail.com',
+      createdBy: 'admin'
+    }
+  ],
+  Count: 1,
+  ScannedCount: 1
+}
+[refresh-token] 2:38:26 PM END RequestId: f64235cd-c9c6-4629-8578-0aba1c5fd27f
+[refresh-token] 2:38:26 PM REPORT RequestId: f64235cd-c9c6-4629-8578-0aba1c5fd27f	Duration: 629.86 ms	Billed Duration: 630 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 956.82 ms
+[list-admin] 2:39:27 PM INIT_START Runtime Version: nodejs:18.v63	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:ad007b64e69135315cba0d95ed797867707d928d1128edf4fa17a926a71f1718
+[list-admin] 2:39:28 PM START RequestId: f6ce9c25-8a2e-4680-8d0f-8904b5a3d046 Version: $LATEST
+[list-admin] 2:39:28 PM 2025-04-14T07:39:28.746Z	f6ce9c25-8a2e-4680-8d0f-8904b5a3d046	INFO	Auth Header:  Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGNiNDNjNy1mYzU0LTQwNGUtODJhZi02NmIyZGFkMzE1ZGUiLCJpYXQiOjE3NDQ2MTU2MDgsImV4cCI6MTc0NDYxNTkwOH0.coJ-KLeOCF-CwxWc4nxkPH_-XwmtOvhkLB-bOOkW6wg
+[list-admin] 2:39:28 PM 2025-04-14T07:39:28.762Z	f6ce9c25-8a2e-4680-8d0f-8904b5a3d046	ERROR	Failed to retrieve Users:  {
+  error: Error: Invalid or expired token
+      at v$ (file:///var/task/index.mjs:37:51811)
+      at Runtime.amt [as handler] (file:///var/task/index.mjs:37:52881)
+      at Runtime.handleOnceNonStreaming (file:///var/runtime/index.mjs:1173:29) {
+    statusCode: 401
+  },
+  event: {
+    resource: '/users',
+    path: '/users',
+    httpMethod: 'GET',
+    headers: {
+      Accept: '*/*',
+      'Accept-Encoding': 'gzip, deflate, br',
+      Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGNiNDNjNy1mYzU0LTQwNGUtODJhZi02NmIyZGFkMzE1ZGUiLCJpYXQiOjE3NDQ2MTU2MDgsImV4cCI6MTc0NDYxNTkwOH0.coJ-KLeOCF-CwxWc4nxkPH_-XwmtOvhkLB-bOOkW6wg',
+      'Cache-Control': 'no-cache',
+      'CloudFront-Forwarded-Proto': 'https',
+      'CloudFront-Is-Desktop-Viewer': 'true',
+      'CloudFront-Is-Mobile-Viewer': 'false',
+      'CloudFront-Is-SmartTV-Viewer': 'false',
+      'CloudFront-Is-Tablet-Viewer': 'false',
+      'CloudFront-Viewer-ASN': '45899',
+      'CloudFront-Viewer-Country': 'VN',
+      Host: 'jmkfjlxu63.execute-api.us-east-1.amazonaws.com',
+      'Postman-Token': '08b06b15-e874-4fdb-885b-6441efe2d176',
+      'User-Agent': 'PostmanRuntime/7.43.3',
+      Via: '1.1 d75579c7b6b5378d2f97d54e69c6b3cc.cloudfront.net (CloudFront)',
+      'X-Amz-Cf-Id': 'SDvy9QgFGy9qboAMaoLY8OJCCbEdEcGtCJwNQBFKNbfAAi-j7Tr_5w==',
+      'X-Amzn-Trace-Id': 'Root=1-67fcbbaf-1fd02fb7211e615b011520e7',
+      'X-Forwarded-For': '14.161.12.17, 15.158.13.11',
+      'X-Forwarded-Port': '443',
+      'X-Forwarded-Proto': 'https'
+    },
+    multiValueHeaders: {
+      Accept: [Array],
+      'Accept-Encoding': [Array],
+      Authorization: [Array],
+      'Cache-Control': [Array],
+      'CloudFront-Forwarded-Proto': [Array],
+      'CloudFront-Is-Desktop-Viewer': [Array],
+      'CloudFront-Is-Mobile-Viewer': [Array],
+      'CloudFront-Is-SmartTV-Viewer': [Array],
+      'CloudFront-Is-Tablet-Viewer': [Array],
+      'CloudFront-Viewer-ASN': [Array],
+      'CloudFront-Viewer-Country': [Array],
+      Host: [Array],
+      'Postman-Token': [Array],
+      'User-Agent': [Array],
+      Via: [Array],
+      'X-Amz-Cf-Id': [Array],
+      'X-Amzn-Trace-Id': [Array],
+      'X-Forwarded-For': [Array],
+      'X-Forwarded-Port': [Array],
+      'X-Forwarded-Proto': [Array]
+    },
+    queryStringParameters: { page: '1', pageSize: '3' },
+    multiValueQueryStringParameters: { page: [Array], pageSize: [Array] },
+    pathParameters: null,
+    stageVariables: null,
+    requestContext: {
+      resourceId: '3rsr17',
+      resourcePath: '/users',
+      httpMethod: 'GET',
+      extendedRequestId: 'JAJDgHrboAMEMPg=',
+      requestTime: '14/Apr/2025:07:39:27 +0000',
+      path: '/prod/users',
+      accountId: '647755634525',
+      protocol: 'HTTP/1.1',
+      stage: 'prod',
+      domainPrefix: 'jmkfjlxu63',
+      requestTimeEpoch: 1744616367664,
+      requestId: 'e4906fb4-4a21-43a9-ac63-bfdd2908ab51',
+      identity: [Object],
+      domainName: 'jmkfjlxu63.execute-api.us-east-1.amazonaws.com',
+      deploymentId: 'sf0sq6',
+      apiId: 'jmkfjlxu63'
+    },
+    body: null,
+    isBase64Encoded: false
+  }
+}
+[list-admin] 2:39:28 PM END RequestId: f6ce9c25-8a2e-4680-8d0f-8904b5a3d046
+[list-admin] 2:39:28 PM REPORT RequestId: f6ce9c25-8a2e-4680-8d0f-8904b5a3d046	Duration: 65.51 ms	Billed Duration: 66 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 929.59 ms
+[list-tour] 2:39:42 PM INIT_START Runtime Version: nodejs:18.v63	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:ad007b64e69135315cba0d95ed797867707d928d1128edf4fa17a926a71f1718
+[list-tour] 2:39:43 PM START RequestId: 7ee6cb2b-6454-47b5-b945-d9d25eff52c6 Version: $LATEST
+[list-tour] 2:39:43 PM 2025-04-14T07:39:43.244Z	7ee6cb2b-6454-47b5-b945-d9d25eff52c6	INFO	Retrieving list of tours
+[list-tour] 2:39:43 PM 2025-04-14T07:39:43.264Z	7ee6cb2b-6454-47b5-b945-d9d25eff52c6	ERROR	Failed to retrieve tours:  {
+  error: Error: Invalid or expired token
+      at v$ (file:///var/task/index.mjs:37:51811)
+      at Runtime.amt [as handler] (file:///var/task/index.mjs:37:52825)
+      at Runtime.handleOnceNonStreaming (file:///var/runtime/index.mjs:1173:29) {
+    statusCode: 401
+  },
+  event: {
+    resource: '/tours',
+    path: '/tours/',
+    httpMethod: 'GET',
+    headers: {
+      Accept: '*/*',
+      'Accept-Encoding': 'gzip, deflate, br, zstd',
+      'Accept-Language': 'en-US,en;q=0.9,vi;q=0.8,zh-CN;q=0.7,zh;q=0.6',
+      Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGNiNDNjNy1mYzU0LTQwNGUtODJhZi02NmIyZGFkMzE1ZGUiLCJpYXQiOjE3NDQ2MTU2MDgsImV4cCI6MTc0NDYxNTkwOH0.coJ-KLeOCF-CwxWc4nxkPH_-XwmtOvhkLB-bOOkW6wg',
+      'CloudFront-Forwarded-Proto': 'https',
+      'CloudFront-Is-Desktop-Viewer': 'true',
+      'CloudFront-Is-Mobile-Viewer': 'false',
+      'CloudFront-Is-SmartTV-Viewer': 'false',
+      'CloudFront-Is-Tablet-Viewer': 'false',
+      'CloudFront-Viewer-ASN': '45899',
+      'CloudFront-Viewer-Country': 'VN',
+      Host: 'zfs1gdum83.execute-api.us-east-1.amazonaws.com',
+      origin: 'http://localhost:3000',
+      priority: 'u=1, i',
+      Referer: 'http://localhost:3000/',
+      'sec-ch-ua': '"Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"',
+      'sec-ch-ua-mobile': '?0',
+      'sec-ch-ua-platform': '"Windows"',
+      'sec-fetch-dest': 'empty',
+      'sec-fetch-mode': 'cors',
+      'sec-fetch-site': 'cross-site',
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36',
+      Via: '2.0 c0ae01d05d0cd138dcc4a6e5ef7a2694.cloudfront.net (CloudFront)',
+      'X-Amz-Cf-Id': 'VO5cI3DQv39Me6MvpX_eJuIxq2xF51fsw4iwCf78KPc4MQsJQSWqsw==',
+      'X-Amzn-Trace-Id': 'Root=1-67fcbbbe-3d06f445718a73b750570bee',
+      'X-Forwarded-For': '14.161.12.17, 15.158.13.39',
+      'X-Forwarded-Port': '443',
+      'X-Forwarded-Proto': 'https'
+    },
+    multiValueHeaders: {
+      Accept: [Array],
+      'Accept-Encoding': [Array],
+      'Accept-Language': [Array],
+      Authorization: [Array],
+      'CloudFront-Forwarded-Proto': [Array],
+      'CloudFront-Is-Desktop-Viewer': [Array],
+      'CloudFront-Is-Mobile-Viewer': [Array],
+      'CloudFront-Is-SmartTV-Viewer': [Array],
+      'CloudFront-Is-Tablet-Viewer': [Array],
+      'CloudFront-Viewer-ASN': [Array],
+      'CloudFront-Viewer-Country': [Array],
+      Host: [Array],
+      origin: [Array],
+      priority: [Array],
+      Referer: [Array],
+      'sec-ch-ua': [Array],
+      'sec-ch-ua-mobile': [Array],
+      'sec-ch-ua-platform': [Array],
+      'sec-fetch-dest': [Array],
+      'sec-fetch-mode': [Array],
+      'sec-fetch-site': [Array],
+      'User-Agent': [Array],
+      Via: [Array],
+      'X-Amz-Cf-Id': [Array],
+      'X-Amzn-Trace-Id': [Array],
+      'X-Forwarded-For': [Array],
+      'X-Forwarded-Port': [Array],
+      'X-Forwarded-Proto': [Array]
+    },
+    queryStringParameters: { page: '1', pageSize: '10', query: '' },
+    multiValueQueryStringParameters: { page: [Array], pageSize: [Array], query: [Array] },
+    pathParameters: null,
+    stageVariables: null,
+    requestContext: {
+      resourceId: 'h6nwgo',
+      resourcePath: '/tours',
+      httpMethod: 'GET',
+      extendedRequestId: 'JAJFwFBCIAMEhsQ=',
+      requestTime: '14/Apr/2025:07:39:42 +0000',
+      path: '/prod/tours/',
+      accountId: '647755634525',
+      protocol: 'HTTP/1.1',
+      stage: 'prod',
+      domainPrefix: 'zfs1gdum83',
+      requestTimeEpoch: 1744616382032,
+      requestId: 'c00e4910-1a9f-42b8-bdc1-dd1177dd7d75',
+      identity: [Object],
+      domainName: 'zfs1gdum83.execute-api.us-east-1.amazonaws.com',
+      deploymentId: 'opjaqt',
+      apiId: 'zfs1gdum83'
+    },
+    body: null,
+    isBase64Encoded: false
+  }
+}
+[list-tour] 2:39:43 PM END RequestId: 7ee6cb2b-6454-47b5-b945-d9d25eff52c6
+[list-tour] 2:39:43 PM REPORT RequestId: 7ee6cb2b-6454-47b5-b945-d9d25eff52c6	Duration: 55.92 ms	Billed Duration: 56 ms	Memory Size: 512 MB	Max Memory Used: 316 MB	Init Duration: 927.31 ms
+[check-auth] 2:39:40 PM START RequestId: 91eedd58-47f9-456b-82f7-3fabd6991adf Version: $LATEST
+[check-auth] 2:39:40 PM 2025-04-14T07:39:40.811Z	91eedd58-47f9-456b-82f7-3fabd6991adf	INFO	Token (cleaned):  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGNiNDNjNy1mYzU0LTQwNGUtODJhZi02NmIyZGFkMzE1ZGUiLCJpYXQiOjE3NDQ2MTU2MDgsImV4cCI6MTc0NDYxNTkwOH0.coJ-KLeOCF-CwxWc4nxkPH_-XwmtOvhkLB-bOOkW6wg
+[check-auth] 2:39:40 PM 2025-04-14T07:39:40.811Z	91eedd58-47f9-456b-82f7-3fabd6991adf	INFO	Verifying token... a5e3696b23ce9b6e96af822f26b757d52c64b9a8e29351b9fee039dfb2d35600
+[check-auth] 2:39:40 PM END RequestId: 91eedd58-47f9-456b-82f7-3fabd6991adf
+[check-auth] 2:39:40 PM REPORT RequestId: 91eedd58-47f9-456b-82f7-3fabd6991adf	Duration: 61.96 ms	Billed Duration: 62 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[check-auth] 2:39:42 PM START RequestId: e374cca9-cbe1-4dd9-9e46-01c123befeda Version: $LATEST
+[check-auth] 2:39:42 PM 2025-04-14T07:39:42.952Z	e374cca9-cbe1-4dd9-9e46-01c123befeda	INFO	Token (cleaned):  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGNiNDNjNy1mYzU0LTQwNGUtODJhZi02NmIyZGFkMzE1ZGUiLCJpYXQiOjE3NDQ2MTU2MDgsImV4cCI6MTc0NDYxNTkwOH0.coJ-KLeOCF-CwxWc4nxkPH_-XwmtOvhkLB-bOOkW6wg
+[check-auth] 2:39:42 PM 2025-04-14T07:39:42.952Z	e374cca9-cbe1-4dd9-9e46-01c123befeda	INFO	Verifying token... a5e3696b23ce9b6e96af822f26b757d52c64b9a8e29351b9fee039dfb2d35600
+[check-auth] 2:39:42 PM END RequestId: e374cca9-cbe1-4dd9-9e46-01c123befeda
+[check-auth] 2:39:42 PM REPORT RequestId: e374cca9-cbe1-4dd9-9e46-01c123befeda	Duration: 11.51 ms	Billed Duration: 12 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[login] 2:39:48 PM INIT_START Runtime Version: nodejs:18.v63	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:ad007b64e69135315cba0d95ed797867707d928d1128edf4fa17a926a71f1718
+[login] 2:39:49 PM START RequestId: a4928a25-645f-4c5b-b55d-a9a374c05e17 Version: $LATEST
+[login] 2:39:49 PM 2025-04-14T07:39:49.910Z	a4928a25-645f-4c5b-b55d-a9a374c05e17	INFO	Retrieving user with email:  info-admin@gmail.com
+[login] 2:39:50 PM 2025-04-14T07:39:50.489Z	a4928a25-645f-4c5b-b55d-a9a374c05e17	INFO	User successfully retrieved:  {
+  password: '$2b$10$Fk8hSSFK9yWlmyCSdMBkfuaPNnfBiNoeOxzJxnhMOkDbsyMq9v0JO',
+  active: 0,
+  deleteFlag: 0,
+  role: 0,
+  updatedAt: '2025-03-28T07:24:56.336Z',
+  userId: '64cb43c7-fc54-404e-82af-66b2dad315de',
+  userName: 'admin',
+  createdAt: '2025-03-28T07:24:56.336Z',
+  updatedBy: 'admin',
+  email: 'info-admin@gmail.com',
+  createdBy: 'admin'
+}
+[login] 2:39:50 PM END RequestId: a4928a25-645f-4c5b-b55d-a9a374c05e17
+[login] 2:39:50 PM REPORT RequestId: a4928a25-645f-4c5b-b55d-a9a374c05e17	Duration: 1059.39 ms	Billed Duration: 1060 ms	Memory Size: 512 MB	Max Memory Used: 323 MB	Init Duration: 923.33 ms
+[check-auth] 2:39:52 PM START RequestId: 57f0b475-1ecb-4145-802c-06caf8e1dbfc Version: $LATEST
+[check-auth] 2:39:52 PM 2025-04-14T07:39:52.139Z	57f0b475-1ecb-4145-802c-06caf8e1dbfc	INFO	Token (cleaned):  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGNiNDNjNy1mYzU0LTQwNGUtODJhZi02NmIyZGFkMzE1ZGUiLCJpYXQiOjE3NDQ2MTYzOTAsImV4cCI6MTc0NDYxNjY5MH0.7id-VrZmNz7uV9gTvraMVAF91tpTNaCfcuHRmr0l2Rk
+[check-auth] 2:39:52 PM 2025-04-14T07:39:52.140Z	57f0b475-1ecb-4145-802c-06caf8e1dbfc	INFO	Verifying token... a5e3696b23ce9b6e96af822f26b757d52c64b9a8e29351b9fee039dfb2d35600
+[check-auth] 2:39:52 PM 2025-04-14T07:39:52.140Z	57f0b475-1ecb-4145-802c-06caf8e1dbfc	INFO	userId:  64cb43c7-fc54-404e-82af-66b2dad315de
+[check-auth] 2:39:52 PM 2025-04-14T07:39:52.624Z	57f0b475-1ecb-4145-802c-06caf8e1dbfc	INFO	DynamoDB result:  {
+  Items: [
+    {
+      password: '$2b$10$Fk8hSSFK9yWlmyCSdMBkfuaPNnfBiNoeOxzJxnhMOkDbsyMq9v0JO',
+      active: 0,
+      deleteFlag: 0,
+      role: 0,
+      userId: '64cb43c7-fc54-404e-82af-66b2dad315de',
+      updatedAt: '2025-03-28T07:24:56.336Z',
+      userName: 'admin',
+      createdAt: '2025-03-28T07:24:56.336Z',
+      updatedBy: 'admin',
+      email: 'info-admin@gmail.com',
+      createdBy: 'admin'
+    }
+  ],
+  Count: 1,
+  ScannedCount: 1
+}
+[check-auth] 2:39:52 PM END RequestId: 57f0b475-1ecb-4145-802c-06caf8e1dbfc
+[check-auth] 2:39:52 PM REPORT RequestId: 57f0b475-1ecb-4145-802c-06caf8e1dbfc	Duration: 487.08 ms	Billed Duration: 488 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[list-tour] 2:39:54 PM START RequestId: a375d25f-f860-43bc-98c7-aedb0fdbe7f6 Version: $LATEST
+[list-tour] 2:39:54 PM 2025-04-14T07:39:54.160Z	a375d25f-f860-43bc-98c7-aedb0fdbe7f6	INFO	Retrieving list of tours
+[list-tour] 2:39:55 PM END RequestId: a375d25f-f860-43bc-98c7-aedb0fdbe7f6
+[list-tour] 2:39:55 PM REPORT RequestId: a375d25f-f860-43bc-98c7-aedb0fdbe7f6	Duration: 1505.86 ms	Billed Duration: 1506 ms	Memory Size: 512 MB	Max Memory Used: 321 MB
+[list-admin] 2:40:03 PM START RequestId: 2b591929-7580-4856-ab95-2e5e343e9754 Version: $LATEST
+[list-admin] 2:40:03 PM 2025-04-14T07:40:03.300Z	2b591929-7580-4856-ab95-2e5e343e9754	INFO	Auth Header:  Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGNiNDNjNy1mYzU0LTQwNGUtODJhZi02NmIyZGFkMzE1ZGUiLCJpYXQiOjE3NDQ2MTYzOTAsImV4cCI6MTc0NDYxNjY5MH0.7id-VrZmNz7uV9gTvraMVAF91tpTNaCfcuHRmr0l2Rk
+[list-admin] 2:40:04 PM 2025-04-14T07:40:04.062Z	2b591929-7580-4856-ab95-2e5e343e9754	INFO	Authenticated User: {
+  password: '$2b$10$Fk8hSSFK9yWlmyCSdMBkfuaPNnfBiNoeOxzJxnhMOkDbsyMq9v0JO',
+  active: 0,
+  deleteFlag: 0,
+  role: 0,
+  userId: '64cb43c7-fc54-404e-82af-66b2dad315de',
+  updatedAt: '2025-03-28T07:24:56.336Z',
+  userName: 'admin',
+  createdAt: '2025-03-28T07:24:56.336Z',
+  updatedBy: 'admin',
+  email: 'info-admin@gmail.com',
+  createdBy: 'admin'
+}
+[list-admin] 2:40:04 PM 2025-04-14T07:40:04.062Z	2b591929-7580-4856-ab95-2e5e343e9754	INFO	Retrieving list of Users
+[list-admin] 2:40:05 PM 2025-04-14T07:40:05.046Z	2b591929-7580-4856-ab95-2e5e343e9754	INFO	Users successfully retrieved:  [
+  {
+    active: 0,
+    password: '$2b$10$cNSs3ZIrIS8S3RGpYX43guXttgHdtzFHTCQklm9S20VuS1HFiqV1G',
+    deleteFlag: 0,
+    role: 0,
+    updatedAt: '2025-04-11T08:22:20.127Z',
+    userId: 'f1798c43-4970-4399-be72-3cdde891bc53',
+    userName: 'test',
+    createdAt: '2025-04-11T07:54:20.072Z',
+    updatedBy: '64cb43c7-fc54-404e-82af-66b2dad315de',
+    email: 'test@gmail.com',
+    createdBy: '64cb43c7-fc54-404e-82af-66b2dad315de'
+  },
+  {
+    password: '$2b$10$Fk8hSSFK9yWlmyCSdMBkfuaPNnfBiNoeOxzJxnhMOkDbsyMq9v0JO',
+    active: 0,
+    deleteFlag: 0,
+    role: 0,
+    userId: '64cb43c7-fc54-404e-82af-66b2dad315de',
+    updatedAt: '2025-03-28T07:24:56.336Z',
+    userName: 'admin',
+    createdAt: '2025-03-28T07:24:56.336Z',
+    updatedBy: 'admin',
+    email: 'info-admin@gmail.com',
+    createdBy: 'admin'
+  }
+]
+[list-admin] 2:40:05 PM END RequestId: 2b591929-7580-4856-ab95-2e5e343e9754
+[list-admin] 2:40:05 PM REPORT RequestId: 2b591929-7580-4856-ab95-2e5e343e9754	Duration: 1784.96 ms	Billed Duration: 1785 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[list-admin] 2:40:14 PM START RequestId: 3354cc85-ba51-419d-95a5-ba5d5c2cd599 Version: $LATEST
+[list-admin] 2:40:14 PM 2025-04-14T07:40:14.564Z	3354cc85-ba51-419d-95a5-ba5d5c2cd599	INFO	Auth Header:  Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGNiNDNjNy1mYzU0LTQwNGUtODJhZi02NmIyZGFkMzE1ZGUiLCJpYXQiOjE3NDQ2MTYzOTAsImV4cCI6MTc0NDYxNjY5MH0.7id-VrZmNz7uV9gTvraMVAF91tpTNaCfcuHRmr0l2Rk
+[list-admin] 2:40:15 PM 2025-04-14T07:40:15.034Z	3354cc85-ba51-419d-95a5-ba5d5c2cd599	INFO	Authenticated User: {
+  password: '$2b$10$Fk8hSSFK9yWlmyCSdMBkfuaPNnfBiNoeOxzJxnhMOkDbsyMq9v0JO',
+  active: 0,
+  deleteFlag: 0,
+  role: 0,
+  userId: '64cb43c7-fc54-404e-82af-66b2dad315de',
+  updatedAt: '2025-03-28T07:24:56.336Z',
+  userName: 'admin',
+  createdAt: '2025-03-28T07:24:56.336Z',
+  updatedBy: 'admin',
+  email: 'info-admin@gmail.com',
+  createdBy: 'admin'
+}
+[list-admin] 2:40:15 PM 2025-04-14T07:40:15.035Z	3354cc85-ba51-419d-95a5-ba5d5c2cd599	INFO	Retrieving list of Users
+[list-admin] 2:40:15 PM 2025-04-14T07:40:15.968Z	3354cc85-ba51-419d-95a5-ba5d5c2cd599	INFO	Users successfully retrieved:  [
+  {
+    active: 0,
+    password: '$2b$10$cNSs3ZIrIS8S3RGpYX43guXttgHdtzFHTCQklm9S20VuS1HFiqV1G',
+    deleteFlag: 0,
+    role: 0,
+    updatedAt: '2025-04-11T08:22:20.127Z',
+    userId: 'f1798c43-4970-4399-be72-3cdde891bc53',
+    userName: 'test',
+    createdAt: '2025-04-11T07:54:20.072Z',
+    updatedBy: '64cb43c7-fc54-404e-82af-66b2dad315de',
+    email: 'test@gmail.com',
+    createdBy: '64cb43c7-fc54-404e-82af-66b2dad315de'
+  }
+]
+[list-admin] 2:40:15 PM END RequestId: 3354cc85-ba51-419d-95a5-ba5d5c2cd599
+[list-admin] 2:40:15 PM REPORT RequestId: 3354cc85-ba51-419d-95a5-ba5d5c2cd599	Duration: 1406.66 ms	Billed Duration: 1407 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[get-meeting] 2:58:29 PM INIT_START Runtime Version: nodejs:18.v63	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:ad007b64e69135315cba0d95ed797867707d928d1128edf4fa17a926a71f1718
+[get-meeting] 2:58:30 PM START RequestId: f7e1738d-6f05-4c11-b99b-68a1a52c1ff8 Version: $LATEST
+[get-meeting] 2:58:30 PM 2025-04-14T07:58:30.265Z	f7e1738d-6f05-4c11-b99b-68a1a52c1ff8	INFO	Getting meeting with meetingId:  dcca6810-b790-459b-8229-f46d88374804
+[get-meeting] 2:58:30 PM 2025-04-14T07:58:30.990Z	f7e1738d-6f05-4c11-b99b-68a1a52c1ff8	INFO	Get Meeting Response:  dcca6810-b790-459b-8229-f46d88374804
+[get-meeting] 2:58:30 PM END RequestId: f7e1738d-6f05-4c11-b99b-68a1a52c1ff8
+[get-meeting] 2:58:30 PM REPORT RequestId: f7e1738d-6f05-4c11-b99b-68a1a52c1ff8	Duration: 733.20 ms	Billed Duration: 734 ms	Memory Size: 512 MB	Max Memory Used: 316 MB	Init Duration: 893.30 ms
+[start-meeting-transcription] 2:58:34 PM INIT_START Runtime Version: nodejs:18.v63	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:ad007b64e69135315cba0d95ed797867707d928d1128edf4fa17a926a71f1718
+[start-meeting-transcription] 2:58:35 PM START RequestId: 499452e5-2676-4af3-99c4-3980ef89752b Version: $LATEST
+[start-meeting-transcription] 2:58:35 PM 2025-04-14T07:58:35.553Z	499452e5-2676-4af3-99c4-3980ef89752b	INFO	Start MeetingTranscription with meetingId:  e66d2044-26a1-4223-be51-7d5d9fd74804 languageCode:  ja-JP
+[start-meeting-transcription] 2:58:36 PM 2025-04-14T07:58:36.291Z	499452e5-2676-4af3-99c4-3980ef89752b	ERROR	Failed to start transcription:  {
+  error: NotFound: Meeting <e66d2044-26a1-4223-be51-7d5d9fd74804> not found
+      at Object.kJ [as extractError] (file:///var/task/index.mjs:2:5259)
+      at constructor.YJ (file:///var/task/index.mjs:2:17862)
+      at constructor.callListeners (file:///var/task/index.mjs:2:48795)
+      at constructor.emit (file:///var/task/index.mjs:2:48503)
+      at constructor.emitEvent (file:///var/task/index.mjs:3:28427)
+      at constructor.t (file:///var/task/index.mjs:3:23986)
+      at Rc.runTo (file:///var/task/index.mjs:3:1217)
+      at file:///var/task/index.mjs:3:1429
+      at constructor.<anonymous> (file:///var/task/index.mjs:3:24200)
+      at constructor.<anonymous> (file:///var/task/index.mjs:3:28482) {
+    code: 'NotFound',
+    '[Code]': 'See error.Code for details.',
+    '[Message]': 'See error.Message for details.',
+    '[RequestId]': 'See error.RequestId for details.',
+    time: 2025-04-14T07:58:36.289Z,
+    requestId: '85546d74-a7be-4c99-a475-df018366f62e',
+    statusCode: 404,
+    retryable: false,
+    retryDelay: 16.418630433903548
+  },
+  event: {
+    resource: '/meetings/{MeetingID}/transcription',
+    path: '/meetings/e66d2044-26a1-4223-be51-7d5d9fd74804/transcription',
+    httpMethod: 'POST',
+    headers: {
+      Accept: '*/*',
+      'Accept-Encoding': 'gzip, deflate, br, zstd',
+      'Accept-Language': 'en-US,en;q=0.9,vi;q=0.8,zh-CN;q=0.7,zh;q=0.6',
+      'CloudFront-Forwarded-Proto': 'https',
+      'CloudFront-Is-Desktop-Viewer': 'false',
+      'CloudFront-Is-Mobile-Viewer': 'true',
+      'CloudFront-Is-SmartTV-Viewer': 'false',
+      'CloudFront-Is-Tablet-Viewer': 'false',
+      'CloudFront-Viewer-ASN': '45899',
+      'CloudFront-Viewer-Country': 'VN',
+      'content-type': 'application/json; charset=UTF-8',
+      Host: 'zyilyi1dgj.execute-api.us-east-1.amazonaws.com',
+      origin: 'http://localhost:3000',
+      priority: 'u=1, i',
+      Referer: 'http://localhost:3000/',
+      'sec-ch-ua': '"Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"',
+      'sec-ch-ua-mobile': '?1',
+      'sec-ch-ua-platform': '"Android"',
+      'sec-fetch-dest': 'empty',
+      'sec-fetch-mode': 'cors',
+      'sec-fetch-site': 'cross-site',
+      'User-Agent': 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Mobile Safari/537.36',
+      Via: '2.0 03322dcb952fd7593ad1b88b9201212e.cloudfront.net (CloudFront)',
+      'X-Amz-Cf-Id': '3eiZAdwkSb9lObvRj1UE99jBxcRgjvF8-JGiPVjO_PQimCanOz2mkQ==',
+      'X-Amzn-Trace-Id': 'Root=1-67fcc02a-4813fdbf6c2ecb1618c1e312',
+      'X-Forwarded-For': '14.161.12.17, 15.158.13.80',
+      'X-Forwarded-Port': '443',
+      'X-Forwarded-Proto': 'https'
+    },
+    multiValueHeaders: {
+      Accept: [Array],
+      'Accept-Encoding': [Array],
+      'Accept-Language': [Array],
+      'CloudFront-Forwarded-Proto': [Array],
+      'CloudFront-Is-Desktop-Viewer': [Array],
+      'CloudFront-Is-Mobile-Viewer': [Array],
+      'CloudFront-Is-SmartTV-Viewer': [Array],
+      'CloudFront-Is-Tablet-Viewer': [Array],
+      'CloudFront-Viewer-ASN': [Array],
+      'CloudFront-Viewer-Country': [Array],
+      'content-type': [Array],
+      Host: [Array],
+      origin: [Array],
+      priority: [Array],
+      Referer: [Array],
+      'sec-ch-ua': [Array],
+      'sec-ch-ua-mobile': [Array],
+      'sec-ch-ua-platform': [Array],
+      'sec-fetch-dest': [Array],
+      'sec-fetch-mode': [Array],
+      'sec-fetch-site': [Array],
+      'User-Agent': [Array],
+      Via: [Array],
+      'X-Amz-Cf-Id': [Array],
+      'X-Amzn-Trace-Id': [Array],
+      'X-Forwarded-For': [Array],
+      'X-Forwarded-Port': [Array],
+      'X-Forwarded-Proto': [Array]
+    },
+    queryStringParameters: null,
+    multiValueQueryStringParameters: null,
+    pathParameters: { MeetingID: 'e66d2044-26a1-4223-be51-7d5d9fd74804' },
+    stageVariables: null,
+    requestContext: {
+      resourceId: 'iixuht',
+      resourcePath: '/meetings/{MeetingID}/transcription',
+      httpMethod: 'POST',
+      extendedRequestId: 'JAL2rHyRoAMEO3A=',
+      requestTime: '14/Apr/2025:07:58:34 +0000',
+      path: '/prod/meetings/e66d2044-26a1-4223-be51-7d5d9fd74804/transcription',
+      accountId: '647755634525',
+      protocol: 'HTTP/1.1',
+      stage: 'prod',
+      domainPrefix: 'zyilyi1dgj',
+      requestTimeEpoch: 1744617514379,
+      requestId: '5b81a9ca-8e56-4b15-94a9-486aa876f76e',
+      identity: [Object],
+      domainName: 'zyilyi1dgj.execute-api.us-east-1.amazonaws.com',
+      deploymentId: '7rxnsl',
+      apiId: 'zyilyi1dgj'
+    },
+    body: '{"languageCode":"ja-JP"}',
+    isBase64Encoded: false
+  }
+}
+[start-meeting-transcription] 2:58:36 PM END RequestId: 499452e5-2676-4af3-99c4-3980ef89752b
+[start-meeting-transcription] 2:58:36 PM REPORT RequestId: 499452e5-2676-4af3-99c4-3980ef89752b	Duration: 755.69 ms	Billed Duration: 756 ms	Memory Size: 512 MB	Max Memory Used: 316 MB	Init Duration: 856.76 ms
+[start-meeting-transcription] 2:58:38 PM START RequestId: 7969f2a8-1f00-41f6-a5af-57cdd790f776 Version: $LATEST
+[start-meeting-transcription] 2:58:38 PM 2025-04-14T07:58:38.123Z	7969f2a8-1f00-41f6-a5af-57cdd790f776	INFO	Start MeetingTranscription with meetingId:  e66d2044-26a1-4223-be51-7d5d9fd74804 languageCode:  ja-JP
+[start-meeting-transcription] 2:58:38 PM 2025-04-14T07:58:38.720Z	7969f2a8-1f00-41f6-a5af-57cdd790f776	ERROR	Failed to start transcription:  {
+  error: NotFound: Meeting <e66d2044-26a1-4223-be51-7d5d9fd74804> not found
+      at Object.kJ [as extractError] (file:///var/task/index.mjs:2:5259)
+      at constructor.YJ (file:///var/task/index.mjs:2:17862)
+      at constructor.callListeners (file:///var/task/index.mjs:2:48795)
+      at constructor.emit (file:///var/task/index.mjs:2:48503)
+      at constructor.emitEvent (file:///var/task/index.mjs:3:28427)
+      at constructor.t (file:///var/task/index.mjs:3:23986)
+      at Rc.runTo (file:///var/task/index.mjs:3:1217)
+      at file:///var/task/index.mjs:3:1429
+      at constructor.<anonymous> (file:///var/task/index.mjs:3:24200)
+      at constructor.<anonymous> (file:///var/task/index.mjs:3:28482) {
+    code: 'NotFound',
+    '[Code]': 'See error.Code for details.',
+    '[Message]': 'See error.Message for details.',
+    '[RequestId]': 'See error.RequestId for details.',
+    time: 2025-04-14T07:58:38.719Z,
+    requestId: '54dda649-a0d3-416c-b964-a765356bfb0c',
+    statusCode: 404,
+    retryable: false,
+    retryDelay: 12.853955061529977
+  },
+  event: {
+    resource: '/meetings/{MeetingID}/transcription',
+    path: '/meetings/e66d2044-26a1-4223-be51-7d5d9fd74804/transcription',
+    httpMethod: 'POST',
+    headers: {
+      Accept: '*/*',
+      'Accept-Encoding': 'gzip, deflate, br, zstd',
+      'Accept-Language': 'en-US,en;q=0.9,vi;q=0.8,zh-CN;q=0.7,zh;q=0.6',
+      'CloudFront-Forwarded-Proto': 'https',
+      'CloudFront-Is-Desktop-Viewer': 'false',
+      'CloudFront-Is-Mobile-Viewer': 'true',
+      'CloudFront-Is-SmartTV-Viewer': 'false',
+      'CloudFront-Is-Tablet-Viewer': 'false',
+      'CloudFront-Viewer-ASN': '45899',
+      'CloudFront-Viewer-Country': 'VN',
+      'content-type': 'application/json; charset=UTF-8',
+      Host: 'zyilyi1dgj.execute-api.us-east-1.amazonaws.com',
+      origin: 'http://localhost:3000',
+      priority: 'u=1, i',
+      Referer: 'http://localhost:3000/',
+      'sec-ch-ua': '"Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"',
+      'sec-ch-ua-mobile': '?1',
+      'sec-ch-ua-platform': '"Android"',
+      'sec-fetch-dest': 'empty',
+      'sec-fetch-mode': 'cors',
+      'sec-fetch-site': 'cross-site',
+      'User-Agent': 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Mobile Safari/537.36',
+      Via: '2.0 03322dcb952fd7593ad1b88b9201212e.cloudfront.net (CloudFront)',
+      'X-Amz-Cf-Id': 'buL753yVfB8Yhqm7DzP_PA4ZBZZnIh3aRyjI-QBfNTdVvfIxZzelgQ==',
+      'X-Amzn-Trace-Id': 'Root=1-67fcc02e-6624c2ae3009b793728c69cf',
+      'X-Forwarded-For': '14.161.12.17, 15.158.13.104',
+      'X-Forwarded-Port': '443',
+      'X-Forwarded-Proto': 'https'
+    },
+    multiValueHeaders: {
+      Accept: [Array],
+      'Accept-Encoding': [Array],
+      'Accept-Language': [Array],
+      'CloudFront-Forwarded-Proto': [Array],
+      'CloudFront-Is-Desktop-Viewer': [Array],
+      'CloudFront-Is-Mobile-Viewer': [Array],
+      'CloudFront-Is-SmartTV-Viewer': [Array],
+      'CloudFront-Is-Tablet-Viewer': [Array],
+      'CloudFront-Viewer-ASN': [Array],
+      'CloudFront-Viewer-Country': [Array],
+      'content-type': [Array],
+      Host: [Array],
+      origin: [Array],
+      priority: [Array],
+      Referer: [Array],
+      'sec-ch-ua': [Array],
+      'sec-ch-ua-mobile': [Array],
+      'sec-ch-ua-platform': [Array],
+      'sec-fetch-dest': [Array],
+      'sec-fetch-mode': [Array],
+      'sec-fetch-site': [Array],
+      'User-Agent': [Array],
+      Via: [Array],
+      'X-Amz-Cf-Id': [Array],
+      'X-Amzn-Trace-Id': [Array],
+      'X-Forwarded-For': [Array],
+      'X-Forwarded-Port': [Array],
+      'X-Forwarded-Proto': [Array]
+    },
+    queryStringParameters: null,
+    multiValueQueryStringParameters: null,
+    pathParameters: { MeetingID: 'e66d2044-26a1-4223-be51-7d5d9fd74804' },
+    stageVariables: null,
+    requestContext: {
+      resourceId: 'iixuht',
+      resourcePath: '/meetings/{MeetingID}/transcription',
+      httpMethod: 'POST',
+      extendedRequestId: 'JAL3RHbkoAMEFVw=',
+      requestTime: '14/Apr/2025:07:58:38 +0000',
+      path: '/prod/meetings/e66d2044-26a1-4223-be51-7d5d9fd74804/transcription',
+      accountId: '647755634525',
+      protocol: 'HTTP/1.1',
+      stage: 'prod',
+      domainPrefix: 'zyilyi1dgj',
+      requestTimeEpoch: 1744617518100,
+      requestId: '30e0c923-b7eb-4c83-b988-74f6796db6b8',
+      identity: [Object],
+      domainName: 'zyilyi1dgj.execute-api.us-east-1.amazonaws.com',
+      deploymentId: '7rxnsl',
+      apiId: 'zyilyi1dgj'
+    },
+    body: '{"languageCode":"ja-JP"}',
+    isBase64Encoded: false
+  }
+}
+[start-meeting-transcription] 2:58:38 PM END RequestId: 7969f2a8-1f00-41f6-a5af-57cdd790f776
+[start-meeting-transcription] 2:58:38 PM REPORT RequestId: 7969f2a8-1f00-41f6-a5af-57cdd790f776	Duration: 599.90 ms	Billed Duration: 600 ms	Memory Size: 512 MB	Max Memory Used: 316 MB
+[start-meeting-transcription] 2:58:40 PM START RequestId: 34fab48b-0b28-4c42-8a81-0cf43acf88d6 Version: $LATEST
+[start-meeting-transcription] 2:58:40 PM 2025-04-14T07:58:40.852Z	34fab48b-0b28-4c42-8a81-0cf43acf88d6	INFO	Start MeetingTranscription with meetingId:  e66d2044-26a1-4223-be51-7d5d9fd74804 languageCode:  ja-JP
+[start-meeting-transcription] 2:58:41 PM 2025-04-14T07:58:41.491Z	34fab48b-0b28-4c42-8a81-0cf43acf88d6	ERROR	Failed to start transcription:  {
+  error: NotFound: Meeting <e66d2044-26a1-4223-be51-7d5d9fd74804> not found
+      at Object.kJ [as extractError] (file:///var/task/index.mjs:2:5259)
+      at constructor.YJ (file:///var/task/index.mjs:2:17862)
+      at constructor.callListeners (file:///var/task/index.mjs:2:48795)
+      at constructor.emit (file:///var/task/index.mjs:2:48503)
+      at constructor.emitEvent (file:///var/task/index.mjs:3:28427)
+      at constructor.t (file:///var/task/index.mjs:3:23986)
+      at Rc.runTo (file:///var/task/index.mjs:3:1217)
+      at file:///var/task/index.mjs:3:1429
+      at constructor.<anonymous> (file:///var/task/index.mjs:3:24200)
+      at constructor.<anonymous> (file:///var/task/index.mjs:3:28482) {
+    code: 'NotFound',
+    '[Code]': 'See error.Code for details.',
+    '[Message]': 'See error.Message for details.',
+    '[RequestId]': 'See error.RequestId for details.',
+    time: 2025-04-14T07:58:41.491Z,
+    requestId: 'd1f012a0-5646-4b52-8b15-3fb750a535ba',
+    statusCode: 404,
+    retryable: false,
+    retryDelay: 16.699005677983703
+  },
+  event: {
+    resource: '/meetings/{MeetingID}/transcription',
+    path: '/meetings/e66d2044-26a1-4223-be51-7d5d9fd74804/transcription',
+    httpMethod: 'POST',
+    headers: {
+      Accept: '*/*',
+      'Accept-Encoding': 'gzip, deflate, br, zstd',
+      'Accept-Language': 'en-US,en;q=0.9,vi;q=0.8,zh-CN;q=0.7,zh;q=0.6',
+      'CloudFront-Forwarded-Proto': 'https',
+      'CloudFront-Is-Desktop-Viewer': 'false',
+      'CloudFront-Is-Mobile-Viewer': 'true',
+      'CloudFront-Is-SmartTV-Viewer': 'false',
+      'CloudFront-Is-Tablet-Viewer': 'false',
+      'CloudFront-Viewer-ASN': '45899',
+      'CloudFront-Viewer-Country': 'VN',
+      'content-type': 'application/json; charset=UTF-8',
+      Host: 'zyilyi1dgj.execute-api.us-east-1.amazonaws.com',
+      origin: 'http://localhost:3000',
+      priority: 'u=1, i',
+      Referer: 'http://localhost:3000/',
+      'sec-ch-ua': '"Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"',
+      'sec-ch-ua-mobile': '?1',
+      'sec-ch-ua-platform': '"Android"',
+      'sec-fetch-dest': 'empty',
+      'sec-fetch-mode': 'cors',
+      'sec-fetch-site': 'cross-site',
+      'User-Agent': 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Mobile Safari/537.36',
+      Via: '2.0 03322dcb952fd7593ad1b88b9201212e.cloudfront.net (CloudFront)',
+      'X-Amz-Cf-Id': 'tezF56VWgp9qaBLltDDu61_OoQBTBT53TaeXuCwS_y5xOpg3rwZ-7Q==',
+      'X-Amzn-Trace-Id': 'Root=1-67fcc030-780269d160f8af3319418389',
+      'X-Forwarded-For': '14.161.12.17, 15.158.13.86',
+      'X-Forwarded-Port': '443',
+      'X-Forwarded-Proto': 'https'
+    },
+    multiValueHeaders: {
+      Accept: [Array],
+      'Accept-Encoding': [Array],
+      'Accept-Language': [Array],
+      'CloudFront-Forwarded-Proto': [Array],
+      'CloudFront-Is-Desktop-Viewer': [Array],
+      'CloudFront-Is-Mobile-Viewer': [Array],
+      'CloudFront-Is-SmartTV-Viewer': [Array],
+      'CloudFront-Is-Tablet-Viewer': [Array],
+      'CloudFront-Viewer-ASN': [Array],
+      'CloudFront-Viewer-Country': [Array],
+      'content-type': [Array],
+      Host: [Array],
+      origin: [Array],
+      priority: [Array],
+      Referer: [Array],
+      'sec-ch-ua': [Array],
+      'sec-ch-ua-mobile': [Array],
+      'sec-ch-ua-platform': [Array],
+      'sec-fetch-dest': [Array],
+      'sec-fetch-mode': [Array],
+      'sec-fetch-site': [Array],
+      'User-Agent': [Array],
+      Via: [Array],
+      'X-Amz-Cf-Id': [Array],
+      'X-Amzn-Trace-Id': [Array],
+      'X-Forwarded-For': [Array],
+      'X-Forwarded-Port': [Array],
+      'X-Forwarded-Proto': [Array]
+    },
+    queryStringParameters: null,
+    multiValueQueryStringParameters: null,
+    pathParameters: { MeetingID: 'e66d2044-26a1-4223-be51-7d5d9fd74804' },
+    stageVariables: null,
+    requestContext: {
+      resourceId: 'iixuht',
+      resourcePath: '/meetings/{MeetingID}/transcription',
+      httpMethod: 'POST',
+      extendedRequestId: 'JAL3sFF4oAMECrA=',
+      requestTime: '14/Apr/2025:07:58:40 +0000',
+      path: '/prod/meetings/e66d2044-26a1-4223-be51-7d5d9fd74804/transcription',
+      accountId: '647755634525',
+      protocol: 'HTTP/1.1',
+      stage: 'prod',
+      domainPrefix: 'zyilyi1dgj',
+      requestTimeEpoch: 1744617520823,
+      requestId: '55d4b28b-377e-41a5-b804-1b72955ad977',
+      identity: [Object],
+      domainName: 'zyilyi1dgj.execute-api.us-east-1.amazonaws.com',
+      deploymentId: '7rxnsl',
+      apiId: 'zyilyi1dgj'
+    },
+    body: '{"languageCode":"ja-JP"}',
+    isBase64Encoded: false
+  }
+}
+[start-meeting-transcription] 2:58:41 PM END RequestId: 34fab48b-0b28-4c42-8a81-0cf43acf88d6
+[start-meeting-transcription] 2:58:41 PM REPORT RequestId: 34fab48b-0b28-4c42-8a81-0cf43acf88d6	Duration: 641.79 ms	Billed Duration: 642 ms	Memory Size: 512 MB	Max Memory Used: 316 MB
+[list-admin] 2:56:06 PM START RequestId: 6ee8cee3-76ff-408d-8237-48e75d9561d6 Version: $LATEST
+[list-admin] 2:56:06 PM 2025-04-14T07:56:06.389Z	6ee8cee3-76ff-408d-8237-48e75d9561d6	INFO	Auth Header:  Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGNiNDNjNy1mYzU0LTQwNGUtODJhZi02NmIyZGFkMzE1ZGUiLCJpYXQiOjE3NDQ2MTcyOTksImV4cCI6MTc0NDYxNzU5OX0.mlbA4pa_12smacPNMRhWvtw_wGDktlig-6DIM-JGRKQ
+[list-admin] 2:56:06 PM 2025-04-14T07:56:06.873Z	6ee8cee3-76ff-408d-8237-48e75d9561d6	INFO	Authenticated User: {
+  password: '$2b$10$Fk8hSSFK9yWlmyCSdMBkfuaPNnfBiNoeOxzJxnhMOkDbsyMq9v0JO',
+  active: 0,
+  deleteFlag: 0,
+  role: 0,
+  userId: '64cb43c7-fc54-404e-82af-66b2dad315de',
+  updatedAt: '2025-03-28T07:24:56.336Z',
+  userName: 'admin',
+  createdAt: '2025-03-28T07:24:56.336Z',
+  updatedBy: 'admin',
+  email: 'info-admin@gmail.com',
+  createdBy: 'admin'
+}
+[list-admin] 2:56:06 PM 2025-04-14T07:56:06.873Z	6ee8cee3-76ff-408d-8237-48e75d9561d6	INFO	Retrieving list of Users
+[list-admin] 2:56:07 PM 2025-04-14T07:56:07.828Z	6ee8cee3-76ff-408d-8237-48e75d9561d6	INFO	Users successfully retrieved:  [
+  {
+    active: 0,
+    password: '$2b$10$cNSs3ZIrIS8S3RGpYX43guXttgHdtzFHTCQklm9S20VuS1HFiqV1G',
+    deleteFlag: 0,
+    role: 0,
+    updatedAt: '2025-04-11T08:22:20.127Z',
+    userId: 'f1798c43-4970-4399-be72-3cdde891bc53',
+    userName: 'test',
+    createdAt: '2025-04-11T07:54:20.072Z',
+    updatedBy: '64cb43c7-fc54-404e-82af-66b2dad315de',
+    email: 'test@gmail.com',
+    createdBy: '64cb43c7-fc54-404e-82af-66b2dad315de'
+  },
+  {
+    password: '$2b$10$Fk8hSSFK9yWlmyCSdMBkfuaPNnfBiNoeOxzJxnhMOkDbsyMq9v0JO',
+    active: 0,
+    deleteFlag: 0,
+    role: 0,
+    userId: '64cb43c7-fc54-404e-82af-66b2dad315de',
+    updatedAt: '2025-03-28T07:24:56.336Z',
+    userName: 'admin',
+    createdAt: '2025-03-28T07:24:56.336Z',
+    updatedBy: 'admin',
+    email: 'info-admin@gmail.com',
+    createdBy: 'admin'
+  }
+]
+[list-admin] 2:56:07 PM END RequestId: 6ee8cee3-76ff-408d-8237-48e75d9561d6
+[list-admin] 2:56:07 PM REPORT RequestId: 6ee8cee3-76ff-408d-8237-48e75d9561d6	Duration: 1440.66 ms	Billed Duration: 1441 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[list-admin] 2:58:31 PM START RequestId: fc4c9d50-0392-4a76-af4e-a7a2c7a9590a Version: $LATEST
+[list-admin] 2:58:31 PM 2025-04-14T07:58:31.881Z	fc4c9d50-0392-4a76-af4e-a7a2c7a9590a	INFO	Auth Header:  Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGNiNDNjNy1mYzU0LTQwNGUtODJhZi02NmIyZGFkMzE1ZGUiLCJpYXQiOjE3NDQ2MTcyOTksImV4cCI6MTc0NDYxNzU5OX0.mlbA4pa_12smacPNMRhWvtw_wGDktlig-6DIM-JGRKQ
+[list-admin] 2:58:32 PM 2025-04-14T07:58:32.361Z	fc4c9d50-0392-4a76-af4e-a7a2c7a9590a	INFO	Authenticated User: {
+  password: '$2b$10$Fk8hSSFK9yWlmyCSdMBkfuaPNnfBiNoeOxzJxnhMOkDbsyMq9v0JO',
+  active: 0,
+  deleteFlag: 0,
+  role: 0,
+  userId: '64cb43c7-fc54-404e-82af-66b2dad315de',
+  updatedAt: '2025-03-28T07:24:56.336Z',
+  userName: 'admin',
+  createdAt: '2025-03-28T07:24:56.336Z',
+  updatedBy: 'admin',
+  email: 'info-admin@gmail.com',
+  createdBy: 'admin'
+}
+[list-admin] 2:58:32 PM 2025-04-14T07:58:32.361Z	fc4c9d50-0392-4a76-af4e-a7a2c7a9590a	INFO	Retrieving list of Users
+[list-admin] 2:58:33 PM 2025-04-14T07:58:33.342Z	fc4c9d50-0392-4a76-af4e-a7a2c7a9590a	INFO	Users successfully retrieved:  [
+  {
+    active: 0,
+    password: '$2b$10$cNSs3ZIrIS8S3RGpYX43guXttgHdtzFHTCQklm9S20VuS1HFiqV1G',
+    deleteFlag: 0,
+    role: 0,
+    updatedAt: '2025-04-11T08:22:20.127Z',
+    userId: 'f1798c43-4970-4399-be72-3cdde891bc53',
+    userName: 'test',
+    createdAt: '2025-04-11T07:54:20.072Z',
+    updatedBy: '64cb43c7-fc54-404e-82af-66b2dad315de',
+    email: 'test@gmail.com',
+    createdBy: '64cb43c7-fc54-404e-82af-66b2dad315de'
+  },
+  {
+    password: '$2b$10$Fk8hSSFK9yWlmyCSdMBkfuaPNnfBiNoeOxzJxnhMOkDbsyMq9v0JO',
+    active: 0,
+    deleteFlag: 0,
+    role: 0,
+    userId: '64cb43c7-fc54-404e-82af-66b2dad315de',
+    updatedAt: '2025-03-28T07:24:56.336Z',
+    userName: 'admin',
+    createdAt: '2025-03-28T07:24:56.336Z',
+    updatedBy: 'admin',
+    email: 'info-admin@gmail.com',
+    createdBy: 'admin'
+  },
+  {
+    active: 0,
+    password: '$2b$10$2dsYpkVzS0oiGRMaWM/YDuN1PHDNNFDo.N2jv0uPfR5JRtPwMrcnK',
+    deleteFlag: 0,
+    role: 0,
+    updatedAt: '2025-04-04T08:23:45.372Z',
+    userId: 'd84c7df7-0be3-47a6-9e2c-4765b8b19fee',
+    userName: 'minh333',
+    createdAt: '2025-04-04T08:14:35.686Z',
+    updatedBy: '64cb43c7-fc54-404e-82af-66b2dad315de',
+    email: 'test@gmail.com',
+    createdBy: '64cb43c7-fc54-404e-82af-66b2dad315de'
+  },
+  {
+    password: '$2b$10$ZD9A.Sh40y3Jiz5R48482.XW8V7F53hagc0bUT4GrhEJyJfupw9VC',
+    active: 0,
+    deleteFlag: 0,
+    role: 0,
+    userId: 'e9635760-d6d9-4c58-8d23-4ceff2b093d3',
+    updatedAt: '',
+    userName: 'test',
+    createdAt: '2025-04-11T06:55:27.522Z',
+    updatedBy: '',
+    email: 'info-admin@gmail.com',
+    createdBy: '64cb43c7-fc54-404e-82af-66b2dad315de'
+  },
+  {
+    password: '$2b$10$P0GoA4j7aICx2jwwEyALbug.tRRnRycPe/5WHmtlRo80kiojiq/g.',
+    active: 0,
+    deleteFlag: 0,
+    role: 0,
+    userId: 'd521bb43-15ca-4eb6-b0e8-a938734e29b8',
+    updatedAt: '',
+    userName: 'test',
+    createdAt: '2025-04-04T02:56:06.742Z',
+    updatedBy: '',
+    email: 'test@gmail.com',
+    createdBy: '64cb43c7-fc54-404e-82af-66b2dad315de'
+  },
+  {
+    password: '$2b$10$5nLpdXoISMAdk3s7qYJa5.wCGmJGXod088F9BkyK2qN4Kl5sTkBWe',
+    active: 0,
+    deleteFlag: 0,
+    role: 0,
+    userId: 'de6d2237-ae55-4cdd-915c-da039ffeef4c',
+    updatedAt: '',
+    userName: 'test',
+    createdAt: '2025-04-04T02:56:07.605Z',
+    updatedBy: '',
+    email: 'test@gmail.com',
+    createdBy: '64cb43c7-fc54-404e-82af-66b2dad315de'
+  },
+  {
+    active: 0,
+    password: '$2b$10$frHsErU23As.Z3mFn2H0Xe7ZTfW.9dPCVe8f7mdGFNUA3QhZwJ5m2',
+    deleteFlag: 0,
+    role: 0,
+    updatedAt: '2025-04-04T05:03:29.645Z',
+    userId: 'acdea670-fb1e-44db-927f-7d893030e9a9',
+    userName: 'jack3.5',
+    createdAt: '2025-04-04T04:35:03.838Z',
+    updatedBy: '64cb43c7-fc54-404e-82af-66b2dad315de',
+    email: 'jack@gmail.com',
+    createdBy: '64cb43c7-fc54-404e-82af-66b2dad315de'
+  },
+  {
+    password: '$2b$10$HTbLfdQ1G3/z3ybwSCoiTuvTAszhRmUSj78Zhl9M7sGmH97J5cV16',
+    active: 0,
+    deleteFlag: 0,
+    role: 0,
+    userId: 'abe3b8ad-de7d-48a1-b32e-4ddfc32b64c9',
+    updatedAt: '',
+    userName: 'test20250411',
+    createdAt: '2025-04-11T07:55:24.750Z',
+    updatedBy: '',
+    email: 'test20250411@gmail.com',
+    createdBy: '64cb43c7-fc54-404e-82af-66b2dad315de'
+  },
+  {
+    password: '$2b$10$PCUZvjs.qTUhDpEryTLyH.QjB7/kW6AGTRnpU.nkTLiN2cWRPD0tW',
+    active: 0,
+    deleteFlag: 0,
+    role: 0,
+    userId: 'b628db4c-eaf4-4341-880c-3645dbbb6c46',
+    updatedAt: '',
+    userName: 'test',
+    createdAt: '2025-04-04T02:56:06.056Z',
+    updatedBy: '',
+    email: 'test@gmail.com',
+    createdBy: '64cb43c7-fc54-404e-82af-66b2dad315de'
+  },
+  {
+    active: 1,
+    password: '$2b$10$juLOt2f2yiZ20gRI3.U4pOf.dkzD9q5py.6yRoH2TXXCpCgce6Ez6',
+    deleteFlag: 0,
+    role: 0,
+    updatedAt: '2025-04-11T08:21:09.036Z',
+    userId: '62ebfd27-91d3-422d-b80b-1f72143d0201',
+    userName: 'test',
+    createdAt: '2025-04-04T02:55:11.235Z',
+    updatedBy: '64cb43c7-fc54-404e-82af-66b2dad315de',
+    email: 'info-admin@gmail.com',
+    createdBy: '64cb43c7-fc54-404e-82af-66b2dad315de'
+  },
+  {
+    password: '$2b$10$GDTvQxnhMLyhn9JuUFL5.eYMXhQRAi.gTJPenIfrDm/Rb2gCPXse.',
+    active: 0,
+    deleteFlag: 0,
+    role: 0,
+    userId: '38db7063-9a50-44a1-859c-a7efccde8f57',
+    updatedAt: '',
+    userName: 'test6868',
+    createdAt: '2025-04-11T06:51:19.409Z',
+    updatedBy: '',
+    email: 'test68@gmail.com',
+    createdBy: '64cb43c7-fc54-404e-82af-66b2dad315de'
+  },
+  {
+    password: '$2b$10$OaBVgKv7mypqlyXCfDWKNO/yEFavmsX9E/KvJKywYMXxN8RlSmxlO',
+    active: 0,
+    deleteFlag: 0,
+    role: 0,
+    userId: '21c18fa6-7450-4b68-bde6-79f7f9123f48',
+    updatedAt: '',
+    userName: 'test',
+    createdAt: '2025-04-04T03:45:44.454Z',
+    updatedBy: '',
+    email: 'minh@gmail.com',
+    createdBy: '64cb43c7-fc54-404e-82af-66b2dad315de'
+  },
+  {
+    password: '$2b$10$inUYbVz0oIm5X8wQbf5PVuV7J7VE9BnqE/cWKhoLB4Dv1/mq.aGJm',
+    active: 0,
+    deleteFlag: 0,
+    role: 0,
+    userId: '558997f2-2e3c-4260-9c25-a587ead98804',
+    updatedAt: '',
+    userName: 'test',
+    createdAt: '2025-04-04T03:46:58.573Z',
+    updatedBy: '',
+    email: 'minh@gmail.com',
+    createdBy: '64cb43c7-fc54-404e-82af-66b2dad315de'
+  },
+  {
+    password: '$2b$10$fIw9F1BFBdz4vvr3DKvn7.3xWUDj8G5fT4SV9nm8saR/K4u7Btmmy',
+    active: 0,
+    deleteFlag: 0,
+    role: 0,
+    userId: '9ba7f151-5905-43af-af11-64f69fab361d',
+    updatedAt: '',
+    userName: 'test',
+    createdAt: '2025-04-04T03:44:39.358Z',
+    updatedBy: '',
+    email: 'info-admin@gmail.com',
+    createdBy: '64cb43c7-fc54-404e-82af-66b2dad315de'
+  },
+  {
+    password: '$2b$10$FZ6HZcA.VIi3eackxxeQy.GQvVETVOdMfH3NEdlvWAk6.JyjC/aZq',
+    active: 0,
+    deleteFlag: 0,
+    role: 0,
+    userId: '3aed1a5a-27e5-4363-96b8-f561e75c88bc',
+    updatedAt: '',
+    userName: 'test11',
+    createdAt: '2025-04-04T02:57:32.917Z',
+    updatedBy: '',
+    email: 'hoatm@i-stech.net',
+    createdBy: '64cb43c7-fc54-404e-82af-66b2dad315de'
+  },
+  {
+    password: '$2b$10$fhlEigQXtWutTHaxCjlk..imrjlWdaQ5h8pVNWFi3spB4OW9F56fa',
+    active: 0,
+    deleteFlag: 0,
+    role: 0,
+    userId: 'cc838e49-56e5-4774-b72d-ae2c35c6d47d',
+    updatedAt: '',
+    userName: 'test',
+    createdAt: '2025-04-04T02:56:07.794Z',
+    updatedBy: '',
+    email: 'test@gmail.com',
+    createdBy: '64cb43c7-fc54-404e-82af-66b2dad315de'
+  },
+  {
+    password: '$2b$10$Iy16eo5/YmMzCIHO9Of6qesrvoeUFfVc.288Nm/Iy3GpM8gdUif.m',
+    active: 0,
+    deleteFlag: 0,
+    role: 0,
+    userId: '0b81121e-991d-4a91-8fee-bc049f30bf78',
+    updatedAt: '',
+    userName: 'test999',
+    createdAt: '2025-04-11T06:56:05.067Z',
+    updatedBy: '',
+    email: 'test@gmail.com',
+    createdBy: '64cb43c7-fc54-404e-82af-66b2dad315de'
+  },
+  {
+    password: '$2b$10$Sgj9EldqVSmHnr71Xv4YOu.g6/H4jqDRu.4XqRY9vUo.bU9suILBO',
+    active: 0,
+    deleteFlag: 0,
+    role: 0,
+    userId: '4138b5cb-2f4f-47f8-9995-32ff968b29cc',
+    updatedAt: '',
+    userName: 'test',
+    createdAt: '2025-04-04T02:56:27.771Z',
+    updatedBy: '',
+    email: 'hoa@gmail.com',
+    createdBy: '64cb43c7-fc54-404e-82af-66b2dad315de'
+  },
+  {
+    password: '$2b$10$EicHzMQq73wxgT1Kc98dJegzfbqQRp2HCq70XuyP/I/ctmS4RVtbq',
+    active: 0,
+    deleteFlag: 0,
+    role: 0,
+    userId: 'cbd61566-82f9-4fb7-b337-9c739237e343',
+    updatedAt: '',
+    userName: 'test',
+    createdAt: '2025-04-04T02:56:07.847Z',
+    updatedBy: '',
+    email: 'test@gmail.com',
+    createdBy: '64cb43c7-fc54-404e-82af-66b2dad315de'
+  },
+  {
+    password: '$2b$10$SsyOazBU39ujEAiwWnD/Hu02y3wi2M4OGl5PkHSPl4iJ/UKiazm12',
+    active: 0,
+    deleteFlag: 0,
+    role: 0,
+    userId: 'c77c4c1c-4864-4d2a-ba13-144c400e8749',
+    updatedAt: '',
+    userName: 'test',
+    createdAt: '2025-04-04T02:55:10.411Z',
+    updatedBy: '',
+    email: 'info-admin@gmail.com',
+    createdBy: '64cb43c7-fc54-404e-82af-66b2dad315de'
+  },
+  {
+    password: '$2b$10$YXu1UVjmMk7twh0CMK38Iel.lvxh00zueubxDlBdpBX4Elkln.zTW',
+    active: 0,
+    deleteFlag: 0,
+    role: 0,
+    userId: 'b729f846-2890-4c16-9109-6b1cf18c728c',
+    updatedAt: '',
+    userName: 'key',
+    createdAt: '2025-04-03T07:56:02.610Z',
+    updatedBy: '',
+    email: 'key@gmail.com',
+    createdBy: '64cb43c7-fc54-404e-82af-66b2dad315de'
+  },
+  {
+    password: '$2b$10$.YhjtYorZSiVU9nKb52zI.0In6d2c2ZMBydukF7KAmFuX7Qte3rpy',
+    active: 0,
+    deleteFlag: 0,
+    role: 0,
+    userId: '60ddbf26-6649-4950-8220-91fec5c71340',
+    updatedAt: '',
+    userName: 'test11',
+    createdAt: '2025-04-04T02:57:35.234Z',
+    updatedBy: '',
+    email: 'hoatm@i-stech.net',
+    createdBy: '64cb43c7-fc54-404e-82af-66b2dad315de'
+  },
+  {
+    password: '$2b$10$lYCmo5XmlN3MW0KwwMdOJecIA6o3Mg.yRF3RhfK2HxeouQJRyCf72',
+    active: 0,
+    deleteFlag: 0,
+    role: 0,
+    userId: 'a75789ad-14d6-410d-9c7e-636eb2dd630c',
+    updatedAt: '',
+    userName: 'test',
+    createdAt: '2025-04-04T03:44:41.238Z',
+    updatedBy: '',
+    email: 'info-admin@gmail.com',
+    createdBy: '64cb43c7-fc54-404e-82af-66b2dad315de'
+  },
+  {
+    password: '$2b$10$fOfFHII1b9KZtd/zTMVzJeHGLITLkTN6ku87BUausMn1n/tLrT0na',
+    active: 0,
+    deleteFlag: 0,
+    role: 0,
+    userId: 'ed9ac1c4-0a9a-486b-a007-b0a239cf9227',
+    updatedAt: '',
+    userName: 'truong11',
+    createdAt: '2025-04-03T07:52:53.151Z',
+    updatedBy: '',
+    email: 'truong11@gmail.com',
+    createdBy: '64cb43c7-fc54-404e-82af-66b2dad315de'
+  },
+  {
+    password: '$2b$10$1IgNiude8EUA4CrpypnvjOYczt.S.llSTr8YztkN/1hR6BfkPxjCi',
+    active: 0,
+    deleteFlag: 0,
+    role: 0,
+    userId: '6ddc00fc-5e1c-4586-8528-f5684f01b013',
+    updatedAt: '',
+    userName: 'test',
+    createdAt: '2025-04-04T02:56:05.376Z',
+    updatedBy: '',
+    email: 'test@gmail.com',
+    createdBy: '64cb43c7-fc54-404e-82af-66b2dad315de'
+  },
+  {
+    password: '$2b$10$aNGjWvUapiqa4UHjmRRWbOYp/qY1fjqJgvmxSUfAxMbFpdHyDXnoe',
+    active: 0,
+    deleteFlag: 0,
+    role: 0,
+    userId: '84127560-feed-41b2-9302-83850090fe67',
+    updatedAt: '',
+    userName: 'test11',
+    createdAt: '2025-04-04T02:57:44.431Z',
+    updatedBy: '',
+    email: 'hoatm@i-stech.net',
+    createdBy: '64cb43c7-fc54-404e-82af-66b2dad315de'
+  },
+  {
+    password: '$2b$10$h5.JPG/XB20Bb.12ioAicelWJ7qJPhspTxsX8KdjmAWpfVJCKqvNe',
+    active: 0,
+    deleteFlag: 0,
+    role: 0,
+    userId: '834f9f30-3bb8-4a38-8d6b-7f7cd071b14b',
+    updatedAt: '',
+    userName: 'test',
+    createdAt: '2025-04-04T02:56:06.636Z',
+    updatedBy: '',
+    email: 'test@gmail.com',
+    createdBy: '64cb43c7-fc54-404e-82af-66b2dad315de'
+  },
+  {
+    password: '$2b$10$OapB1/sHs4F7KUao8dsjK.pecuWgHPhc4Vaqmjmw6oC8F58LIKOS6',
+    active: 0,
+    deleteFlag: 0,
+    role: 0,
+    userId: '952e985a-2aff-4bc0-8e6a-1ba2890ebbc9',
+    updatedAt: '',
+    userName: 'test',
+    createdAt: '2025-04-04T02:56:27.432Z',
+    updatedBy: '',
+    email: 'hoa@gmail.com',
+    createdBy: '64cb43c7-fc54-404e-82af-66b2dad315de'
+  },
+  {
+    password: '$2b$10$jZFwjNxRpgnxooM6gKqINu9iIxGEtG13J8iZFgoi3DmrVSF.uySsa',
+    active: 0,
+    deleteFlag: 0,
+    role: 0,
+    userId: '0ef89c3c-168d-42c8-a5d5-5c793a739871',
+    updatedAt: '',
+    userName: 'test',
+    createdAt: '2025-04-04T02:56:04.573Z',
+    updatedBy: '',
+    email: 'test@gmail.com',
+    createdBy: '64cb43c7-fc54-404e-82af-66b2dad315de'
+  },
+  {
+    password: '$2b$10$WcZQivjgmPQ336P8LSS4meS5WcleU/MhbvOfsUaKPmvR9xjs5LSGG',
+    active: 0,
+    deleteFlag: 0,
+    role: 0,
+    userId: '5184b3bb-845b-4371-9d0e-ad8a6c8a44fe',
+    updatedAt: '',
+    userName: 'test11',
+    createdAt: '2025-04-04T02:57:36.101Z',
+    updatedBy: '',
+    email: 'hoatm@i-stech.net',
+    createdBy: '64cb43c7-fc54-404e-82af-66b2dad315de'
+  }
+]
+[list-admin] 2:58:33 PM END RequestId: fc4c9d50-0392-4a76-af4e-a7a2c7a9590a
+[list-admin] 2:58:33 PM REPORT RequestId: fc4c9d50-0392-4a76-af4e-a7a2c7a9590a	Duration: 1464.09 ms	Billed Duration: 1465 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[list-admin] 2:59:03 PM START RequestId: 62afa7dc-8e65-482b-bf89-188ed059a9ed Version: $LATEST
+[list-admin] 2:59:03 PM 2025-04-14T07:59:03.454Z	62afa7dc-8e65-482b-bf89-188ed059a9ed	INFO	Auth Header:  Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGNiNDNjNy1mYzU0LTQwNGUtODJhZi02NmIyZGFkMzE1ZGUiLCJpYXQiOjE3NDQ2MTcyOTksImV4cCI6MTc0NDYxNzU5OX0.mlbA4pa_12smacPNMRhWvtw_wGDktlig-6DIM-JGRKQ
+[list-admin] 2:59:03 PM 2025-04-14T07:59:03.930Z	62afa7dc-8e65-482b-bf89-188ed059a9ed	INFO	Authenticated User: {
+  password: '$2b$10$Fk8hSSFK9yWlmyCSdMBkfuaPNnfBiNoeOxzJxnhMOkDbsyMq9v0JO',
+  active: 0,
+  deleteFlag: 0,
+  role: 0,
+  userId: '64cb43c7-fc54-404e-82af-66b2dad315de',
+  updatedAt: '2025-03-28T07:24:56.336Z',
+  userName: 'admin',
+  createdAt: '2025-03-28T07:24:56.336Z',
+  updatedBy: 'admin',
+  email: 'info-admin@gmail.com',
+  createdBy: 'admin'
+}
+[list-admin] 2:59:03 PM 2025-04-14T07:59:03.930Z	62afa7dc-8e65-482b-bf89-188ed059a9ed	INFO	Retrieving list of Users
+[list-admin] 2:59:04 PM 2025-04-14T07:59:04.883Z	62afa7dc-8e65-482b-bf89-188ed059a9ed	INFO	Users successfully retrieved:  [
+  {
+    active: 0,
+    password: '$2b$10$cNSs3ZIrIS8S3RGpYX43guXttgHdtzFHTCQklm9S20VuS1HFiqV1G',
+    deleteFlag: 0,
+    role: 0,
+    updatedAt: '2025-04-11T08:22:20.127Z',
+    userId: 'f1798c43-4970-4399-be72-3cdde891bc53',
+    userName: 'test',
+    createdAt: '2025-04-11T07:54:20.072Z',
+    updatedBy: '64cb43c7-fc54-404e-82af-66b2dad315de',
+    email: 'test@gmail.com',
+    createdBy: '64cb43c7-fc54-404e-82af-66b2dad315de'
+  },
+  {
+    password: '$2b$10$Fk8hSSFK9yWlmyCSdMBkfuaPNnfBiNoeOxzJxnhMOkDbsyMq9v0JO',
+    active: 0,
+    deleteFlag: 0,
+    role: 0,
+    userId: '64cb43c7-fc54-404e-82af-66b2dad315de',
+    updatedAt: '2025-03-28T07:24:56.336Z',
+    userName: 'admin',
+    createdAt: '2025-03-28T07:24:56.336Z',
+    updatedBy: 'admin',
+    email: 'info-admin@gmail.com',
+    createdBy: 'admin'
+  },
+  {
+    active: 0,
+    password: '$2b$10$2dsYpkVzS0oiGRMaWM/YDuN1PHDNNFDo.N2jv0uPfR5JRtPwMrcnK',
+    deleteFlag: 0,
+    role: 0,
+    updatedAt: '2025-04-04T08:23:45.372Z',
+    userId: 'd84c7df7-0be3-47a6-9e2c-4765b8b19fee',
+    userName: 'minh333',
+    createdAt: '2025-04-04T08:14:35.686Z',
+    updatedBy: '64cb43c7-fc54-404e-82af-66b2dad315de',
+    email: 'test@gmail.com',
+    createdBy: '64cb43c7-fc54-404e-82af-66b2dad315de'
+  },
+  {
+    password: '$2b$10$ZD9A.Sh40y3Jiz5R48482.XW8V7F53hagc0bUT4GrhEJyJfupw9VC',
+    active: 0,
+    deleteFlag: 0,
+    role: 0,
+    userId: 'e9635760-d6d9-4c58-8d23-4ceff2b093d3',
+    updatedAt: '',
+    userName: 'test',
+    createdAt: '2025-04-11T06:55:27.522Z',
+    updatedBy: '',
+    email: 'info-admin@gmail.com',
+    createdBy: '64cb43c7-fc54-404e-82af-66b2dad315de'
+  },
+  {
+    password: '$2b$10$P0GoA4j7aICx2jwwEyALbug.tRRnRycPe/5WHmtlRo80kiojiq/g.',
+    active: 0,
+    deleteFlag: 0,
+    role: 0,
+    userId: 'd521bb43-15ca-4eb6-b0e8-a938734e29b8',
+    updatedAt: '',
+    userName: 'test',
+    createdAt: '2025-04-04T02:56:06.742Z',
+    updatedBy: '',
+    email: 'test@gmail.com',
+    createdBy: '64cb43c7-fc54-404e-82af-66b2dad315de'
+  }
+]
+[list-admin] 2:59:04 PM END RequestId: 62afa7dc-8e65-482b-bf89-188ed059a9ed
+[list-admin] 2:59:04 PM REPORT RequestId: 62afa7dc-8e65-482b-bf89-188ed059a9ed	Duration: 1432.09 ms	Billed Duration: 1433 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[check-auth] 2:57:31 PM INIT_START Runtime Version: nodejs:18.v63	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:ad007b64e69135315cba0d95ed797867707d928d1128edf4fa17a926a71f1718
+[check-auth] 2:57:32 PM START RequestId: 5ab00623-c859-47f2-af2a-9da1a8beb27d Version: $LATEST
+[check-auth] 2:57:32 PM 2025-04-14T07:57:32.368Z	5ab00623-c859-47f2-af2a-9da1a8beb27d	INFO	Token (cleaned):  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGNiNDNjNy1mYzU0LTQwNGUtODJhZi02NmIyZGFkMzE1ZGUiLCJpYXQiOjE3NDQ2MTc0NDcsImV4cCI6MTc0NDYxODM0N30._AXgqMpP86D9ca0DTSWYaGtAbz4Jf4zGruNT38I0m_U
+[check-auth] 2:57:32 PM 2025-04-14T07:57:32.369Z	5ab00623-c859-47f2-af2a-9da1a8beb27d	INFO	Verifying token... a5e3696b23ce9b6e96af822f26b757d52c64b9a8e29351b9fee039dfb2d35600
+[check-auth] 2:57:32 PM 2025-04-14T07:57:32.384Z	5ab00623-c859-47f2-af2a-9da1a8beb27d	INFO	userId:  64cb43c7-fc54-404e-82af-66b2dad315de
+[check-auth] 2:57:32 PM 2025-04-14T07:57:32.970Z	5ab00623-c859-47f2-af2a-9da1a8beb27d	INFO	DynamoDB result:  {
+  Items: [
+    {
+      password: '$2b$10$Fk8hSSFK9yWlmyCSdMBkfuaPNnfBiNoeOxzJxnhMOkDbsyMq9v0JO',
+      active: 0,
+      deleteFlag: 0,
+      role: 0,
+      userId: '64cb43c7-fc54-404e-82af-66b2dad315de',
+      updatedAt: '2025-03-28T07:24:56.336Z',
+      userName: 'admin',
+      createdAt: '2025-03-28T07:24:56.336Z',
+      updatedBy: 'admin',
+      email: 'info-admin@gmail.com',
+      createdBy: 'admin'
+    }
+  ],
+  Count: 1,
+  ScannedCount: 1
+}
+[check-auth] 2:57:32 PM END RequestId: 5ab00623-c859-47f2-af2a-9da1a8beb27d
+[check-auth] 2:57:32 PM REPORT RequestId: 5ab00623-c859-47f2-af2a-9da1a8beb27d	Duration: 628.09 ms	Billed Duration: 629 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 933.01 ms
+[check-auth] 2:57:37 PM START RequestId: f0cef4fe-9c95-4fa6-8ca3-ecff78ece784 Version: $LATEST
+[check-auth] 2:57:37 PM 2025-04-14T07:57:37.702Z	f0cef4fe-9c95-4fa6-8ca3-ecff78ece784	INFO	Token (cleaned):  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGNiNDNjNy1mYzU0LTQwNGUtODJhZi02NmIyZGFkMzE1ZGUiLCJpYXQiOjE3NDQ2MTc0NDcsImV4cCI6MTc0NDYxODM0N30._AXgqMpP86D9ca0DTSWYaGtAbz4Jf4zGruNT38I0m_U
+[check-auth] 2:57:37 PM 2025-04-14T07:57:37.702Z	f0cef4fe-9c95-4fa6-8ca3-ecff78ece784	INFO	Verifying token... a5e3696b23ce9b6e96af822f26b757d52c64b9a8e29351b9fee039dfb2d35600
+[check-auth] 2:57:37 PM 2025-04-14T07:57:37.703Z	f0cef4fe-9c95-4fa6-8ca3-ecff78ece784	INFO	userId:  64cb43c7-fc54-404e-82af-66b2dad315de
+[check-auth] 2:57:38 PM 2025-04-14T07:57:38.185Z	f0cef4fe-9c95-4fa6-8ca3-ecff78ece784	INFO	DynamoDB result:  {
+  Items: [
+    {
+      password: '$2b$10$Fk8hSSFK9yWlmyCSdMBkfuaPNnfBiNoeOxzJxnhMOkDbsyMq9v0JO',
+      active: 0,
+      deleteFlag: 0,
+      role: 0,
+      userId: '64cb43c7-fc54-404e-82af-66b2dad315de',
+      updatedAt: '2025-03-28T07:24:56.336Z',
+      userName: 'admin',
+      createdAt: '2025-03-28T07:24:56.336Z',
+      updatedBy: 'admin',
+      email: 'info-admin@gmail.com',
+      createdBy: 'admin'
+    }
+  ],
+  Count: 1,
+  ScannedCount: 1
+}
+[check-auth] 2:57:38 PM END RequestId: f0cef4fe-9c95-4fa6-8ca3-ecff78ece784
+[check-auth] 2:57:38 PM REPORT RequestId: f0cef4fe-9c95-4fa6-8ca3-ecff78ece784	Duration: 486.56 ms	Billed Duration: 487 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[check-auth] 2:58:27 PM START RequestId: cde27c66-f267-444e-8136-40c629c867c2 Version: $LATEST
+[check-auth] 2:58:27 PM 2025-04-14T07:58:27.365Z	cde27c66-f267-444e-8136-40c629c867c2	INFO	Token (cleaned):  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGNiNDNjNy1mYzU0LTQwNGUtODJhZi02NmIyZGFkMzE1ZGUiLCJpYXQiOjE3NDQ2MTcyOTksImV4cCI6MTc0NDYxNzU5OX0.mlbA4pa_12smacPNMRhWvtw_wGDktlig-6DIM-JGRKQ
+[check-auth] 2:58:27 PM 2025-04-14T07:58:27.384Z	cde27c66-f267-444e-8136-40c629c867c2	INFO	Verifying token... a5e3696b23ce9b6e96af822f26b757d52c64b9a8e29351b9fee039dfb2d35600
+[check-auth] 2:58:27 PM 2025-04-14T07:58:27.385Z	cde27c66-f267-444e-8136-40c629c867c2	INFO	userId:  64cb43c7-fc54-404e-82af-66b2dad315de
+[check-auth] 2:58:27 PM 2025-04-14T07:58:27.896Z	cde27c66-f267-444e-8136-40c629c867c2	INFO	DynamoDB result:  {
+  Items: [
+    {
+      password: '$2b$10$Fk8hSSFK9yWlmyCSdMBkfuaPNnfBiNoeOxzJxnhMOkDbsyMq9v0JO',
+      active: 0,
+      deleteFlag: 0,
+      role: 0,
+      userId: '64cb43c7-fc54-404e-82af-66b2dad315de',
+      updatedAt: '2025-03-28T07:24:56.336Z',
+      userName: 'admin',
+      createdAt: '2025-03-28T07:24:56.336Z',
+      updatedBy: 'admin',
+      email: 'info-admin@gmail.com',
+      createdBy: 'admin'
+    }
+  ],
+  Count: 1,
+  ScannedCount: 1
+}
+[check-auth] 2:58:27 PM END RequestId: cde27c66-f267-444e-8136-40c629c867c2
+[check-auth] 2:58:27 PM REPORT RequestId: cde27c66-f267-444e-8136-40c629c867c2	Duration: 561.65 ms	Billed Duration: 562 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[check-auth] 2:58:29 PM START RequestId: ea92bc2f-8882-4187-892c-d6682bbcd627 Version: $LATEST
+[check-auth] 2:58:29 PM 2025-04-14T07:58:29.705Z	ea92bc2f-8882-4187-892c-d6682bbcd627	INFO	Token (cleaned):  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGNiNDNjNy1mYzU0LTQwNGUtODJhZi02NmIyZGFkMzE1ZGUiLCJpYXQiOjE3NDQ2MTcyOTksImV4cCI6MTc0NDYxNzU5OX0.mlbA4pa_12smacPNMRhWvtw_wGDktlig-6DIM-JGRKQ
+[check-auth] 2:58:29 PM 2025-04-14T07:58:29.705Z	ea92bc2f-8882-4187-892c-d6682bbcd627	INFO	Verifying token... a5e3696b23ce9b6e96af822f26b757d52c64b9a8e29351b9fee039dfb2d35600
+[check-auth] 2:58:29 PM 2025-04-14T07:58:29.706Z	ea92bc2f-8882-4187-892c-d6682bbcd627	INFO	userId:  64cb43c7-fc54-404e-82af-66b2dad315de
+[check-auth] 2:58:30 PM 2025-04-14T07:58:30.258Z	ea92bc2f-8882-4187-892c-d6682bbcd627	INFO	DynamoDB result:  {
+  Items: [
+    {
+      password: '$2b$10$Fk8hSSFK9yWlmyCSdMBkfuaPNnfBiNoeOxzJxnhMOkDbsyMq9v0JO',
+      active: 0,
+      deleteFlag: 0,
+      role: 0,
+      userId: '64cb43c7-fc54-404e-82af-66b2dad315de',
+      updatedAt: '2025-03-28T07:24:56.336Z',
+      userName: 'admin',
+      createdAt: '2025-03-28T07:24:56.336Z',
+      updatedBy: 'admin',
+      email: 'info-admin@gmail.com',
+      createdBy: 'admin'
+    }
+  ],
+  Count: 1,
+  ScannedCount: 1
+}
+[check-auth] 2:58:30 PM END RequestId: ea92bc2f-8882-4187-892c-d6682bbcd627
+[check-auth] 2:58:30 PM REPORT RequestId: ea92bc2f-8882-4187-892c-d6682bbcd627	Duration: 555.29 ms	Billed Duration: 556 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[refresh-token] 2:57:26 PM INIT_START Runtime Version: nodejs:18.v63	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:ad007b64e69135315cba0d95ed797867707d928d1128edf4fa17a926a71f1718
+[refresh-token] 2:57:27 PM START RequestId: 0cb480c1-9c68-4f10-91f5-52a3ac8ae598 Version: $LATEST
+[refresh-token] 2:57:27 PM 2025-04-14T07:57:27.331Z	0cb480c1-9c68-4f10-91f5-52a3ac8ae598	INFO	Refresh Token (cleaned):  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGNiNDNjNy1mYzU0LTQwNGUtODJhZi02NmIyZGFkMzE1ZGUiLCJpYXQiOjE3NDQ2MTYzMDYsImV4cCI6MTc0NTIyMTEwNn0.ZbsHn2SUo7UQUYXCgJ582g8sPoVhdC4qguVWXWlZtgU
+[refresh-token] 2:57:27 PM 2025-04-14T07:57:27.351Z	0cb480c1-9c68-4f10-91f5-52a3ac8ae598	INFO	Decoded refresh token:  {
+  userId: '64cb43c7-fc54-404e-82af-66b2dad315de',
+  iat: 1744616306,
+  exp: 1745221106
+}
+[refresh-token] 2:57:27 PM 2025-04-14T07:57:27.353Z	0cb480c1-9c68-4f10-91f5-52a3ac8ae598	INFO	Extracted userId:  64cb43c7-fc54-404e-82af-66b2dad315de
+[refresh-token] 2:57:27 PM 2025-04-14T07:57:27.938Z	0cb480c1-9c68-4f10-91f5-52a3ac8ae598	INFO	DynamoDB query result:  {
+  Items: [
+    {
+      password: '$2b$10$Fk8hSSFK9yWlmyCSdMBkfuaPNnfBiNoeOxzJxnhMOkDbsyMq9v0JO',
+      active: 0,
+      deleteFlag: 0,
+      role: 0,
+      userId: '64cb43c7-fc54-404e-82af-66b2dad315de',
+      updatedAt: '2025-03-28T07:24:56.336Z',
+      userName: 'admin',
+      createdAt: '2025-03-28T07:24:56.336Z',
+      updatedBy: 'admin',
+      email: 'info-admin@gmail.com',
+      createdBy: 'admin'
+    }
+  ],
+  Count: 1,
+  ScannedCount: 1
+}
+[refresh-token] 2:57:27 PM END RequestId: 0cb480c1-9c68-4f10-91f5-52a3ac8ae598
+[refresh-token] 2:57:27 PM REPORT RequestId: 0cb480c1-9c68-4f10-91f5-52a3ac8ae598	Duration: 629.95 ms	Billed Duration: 630 ms	Memory Size: 512 MB	Max Memory Used: 316 MB	Init Duration: 973.20 ms
+[get-meeting-by-tourid] 2:58:27 PM INIT_START Runtime Version: nodejs:18.v63	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:ad007b64e69135315cba0d95ed797867707d928d1128edf4fa17a926a71f1718
+[get-meeting-by-tourid] 2:58:27 PM START RequestId: e629baa3-0bf8-4c11-bb25-cfa5afcb0373 Version: $LATEST
+[get-meeting-by-tourid] 2:58:28 PM 2025-04-14T07:58:28.004Z	e629baa3-0bf8-4c11-bb25-cfa5afcb0373	INFO	Retrieving tour with tourId:  17761f15-d360-44fc-93d3-cc3ff6787dff
+[get-meeting-by-tourid] 2:58:28 PM 2025-04-14T07:58:28.577Z	e629baa3-0bf8-4c11-bb25-cfa5afcb0373	INFO	Tour successfully retrieved:  {
+  planningSalesOfficeName: '',
+  tourNumber: 'Tour003',
+  otherRemarks: 'allChat',
+  updatedBy: '',
+  createdBy: '64cb43c7-fc54-404e-82af-66b2dad315de',
+  planningSalesOfficeTeamName: '',
+  qrCodeDestination: '',
+  meetingId: 'dcca6810-b790-459b-8229-f46d88374804',
+  departureDate: '2025-04-10',
+  contactPersonName: '',
+  numberOfTransmitters: '',
+  phoneNumberCustomer: '',
+  numberOfDevices: '',
+  acceptanceDate: '',
+  createdAt: '2025-04-10T04:27:01.641Z',
+  planningOfficeName: '',
+  contactPersonEmail: '',
+  emailCustomer: '',
+  returnDate: '2025-04-18',
+  deleteFlag: 0,
+  channelId: 'ff786364-12de-4e9f-96bb-879a948c21e0',
+  chatRestriction: 'allChat',
+  processingNumber: '0001',
+  tourName: 'Tour001',
+  updatedAt: '',
+  tourId: '17761f15-d360-44fc-93d3-cc3ff6787dff'
+}
+[get-meeting-by-tourid] 2:58:28 PM END RequestId: e629baa3-0bf8-4c11-bb25-cfa5afcb0373
+[get-meeting-by-tourid] 2:58:28 PM REPORT RequestId: e629baa3-0bf8-4c11-bb25-cfa5afcb0373	Duration: 610.55 ms	Billed Duration: 611 ms	Memory Size: 512 MB	Max Memory Used: 316 MB	Init Duration: 918.81 ms
+[list-admin] 3:00:27 PM INIT_START Runtime Version: nodejs:18.v63	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:ad007b64e69135315cba0d95ed797867707d928d1128edf4fa17a926a71f1718
+[list-admin] 3:00:28 PM START RequestId: 7d1b6870-21f8-4ccd-a18a-d6f1fd3bf3c4 Version: $LATEST
+[list-admin] 3:00:28 PM 2025-04-14T08:00:28.917Z	7d1b6870-21f8-4ccd-a18a-d6f1fd3bf3c4	INFO	Auth Header:  Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGNiNDNjNy1mYzU0LTQwNGUtODJhZi02NmIyZGFkMzE1ZGUiLCJpYXQiOjE3NDQ2MTcyOTksImV4cCI6MTc0NDYxNzU5OX0.mlbA4pa_12smacPNMRhWvtw_wGDktlig-6DIM-JGRKQ
+[list-admin] 3:00:28 PM 2025-04-14T08:00:28.938Z	7d1b6870-21f8-4ccd-a18a-d6f1fd3bf3c4	ERROR	Failed to retrieve Users:  {
+  error: Error: Invalid or expired token
+      at v$ (file:///var/task/index.mjs:37:51811)
+      at Runtime.amt [as handler] (file:///var/task/index.mjs:37:52881)
+      at Runtime.handleOnceNonStreaming (file:///var/runtime/index.mjs:1173:29) {
+    statusCode: 401
+  },
+  event: {
+    resource: '/users',
+    path: '/users/',
+    httpMethod: 'GET',
+    headers: {
+      Accept: '*/*',
+      'Accept-Encoding': 'gzip, deflate, br',
+      Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGNiNDNjNy1mYzU0LTQwNGUtODJhZi02NmIyZGFkMzE1ZGUiLCJpYXQiOjE3NDQ2MTcyOTksImV4cCI6MTc0NDYxNzU5OX0.mlbA4pa_12smacPNMRhWvtw_wGDktlig-6DIM-JGRKQ',
+      'Cache-Control': 'no-cache',
+      'CloudFront-Forwarded-Proto': 'https',
+      'CloudFront-Is-Desktop-Viewer': 'true',
+      'CloudFront-Is-Mobile-Viewer': 'false',
+      'CloudFront-Is-SmartTV-Viewer': 'false',
+      'CloudFront-Is-Tablet-Viewer': 'false',
+      'CloudFront-Viewer-ASN': '45899',
+      'CloudFront-Viewer-Country': 'VN',
+      Host: 'jmkfjlxu63.execute-api.us-east-1.amazonaws.com',
+      'Postman-Token': '115f19e4-17a8-4567-9e23-e34c986e8599',
+      'User-Agent': 'PostmanRuntime/7.43.3',
+      Via: '1.1 c1bd4c89f1f6daf71922ce6048514b9e.cloudfront.net (CloudFront)',
+      'X-Amz-Cf-Id': 'bG-qsosk2OFHb4RZ3kC2EPtVY_2eckMS4x615my8v8wY_Jirf2oHWg==',
+      'X-Amzn-Trace-Id': 'Root=1-67fcc09b-4f397eae084044461ac87a55',
+      'X-Forwarded-For': '14.161.12.17, 15.158.13.44',
+      'X-Forwarded-Port': '443',
+      'X-Forwarded-Proto': 'https'
+    },
+    multiValueHeaders: {
+      Accept: [Array],
+      'Accept-Encoding': [Array],
+      Authorization: [Array],
+      'Cache-Control': [Array],
+      'CloudFront-Forwarded-Proto': [Array],
+      'CloudFront-Is-Desktop-Viewer': [Array],
+      'CloudFront-Is-Mobile-Viewer': [Array],
+      'CloudFront-Is-SmartTV-Viewer': [Array],
+      'CloudFront-Is-Tablet-Viewer': [Array],
+      'CloudFront-Viewer-ASN': [Array],
+      'CloudFront-Viewer-Country': [Array],
+      Host: [Array],
+      'Postman-Token': [Array],
+      'User-Agent': [Array],
+      Via: [Array],
+      'X-Amz-Cf-Id': [Array],
+      'X-Amzn-Trace-Id': [Array],
+      'X-Forwarded-For': [Array],
+      'X-Forwarded-Port': [Array],
+      'X-Forwarded-Proto': [Array]
+    },
+    queryStringParameters: { page: '1', pageSize: '2', query: '' },
+    multiValueQueryStringParameters: { page: [Array], pageSize: [Array], query: [Array] },
+    pathParameters: null,
+    stageVariables: null,
+    requestContext: {
+      resourceId: '3rsr17',
+      resourcePath: '/users',
+      httpMethod: 'GET',
+      extendedRequestId: 'JAMIYH1roAMEjLg=',
+      requestTime: '14/Apr/2025:08:00:27 +0000',
+      path: '/prod/users/',
+      accountId: '647755634525',
+      protocol: 'HTTP/1.1',
+      stage: 'prod',
+      domainPrefix: 'jmkfjlxu63',
+      requestTimeEpoch: 1744617627693,
+      requestId: '7af94709-bfac-4d55-b975-79df69d72f7a',
+      identity: [Object],
+      domainName: 'jmkfjlxu63.execute-api.us-east-1.amazonaws.com',
+      deploymentId: 'sf0sq6',
+      apiId: 'jmkfjlxu63'
+    },
+    body: null,
+    isBase64Encoded: false
+  }
+}
+[list-admin] 3:00:28 PM END RequestId: 7d1b6870-21f8-4ccd-a18a-d6f1fd3bf3c4
+[list-admin] 3:00:28 PM REPORT RequestId: 7d1b6870-21f8-4ccd-a18a-d6f1fd3bf3c4	Duration: 64.04 ms	Billed Duration: 65 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 1005.91 ms
+[check-auth] 3:00:36 PM START RequestId: 119a2a02-b282-4bc0-be7b-f9b948343ae6 Version: $LATEST
+[check-auth] 3:00:36 PM 2025-04-14T08:00:36.243Z	119a2a02-b282-4bc0-be7b-f9b948343ae6	INFO	Token (cleaned):  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGNiNDNjNy1mYzU0LTQwNGUtODJhZi02NmIyZGFkMzE1ZGUiLCJpYXQiOjE3NDQ2MTcyOTksImV4cCI6MTc0NDYxNzU5OX0.mlbA4pa_12smacPNMRhWvtw_wGDktlig-6DIM-JGRKQ
+[check-auth] 3:00:36 PM 2025-04-14T08:00:36.244Z	119a2a02-b282-4bc0-be7b-f9b948343ae6	INFO	Verifying token... a5e3696b23ce9b6e96af822f26b757d52c64b9a8e29351b9fee039dfb2d35600
+[check-auth] 3:00:36 PM END RequestId: 119a2a02-b282-4bc0-be7b-f9b948343ae6
+[check-auth] 3:00:36 PM REPORT RequestId: 119a2a02-b282-4bc0-be7b-f9b948343ae6	Duration: 6.42 ms	Billed Duration: 7 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[check-auth] 3:00:38 PM START RequestId: d9a0f38b-806d-4f77-9348-98605980eb3a Version: $LATEST
+[check-auth] 3:00:38 PM 2025-04-14T08:00:38.685Z	d9a0f38b-806d-4f77-9348-98605980eb3a	INFO	Token (cleaned):  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGNiNDNjNy1mYzU0LTQwNGUtODJhZi02NmIyZGFkMzE1ZGUiLCJpYXQiOjE3NDQ2MTcyOTksImV4cCI6MTc0NDYxNzU5OX0.mlbA4pa_12smacPNMRhWvtw_wGDktlig-6DIM-JGRKQ
+[check-auth] 3:00:38 PM 2025-04-14T08:00:38.685Z	d9a0f38b-806d-4f77-9348-98605980eb3a	INFO	Verifying token... a5e3696b23ce9b6e96af822f26b757d52c64b9a8e29351b9fee039dfb2d35600
+[check-auth] 3:00:38 PM END RequestId: d9a0f38b-806d-4f77-9348-98605980eb3a
+[check-auth] 3:00:38 PM REPORT RequestId: d9a0f38b-806d-4f77-9348-98605980eb3a	Duration: 23.20 ms	Billed Duration: 24 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[list-tour] 3:00:49 PM INIT_START Runtime Version: nodejs:18.v63	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:ad007b64e69135315cba0d95ed797867707d928d1128edf4fa17a926a71f1718
+[list-tour] 3:00:50 PM START RequestId: b45151c4-c9a1-469e-8902-8222eebfe0fe Version: $LATEST
+[list-tour] 3:00:50 PM 2025-04-14T08:00:50.369Z	b45151c4-c9a1-469e-8902-8222eebfe0fe	INFO	Retrieving list of tours
+[list-tour] 3:00:51 PM END RequestId: b45151c4-c9a1-469e-8902-8222eebfe0fe
+[list-tour] 3:00:51 PM REPORT RequestId: b45151c4-c9a1-469e-8902-8222eebfe0fe	Duration: 1593.41 ms	Billed Duration: 1594 ms	Memory Size: 512 MB	Max Memory Used: 321 MB	Init Duration: 942.33 ms
+[login] 3:00:44 PM START RequestId: 4783f9a6-4715-44fe-9253-bd7849de8a1b Version: $LATEST
+[login] 3:00:44 PM 2025-04-14T08:00:44.390Z	4783f9a6-4715-44fe-9253-bd7849de8a1b	INFO	Retrieving user with email:  info-admin@gmail.com
+[login] 3:00:44 PM 2025-04-14T08:00:44.911Z	4783f9a6-4715-44fe-9253-bd7849de8a1b	INFO	User successfully retrieved:  {
+  password: '$2b$10$Fk8hSSFK9yWlmyCSdMBkfuaPNnfBiNoeOxzJxnhMOkDbsyMq9v0JO',
+  active: 0,
+  deleteFlag: 0,
+  role: 0,
+  updatedAt: '2025-03-28T07:24:56.336Z',
+  userId: '64cb43c7-fc54-404e-82af-66b2dad315de',
+  userName: 'admin',
+  createdAt: '2025-03-28T07:24:56.336Z',
+  updatedBy: 'admin',
+  email: 'info-admin@gmail.com',
+  createdBy: 'admin'
+}
+[login] 3:00:45 PM END RequestId: 4783f9a6-4715-44fe-9253-bd7849de8a1b
+[login] 3:00:45 PM REPORT RequestId: 4783f9a6-4715-44fe-9253-bd7849de8a1b	Duration: 990.01 ms	Billed Duration: 991 ms	Memory Size: 512 MB	Max Memory Used: 324 MB
+[check-auth] 3:00:47 PM START RequestId: b3c20ce6-8d6c-4bd5-82be-7f77c9fefae4 Version: $LATEST
+[check-auth] 3:00:47 PM 2025-04-14T08:00:47.088Z	b3c20ce6-8d6c-4bd5-82be-7f77c9fefae4	INFO	Token (cleaned):  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGNiNDNjNy1mYzU0LTQwNGUtODJhZi02NmIyZGFkMzE1ZGUiLCJpYXQiOjE3NDQ2MTc2NDUsImV4cCI6MTc0NDYxNzk0NX0.7L548wEqnX_gVBpBsWz3IJOw1XNhydt5pZO6s9yZIQg
+[check-auth] 3:00:47 PM 2025-04-14T08:00:47.088Z	b3c20ce6-8d6c-4bd5-82be-7f77c9fefae4	INFO	Verifying token... a5e3696b23ce9b6e96af822f26b757d52c64b9a8e29351b9fee039dfb2d35600
+[check-auth] 3:00:47 PM 2025-04-14T08:00:47.089Z	b3c20ce6-8d6c-4bd5-82be-7f77c9fefae4	INFO	userId:  64cb43c7-fc54-404e-82af-66b2dad315de
+[check-auth] 3:00:47 PM 2025-04-14T08:00:47.565Z	b3c20ce6-8d6c-4bd5-82be-7f77c9fefae4	INFO	DynamoDB result:  {
+  Items: [
+    {
+      password: '$2b$10$Fk8hSSFK9yWlmyCSdMBkfuaPNnfBiNoeOxzJxnhMOkDbsyMq9v0JO',
+      active: 0,
+      deleteFlag: 0,
+      role: 0,
+      userId: '64cb43c7-fc54-404e-82af-66b2dad315de',
+      updatedAt: '2025-03-28T07:24:56.336Z',
+      userName: 'admin',
+      createdAt: '2025-03-28T07:24:56.336Z',
+      updatedBy: 'admin',
+      email: 'info-admin@gmail.com',
+      createdBy: 'admin'
+    }
+  ],
+  Count: 1,
+  ScannedCount: 1
+}
+[check-auth] 3:00:47 PM END RequestId: b3c20ce6-8d6c-4bd5-82be-7f77c9fefae4
+[check-auth] 3:00:47 PM REPORT RequestId: b3c20ce6-8d6c-4bd5-82be-7f77c9fefae4	Duration: 479.79 ms	Billed Duration: 480 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[list-admin] 3:01:03 PM START RequestId: e33aeca6-07ef-4c6c-804f-f33cb2b47d3b Version: $LATEST
+[list-admin] 3:01:03 PM 2025-04-14T08:01:03.579Z	e33aeca6-07ef-4c6c-804f-f33cb2b47d3b	INFO	Auth Header:  Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGNiNDNjNy1mYzU0LTQwNGUtODJhZi02NmIyZGFkMzE1ZGUiLCJpYXQiOjE3NDQ2MTc2NDUsImV4cCI6MTc0NDYxNzk0NX0.7L548wEqnX_gVBpBsWz3IJOw1XNhydt5pZO6s9yZIQg
+[list-admin] 3:01:04 PM 2025-04-14T08:01:04.176Z	e33aeca6-07ef-4c6c-804f-f33cb2b47d3b	INFO	Authenticated User: {
+  password: '$2b$10$Fk8hSSFK9yWlmyCSdMBkfuaPNnfBiNoeOxzJxnhMOkDbsyMq9v0JO',
+  active: 0,
+  deleteFlag: 0,
+  role: 0,
+  userId: '64cb43c7-fc54-404e-82af-66b2dad315de',
+  updatedAt: '2025-03-28T07:24:56.336Z',
+  userName: 'admin',
+  createdAt: '2025-03-28T07:24:56.336Z',
+  updatedBy: 'admin',
+  email: 'info-admin@gmail.com',
+  createdBy: 'admin'
+}
+[list-admin] 3:01:04 PM 2025-04-14T08:01:04.177Z	e33aeca6-07ef-4c6c-804f-f33cb2b47d3b	INFO	Retrieving list of Users
+[list-admin] 3:01:05 PM 2025-04-14T08:01:05.148Z	e33aeca6-07ef-4c6c-804f-f33cb2b47d3b	INFO	Users successfully retrieved:  [
+  {
+    active: 0,
+    password: '$2b$10$cNSs3ZIrIS8S3RGpYX43guXttgHdtzFHTCQklm9S20VuS1HFiqV1G',
+    deleteFlag: 0,
+    role: 0,
+    updatedAt: '2025-04-11T08:22:20.127Z',
+    userId: 'f1798c43-4970-4399-be72-3cdde891bc53',
+    userName: 'test',
+    createdAt: '2025-04-11T07:54:20.072Z',
+    updatedBy: '64cb43c7-fc54-404e-82af-66b2dad315de',
+    email: 'test@gmail.com',
+    createdBy: '64cb43c7-fc54-404e-82af-66b2dad315de'
+  }
+]
+[list-admin] 3:01:05 PM END RequestId: e33aeca6-07ef-4c6c-804f-f33cb2b47d3b
+[list-admin] 3:01:05 PM REPORT RequestId: e33aeca6-07ef-4c6c-804f-f33cb2b47d3b	Duration: 1629.62 ms	Billed Duration: 1630 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[login] 3:14:02 PM INIT_START Runtime Version: nodejs:18.v63	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:ad007b64e69135315cba0d95ed797867707d928d1128edf4fa17a926a71f1718
+[login] 3:14:03 PM START RequestId: 56f03cfb-1692-438b-a011-a7971c8dbd52 Version: $LATEST
+[login] 3:14:03 PM 2025-04-14T08:14:03.356Z	56f03cfb-1692-438b-a011-a7971c8dbd52	INFO	Retrieving user with email:  info-admin@gmail.com
+[login] 3:14:03 PM 2025-04-14T08:14:03.952Z	56f03cfb-1692-438b-a011-a7971c8dbd52	INFO	User successfully retrieved:  {
+  password: '$2b$10$Fk8hSSFK9yWlmyCSdMBkfuaPNnfBiNoeOxzJxnhMOkDbsyMq9v0JO',
+  active: 0,
+  deleteFlag: 0,
+  role: 0,
+  updatedAt: '2025-03-28T07:24:56.336Z',
+  userId: '64cb43c7-fc54-404e-82af-66b2dad315de',
+  userName: 'admin',
+  createdAt: '2025-03-28T07:24:56.336Z',
+  updatedBy: 'admin',
+  email: 'info-admin@gmail.com',
+  createdBy: 'admin'
+}
+[login] 3:14:04 PM END RequestId: 56f03cfb-1692-438b-a011-a7971c8dbd52
+[login] 3:14:04 PM REPORT RequestId: 56f03cfb-1692-438b-a011-a7971c8dbd52	Duration: 1074.51 ms	Billed Duration: 1075 ms	Memory Size: 512 MB	Max Memory Used: 323 MB	Init Duration: 983.08 ms
+[check-auth] 3:13:54 PM INIT_START Runtime Version: nodejs:18.v63	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:ad007b64e69135315cba0d95ed797867707d928d1128edf4fa17a926a71f1718
+[check-auth] 3:13:55 PM START RequestId: f93c7afa-6ce6-4ef3-ae25-e4a8820cee56 Version: $LATEST
+[check-auth] 3:13:55 PM 2025-04-14T08:13:55.464Z	f93c7afa-6ce6-4ef3-ae25-e4a8820cee56	INFO	Token (cleaned):  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGNiNDNjNy1mYzU0LTQwNGUtODJhZi02NmIyZGFkMzE1ZGUiLCJpYXQiOjE3NDQ2MTc2NDUsImV4cCI6MTc0NDYxNzk0NX0.7L548wEqnX_gVBpBsWz3IJOw1XNhydt5pZO6s9yZIQg
+[check-auth] 3:13:55 PM 2025-04-14T08:13:55.465Z	f93c7afa-6ce6-4ef3-ae25-e4a8820cee56	INFO	Verifying token... a5e3696b23ce9b6e96af822f26b757d52c64b9a8e29351b9fee039dfb2d35600
+[check-auth] 3:13:55 PM END RequestId: f93c7afa-6ce6-4ef3-ae25-e4a8820cee56
+[check-auth] 3:13:55 PM REPORT RequestId: f93c7afa-6ce6-4ef3-ae25-e4a8820cee56	Duration: 41.46 ms	Billed Duration: 42 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 971.60 ms
+[check-auth] 3:13:57 PM START RequestId: 48a827c8-d6b8-4fd0-a384-0f1b102f8e80 Version: $LATEST
+[check-auth] 3:13:57 PM 2025-04-14T08:13:57.227Z	48a827c8-d6b8-4fd0-a384-0f1b102f8e80	INFO	Token (cleaned):  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGNiNDNjNy1mYzU0LTQwNGUtODJhZi02NmIyZGFkMzE1ZGUiLCJpYXQiOjE3NDQ2MTc2NDUsImV4cCI6MTc0NDYxNzk0NX0.7L548wEqnX_gVBpBsWz3IJOw1XNhydt5pZO6s9yZIQg
+[check-auth] 3:13:57 PM 2025-04-14T08:13:57.227Z	48a827c8-d6b8-4fd0-a384-0f1b102f8e80	INFO	Verifying token... a5e3696b23ce9b6e96af822f26b757d52c64b9a8e29351b9fee039dfb2d35600
+[check-auth] 3:13:57 PM END RequestId: 48a827c8-d6b8-4fd0-a384-0f1b102f8e80
+[check-auth] 3:13:57 PM REPORT RequestId: 48a827c8-d6b8-4fd0-a384-0f1b102f8e80	Duration: 3.52 ms	Billed Duration: 4 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[check-auth] 3:14:06 PM START RequestId: b8dc8e19-0d15-47a6-a9fd-23fad1bf7a85 Version: $LATEST
+[check-auth] 3:14:06 PM 2025-04-14T08:14:06.101Z	b8dc8e19-0d15-47a6-a9fd-23fad1bf7a85	INFO	Token (cleaned):  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGNiNDNjNy1mYzU0LTQwNGUtODJhZi02NmIyZGFkMzE1ZGUiLCJpYXQiOjE3NDQ2MTg0NDQsImV4cCI6MTc0NDYxODc0NH0.MBLGUJlfPW4aIeLI0cCGGo5Em2H77eyqLffawPW7tuA
+[check-auth] 3:14:06 PM 2025-04-14T08:14:06.101Z	b8dc8e19-0d15-47a6-a9fd-23fad1bf7a85	INFO	Verifying token... a5e3696b23ce9b6e96af822f26b757d52c64b9a8e29351b9fee039dfb2d35600
+[check-auth] 3:14:06 PM 2025-04-14T08:14:06.101Z	b8dc8e19-0d15-47a6-a9fd-23fad1bf7a85	INFO	userId:  64cb43c7-fc54-404e-82af-66b2dad315de
+[check-auth] 3:14:06 PM 2025-04-14T08:14:06.684Z	b8dc8e19-0d15-47a6-a9fd-23fad1bf7a85	INFO	DynamoDB result:  {
+  Items: [
+    {
+      password: '$2b$10$Fk8hSSFK9yWlmyCSdMBkfuaPNnfBiNoeOxzJxnhMOkDbsyMq9v0JO',
+      active: 0,
+      deleteFlag: 0,
+      role: 0,
+      userId: '64cb43c7-fc54-404e-82af-66b2dad315de',
+      updatedAt: '2025-03-28T07:24:56.336Z',
+      userName: 'admin',
+      createdAt: '2025-03-28T07:24:56.336Z',
+      updatedBy: 'admin',
+      email: 'info-admin@gmail.com',
+      createdBy: 'admin'
+    }
+  ],
+  Count: 1,
+  ScannedCount: 1
+}
+[check-auth] 3:14:06 PM END RequestId: b8dc8e19-0d15-47a6-a9fd-23fad1bf7a85
+[check-auth] 3:14:06 PM REPORT RequestId: b8dc8e19-0d15-47a6-a9fd-23fad1bf7a85	Duration: 600.36 ms	Billed Duration: 601 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[list-tour] 3:14:08 PM INIT_START Runtime Version: nodejs:18.v63	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:ad007b64e69135315cba0d95ed797867707d928d1128edf4fa17a926a71f1718
+[list-tour] 3:14:09 PM START RequestId: 5da3e11e-b895-4fda-8399-403639df21e7 Version: $LATEST
+[list-tour] 3:14:09 PM 2025-04-14T08:14:09.512Z	5da3e11e-b895-4fda-8399-403639df21e7	INFO	Retrieving list of tours
+[list-tour] 3:14:11 PM END RequestId: 5da3e11e-b895-4fda-8399-403639df21e7
+[list-tour] 3:14:11 PM REPORT RequestId: 5da3e11e-b895-4fda-8399-403639df21e7	Duration: 1647.59 ms	Billed Duration: 1648 ms	Memory Size: 512 MB	Max Memory Used: 322 MB	Init Duration: 999.11 ms
+[list-admin] 3:14:16 PM INIT_START Runtime Version: nodejs:18.v63	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:ad007b64e69135315cba0d95ed797867707d928d1128edf4fa17a926a71f1718
+[list-admin] 3:14:17 PM START RequestId: 55220780-cc51-43aa-a152-3a331cbb377d Version: $LATEST
+[list-admin] 3:14:17 PM 2025-04-14T08:14:17.087Z	55220780-cc51-43aa-a152-3a331cbb377d	INFO	Auth Header:  Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGNiNDNjNy1mYzU0LTQwNGUtODJhZi02NmIyZGFkMzE1ZGUiLCJpYXQiOjE3NDQ2MTg0NDQsImV4cCI6MTc0NDYxODc0NH0.MBLGUJlfPW4aIeLI0cCGGo5Em2H77eyqLffawPW7tuA
+[list-admin] 3:14:17 PM 2025-04-14T08:14:17.669Z	55220780-cc51-43aa-a152-3a331cbb377d	INFO	Authenticated User: {
+  password: '$2b$10$Fk8hSSFK9yWlmyCSdMBkfuaPNnfBiNoeOxzJxnhMOkDbsyMq9v0JO',
+  active: 0,
+  deleteFlag: 0,
+  role: 0,
+  userId: '64cb43c7-fc54-404e-82af-66b2dad315de',
+  updatedAt: '2025-03-28T07:24:56.336Z',
+  userName: 'admin',
+  createdAt: '2025-03-28T07:24:56.336Z',
+  updatedBy: 'admin',
+  email: 'info-admin@gmail.com',
+  createdBy: 'admin'
+}
+[list-admin] 3:14:17 PM 2025-04-14T08:14:17.687Z	55220780-cc51-43aa-a152-3a331cbb377d	INFO	Retrieving list of Users
+[list-admin] 3:14:18 PM 2025-04-14T08:14:18.662Z	55220780-cc51-43aa-a152-3a331cbb377d	INFO	Users successfully retrieved:  [
+  {
+    active: 0,
+    password: '$2b$10$cNSs3ZIrIS8S3RGpYX43guXttgHdtzFHTCQklm9S20VuS1HFiqV1G',
+    deleteFlag: 0,
+    role: 0,
+    updatedAt: '2025-04-11T08:22:20.127Z',
+    userId: 'f1798c43-4970-4399-be72-3cdde891bc53',
+    userName: 'test',
+    createdAt: '2025-04-11T07:54:20.072Z',
+    updatedBy: '64cb43c7-fc54-404e-82af-66b2dad315de',
+    email: 'test@gmail.com',
+    createdBy: '64cb43c7-fc54-404e-82af-66b2dad315de'
+  },
+  {
+    password: '$2b$10$Fk8hSSFK9yWlmyCSdMBkfuaPNnfBiNoeOxzJxnhMOkDbsyMq9v0JO',
+    active: 0,
+    deleteFlag: 0,
+    role: 0,
+    userId: '64cb43c7-fc54-404e-82af-66b2dad315de',
+    updatedAt: '2025-03-28T07:24:56.336Z',
+    userName: 'admin',
+    createdAt: '2025-03-28T07:24:56.336Z',
+    updatedBy: 'admin',
+    email: 'info-admin@gmail.com',
+    createdBy: 'admin'
+  },
+  {
+    active: 0,
+    password: '$2b$10$2dsYpkVzS0oiGRMaWM/YDuN1PHDNNFDo.N2jv0uPfR5JRtPwMrcnK',
+    deleteFlag: 0,
+    role: 0,
+    updatedAt: '2025-04-04T08:23:45.372Z',
+    userId: 'd84c7df7-0be3-47a6-9e2c-4765b8b19fee',
+    userName: 'minh333',
+    createdAt: '2025-04-04T08:14:35.686Z',
+    updatedBy: '64cb43c7-fc54-404e-82af-66b2dad315de',
+    email: 'test@gmail.com',
+    createdBy: '64cb43c7-fc54-404e-82af-66b2dad315de'
+  },
+  {
+    password: '$2b$10$ZD9A.Sh40y3Jiz5R48482.XW8V7F53hagc0bUT4GrhEJyJfupw9VC',
+    active: 0,
+    deleteFlag: 0,
+    role: 0,
+    userId: 'e9635760-d6d9-4c58-8d23-4ceff2b093d3',
+    updatedAt: '',
+    userName: 'test',
+    createdAt: '2025-04-11T06:55:27.522Z',
+    updatedBy: '',
+    email: 'info-admin@gmail.com',
+    createdBy: '64cb43c7-fc54-404e-82af-66b2dad315de'
+  },
+  {
+    password: '$2b$10$P0GoA4j7aICx2jwwEyALbug.tRRnRycPe/5WHmtlRo80kiojiq/g.',
+    active: 0,
+    deleteFlag: 0,
+    role: 0,
+    userId: 'd521bb43-15ca-4eb6-b0e8-a938734e29b8',
+    updatedAt: '',
+    userName: 'test',
+    createdAt: '2025-04-04T02:56:06.742Z',
+    updatedBy: '',
+    email: 'test@gmail.com',
+    createdBy: '64cb43c7-fc54-404e-82af-66b2dad315de'
+  }
+]
+[list-admin] 3:14:18 PM END RequestId: 55220780-cc51-43aa-a152-3a331cbb377d
+[list-admin] 3:14:18 PM REPORT RequestId: 55220780-cc51-43aa-a152-3a331cbb377d	Duration: 1606.55 ms	Billed Duration: 1607 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 935.36 ms
+[refresh-token] 3:53:18 PM INIT_START Runtime Version: nodejs:18.v63	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:ad007b64e69135315cba0d95ed797867707d928d1128edf4fa17a926a71f1718
+[refresh-token] 3:53:19 PM START RequestId: 1d1ef357-5fd2-4bc2-8a32-c01643ef23ac Version: $LATEST
+[refresh-token] 3:53:19 PM 2025-04-14T08:53:19.376Z	1d1ef357-5fd2-4bc2-8a32-c01643ef23ac	INFO	Refresh Token (cleaned):  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGNiNDNjNy1mYzU0LTQwNGUtODJhZi02NmIyZGFkMzE1ZGUiLCJpYXQiOjE3NDQ2MTg0NDQsImV4cCI6MTc0NTIyMzI0NH0.M5gXKQEW4bwus6qNNcJtLOPcMGHTm-z3bKiumGgmT7Y
+[refresh-token] 3:53:19 PM 2025-04-14T08:53:19.396Z	1d1ef357-5fd2-4bc2-8a32-c01643ef23ac	INFO	Decoded refresh token:  {
+  userId: '64cb43c7-fc54-404e-82af-66b2dad315de',
+  iat: 1744618444,
+  exp: 1745223244
+}
+[refresh-token] 3:53:19 PM 2025-04-14T08:53:19.398Z	1d1ef357-5fd2-4bc2-8a32-c01643ef23ac	INFO	Extracted userId:  64cb43c7-fc54-404e-82af-66b2dad315de
+[refresh-token] 3:53:19 PM 2025-04-14T08:53:19.979Z	1d1ef357-5fd2-4bc2-8a32-c01643ef23ac	INFO	DynamoDB query result:  {
+  Items: [
+    {
+      password: '$2b$10$Fk8hSSFK9yWlmyCSdMBkfuaPNnfBiNoeOxzJxnhMOkDbsyMq9v0JO',
+      active: 0,
+      deleteFlag: 0,
+      role: 0,
+      userId: '64cb43c7-fc54-404e-82af-66b2dad315de',
+      updatedAt: '2025-03-28T07:24:56.336Z',
+      userName: 'admin',
+      createdAt: '2025-03-28T07:24:56.336Z',
+      updatedBy: 'admin',
+      email: 'info-admin@gmail.com',
+      createdBy: 'admin'
+    }
+  ],
+  Count: 1,
+  ScannedCount: 1
+}
+[refresh-token] 3:53:19 PM END RequestId: 1d1ef357-5fd2-4bc2-8a32-c01643ef23ac
+[refresh-token] 3:53:19 PM REPORT RequestId: 1d1ef357-5fd2-4bc2-8a32-c01643ef23ac	Duration: 630.37 ms	Billed Duration: 631 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 1051.03 ms
+[list-admin] 3:53:25 PM INIT_START Runtime Version: nodejs:18.v63	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:ad007b64e69135315cba0d95ed797867707d928d1128edf4fa17a926a71f1718
+[list-admin] 3:53:26 PM START RequestId: 853eae19-064d-471d-9e02-9fb13eb301c6 Version: $LATEST
+[list-admin] 3:53:26 PM 2025-04-14T08:53:26.117Z	853eae19-064d-471d-9e02-9fb13eb301c6	INFO	Query Parameters: { page: 1, pageSize: 10, query: undefined }
+[list-admin] 3:53:26 PM 2025-04-14T08:53:26.135Z	853eae19-064d-471d-9e02-9fb13eb301c6	INFO	Auth Header:  Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGNiNDNjNy1mYzU0LTQwNGUtODJhZi02NmIyZGFkMzE1ZGUiLCJpYXQiOjE3NDQ2MjA3OTksImV4cCI6MTc0NDYyMTY5OX0.Cq5afHnTivGKjEny4Lrgb543Vi4cu40q-k7g8MUSlS0
+[list-admin] 3:53:26 PM 2025-04-14T08:53:26.697Z	853eae19-064d-471d-9e02-9fb13eb301c6	INFO	Authenticated User: {
+  password: '$2b$10$Fk8hSSFK9yWlmyCSdMBkfuaPNnfBiNoeOxzJxnhMOkDbsyMq9v0JO',
+  active: 0,
+  deleteFlag: 0,
+  role: 0,
+  userId: '64cb43c7-fc54-404e-82af-66b2dad315de',
+  updatedAt: '2025-03-28T07:24:56.336Z',
+  userName: 'admin',
+  createdAt: '2025-03-28T07:24:56.336Z',
+  updatedBy: 'admin',
+  email: 'info-admin@gmail.com',
+  createdBy: 'admin'
+}
+[list-admin] 3:53:26 PM 2025-04-14T08:53:26.697Z	853eae19-064d-471d-9e02-9fb13eb301c6	INFO	Retrieving list of Users
+[list-admin] 3:53:28 PM 2025-04-14T08:53:28.145Z	853eae19-064d-471d-9e02-9fb13eb301c6	INFO	Users successfully retrieved:  [
+  {
+    active: 0,
+    password: '$2b$10$cNSs3ZIrIS8S3RGpYX43guXttgHdtzFHTCQklm9S20VuS1HFiqV1G',
+    deleteFlag: 0,
+    role: 0,
+    updatedAt: '2025-04-11T08:22:20.127Z',
+    userId: 'f1798c43-4970-4399-be72-3cdde891bc53',
+    userName: 'test',
+    createdAt: '2025-04-11T07:54:20.072Z',
+    updatedBy: '64cb43c7-fc54-404e-82af-66b2dad315de',
+    email: 'test@gmail.com',
+    createdBy: '64cb43c7-fc54-404e-82af-66b2dad315de'
+  },
+  {
+    password: '$2b$10$Fk8hSSFK9yWlmyCSdMBkfuaPNnfBiNoeOxzJxnhMOkDbsyMq9v0JO',
+    active: 0,
+    deleteFlag: 0,
+    role: 0,
+    userId: '64cb43c7-fc54-404e-82af-66b2dad315de',
+    updatedAt: '2025-03-28T07:24:56.336Z',
+    userName: 'admin',
+    createdAt: '2025-03-28T07:24:56.336Z',
+    updatedBy: 'admin',
+    email: 'info-admin@gmail.com',
+    createdBy: 'admin'
+  },
+  {
+    active: 0,
+    password: '$2b$10$2dsYpkVzS0oiGRMaWM/YDuN1PHDNNFDo.N2jv0uPfR5JRtPwMrcnK',
+    deleteFlag: 0,
+    role: 0,
+    updatedAt: '2025-04-04T08:23:45.372Z',
+    userId: 'd84c7df7-0be3-47a6-9e2c-4765b8b19fee',
+    userName: 'minh333',
+    createdAt: '2025-04-04T08:14:35.686Z',
+    updatedBy: '64cb43c7-fc54-404e-82af-66b2dad315de',
+    email: 'test@gmail.com',
+    createdBy: '64cb43c7-fc54-404e-82af-66b2dad315de'
+  },
+  {
+    password: '$2b$10$ZD9A.Sh40y3Jiz5R48482.XW8V7F53hagc0bUT4GrhEJyJfupw9VC',
+    active: 0,
+    deleteFlag: 0,
+    role: 0,
+    userId: 'e9635760-d6d9-4c58-8d23-4ceff2b093d3',
+    updatedAt: '',
+    userName: 'test',
+    createdAt: '2025-04-11T06:55:27.522Z',
+    updatedBy: '',
+    email: 'info-admin@gmail.com',
+    createdBy: '64cb43c7-fc54-404e-82af-66b2dad315de'
+  },
+  {
+    password: '$2b$10$P0GoA4j7aICx2jwwEyALbug.tRRnRycPe/5WHmtlRo80kiojiq/g.',
+    active: 0,
+    deleteFlag: 0,
+    role: 0,
+    userId: 'd521bb43-15ca-4eb6-b0e8-a938734e29b8',
+    updatedAt: '',
+    userName: 'test',
+    createdAt: '2025-04-04T02:56:06.742Z',
+    updatedBy: '',
+    email: 'test@gmail.com',
+    createdBy: '64cb43c7-fc54-404e-82af-66b2dad315de'
+  }
+]
+[list-admin] 3:53:28 PM END RequestId: 853eae19-064d-471d-9e02-9fb13eb301c6
+[list-admin] 3:53:28 PM REPORT RequestId: 853eae19-064d-471d-9e02-9fb13eb301c6	Duration: 2058.64 ms	Billed Duration: 2059 ms	Memory Size: 512 MB	Max Memory Used: 322 MB	Init Duration: 927.03 ms
+[check-auth] 3:53:21 PM INIT_START Runtime Version: nodejs:18.v63	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:ad007b64e69135315cba0d95ed797867707d928d1128edf4fa17a926a71f1718
+[check-auth] 3:53:22 PM START RequestId: fe6c5ccc-9d6a-4d85-bc94-163b0a0a8f1b Version: $LATEST
+[check-auth] 3:53:22 PM 2025-04-14T08:53:22.692Z	fe6c5ccc-9d6a-4d85-bc94-163b0a0a8f1b	INFO	Token (cleaned):  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGNiNDNjNy1mYzU0LTQwNGUtODJhZi02NmIyZGFkMzE1ZGUiLCJpYXQiOjE3NDQ2MjA3OTksImV4cCI6MTc0NDYyMTY5OX0.Cq5afHnTivGKjEny4Lrgb543Vi4cu40q-k7g8MUSlS0
+[check-auth] 3:53:22 PM 2025-04-14T08:53:22.692Z	fe6c5ccc-9d6a-4d85-bc94-163b0a0a8f1b	INFO	Verifying token... a5e3696b23ce9b6e96af822f26b757d52c64b9a8e29351b9fee039dfb2d35600
+[check-auth] 3:53:22 PM 2025-04-14T08:53:22.711Z	fe6c5ccc-9d6a-4d85-bc94-163b0a0a8f1b	INFO	userId:  64cb43c7-fc54-404e-82af-66b2dad315de
+[check-auth] 3:53:23 PM 2025-04-14T08:53:23.291Z	fe6c5ccc-9d6a-4d85-bc94-163b0a0a8f1b	INFO	DynamoDB result:  {
+  Items: [
+    {
+      password: '$2b$10$Fk8hSSFK9yWlmyCSdMBkfuaPNnfBiNoeOxzJxnhMOkDbsyMq9v0JO',
+      active: 0,
+      deleteFlag: 0,
+      role: 0,
+      userId: '64cb43c7-fc54-404e-82af-66b2dad315de',
+      updatedAt: '2025-03-28T07:24:56.336Z',
+      userName: 'admin',
+      createdAt: '2025-03-28T07:24:56.336Z',
+      updatedBy: 'admin',
+      email: 'info-admin@gmail.com',
+      createdBy: 'admin'
+    }
+  ],
+  Count: 1,
+  ScannedCount: 1
+}
+[check-auth] 3:53:23 PM END RequestId: fe6c5ccc-9d6a-4d85-bc94-163b0a0a8f1b
+[check-auth] 3:53:23 PM REPORT RequestId: fe6c5ccc-9d6a-4d85-bc94-163b0a0a8f1b	Duration: 621.47 ms	Billed Duration: 622 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 934.45 ms
+[list-admin] 3:53:44 PM START RequestId: 9904753f-0573-448e-b4e7-e6146c927018 Version: $LATEST
+[list-admin] 3:53:44 PM 2025-04-14T08:53:44.376Z	9904753f-0573-448e-b4e7-e6146c927018	INFO	Query Parameters: { page: 1, pageSize: 2, query: undefined }
+[list-admin] 3:53:44 PM 2025-04-14T08:53:44.376Z	9904753f-0573-448e-b4e7-e6146c927018	INFO	Auth Header:  Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGNiNDNjNy1mYzU0LTQwNGUtODJhZi02NmIyZGFkMzE1ZGUiLCJpYXQiOjE3NDQ2MjA3OTksImV4cCI6MTc0NDYyMTY5OX0.Cq5afHnTivGKjEny4Lrgb543Vi4cu40q-k7g8MUSlS0
+[list-admin] 3:53:44 PM 2025-04-14T08:53:44.902Z	9904753f-0573-448e-b4e7-e6146c927018	INFO	Authenticated User: {
+  password: '$2b$10$Fk8hSSFK9yWlmyCSdMBkfuaPNnfBiNoeOxzJxnhMOkDbsyMq9v0JO',
+  active: 0,
+  deleteFlag: 0,
+  role: 0,
+  userId: '64cb43c7-fc54-404e-82af-66b2dad315de',
+  updatedAt: '2025-03-28T07:24:56.336Z',
+  userName: 'admin',
+  createdAt: '2025-03-28T07:24:56.336Z',
+  updatedBy: 'admin',
+  email: 'info-admin@gmail.com',
+  createdBy: 'admin'
+}
+[list-admin] 3:53:44 PM 2025-04-14T08:53:44.902Z	9904753f-0573-448e-b4e7-e6146c927018	INFO	Retrieving list of Users
+[list-admin] 3:53:46 PM 2025-04-14T08:53:46.327Z	9904753f-0573-448e-b4e7-e6146c927018	INFO	Users successfully retrieved:  [
+  {
+    active: 0,
+    password: '$2b$10$cNSs3ZIrIS8S3RGpYX43guXttgHdtzFHTCQklm9S20VuS1HFiqV1G',
+    deleteFlag: 0,
+    role: 0,
+    updatedAt: '2025-04-11T08:22:20.127Z',
+    userId: 'f1798c43-4970-4399-be72-3cdde891bc53',
+    userName: 'test',
+    createdAt: '2025-04-11T07:54:20.072Z',
+    updatedBy: '64cb43c7-fc54-404e-82af-66b2dad315de',
+    email: 'test@gmail.com',
+    createdBy: '64cb43c7-fc54-404e-82af-66b2dad315de'
+  }
+]
+[list-admin] 3:53:46 PM END RequestId: 9904753f-0573-448e-b4e7-e6146c927018
+[list-admin] 3:53:46 PM REPORT RequestId: 9904753f-0573-448e-b4e7-e6146c927018	Duration: 1972.66 ms	Billed Duration: 1973 ms	Memory Size: 512 MB	Max Memory Used: 322 MB
+[list-admin] 3:53:58 PM START RequestId: eb144556-8843-40be-95cd-ba79b2f862b9 Version: $LATEST
+[list-admin] 3:53:58 PM 2025-04-14T08:53:58.151Z	eb144556-8843-40be-95cd-ba79b2f862b9	INFO	Query Parameters: { page: 1, pageSize: 5, query: undefined }
+[list-admin] 3:53:58 PM 2025-04-14T08:53:58.152Z	eb144556-8843-40be-95cd-ba79b2f862b9	INFO	Auth Header:  Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGNiNDNjNy1mYzU0LTQwNGUtODJhZi02NmIyZGFkMzE1ZGUiLCJpYXQiOjE3NDQ2MjA3OTksImV4cCI6MTc0NDYyMTY5OX0.Cq5afHnTivGKjEny4Lrgb543Vi4cu40q-k7g8MUSlS0
+[list-admin] 3:53:58 PM 2025-04-14T08:53:58.613Z	eb144556-8843-40be-95cd-ba79b2f862b9	INFO	Authenticated User: {
+  password: '$2b$10$Fk8hSSFK9yWlmyCSdMBkfuaPNnfBiNoeOxzJxnhMOkDbsyMq9v0JO',
+  active: 0,
+  deleteFlag: 0,
+  role: 0,
+  userId: '64cb43c7-fc54-404e-82af-66b2dad315de',
+  updatedAt: '2025-03-28T07:24:56.336Z',
+  userName: 'admin',
+  createdAt: '2025-03-28T07:24:56.336Z',
+  updatedBy: 'admin',
+  email: 'info-admin@gmail.com',
+  createdBy: 'admin'
+}
+[list-admin] 3:53:58 PM 2025-04-14T08:53:58.613Z	eb144556-8843-40be-95cd-ba79b2f862b9	INFO	Retrieving list of Users
+[list-admin] 3:54:00 PM 2025-04-14T08:54:00.511Z	eb144556-8843-40be-95cd-ba79b2f862b9	INFO	Users successfully retrieved:  [
+  {
+    active: 0,
+    password: '$2b$10$cNSs3ZIrIS8S3RGpYX43guXttgHdtzFHTCQklm9S20VuS1HFiqV1G',
+    deleteFlag: 0,
+    role: 0,
+    updatedAt: '2025-04-11T08:22:20.127Z',
+    userId: 'f1798c43-4970-4399-be72-3cdde891bc53',
+    userName: 'test',
+    createdAt: '2025-04-11T07:54:20.072Z',
+    updatedBy: '64cb43c7-fc54-404e-82af-66b2dad315de',
+    email: 'test@gmail.com',
+    createdBy: '64cb43c7-fc54-404e-82af-66b2dad315de'
+  },
+  {
+    password: '$2b$10$Fk8hSSFK9yWlmyCSdMBkfuaPNnfBiNoeOxzJxnhMOkDbsyMq9v0JO',
+    active: 0,
+    deleteFlag: 0,
+    role: 0,
+    userId: '64cb43c7-fc54-404e-82af-66b2dad315de',
+    updatedAt: '2025-03-28T07:24:56.336Z',
+    userName: 'admin',
+    createdAt: '2025-03-28T07:24:56.336Z',
+    updatedBy: 'admin',
+    email: 'info-admin@gmail.com',
+    createdBy: 'admin'
+  }
+]
+[list-admin] 3:54:00 PM END RequestId: eb144556-8843-40be-95cd-ba79b2f862b9
+[list-admin] 3:54:00 PM REPORT RequestId: eb144556-8843-40be-95cd-ba79b2f862b9	Duration: 2362.49 ms	Billed Duration: 2363 ms	Memory Size: 512 MB	Max Memory Used: 322 MB
+[check-auth] 3:58:32 PM INIT_START Runtime Version: nodejs:18.v63	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:ad007b64e69135315cba0d95ed797867707d928d1128edf4fa17a926a71f1718
+[list-admin] 4:10:26 PM INIT_START Runtime Version: nodejs:18.v63	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:ad007b64e69135315cba0d95ed797867707d928d1128edf4fa17a926a71f1718
+[list-admin] 4:10:27 PM START RequestId: 36bfe9f8-9c2f-4aac-adf8-81375711fd39 Version: $LATEST
+[list-admin] 4:10:27 PM 2025-04-14T09:10:27.941Z	36bfe9f8-9c2f-4aac-adf8-81375711fd39	INFO	Query Parameters: { page: 1, pageSize: 10, query: undefined }
+[list-admin] 4:10:27 PM 2025-04-14T09:10:27.959Z	36bfe9f8-9c2f-4aac-adf8-81375711fd39	INFO	Auth Header:  Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGNiNDNjNy1mYzU0LTQwNGUtODJhZi02NmIyZGFkMzE1ZGUiLCJpYXQiOjE3NDQ2MjE4MjEsImV4cCI6MTc0NDYyMjcyMX0.GoIJ4G6-jECTuR4-bnT5xLZ8VggNp11GaUtNcqDmn-s
+[list-admin] 4:10:28 PM 2025-04-14T09:10:28.534Z	36bfe9f8-9c2f-4aac-adf8-81375711fd39	INFO	Authenticated User: {
+  password: '$2b$10$Fk8hSSFK9yWlmyCSdMBkfuaPNnfBiNoeOxzJxnhMOkDbsyMq9v0JO',
+  active: 0,
+  deleteFlag: 0,
+  role: 0,
+  userId: '64cb43c7-fc54-404e-82af-66b2dad315de',
+  updatedAt: '2025-03-28T07:24:56.336Z',
+  userName: 'admin',
+  createdAt: '2025-03-28T07:24:56.336Z',
+  updatedBy: 'admin',
+  email: 'info-admin@gmail.com',
+  createdBy: 'admin'
+}
+[list-admin] 4:10:28 PM 2025-04-14T09:10:28.540Z	36bfe9f8-9c2f-4aac-adf8-81375711fd39	INFO	Retrieving list of Users
+[list-admin] 4:10:29 PM 2025-04-14T09:10:29.962Z	36bfe9f8-9c2f-4aac-adf8-81375711fd39	INFO	Users successfully retrieved:  [
+  {
+    active: 0,
+    password: '$2b$10$pEHViNvlXG2yKomCmlxZDOwBvdsVvanw0BqCE7UhA1BYc09S7swba',
+    deleteFlag: 0,
+    role: 0,
+    updatedAt: '2025-04-14T09:10:25.372Z',
+    userId: 'f1798c43-4970-4399-be72-3cdde891bc53',
+    userName: 'test',
+    createdAt: '2025-04-11T07:54:20.072Z',
+    updatedBy: '64cb43c7-fc54-404e-82af-66b2dad315de',
+    email: 'test@gmail.com',
+    createdBy: '64cb43c7-fc54-404e-82af-66b2dad315de'
+  },
+  {
+    password: '$2b$10$Fk8hSSFK9yWlmyCSdMBkfuaPNnfBiNoeOxzJxnhMOkDbsyMq9v0JO',
+    active: 0,
+    deleteFlag: 0,
+    role: 0,
+    userId: '64cb43c7-fc54-404e-82af-66b2dad315de',
+    updatedAt: '2025-03-28T07:24:56.336Z',
+    userName: 'admin',
+    createdAt: '2025-03-28T07:24:56.336Z',
+    updatedBy: 'admin',
+    email: 'info-admin@gmail.com',
+    createdBy: 'admin'
+  },
+  {
+    active: 0,
+    password: '$2b$10$2dsYpkVzS0oiGRMaWM/YDuN1PHDNNFDo.N2jv0uPfR5JRtPwMrcnK',
+    deleteFlag: 0,
+    role: 0,
+    updatedAt: '2025-04-04T08:23:45.372Z',
+    userId: 'd84c7df7-0be3-47a6-9e2c-4765b8b19fee',
+    userName: 'minh333',
+    createdAt: '2025-04-04T08:14:35.686Z',
+    updatedBy: '64cb43c7-fc54-404e-82af-66b2dad315de',
+    email: 'test@gmail.com',
+    createdBy: '64cb43c7-fc54-404e-82af-66b2dad315de'
+  },
+  {
+    password: '$2b$10$ZD9A.Sh40y3Jiz5R48482.XW8V7F53hagc0bUT4GrhEJyJfupw9VC',
+    active: 0,
+    deleteFlag: 0,
+    role: 0,
+    userId: 'e9635760-d6d9-4c58-8d23-4ceff2b093d3',
+    updatedAt: '',
+    userName: 'test',
+    createdAt: '2025-04-11T06:55:27.522Z',
+    updatedBy: '',
+    email: 'info-admin@gmail.com',
+    createdBy: '64cb43c7-fc54-404e-82af-66b2dad315de'
+  },
+  {
+    password: '$2b$10$P0GoA4j7aICx2jwwEyALbug.tRRnRycPe/5WHmtlRo80kiojiq/g.',
+    active: 0,
+    deleteFlag: 0,
+    role: 0,
+    userId: 'd521bb43-15ca-4eb6-b0e8-a938734e29b8',
+    updatedAt: '',
+    userName: 'test',
+    createdAt: '2025-04-04T02:56:06.742Z',
+    updatedBy: '',
+    email: 'test@gmail.com',
+    createdBy: '64cb43c7-fc54-404e-82af-66b2dad315de'
+  }
+]
+[list-admin] 4:10:29 PM END RequestId: 36bfe9f8-9c2f-4aac-adf8-81375711fd39
+[list-admin] 4:10:29 PM REPORT RequestId: 36bfe9f8-9c2f-4aac-adf8-81375711fd39	Duration: 2053.87 ms	Billed Duration: 2054 ms	Memory Size: 512 MB	Max Memory Used: 322 MB	Init Duration: 948.82 ms
+[list-admin] 4:10:42 PM START RequestId: 32dc6e4f-4a0e-49a5-9f4a-f1855c4b6ae4 Version: $LATEST
+[list-admin] 4:10:42 PM 2025-04-14T09:10:42.821Z	32dc6e4f-4a0e-49a5-9f4a-f1855c4b6ae4	INFO	Query Parameters: { page: 1, pageSize: 5, query: undefined }
+[list-admin] 4:10:42 PM 2025-04-14T09:10:42.821Z	32dc6e4f-4a0e-49a5-9f4a-f1855c4b6ae4	INFO	Auth Header:  Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGNiNDNjNy1mYzU0LTQwNGUtODJhZi02NmIyZGFkMzE1ZGUiLCJpYXQiOjE3NDQ2MjE4MjEsImV4cCI6MTc0NDYyMjcyMX0.GoIJ4G6-jECTuR4-bnT5xLZ8VggNp11GaUtNcqDmn-s
+[list-admin] 4:10:43 PM 2025-04-14T09:10:43.324Z	32dc6e4f-4a0e-49a5-9f4a-f1855c4b6ae4	INFO	Authenticated User: {
+  password: '$2b$10$Fk8hSSFK9yWlmyCSdMBkfuaPNnfBiNoeOxzJxnhMOkDbsyMq9v0JO',
+  active: 0,
+  deleteFlag: 0,
+  role: 0,
+  userId: '64cb43c7-fc54-404e-82af-66b2dad315de',
+  updatedAt: '2025-03-28T07:24:56.336Z',
+  userName: 'admin',
+  createdAt: '2025-03-28T07:24:56.336Z',
+  updatedBy: 'admin',
+  email: 'info-admin@gmail.com',
+  createdBy: 'admin'
+}
+[list-admin] 4:10:43 PM 2025-04-14T09:10:43.324Z	32dc6e4f-4a0e-49a5-9f4a-f1855c4b6ae4	INFO	Retrieving list of Users
+[list-admin] 4:10:45 PM 2025-04-14T09:10:45.234Z	32dc6e4f-4a0e-49a5-9f4a-f1855c4b6ae4	INFO	Users successfully retrieved:  [
+  {
+    active: 0,
+    password: '$2b$10$pEHViNvlXG2yKomCmlxZDOwBvdsVvanw0BqCE7UhA1BYc09S7swba',
+    deleteFlag: 0,
+    role: 0,
+    updatedAt: '2025-04-14T09:10:25.372Z',
+    userId: 'f1798c43-4970-4399-be72-3cdde891bc53',
+    userName: 'test',
+    createdAt: '2025-04-11T07:54:20.072Z',
+    updatedBy: '64cb43c7-fc54-404e-82af-66b2dad315de',
+    email: 'test@gmail.com',
+    createdBy: '64cb43c7-fc54-404e-82af-66b2dad315de'
+  },
+  {
+    password: '$2b$10$Fk8hSSFK9yWlmyCSdMBkfuaPNnfBiNoeOxzJxnhMOkDbsyMq9v0JO',
+    active: 0,
+    deleteFlag: 0,
+    role: 0,
+    userId: '64cb43c7-fc54-404e-82af-66b2dad315de',
+    updatedAt: '2025-03-28T07:24:56.336Z',
+    userName: 'admin',
+    createdAt: '2025-03-28T07:24:56.336Z',
+    updatedBy: 'admin',
+    email: 'info-admin@gmail.com',
+    createdBy: 'admin'
+  }
+]
+[list-admin] 4:10:45 PM END RequestId: 32dc6e4f-4a0e-49a5-9f4a-f1855c4b6ae4
+[list-admin] 4:10:45 PM REPORT RequestId: 32dc6e4f-4a0e-49a5-9f4a-f1855c4b6ae4	Duration: 2416.20 ms	Billed Duration: 2417 ms	Memory Size: 512 MB	Max Memory Used: 322 MB
+[check-auth] 4:10:23 PM INIT_START Runtime Version: nodejs:18.v63	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:ad007b64e69135315cba0d95ed797867707d928d1128edf4fa17a926a71f1718
+[check-auth] 4:10:24 PM START RequestId: d581c5f8-68be-4543-bc03-41e08bddd428 Version: $LATEST
+[check-auth] 4:10:24 PM 2025-04-14T09:10:24.647Z	d581c5f8-68be-4543-bc03-41e08bddd428	INFO	Token (cleaned):  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGNiNDNjNy1mYzU0LTQwNGUtODJhZi02NmIyZGFkMzE1ZGUiLCJpYXQiOjE3NDQ2MjE4MjEsImV4cCI6MTc0NDYyMjcyMX0.GoIJ4G6-jECTuR4-bnT5xLZ8VggNp11GaUtNcqDmn-s
+[check-auth] 4:10:24 PM 2025-04-14T09:10:24.664Z	d581c5f8-68be-4543-bc03-41e08bddd428	INFO	Verifying token... a5e3696b23ce9b6e96af822f26b757d52c64b9a8e29351b9fee039dfb2d35600
+[check-auth] 4:10:24 PM 2025-04-14T09:10:24.667Z	d581c5f8-68be-4543-bc03-41e08bddd428	INFO	userId:  64cb43c7-fc54-404e-82af-66b2dad315de
+[check-auth] 4:10:25 PM 2025-04-14T09:10:25.244Z	d581c5f8-68be-4543-bc03-41e08bddd428	INFO	DynamoDB result:  {
+  Items: [
+    {
+      password: '$2b$10$Fk8hSSFK9yWlmyCSdMBkfuaPNnfBiNoeOxzJxnhMOkDbsyMq9v0JO',
+      active: 0,
+      deleteFlag: 0,
+      role: 0,
+      userId: '64cb43c7-fc54-404e-82af-66b2dad315de',
+      updatedAt: '2025-03-28T07:24:56.336Z',
+      userName: 'admin',
+      createdAt: '2025-03-28T07:24:56.336Z',
+      updatedBy: 'admin',
+      email: 'info-admin@gmail.com',
+      createdBy: 'admin'
+    }
+  ],
+  Count: 1,
+  ScannedCount: 1
+}
+[check-auth] 4:10:25 PM END RequestId: d581c5f8-68be-4543-bc03-41e08bddd428
+[check-auth] 4:10:25 PM REPORT RequestId: d581c5f8-68be-4543-bc03-41e08bddd428	Duration: 610.58 ms	Billed Duration: 611 ms	Memory Size: 512 MB	Max Memory Used: 316 MB	Init Duration: 961.03 ms
+[refresh-token] 4:10:20 PM INIT_START Runtime Version: nodejs:18.v63	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:ad007b64e69135315cba0d95ed797867707d928d1128edf4fa17a926a71f1718
+[refresh-token] 4:10:21 PM START RequestId: 2e091182-3f2f-493b-bcd3-391768b9bdf3 Version: $LATEST
+[refresh-token] 4:10:21 PM 2025-04-14T09:10:21.368Z	2e091182-3f2f-493b-bcd3-391768b9bdf3	INFO	Refresh Token (cleaned):  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGNiNDNjNy1mYzU0LTQwNGUtODJhZi02NmIyZGFkMzE1ZGUiLCJpYXQiOjE3NDQ2MjA3OTksImV4cCI6MTc0NTIyNTU5OX0.omEvFHYOm4ATkBgdTdCl1TlOJH2licIYsoJMXRZ25TE
+[refresh-token] 4:10:21 PM 2025-04-14T09:10:21.388Z	2e091182-3f2f-493b-bcd3-391768b9bdf3	INFO	Decoded refresh token:  {
+  userId: '64cb43c7-fc54-404e-82af-66b2dad315de',
+  iat: 1744620799,
+  exp: 1745225599
+}
+[refresh-token] 4:10:21 PM 2025-04-14T09:10:21.389Z	2e091182-3f2f-493b-bcd3-391768b9bdf3	INFO	Extracted userId:  64cb43c7-fc54-404e-82af-66b2dad315de
+[refresh-token] 4:10:21 PM 2025-04-14T09:10:21.955Z	2e091182-3f2f-493b-bcd3-391768b9bdf3	INFO	DynamoDB query result:  {
+  Items: [
+    {
+      password: '$2b$10$Fk8hSSFK9yWlmyCSdMBkfuaPNnfBiNoeOxzJxnhMOkDbsyMq9v0JO',
+      active: 0,
+      deleteFlag: 0,
+      role: 0,
+      userId: '64cb43c7-fc54-404e-82af-66b2dad315de',
+      updatedAt: '2025-03-28T07:24:56.336Z',
+      userName: 'admin',
+      createdAt: '2025-03-28T07:24:56.336Z',
+      updatedBy: 'admin',
+      email: 'info-admin@gmail.com',
+      createdBy: 'admin'
+    }
+  ],
+  Count: 1,
+  ScannedCount: 1
+}
+[refresh-token] 4:10:21 PM END RequestId: 2e091182-3f2f-493b-bcd3-391768b9bdf3
+[refresh-token] 4:10:21 PM REPORT RequestId: 2e091182-3f2f-493b-bcd3-391768b9bdf3	Duration: 612.87 ms	Billed Duration: 613 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 909.65 ms
+[list-admin] 4:10:54 PM START RequestId: e2e48875-9025-4201-918a-349c464afba4 Version: $LATEST
+[list-admin] 4:10:54 PM 2025-04-14T09:10:54.577Z	e2e48875-9025-4201-918a-349c464afba4	INFO	Query Parameters: { page: 1, pageSize: 2, query: undefined }
+[list-admin] 4:10:54 PM 2025-04-14T09:10:54.577Z	e2e48875-9025-4201-918a-349c464afba4	INFO	Auth Header:  Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGNiNDNjNy1mYzU0LTQwNGUtODJhZi02NmIyZGFkMzE1ZGUiLCJpYXQiOjE3NDQ2MjE4MjEsImV4cCI6MTc0NDYyMjcyMX0.GoIJ4G6-jECTuR4-bnT5xLZ8VggNp11GaUtNcqDmn-s
+[list-admin] 4:10:55 PM 2025-04-14T09:10:55.081Z	e2e48875-9025-4201-918a-349c464afba4	INFO	Authenticated User: {
+  password: '$2b$10$Fk8hSSFK9yWlmyCSdMBkfuaPNnfBiNoeOxzJxnhMOkDbsyMq9v0JO',
+  active: 0,
+  deleteFlag: 0,
+  role: 0,
+  userId: '64cb43c7-fc54-404e-82af-66b2dad315de',
+  updatedAt: '2025-03-28T07:24:56.336Z',
+  userName: 'admin',
+  createdAt: '2025-03-28T07:24:56.336Z',
+  updatedBy: 'admin',
+  email: 'info-admin@gmail.com',
+  createdBy: 'admin'
+}
+[list-admin] 4:10:55 PM 2025-04-14T09:10:55.081Z	e2e48875-9025-4201-918a-349c464afba4	INFO	Retrieving list of Users
+[list-admin] 4:10:56 PM 2025-04-14T09:10:56.509Z	e2e48875-9025-4201-918a-349c464afba4	INFO	Users successfully retrieved:  [
+  {
+    active: 0,
+    password: '$2b$10$pEHViNvlXG2yKomCmlxZDOwBvdsVvanw0BqCE7UhA1BYc09S7swba',
+    deleteFlag: 0,
+    role: 0,
+    updatedAt: '2025-04-14T09:10:25.372Z',
+    userId: 'f1798c43-4970-4399-be72-3cdde891bc53',
+    userName: 'test',
+    createdAt: '2025-04-11T07:54:20.072Z',
+    updatedBy: '64cb43c7-fc54-404e-82af-66b2dad315de',
+    email: 'test@gmail.com',
+    createdBy: '64cb43c7-fc54-404e-82af-66b2dad315de'
+  }
+]
+[list-admin] 4:10:56 PM END RequestId: e2e48875-9025-4201-918a-349c464afba4
+[list-admin] 4:10:56 PM REPORT RequestId: e2e48875-9025-4201-918a-349c464afba4	Duration: 1934.63 ms	Billed Duration: 1935 ms	Memory Size: 512 MB	Max Memory Used: 322 MB
+[list-admin] 4:11:09 PM START RequestId: ca47a1b1-a45a-48a2-95d5-f16bb6f833b5 Version: $LATEST
+[list-admin] 4:11:09 PM 2025-04-14T09:11:09.066Z	ca47a1b1-a45a-48a2-95d5-f16bb6f833b5	INFO	Query Parameters: { page: 1, pageSize: 3, query: undefined }
+[list-admin] 4:11:09 PM 2025-04-14T09:11:09.066Z	ca47a1b1-a45a-48a2-95d5-f16bb6f833b5	INFO	Auth Header:  Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGNiNDNjNy1mYzU0LTQwNGUtODJhZi02NmIyZGFkMzE1ZGUiLCJpYXQiOjE3NDQ2MjE4MjEsImV4cCI6MTc0NDYyMjcyMX0.GoIJ4G6-jECTuR4-bnT5xLZ8VggNp11GaUtNcqDmn-s
+[list-admin] 4:11:09 PM 2025-04-14T09:11:09.549Z	ca47a1b1-a45a-48a2-95d5-f16bb6f833b5	INFO	Authenticated User: {
+  password: '$2b$10$Fk8hSSFK9yWlmyCSdMBkfuaPNnfBiNoeOxzJxnhMOkDbsyMq9v0JO',
+  active: 0,
+  deleteFlag: 0,
+  role: 0,
+  userId: '64cb43c7-fc54-404e-82af-66b2dad315de',
+  updatedAt: '2025-03-28T07:24:56.336Z',
+  userName: 'admin',
+  createdAt: '2025-03-28T07:24:56.336Z',
+  updatedBy: 'admin',
+  email: 'info-admin@gmail.com',
+  createdBy: 'admin'
+}
+[list-admin] 4:11:09 PM 2025-04-14T09:11:09.550Z	ca47a1b1-a45a-48a2-95d5-f16bb6f833b5	INFO	Retrieving list of Users
+[list-admin] 4:11:11 PM 2025-04-14T09:11:11.002Z	ca47a1b1-a45a-48a2-95d5-f16bb6f833b5	INFO	Users successfully retrieved:  [
+  {
+    active: 0,
+    password: '$2b$10$pEHViNvlXG2yKomCmlxZDOwBvdsVvanw0BqCE7UhA1BYc09S7swba',
+    deleteFlag: 0,
+    role: 0,
+    updatedAt: '2025-04-14T09:10:25.372Z',
+    userId: 'f1798c43-4970-4399-be72-3cdde891bc53',
+    userName: 'test',
+    createdAt: '2025-04-11T07:54:20.072Z',
+    updatedBy: '64cb43c7-fc54-404e-82af-66b2dad315de',
+    email: 'test@gmail.com',
+    createdBy: '64cb43c7-fc54-404e-82af-66b2dad315de'
+  },
+  {
+    password: '$2b$10$Fk8hSSFK9yWlmyCSdMBkfuaPNnfBiNoeOxzJxnhMOkDbsyMq9v0JO',
+    active: 0,
+    deleteFlag: 0,
+    role: 0,
+    userId: '64cb43c7-fc54-404e-82af-66b2dad315de',
+    updatedAt: '2025-03-28T07:24:56.336Z',
+    userName: 'admin',
+    createdAt: '2025-03-28T07:24:56.336Z',
+    updatedBy: 'admin',
+    email: 'info-admin@gmail.com',
+    createdBy: 'admin'
+  }
+]
+[list-admin] 4:11:11 PM END RequestId: ca47a1b1-a45a-48a2-95d5-f16bb6f833b5
+[list-admin] 4:11:11 PM REPORT RequestId: ca47a1b1-a45a-48a2-95d5-f16bb6f833b5	Duration: 1938.49 ms	Billed Duration: 1939 ms	Memory Size: 512 MB	Max Memory Used: 322 MB
+[list-admin] 4:12:05 PM START RequestId: 92f2a10a-27d1-44f0-8a9b-73e0c3c71e39 Version: $LATEST
+[list-admin] 4:12:05 PM 2025-04-14T09:12:05.179Z	92f2a10a-27d1-44f0-8a9b-73e0c3c71e39	INFO	Query Parameters: { page: 1, pageSize: 5, query: undefined }
+[list-admin] 4:12:05 PM 2025-04-14T09:12:05.179Z	92f2a10a-27d1-44f0-8a9b-73e0c3c71e39	INFO	Auth Header:  Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGNiNDNjNy1mYzU0LTQwNGUtODJhZi02NmIyZGFkMzE1ZGUiLCJpYXQiOjE3NDQ2MjE4MjEsImV4cCI6MTc0NDYyMjcyMX0.GoIJ4G6-jECTuR4-bnT5xLZ8VggNp11GaUtNcqDmn-s
+[list-admin] 4:12:05 PM 2025-04-14T09:12:05.649Z	92f2a10a-27d1-44f0-8a9b-73e0c3c71e39	INFO	Authenticated User: {
+  password: '$2b$10$Fk8hSSFK9yWlmyCSdMBkfuaPNnfBiNoeOxzJxnhMOkDbsyMq9v0JO',
+  active: 0,
+  deleteFlag: 0,
+  role: 0,
+  userId: '64cb43c7-fc54-404e-82af-66b2dad315de',
+  updatedAt: '2025-03-28T07:24:56.336Z',
+  userName: 'admin',
+  createdAt: '2025-03-28T07:24:56.336Z',
+  updatedBy: 'admin',
+  email: 'info-admin@gmail.com',
+  createdBy: 'admin'
+}
+[list-admin] 4:12:05 PM 2025-04-14T09:12:05.649Z	92f2a10a-27d1-44f0-8a9b-73e0c3c71e39	INFO	Retrieving list of Users
+[list-admin] 4:12:07 PM 2025-04-14T09:12:07.521Z	92f2a10a-27d1-44f0-8a9b-73e0c3c71e39	INFO	Users successfully retrieved:  [
+  {
+    active: 0,
+    password: '$2b$10$pEHViNvlXG2yKomCmlxZDOwBvdsVvanw0BqCE7UhA1BYc09S7swba',
+    deleteFlag: 0,
+    role: 0,
+    updatedAt: '2025-04-14T09:10:25.372Z',
+    userId: 'f1798c43-4970-4399-be72-3cdde891bc53',
+    userName: 'test',
+    createdAt: '2025-04-11T07:54:20.072Z',
+    updatedBy: '64cb43c7-fc54-404e-82af-66b2dad315de',
+    email: 'test@gmail.com',
+    createdBy: '64cb43c7-fc54-404e-82af-66b2dad315de'
+  },
+  {
+    password: '$2b$10$Fk8hSSFK9yWlmyCSdMBkfuaPNnfBiNoeOxzJxnhMOkDbsyMq9v0JO',
+    active: 0,
+    deleteFlag: 0,
+    role: 0,
+    userId: '64cb43c7-fc54-404e-82af-66b2dad315de',
+    updatedAt: '2025-03-28T07:24:56.336Z',
+    userName: 'admin',
+    createdAt: '2025-03-28T07:24:56.336Z',
+    updatedBy: 'admin',
+    email: 'info-admin@gmail.com',
+    createdBy: 'admin'
+  }
+]
+[list-admin] 4:12:07 PM END RequestId: 92f2a10a-27d1-44f0-8a9b-73e0c3c71e39
+[list-admin] 4:12:07 PM REPORT RequestId: 92f2a10a-27d1-44f0-8a9b-73e0c3c71e39	Duration: 2344.97 ms	Billed Duration: 2345 ms	Memory Size: 512 MB	Max Memory Used: 322 MB
+[list-admin] 4:12:13 PM START RequestId: 16943b17-f029-45ca-8678-3b81d5d69b82 Version: $LATEST
+[list-admin] 4:12:13 PM 2025-04-14T09:12:13.102Z	16943b17-f029-45ca-8678-3b81d5d69b82	INFO	Query Parameters: { page: 1, pageSize: 5, query: undefined }
+[list-admin] 4:12:13 PM 2025-04-14T09:12:13.102Z	16943b17-f029-45ca-8678-3b81d5d69b82	INFO	Auth Header:  Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGNiNDNjNy1mYzU0LTQwNGUtODJhZi02NmIyZGFkMzE1ZGUiLCJpYXQiOjE3NDQ2MjE4MjEsImV4cCI6MTc0NDYyMjcyMX0.GoIJ4G6-jECTuR4-bnT5xLZ8VggNp11GaUtNcqDmn-s
+[list-admin] 4:12:13 PM 2025-04-14T09:12:13.563Z	16943b17-f029-45ca-8678-3b81d5d69b82	INFO	Authenticated User: {
+  password: '$2b$10$Fk8hSSFK9yWlmyCSdMBkfuaPNnfBiNoeOxzJxnhMOkDbsyMq9v0JO',
+  active: 0,
+  deleteFlag: 0,
+  role: 0,
+  userId: '64cb43c7-fc54-404e-82af-66b2dad315de',
+  updatedAt: '2025-03-28T07:24:56.336Z',
+  userName: 'admin',
+  createdAt: '2025-03-28T07:24:56.336Z',
+  updatedBy: 'admin',
+  email: 'info-admin@gmail.com',
+  createdBy: 'admin'
+}
+[list-admin] 4:12:13 PM 2025-04-14T09:12:13.563Z	16943b17-f029-45ca-8678-3b81d5d69b82	INFO	Retrieving list of Users
+[list-admin] 4:12:15 PM 2025-04-14T09:12:15.420Z	16943b17-f029-45ca-8678-3b81d5d69b82	INFO	Users successfully retrieved:  [
+  {
+    active: 0,
+    password: '$2b$10$pEHViNvlXG2yKomCmlxZDOwBvdsVvanw0BqCE7UhA1BYc09S7swba',
+    deleteFlag: 0,
+    role: 0,
+    updatedAt: '2025-04-14T09:10:25.372Z',
+    userId: 'f1798c43-4970-4399-be72-3cdde891bc53',
+    userName: 'test',
+    createdAt: '2025-04-11T07:54:20.072Z',
+    updatedBy: '64cb43c7-fc54-404e-82af-66b2dad315de',
+    email: 'test@gmail.com',
+    createdBy: '64cb43c7-fc54-404e-82af-66b2dad315de'
+  },
+  {
+    password: '$2b$10$Fk8hSSFK9yWlmyCSdMBkfuaPNnfBiNoeOxzJxnhMOkDbsyMq9v0JO',
+    active: 0,
+    deleteFlag: 0,
+    role: 0,
+    userId: '64cb43c7-fc54-404e-82af-66b2dad315de',
+    updatedAt: '2025-03-28T07:24:56.336Z',
+    userName: 'admin',
+    createdAt: '2025-03-28T07:24:56.336Z',
+    updatedBy: 'admin',
+    email: 'info-admin@gmail.com',
+    createdBy: 'admin'
+  }
+]
+[list-admin] 4:12:15 PM END RequestId: 16943b17-f029-45ca-8678-3b81d5d69b82
+[list-admin] 4:12:15 PM REPORT RequestId: 16943b17-f029-45ca-8678-3b81d5d69b82	Duration: 2320.79 ms	Billed Duration: 2321 ms	Memory Size: 512 MB	Max Memory Used: 322 MB
+[list-admin] 4:14:01 PM START RequestId: 70c95563-1358-4785-a457-8a63e2b3e4d0 Version: $LATEST
+[list-admin] 4:14:01 PM 2025-04-14T09:14:01.267Z	70c95563-1358-4785-a457-8a63e2b3e4d0	INFO	Query Parameters: { page: 1, pageSize: 10, query: undefined }
+[list-admin] 4:14:01 PM 2025-04-14T09:14:01.267Z	70c95563-1358-4785-a457-8a63e2b3e4d0	INFO	Auth Header:  Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGNiNDNjNy1mYzU0LTQwNGUtODJhZi02NmIyZGFkMzE1ZGUiLCJpYXQiOjE3NDQ2MjE4MjEsImV4cCI6MTc0NDYyMjcyMX0.GoIJ4G6-jECTuR4-bnT5xLZ8VggNp11GaUtNcqDmn-s
+[list-admin] 4:14:01 PM 2025-04-14T09:14:01.742Z	70c95563-1358-4785-a457-8a63e2b3e4d0	INFO	Authenticated User: {
+  password: '$2b$10$Fk8hSSFK9yWlmyCSdMBkfuaPNnfBiNoeOxzJxnhMOkDbsyMq9v0JO',
+  active: 0,
+  deleteFlag: 0,
+  role: 0,
+  userId: '64cb43c7-fc54-404e-82af-66b2dad315de',
+  updatedAt: '2025-03-28T07:24:56.336Z',
+  userName: 'admin',
+  createdAt: '2025-03-28T07:24:56.336Z',
+  updatedBy: 'admin',
+  email: 'info-admin@gmail.com',
+  createdBy: 'admin'
+}
+[list-admin] 4:14:01 PM 2025-04-14T09:14:01.743Z	70c95563-1358-4785-a457-8a63e2b3e4d0	INFO	Retrieving list of Users
+[list-admin] 4:14:03 PM 2025-04-14T09:14:03.162Z	70c95563-1358-4785-a457-8a63e2b3e4d0	INFO	Users successfully retrieved:  [
+  {
+    active: 0,
+    password: '$2b$10$pEHViNvlXG2yKomCmlxZDOwBvdsVvanw0BqCE7UhA1BYc09S7swba',
+    deleteFlag: 0,
+    role: 0,
+    updatedAt: '2025-04-14T09:10:25.372Z',
+    userId: 'f1798c43-4970-4399-be72-3cdde891bc53',
+    userName: 'test',
+    createdAt: '2025-04-11T07:54:20.072Z',
+    updatedBy: '64cb43c7-fc54-404e-82af-66b2dad315de',
+    email: 'test@gmail.com',
+    createdBy: '64cb43c7-fc54-404e-82af-66b2dad315de'
+  },
+  {
+    password: '$2b$10$Fk8hSSFK9yWlmyCSdMBkfuaPNnfBiNoeOxzJxnhMOkDbsyMq9v0JO',
+    active: 0,
+    deleteFlag: 0,
+    role: 0,
+    userId: '64cb43c7-fc54-404e-82af-66b2dad315de',
+    updatedAt: '2025-03-28T07:24:56.336Z',
+    userName: 'admin',
+    createdAt: '2025-03-28T07:24:56.336Z',
+    updatedBy: 'admin',
+    email: 'info-admin@gmail.com',
+    createdBy: 'admin'
+  },
+  {
+    active: 0,
+    password: '$2b$10$2dsYpkVzS0oiGRMaWM/YDuN1PHDNNFDo.N2jv0uPfR5JRtPwMrcnK',
+    deleteFlag: 0,
+    role: 0,
+    updatedAt: '2025-04-04T08:23:45.372Z',
+    userId: 'd84c7df7-0be3-47a6-9e2c-4765b8b19fee',
+    userName: 'minh333',
+    createdAt: '2025-04-04T08:14:35.686Z',
+    updatedBy: '64cb43c7-fc54-404e-82af-66b2dad315de',
+    email: 'test@gmail.com',
+    createdBy: '64cb43c7-fc54-404e-82af-66b2dad315de'
+  },
+  {
+    password: '$2b$10$ZD9A.Sh40y3Jiz5R48482.XW8V7F53hagc0bUT4GrhEJyJfupw9VC',
+    active: 0,
+    deleteFlag: 0,
+    role: 0,
+    userId: 'e9635760-d6d9-4c58-8d23-4ceff2b093d3',
+    updatedAt: '',
+    userName: 'test',
+    createdAt: '2025-04-11T06:55:27.522Z',
+    updatedBy: '',
+    email: 'info-admin@gmail.com',
+    createdBy: '64cb43c7-fc54-404e-82af-66b2dad315de'
+  },
+  {
+    password: '$2b$10$P0GoA4j7aICx2jwwEyALbug.tRRnRycPe/5WHmtlRo80kiojiq/g.',
+    active: 0,
+    deleteFlag: 0,
+    role: 0,
+    userId: 'd521bb43-15ca-4eb6-b0e8-a938734e29b8',
+    updatedAt: '',
+    userName: 'test',
+    createdAt: '2025-04-04T02:56:06.742Z',
+    updatedBy: '',
+    email: 'test@gmail.com',
+    createdBy: '64cb43c7-fc54-404e-82af-66b2dad315de'
+  }
+]
+[list-admin] 4:14:03 PM END RequestId: 70c95563-1358-4785-a457-8a63e2b3e4d0
+[list-admin] 4:14:03 PM REPORT RequestId: 70c95563-1358-4785-a457-8a63e2b3e4d0	Duration: 1897.86 ms	Billed Duration: 1898 ms	Memory Size: 512 MB	Max Memory Used: 322 MB
+[get-meeting-by-tourid] 4:21:00 PM INIT_START Runtime Version: nodejs:18.v63	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:ad007b64e69135315cba0d95ed797867707d928d1128edf4fa17a926a71f1718
+[get-meeting-by-tourid] 4:21:01 PM START RequestId: aeb26724-d373-4cec-83eb-6c3aa5ecda0a Version: $LATEST
+[get-meeting-by-tourid] 4:21:01 PM 2025-04-14T09:21:01.199Z	aeb26724-d373-4cec-83eb-6c3aa5ecda0a	INFO	Retrieving tour with tourId:  17761f15-d360-44fc-93d3-cc3ff6787dff
+[get-meeting-by-tourid] 4:21:01 PM 2025-04-14T09:21:01.797Z	aeb26724-d373-4cec-83eb-6c3aa5ecda0a	INFO	Tour successfully retrieved:  {
+  planningSalesOfficeName: '',
+  tourNumber: 'Tour003',
+  otherRemarks: 'allChat',
+  updatedBy: '',
+  createdBy: '64cb43c7-fc54-404e-82af-66b2dad315de',
+  planningSalesOfficeTeamName: '',
+  qrCodeDestination: '',
+  meetingId: 'eb988405-3f52-440c-858c-0f49185f4804',
+  departureDate: '2025-04-10',
+  contactPersonName: '',
+  numberOfTransmitters: '',
+  phoneNumberCustomer: '',
+  numberOfDevices: '',
+  acceptanceDate: '',
+  createdAt: '2025-04-10T04:27:01.641Z',
+  planningOfficeName: '',
+  contactPersonEmail: '',
+  emailCustomer: '',
+  returnDate: '2025-04-18',
+  deleteFlag: 0,
+  channelId: '46622e34-88d5-497e-9b21-d982b000a1ff',
+  chatRestriction: 'allChat',
+  processingNumber: '0001',
+  tourName: 'Tour001',
+  updatedAt: '',
+  tourId: '17761f15-d360-44fc-93d3-cc3ff6787dff'
+}
+[get-meeting-by-tourid] 4:21:01 PM END RequestId: aeb26724-d373-4cec-83eb-6c3aa5ecda0a
+[get-meeting-by-tourid] 4:21:01 PM REPORT RequestId: aeb26724-d373-4cec-83eb-6c3aa5ecda0a	Duration: 623.62 ms	Billed Duration: 624 ms	Memory Size: 512 MB	Max Memory Used: 316 MB	Init Duration: 903.63 ms
+[create-attendee] 4:21:05 PM INIT_START Runtime Version: nodejs:18.v63	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:ad007b64e69135315cba0d95ed797867707d928d1128edf4fa17a926a71f1718
+[create-attendee] 4:21:06 PM START RequestId: 0776ef56-4ffa-42d4-bda1-603a8c06b419 Version: $LATEST
+[create-attendee] 4:21:06 PM 2025-04-14T09:21:06.882Z	0776ef56-4ffa-42d4-bda1-603a8c06b419	INFO	Creating attendee with meetingId:  eb988405-3f52-440c-858c-0f49185f4804 externalUserId:  User|1744622464759
+[check-auth] 4:20:59 PM INIT_START Runtime Version: nodejs:18.v63	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:ad007b64e69135315cba0d95ed797867707d928d1128edf4fa17a926a71f1718
+[check-auth] 4:21:00 PM START RequestId: 080ea4d4-9bbd-4e9b-9f39-a38ee8078618 Version: $LATEST
+[check-auth] 4:21:00 PM 2025-04-14T09:21:00.273Z	080ea4d4-9bbd-4e9b-9f39-a38ee8078618	INFO	Token (cleaned):  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGNiNDNjNy1mYzU0LTQwNGUtODJhZi02NmIyZGFkMzE1ZGUiLCJpYXQiOjE3NDQ2MjE4MjEsImV4cCI6MTc0NDYyMjcyMX0.GoIJ4G6-jECTuR4-bnT5xLZ8VggNp11GaUtNcqDmn-s
+[check-auth] 4:21:00 PM 2025-04-14T09:21:00.274Z	080ea4d4-9bbd-4e9b-9f39-a38ee8078618	INFO	Verifying token... a5e3696b23ce9b6e96af822f26b757d52c64b9a8e29351b9fee039dfb2d35600
+[check-auth] 4:21:00 PM 2025-04-14T09:21:00.292Z	080ea4d4-9bbd-4e9b-9f39-a38ee8078618	INFO	userId:  64cb43c7-fc54-404e-82af-66b2dad315de
+[check-auth] 4:21:00 PM 2025-04-14T09:21:00.856Z	080ea4d4-9bbd-4e9b-9f39-a38ee8078618	INFO	DynamoDB result:  {
+  Items: [
+    {
+      password: '$2b$10$Fk8hSSFK9yWlmyCSdMBkfuaPNnfBiNoeOxzJxnhMOkDbsyMq9v0JO',
+      active: 0,
+      deleteFlag: 0,
+      role: 0,
+      userId: '64cb43c7-fc54-404e-82af-66b2dad315de',
+      updatedAt: '2025-03-28T07:24:56.336Z',
+      userName: 'admin',
+      createdAt: '2025-03-28T07:24:56.336Z',
+      updatedBy: 'admin',
+      email: 'info-admin@gmail.com',
+      createdBy: 'admin'
+    }
+  ],
+  Count: 1,
+  ScannedCount: 1
+}
+[check-auth] 4:21:00 PM END RequestId: 080ea4d4-9bbd-4e9b-9f39-a38ee8078618
+[check-auth] 4:21:00 PM REPORT RequestId: 080ea4d4-9bbd-4e9b-9f39-a38ee8078618	Duration: 606.78 ms	Billed Duration: 607 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 901.19 ms
+[get-meeting] 4:21:03 PM INIT_START Runtime Version: nodejs:18.v63	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:ad007b64e69135315cba0d95ed797867707d928d1128edf4fa17a926a71f1718
+[get-meeting] 4:21:03 PM START RequestId: 548d482c-cb38-48bf-88f1-6fee30d74df1 Version: $LATEST
+[get-meeting] 4:21:03 PM 2025-04-14T09:21:03.924Z	548d482c-cb38-48bf-88f1-6fee30d74df1	INFO	Getting meeting with meetingId:  eb988405-3f52-440c-858c-0f49185f4804
+[get-meeting] 4:21:04 PM 2025-04-14T09:21:04.625Z	548d482c-cb38-48bf-88f1-6fee30d74df1	INFO	Get Meeting Response:  eb988405-3f52-440c-858c-0f49185f4804
+[get-meeting] 4:21:04 PM END RequestId: 548d482c-cb38-48bf-88f1-6fee30d74df1
+[get-meeting] 4:21:04 PM REPORT RequestId: 548d482c-cb38-48bf-88f1-6fee30d74df1	Duration: 715.97 ms	Billed Duration: 716 ms	Memory Size: 512 MB	Max Memory Used: 316 MB	Init Duration: 885.90 ms
+[get-meeting] 4:21:05 PM START RequestId: de52fa56-dcf9-4132-bc38-69002060bd8f Version: $LATEST
+[get-meeting] 4:21:05 PM 2025-04-14T09:21:05.573Z	de52fa56-dcf9-4132-bc38-69002060bd8f	INFO	Getting meeting with meetingId:  eb988405-3f52-440c-858c-0f49185f4804
+[get-meeting] 4:21:06 PM 2025-04-14T09:21:06.211Z	de52fa56-dcf9-4132-bc38-69002060bd8f	INFO	Get Meeting Response:  eb988405-3f52-440c-858c-0f49185f4804
+[get-meeting] 4:21:06 PM END RequestId: de52fa56-dcf9-4132-bc38-69002060bd8f
+[get-meeting] 4:21:06 PM REPORT RequestId: de52fa56-dcf9-4132-bc38-69002060bd8f	Duration: 641.07 ms	Billed Duration: 642 ms	Memory Size: 512 MB	Max Memory Used: 316 MB
+[create-attendee] 4:21:07 PM INIT_START Runtime Version: nodejs:18.v63	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:ad007b64e69135315cba0d95ed797867707d928d1128edf4fa17a926a71f1718
+[create-attendee] 4:21:08 PM START RequestId: 54b0fee4-21c0-4b0c-a57a-a445ec7e6608 Version: $LATEST
+[create-attendee] 4:21:08 PM 2025-04-14T09:21:08.035Z	54b0fee4-21c0-4b0c-a57a-a445ec7e6608	INFO	Creating attendee with meetingId:  eb988405-3f52-440c-858c-0f49185f4804 externalUserId:  User|1744622466351
+[create-attendee] 4:21:08 PM 2025-04-14T09:21:08.747Z	54b0fee4-21c0-4b0c-a57a-a445ec7e6608	INFO	Created Attendee Response:  ef7dc9db-dc54-a7b6-6392-63181c26eb38
+[create-attendee] 4:21:08 PM END RequestId: 54b0fee4-21c0-4b0c-a57a-a445ec7e6608
+[create-attendee] 4:21:08 PM REPORT RequestId: 54b0fee4-21c0-4b0c-a57a-a445ec7e6608	Duration: 735.70 ms	Billed Duration: 736 ms	Memory Size: 512 MB	Max Memory Used: 316 MB	Init Duration: 920.60 ms
+[list-attendee] 4:21:08 PM INIT_START Runtime Version: nodejs:18.v63	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:ad007b64e69135315cba0d95ed797867707d928d1128edf4fa17a926a71f1718
+[list-attendee] 4:21:09 PM START RequestId: 3e992176-ddc2-4192-bd8c-a51d783e314a Version: $LATEST
+[list-attendee] 4:21:09 PM 2025-04-14T09:21:09.215Z	3e992176-ddc2-4192-bd8c-a51d783e314a	INFO	List Attendees with meetingId:  eb988405-3f52-440c-858c-0f49185f4804
+[list-attendee] 4:21:09 PM 2025-04-14T09:21:09.935Z	3e992176-ddc2-4192-bd8c-a51d783e314a	INFO	Current batch size: 5
+[list-attendee] 4:21:09 PM 2025-04-14T09:21:09.936Z	3e992176-ddc2-4192-bd8c-a51d783e314a	INFO	Total attendees count: 5
+[list-attendee] 4:21:09 PM 2025-04-14T09:21:09.936Z	3e992176-ddc2-4192-bd8c-a51d783e314a	INFO	List attendees: [
+  {
+    ExternalUserId: 'Guide|1744621989771',
+    AttendeeId: '5429a9e3-67b1-2f2f-2af5-48321b9e5b4b',
+    JoinToken: 'NTQyOWE5ZTMtNjdiMS0yZjJmLTJhZjUtNDgzMjFiOWU1YjRiOjJiYzI2YTgyLTUyZjktNDBhYi04MDUwLTYwY2QxM2Q5NTExMA',
+    Capabilities: { Audio: 'SendReceive', Video: 'None', Content: 'None' }
+  },
+  {
+    ExternalUserId: 'User|1744622068276',
+    AttendeeId: 'ac0a6344-40a9-0013-9e14-e2b5533c53bc',
+    JoinToken: 'YWMwYTYzNDQtNDBhOS0wMDEzLTllMTQtZTJiNTUzM2M1M2JjOmU2NjBhMThhLTY1N2UtNGUwNC05Y2E5LTk5MGJkMjhiNDViOA',
+    Capabilities: { Audio: 'SendReceive', Video: 'None', Content: 'None' }
+  },
+  {
+    ExternalUserId: 'User|1744622464759',
+    AttendeeId: 'ac9f9abc-f679-50d2-d21e-6b3c3d9c6a87',
+    JoinToken: 'YWM5ZjlhYmMtZjY3OS01MGQyLWQyMWUtNmIzYzNkOWM2YTg3OjM0MTQ4ZDc4LThlMDctNGEzYy04YTQ3LThmYTA2YTQ4YjM3ZA',
+    Capabilities: { Audio: 'SendReceive', Video: 'None', Content: 'None' }
+  },
+  {
+    ExternalUserId: 'Sub-Guide|1744622425232',
+    AttendeeId: 'e36f628d-ce42-a05c-73ea-ca17154a4d71',
+    JoinToken: 'ZTM2ZjYyOGQtY2U0Mi1hMDVjLTczZWEtY2ExNzE1NGE0ZDcxOmRmOGFhYzQ2LWFmNjEtNDdlYy04MmFjLWM3YzFlOTJkMzEzNg',
+    Capabilities: { Audio: 'SendReceive', Video: 'None', Content: 'None' }
+  },
+  {
+    ExternalUserId: 'User|1744622466351',
+    AttendeeId: 'ef7dc9db-dc54-a7b6-6392-63181c26eb38',
+    JoinToken: 'ZWY3ZGM5ZGItZGM1NC1hN2I2LTYzOTItNjMxODFjMjZlYjM4Ojg5NjcyNTMxLTVmNDEtNGY2Ny1iYzY2LTU4MmM2MGFhNWFiMQ',
+    Capabilities: { Audio: 'SendReceive', Video: 'None', Content: 'None' }
+  }
+]
+[list-attendee] 4:21:09 PM END RequestId: 3e992176-ddc2-4192-bd8c-a51d783e314a
+[list-attendee] 4:21:09 PM REPORT RequestId: 3e992176-ddc2-4192-bd8c-a51d783e314a	Duration: 731.20 ms	Billed Duration: 732 ms	Memory Size: 512 MB	Max Memory Used: 316 MB	Init Duration: 962.74 ms
+[get-meeting-by-tourid] 4:21:04 PM START RequestId: 7dd260c8-4b3d-4398-a511-53b450e90bad Version: $LATEST
+[get-meeting-by-tourid] 4:21:04 PM 2025-04-14T09:21:04.343Z	7dd260c8-4b3d-4398-a511-53b450e90bad	INFO	Retrieving tour with tourId:  17761f15-d360-44fc-93d3-cc3ff6787dff
+[get-meeting-by-tourid] 4:21:04 PM 2025-04-14T09:21:04.804Z	7dd260c8-4b3d-4398-a511-53b450e90bad	INFO	Tour successfully retrieved:  {
+  planningSalesOfficeName: '',
+  tourNumber: 'Tour003',
+  otherRemarks: 'allChat',
+  updatedBy: '',
+  createdBy: '64cb43c7-fc54-404e-82af-66b2dad315de',
+  planningSalesOfficeTeamName: '',
+  qrCodeDestination: '',
+  meetingId: 'eb988405-3f52-440c-858c-0f49185f4804',
+  departureDate: '2025-04-10',
+  contactPersonName: '',
+  numberOfTransmitters: '',
+  phoneNumberCustomer: '',
+  numberOfDevices: '',
+  acceptanceDate: '',
+  createdAt: '2025-04-10T04:27:01.641Z',
+  planningOfficeName: '',
+  contactPersonEmail: '',
+  emailCustomer: '',
+  returnDate: '2025-04-18',
+  deleteFlag: 0,
+  channelId: '46622e34-88d5-497e-9b21-d982b000a1ff',
+  chatRestriction: 'allChat',
+  processingNumber: '0001',
+  tourName: 'Tour001',
+  updatedAt: '',
+  tourId: '17761f15-d360-44fc-93d3-cc3ff6787dff'
+}
+[get-meeting-by-tourid] 4:21:04 PM END RequestId: 7dd260c8-4b3d-4398-a511-53b450e90bad
+[get-meeting-by-tourid] 4:21:04 PM REPORT RequestId: 7dd260c8-4b3d-4398-a511-53b450e90bad	Duration: 464.69 ms	Billed Duration: 465 ms	Memory Size: 512 MB	Max Memory Used: 316 MB
+[create-app-instance-user] 4:21:11 PM INIT_START Runtime Version: nodejs:18.v63	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:ad007b64e69135315cba0d95ed797867707d928d1128edf4fa17a926a71f1718
+[create-app-instance-user] 4:21:12 PM START RequestId: 4fefbe64-1a2e-48e9-9043-be49098aea15 Version: $LATEST
+[create-app-instance-user] 4:21:12 PM 2025-04-14T09:21:12.697Z	4fefbe64-1a2e-48e9-9043-be49098aea15	INFO	Creating App Instance User with appInstanceArn:  arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0 appInstanceUserId:  1d827e67-3fbc-4879-8960-0a973e6e9cf0 clientRequestToken:  cc997539-fbe8-48a4-ad76-efe36baed0fc name:  User2 expirationCriterion:  CREATED_TIMESTAMP expirationDays:  1
+[create-app-instance-user] 4:21:12 PM 2025-04-14T09:21:12.883Z	4fefbe64-1a2e-48e9-9043-be49098aea15	INFO	Created App Instance User Response:  arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0/user/1d827e67-3fbc-4879-8960-0a973e6e9cf0
+[create-app-instance-user] 4:21:12 PM END RequestId: 4fefbe64-1a2e-48e9-9043-be49098aea15
+[create-app-instance-user] 4:21:12 PM REPORT RequestId: 4fefbe64-1a2e-48e9-9043-be49098aea15	Duration: 215.38 ms	Billed Duration: 216 ms	Memory Size: 512 MB	Max Memory Used: 316 MB	Init Duration: 936.01 ms
+[add-channel-membership] 4:21:14 PM INIT_START Runtime Version: nodejs:18.v63	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:ad007b64e69135315cba0d95ed797867707d928d1128edf4fa17a926a71f1718
+[add-channel-membership] 4:21:15 PM START RequestId: 76ba21ee-5cfe-4a27-bd1f-7fcf86280527 Version: $LATEST
+[add-channel-membership] 4:21:15 PM 2025-04-14T09:21:15.639Z	76ba21ee-5cfe-4a27-bd1f-7fcf86280527	INFO	Creating Channel Membership with channelArn:  arn%3Aaws%3Achime%3Aus-east-1%3A647755634525%3Aapp-instance%2F1007fa5f-d281-43e6-ac7d-758a23201cc0%2Fchannel%2F46622e34-88d5-497e-9b21-d982b000a1ff memberArn:  arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0/user/cd57f223-2b18-4488-a488-d4c43b8448fe type: DEFAULT chimeBearer:  arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0/user/cd57f223-2b18-4488-a488-d4c43b8448fe
+[add-channel-membership] 4:21:15 PM 2025-04-14T09:21:15.848Z	76ba21ee-5cfe-4a27-bd1f-7fcf86280527	INFO	Created Channel Membership Response:  {
+  ChannelArn: 'arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0/channel/46622e34-88d5-497e-9b21-d982b000a1ff',
+  Member: {
+    Arn: 'arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0/user/cd57f223-2b18-4488-a488-d4c43b8448fe',
+    Name: 'User3'
+  },
+  SubChannelId: null
+}
+[add-channel-membership] 4:21:15 PM END RequestId: 76ba21ee-5cfe-4a27-bd1f-7fcf86280527
+[add-channel-membership] 4:21:15 PM REPORT RequestId: 76ba21ee-5cfe-4a27-bd1f-7fcf86280527	Duration: 236.81 ms	Billed Duration: 237 ms	Memory Size: 512 MB	Max Memory Used: 316 MB	Init Duration: 909.23 ms
+[list-attendee] 4:21:10 PM START RequestId: 51dcadd0-a962-4cae-a2c8-cf28ade1378b Version: $LATEST
+[list-attendee] 4:21:10 PM 2025-04-14T09:21:10.090Z	51dcadd0-a962-4cae-a2c8-cf28ade1378b	INFO	List Attendees with meetingId:  eb988405-3f52-440c-858c-0f49185f4804
+[list-attendee] 4:21:10 PM 2025-04-14T09:21:10.806Z	51dcadd0-a962-4cae-a2c8-cf28ade1378b	INFO	Current batch size: 5
+[list-attendee] 4:21:10 PM 2025-04-14T09:21:10.807Z	51dcadd0-a962-4cae-a2c8-cf28ade1378b	INFO	Total attendees count: 5
+[list-attendee] 4:21:10 PM 2025-04-14T09:21:10.807Z	51dcadd0-a962-4cae-a2c8-cf28ade1378b	INFO	List attendees: [
+  {
+    ExternalUserId: 'Guide|1744621989771',
+    AttendeeId: '5429a9e3-67b1-2f2f-2af5-48321b9e5b4b',
+    JoinToken: 'NTQyOWE5ZTMtNjdiMS0yZjJmLTJhZjUtNDgzMjFiOWU1YjRiOjJiYzI2YTgyLTUyZjktNDBhYi04MDUwLTYwY2QxM2Q5NTExMA',
+    Capabilities: { Audio: 'SendReceive', Video: 'None', Content: 'None' }
+  },
+  {
+    ExternalUserId: 'User|1744622068276',
+    AttendeeId: 'ac0a6344-40a9-0013-9e14-e2b5533c53bc',
+    JoinToken: 'YWMwYTYzNDQtNDBhOS0wMDEzLTllMTQtZTJiNTUzM2M1M2JjOmU2NjBhMThhLTY1N2UtNGUwNC05Y2E5LTk5MGJkMjhiNDViOA',
+    Capabilities: { Audio: 'SendReceive', Video: 'None', Content: 'None' }
+  },
+  {
+    ExternalUserId: 'User|1744622464759',
+    AttendeeId: 'ac9f9abc-f679-50d2-d21e-6b3c3d9c6a87',
+    JoinToken: 'YWM5ZjlhYmMtZjY3OS01MGQyLWQyMWUtNmIzYzNkOWM2YTg3OjM0MTQ4ZDc4LThlMDctNGEzYy04YTQ3LThmYTA2YTQ4YjM3ZA',
+    Capabilities: { Audio: 'SendReceive', Video: 'None', Content: 'None' }
+  },
+  {
+    ExternalUserId: 'Sub-Guide|1744622425232',
+    AttendeeId: 'e36f628d-ce42-a05c-73ea-ca17154a4d71',
+    JoinToken: 'ZTM2ZjYyOGQtY2U0Mi1hMDVjLTczZWEtY2ExNzE1NGE0ZDcxOmRmOGFhYzQ2LWFmNjEtNDdlYy04MmFjLWM3YzFlOTJkMzEzNg',
+    Capabilities: { Audio: 'SendReceive', Video: 'None', Content: 'None' }
+  },
+  {
+    ExternalUserId: 'User|1744622466351',
+    AttendeeId: 'ef7dc9db-dc54-a7b6-6392-63181c26eb38',
+    JoinToken: 'ZWY3ZGM5ZGItZGM1NC1hN2I2LTYzOTItNjMxODFjMjZlYjM4Ojg5NjcyNTMxLTVmNDEtNGY2Ny1iYzY2LTU4MmM2MGFhNWFiMQ',
+    Capabilities: { Audio: 'SendReceive', Video: 'None', Content: 'None' }
+  }
+]
+[list-attendee] 4:21:10 PM END RequestId: 51dcadd0-a962-4cae-a2c8-cf28ade1378b
+[list-attendee] 4:21:10 PM REPORT RequestId: 51dcadd0-a962-4cae-a2c8-cf28ade1378b	Duration: 734.73 ms	Billed Duration: 735 ms	Memory Size: 512 MB	Max Memory Used: 316 MB	Init Duration: 918.39 ms
+[create-app-instance-user] 4:21:12 PM 2025-04-14T09:21:12.899Z	619bc666-59fc-411c-ad73-45fde1c9e164	INFO	Created App Instance User Response:  arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0/user/cd57f223-2b18-4488-a488-d4c43b8448fe
+[create-app-instance-user] 4:21:12 PM END RequestId: 619bc666-59fc-411c-ad73-45fde1c9e164
+[create-app-instance-user] 4:21:12 PM REPORT RequestId: 619bc666-59fc-411c-ad73-45fde1c9e164	Duration: 197.16 ms	Billed Duration: 198 ms	Memory Size: 512 MB	Max Memory Used: 316 MB	Init Duration: 926.16 ms
+[refresh-token] 4:32:30 PM INIT_START Runtime Version: nodejs:18.v63	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:ad007b64e69135315cba0d95ed797867707d928d1128edf4fa17a926a71f1718
+[refresh-token] 4:32:31 PM START RequestId: 0c53406c-6482-459f-8c41-66eebf5b95ba Version: $LATEST
+[refresh-token] 4:32:31 PM 2025-04-14T09:32:31.041Z	0c53406c-6482-459f-8c41-66eebf5b95ba	INFO	Refresh Token (cleaned):  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGNiNDNjNy1mYzU0LTQwNGUtODJhZi02NmIyZGFkMzE1ZGUiLCJpYXQiOjE3NDQ2MTc0NDcsImV4cCI6MTc0NTIyMjI0N30.gaA_ohTlND0_3fmeA_mfZ-vSADBeQwYJS7da_roLfjE
+[refresh-token] 4:32:31 PM 2025-04-14T09:32:31.058Z	0c53406c-6482-459f-8c41-66eebf5b95ba	INFO	Decoded refresh token:  {
+  userId: '64cb43c7-fc54-404e-82af-66b2dad315de',
+  iat: 1744617447,
+  exp: 1745222247
+}
+[refresh-token] 4:32:31 PM 2025-04-14T09:32:31.060Z	0c53406c-6482-459f-8c41-66eebf5b95ba	INFO	Extracted userId:  64cb43c7-fc54-404e-82af-66b2dad315de
+[refresh-token] 4:32:31 PM 2025-04-14T09:32:31.658Z	0c53406c-6482-459f-8c41-66eebf5b95ba	INFO	DynamoDB query result:  {
+  Items: [
+    {
+      password: '$2b$10$Fk8hSSFK9yWlmyCSdMBkfuaPNnfBiNoeOxzJxnhMOkDbsyMq9v0JO',
+      active: 0,
+      deleteFlag: 0,
+      role: 0,
+      userId: '64cb43c7-fc54-404e-82af-66b2dad315de',
+      updatedAt: '2025-03-28T07:24:56.336Z',
+      userName: 'admin',
+      createdAt: '2025-03-28T07:24:56.336Z',
+      updatedBy: 'admin',
+      email: 'info-admin@gmail.com',
+      createdBy: 'admin'
+    }
+  ],
+  Count: 1,
+  ScannedCount: 1
+}
+[refresh-token] 4:32:31 PM END RequestId: 0c53406c-6482-459f-8c41-66eebf5b95ba
+[refresh-token] 4:32:31 PM REPORT RequestId: 0c53406c-6482-459f-8c41-66eebf5b95ba	Duration: 649.87 ms	Billed Duration: 650 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 1020.01 ms

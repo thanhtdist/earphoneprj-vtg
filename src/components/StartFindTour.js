@@ -1,38 +1,58 @@
-import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
-import '../styles/StartMainGuide.css';
+import React, { 
+    //useState 
+} from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
+// import '../styles/StartFindTour.css';
 import Header from './Header';
+
 const StartFindTour = () => {
-    const { t } = useTranslation();
-    const [chatSetting, setChatSetting] = useState('guideOnly');
-    const handleChatSettingChange = (e) => {
-        setChatSetting(e.target.value);
-      };
-    const navigate = useNavigate();
-    const handleClick = () => {
-        navigate(`/guide?chatSetting=${chatSetting}`);
-    }
+    // const [tourNumber, setTourNumber] = useState('');
+    // const [departureDate, setDepartureDate] = useState('');
+
+    // const handleTourNumberChange = (e) => setTourNumber(e.target.value);
+    // const handleDateChange = (e) => setDepartureDate(e.target.value);
+    // const handleDisplayClick = () => {
+    //     alert(`Tour Number: ${tourNumber}, Departure Date: ${departureDate}`);
+    // };
+
     return (
         <>
-        <Header/>
-            <div className='chat-setting-container'>
-                <div>
-                    <p style={{textAlign:'center', fontWeight:'700',fontSize:'20px'}}>{t('chatSettingLbl')}</p>
+            <Header />
+            <div className="container">
+                <div className="row justify-content-center">
+                    <div className="col-12">
+                        <div className="">
+                            <h3 className="text-center text-danger mb-4">ガイド専用ページ</h3>
+                            <form>
+                                <div className="mb-3">
+                                    <label htmlFor="tourNumber" className="form-label">
+                                        ツアー番号
+                                    </label>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        id="tourNumber"
+                                        placeholder="ツアー番号"
+                                    />
+                                </div>
+                                <div className="mb-3">
+                                    <label htmlFor="departureDate" className="form-label">
+                                        出発日
+                                    </label>
+                                    <input
+                                        type="date"
+                                        className="form-control"
+                                        id="departureDate"
+                                    />
+                                </div>
+                                <button type="submit" className="btn btn-danger w-100">
+                                    表示
+                                </button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
-                <div className='selected'> 
-                    <select className='selectFile' style={{border:"1px solid #C60226"}} value={chatSetting} onChange={handleChatSettingChange}>
-                        <option value="allChat">{t('chatSettingOptions.allChat')}</option>
-                        <option value="guideOnly">{t('chatSettingOptions.onlyGuideChat')}</option>
-                        <option value="nochat">{t('chatSettingOptions.noChat')}</option>
-                    </select>
-                </div>
-                <div className='btn-chat-setting'>                
-                    <button className="btn-confirm"  onClick={handleClick}>{t('startGuidePage.startBtn')}</button>
-                        
-               </div>
             </div>
-
         </>
     );
 };
