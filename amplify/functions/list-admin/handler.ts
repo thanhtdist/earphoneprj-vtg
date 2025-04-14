@@ -49,7 +49,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       result = await dynamoDB.scan({
         TableName: "Users",
         Limit: pageSize,
-        ExclusiveStartKey,
+        // ExclusiveStartKey,
         FilterExpression: 'deleteFlag = :deleteFlag AND contains(#userName, :query)',
         ExpressionAttributeNames: {
           '#userName': 'userName',
@@ -63,7 +63,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       result = await dynamoDB.scan({
         TableName: "Users",
         Limit: pageSize,
-        ExclusiveStartKey,
+        // ExclusiveStartKey,
         FilterExpression: "deleteFlag = :deleteFlag",
         ExpressionAttributeValues: {
           ":deleteFlag": 0,

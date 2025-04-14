@@ -84,7 +84,7 @@ function Header({ tourId, count = null, userType = null }) {
                                         <div className="qrCodeContent">
                                             <QRCodeSVG value={`${Config.appSubGuideURL}/${tourId}`} size={256} level="H" />
                                         </div>
-                                        <div style={{ textAlign: "center" }}>
+                                        <div style={{ textAlign: "center", fontWeight: "bold"  }}>
                                             <a style={{ display: "unset" }} className='link' target="_blank" rel="noopener noreferrer"
                                                 href={`${Config.appSubGuideURL}/${tourId}`}
                                             >
@@ -103,7 +103,7 @@ function Header({ tourId, count = null, userType = null }) {
                                         <div className="qrCodeContent">
                                             <QRCodeSVG value={`${Config.appViewerURL}/${tourId}`} size={256} level="H" />
                                         </div>
-                                        <div style={{ textAlign: "center" }}>
+                                        <div style={{ textAlign: "center" , fontWeight: "bold" }}>
                                             <a style={{ display: "unset" }} className='link' target="_blank" rel="noopener noreferrer"
                                                 href={`${Config.appViewerURL}/${tourId}`}
                                             >
