@@ -15,6 +15,20 @@ const GuideTourConfirm = ({ tour }) => {
               {t('pageTitles.guide')}
             </span>
           </div>
+          {tour?.meetingId && (
+            <div className="text-center mb-4"
+              style={{
+                color: "#C60226",
+                background: "#C602260D"
+              }}>
+              <img
+                src="/images/exclamation-circle-fill.svg"
+                alt="Exclamation Icon"
+                style={{ width: "1.5rem", marginRight: "0.5rem" }}
+              />
+              <strong>現在、既に参加しているガイドがいます</strong>
+            </div>
+          )}
 
           <div className="mb-3">
             <h5 className="fw-bold">{t('startGuidePage.tourName')}</h5>

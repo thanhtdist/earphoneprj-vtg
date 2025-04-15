@@ -79,7 +79,6 @@ const StartFindTour = () => {
                                         type="text"
                                         className="form-control"
                                         id="tourNumber"
-                                        placeholder="ツアー番号"
                                         {...register('tourNumber', { required: true })}
                                     />
                                     {errors.tourNumber && (
