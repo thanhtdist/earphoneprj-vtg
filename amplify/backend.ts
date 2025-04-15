@@ -37,7 +37,7 @@ import { checkAuth } from './functions/check-auth/resource';
 import { activeAdmin } from './functions/active-admin/resource';
 import { refreshToken } from './functions/refresh-token/resource';
 import { getMeetingByTourId } from './functions/get-meeting-by-tourid/resource';
-import { getTourByNameAndDate } from './functions/get-tour-by-name-and-date/resource';
+import { getTourByNumberAndDate } from './functions/get-tour-by-number-and-date/resource';
 import { updateMeetingByTourId } from './functions/update-meeting-by-tourid/resource'
 
 /**
@@ -75,7 +75,7 @@ const backend = defineBackend({
   refreshToken, // refresh token by the admin
   getMeetingByTourId, // get meeting by tourID
   updateMeetingByTourId,
-  getTourByNameAndDate
+  getTourByNumberAndDate
 });
 
 /**
@@ -285,7 +285,7 @@ tourPath.addMethod("GET", new LambdaIntegration(
 const tourFindNamDatePath = tourPath.addResource("find");
 // add GET method to /tours/find with getTour Lambda integration
 tourFindNamDatePath.addMethod("POST", new LambdaIntegration(
-  backend.getTourByNameAndDate.resources.lambda
+  backend.getTourByNumberAndDate.resources.lambda
 ));
 
 // add batch tour creation endpoint

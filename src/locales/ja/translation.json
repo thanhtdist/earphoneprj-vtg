@@ -57,6 +57,16 @@
     "subGuide": "サブガイド専用ページ"
   },
   "startGuidePage": {
+    "tourNumber": "ツアー番号",
+    "startDate": "出発日",
+    "endDate": "帰着日",
+    "nextBtn": "表示 ",
+    "tourName": "ツアー名",
+    "tourConfirm" : {
+      "isTourSetting": "1.上記内容で間違いありませんか?",
+      "customerScanQRCode": "2.ガイド画面に入ったらお客様にQRコードを読ませてください。",
+      "iUnderstand": "上記を理解しました。"
+    },
     "startBtn": "ガイドを開始する"
   }
 }

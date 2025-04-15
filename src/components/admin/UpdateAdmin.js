@@ -45,8 +45,10 @@ const UpdateAdmin = () => {
     useEffect(() => {
         const handleGetDetailAdmin = async () => {
             try {
+                setIsLoading(true);
                 const getDetailResponse = await getDetailAdmin(userId);
                 setAdmin(getDetailResponse);
+                setIsLoading(false);
             } catch (error) {
                 // console.error("Call API get detail false:", error);
                 alert("Call API get detail false:", error);
@@ -70,7 +72,6 @@ const UpdateAdmin = () => {
                 <main className="px-4 px-sm-5 my-2">
                     <h1>管理者詳細</h1>
                     <div className="col-8 mx-auto mt-5 p-5 bg-white">
-
                         <form onSubmit={handleSubmit(onSubmit)}>
                             <div className="form-group row mb-3">
                                 <label htmlFor="inputName" className="col-sm-3 col-form-label">名前</label>
@@ -84,7 +85,9 @@ const UpdateAdmin = () => {
                             <div className="form-group row mb-3">
                                 <label htmlFor="inputEmail" className="col-sm-3 col-form-label">メールアドレス</label>
                                 <div className="col-sm-9">
-                                    <input type="email" className="form-control" id="inputEmail" defaultValue={admin.email} disabled />
+                                    <input type="email" className="form-control" id="inputEmail" defaultValue={admin.email} disabled 
+                                    {...register("email", {})}
+                                    />
                                 </div>
                             </div>
                             <div className="form-group row mb-3">

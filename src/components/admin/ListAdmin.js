@@ -27,7 +27,7 @@ const ListAdmin = () => {
             setIsLoading(true);
             const registerResponse = await listAdmins({
                 page: 1,
-                pagSize: 10,
+                pageSize: 10,
                 query: data
             });
             console.log("Call API get list admin success:", registerResponse);

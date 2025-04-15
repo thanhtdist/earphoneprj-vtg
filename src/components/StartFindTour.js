@@ -1,58 +1,116 @@
-import React, { 
-    //useState 
-} from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
-// import '../styles/StartFindTour.css';
+import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import {
+    getTourByNumberAndDate,
+} from '../apis/api';
+import { useTranslation } from 'react-i18next';
+import { messages } from '../messages';
 import Header from './Header';
+import GuideTourConfirm from './GuideTourConfirm';
+import Loading from './Loading';
 
 const StartFindTour = () => {
-    // const [tourNumber, setTourNumber] = useState('');
-    // const [departureDate, setDepartureDate] = useState('');
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm();
+    const { t } = useTranslation();
+    const [tour, setTour] = useState(null);
+    const [error, setError] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
 
-    // const handleTourNumberChange = (e) => setTourNumber(e.target.value);
-    // const handleDateChange = (e) => setDepartureDate(e.target.value);
-    // const handleDisplayClick = () => {
-    //     alert(`Tour Number: ${tourNumber}, Departure Date: ${departureDate}`);
-    // };
+    const findTour = async (data) => {
+        try {
+            setIsLoading(true);
+            const getTourByNumberAndDateResponse = await getTourByNumberAndDate(data);
+            if (getTourByNumberAndDateResponse?.statusCode !== 200) {
+                console.log('Find tour error:', getTourByNumberAndDateResponse);
+                setError(messages.tour.notFound);
+                setTour(null);
+            } else {
+                console.log('Find tour:', getTourByNumberAndDateResponse.data[0]);
+                setTour(getTourByNumberAndDateResponse.data[0]);
+            }
+
+        } catch (error) {
+            console.error('Error fetching tour:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
+    const onSubmit = (data) => {
+        console.log("Find data", data);
+        // Perform any action with the form data here
+        findTour(data);
+    };
+
+    console.log("Error", error);
+    console.log("Tour", tour);
+    // console.log("Error", error);
 
     return (
         <>
+            {isLoading && <Loading />}
             <Header />
-            <div className="container">
-                <div className="row justify-content-center">
-                    <div className="col-12">
-                        <div className="">
-                            <h3 className="text-center text-danger mb-4">ガイド専用ページ</h3>
-                            <form>
+            {tour ? (
+                // Render StartMainGuide component if tour is not null
+                <GuideTourConfirm tour={tour} />
+            ) : (
+                // Render the form if tour is null
+                <div
+                    className="container-fluid py-5"
+                >
+                    <div className="row justify-content-center">
+                        <div className="col-lg-6 col-md-8 col-12">
+                            <div className="text-center mb-4">
+                                <span className='titleLiveSession'
+                                >
+                                    {t('pageTitles.guide')}
+                                </span>
+                            </div>
+                            <form onSubmit={handleSubmit(onSubmit)}>
                                 <div className="mb-3">
-                                    <label htmlFor="tourNumber" className="form-label">
-                                        ツアー番号
+                                    <label htmlFor="tourNumber" className="form-label fw-bold">
+                                        {t('startGuidePage.tourNumber')}
                                     </label>
                                     <input
                                         type="text"
                                         className="form-control"
                                         id="tourNumber"
                                         placeholder="ツアー番号"
+                                        {...register('tourNumber', { required: true })}
                                     />
+                                    {errors.tourNumber && (
+                                        <span className="text-danger">ツアー番号を入力してください。</span>
+                                    )}
                                 </div>
                                 <div className="mb-3">
-                                    <label htmlFor="departureDate" className="form-label">
-                                        出発日
+                                    <label htmlFor="departureDate" className="form-label fw-bold">
+                                        {t('startGuidePage.startDate')}
                                     </label>
                                     <input
                                         type="date"
                                         className="form-control"
                                         id="departureDate"
+                                        {...register('departureDate', { required: true })}
                                     />
+                                    {errors.departureDate && (
+                                        <span className="text-danger">出発日を入力してください。</span>
+                                    )}
                                 </div>
-                                <button type="submit" className="btn btn-danger w-100">
-                                    表示
-                                </button>
+                                {error && <p className="text-danger">{error}</p>}
+                                <div className="text-center">
+                                    <button type="submit" className="btn btn-danger">
+                                        {t('startGuidePage.nextBtn')}
+                                    </button>
+                                </div>
                             </form>
                         </div>
                     </div>
                 </div>
-            </div>
+            )}
         </>
     );
 };

@@ -4,4 +4,8 @@ export const messages = {
         // Error message for incorrect email or password
         incorrectEmailPassword: "メールアドレスまたはパスワードが間違っています",
     },
+    tour: {
+        // Error message for tour not found
+        notFound: "ツアーが見つかりません",
+    },
 };

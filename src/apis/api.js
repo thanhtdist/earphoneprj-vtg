@@ -204,13 +204,13 @@ export async function getMeeting(meetingId) {
     const response = await body.json();
     return {
       statusCode: 200, // The status code of the response
-      data: response.data 
+      data: response.data
     }
   } catch (error) {
     const errorResponse = JSON.parse(error.response.body);
     // console.log('GET call getMeeting failed: ', errorResponse);
     // throw new Error('GET call getMeeting failed: ', JSON.parse(error.response.body));
-    console.log('Get call getMeeting failed: ',errorResponse);
+    console.log('Get call getMeeting failed: ', errorResponse);
     // Handle "Meeting not found" error specifically
     if (errorResponse?.error?.includes('not found')) {
       return {
@@ -391,5 +391,44 @@ export async function updateMeetingByTourId(data) {
     // throw new Error('GET call getMeeting failed: ', JSON.parse(error.response.body));
     //throw error.response.body;
     console.log('POST call updateMeetingByTourId failed: ', error);
+  }
+}
+
+/**
+ * Get a meetingId by tourNumber and departureDate
+ * @param {string} tourId - The ID of the tour.
+ * @returns {Promise<any>} The response data from the API call.
+ * @throws {Error} Logs the error details if the POST call fails.
+ */
+export async function getTourByNumberAndDate(data) {
+  try {
+    const restOperation = post({
+      // The name of the API defined in backend.ts
+      apiName: 'TourVTGRestApi',
+      path: `tours/find`, // endpoint defined in backend.ts, tourId is dynamically passed
+      options: {
+        body: {
+          tourNumber: data.tourNumber, // The external ID of the user, it is userId of participant joined the meeting
+          departureDate: data.departureDate, // The external ID of the user, it is userId of participant joined the meeting
+        }
+      }
+    });
+    const { body, statusCode } = await restOperation.response;
+    const response = await body.json();
+    return {
+      statusCode: statusCode, // The status code of the response
+      data: response.data
+    };
+  } catch (error) {
+    const errorMessage = error.response?.body
+      ? JSON.parse(error.response.body)?.error || 'An unexpected error occurred'
+      : error.message;
+
+    console.log('POST call getTourByNumberAndDate failed: ', error);
+
+    return {
+      statusCode: error.response?.statusCode || 500,
+      error: errorMessage,
+    };
   }
 }
