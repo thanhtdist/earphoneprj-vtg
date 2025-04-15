@@ -67,6 +67,7 @@
       "customerScanQRCode": "2.Please make Customer scan the QR code on the next page",
       "iUnderstand": "I understand"
     },
-    "startBtn": "Start the guide"
+    "startBtn": "Start the guide",
+    "joinedGuide": "There are guides who have already joined"
   }
 }

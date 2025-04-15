@@ -26,7 +26,7 @@ const GuideTourConfirm = ({ tour }) => {
                 alt="Exclamation Icon"
                 style={{ width: "1.5rem", marginRight: "0.5rem" }}
               />
-              <strong>現在、既に参加しているガイドがいます</strong>
+              <strong>{t('startGuidePage.joinedGuide')}</strong>
             </div>
           )}
 

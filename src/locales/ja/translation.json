@@ -67,6 +67,7 @@
       "customerScanQRCode": "2.ガイド画面に入ったらお客様にQRコードを読ませてください。",
       "iUnderstand": "上記を理解しました。"
     },
-    "startBtn": "ガイドを開始する"
+    "startBtn": "ガイドを開始する",
+    "joinedGuide": "現在、既に参加しているガイドがいます"
   }
 }
