@@ -669,7 +669,7 @@ function StartLiveSession() {
         ) : (
           <>
             {meetingSession && (<AudioUploadBox meetingSession={meetingSession} logger={logger} />)}
-            {(!noMicroMsg) ? (
+            {(noMicroMsg) ? (
               <>
                 {!microChecking ? (
                   <p style={{ color: "red" }}>{t('noMicroMsg')}</p>
@@ -701,7 +701,7 @@ function StartLiveSession() {
                         <IoMicCircle size={30} />
                         {/* : <IoMicOffCircleSharp size={33} color="gray" />} */}
                         {/* <span className="mic-text">{isMicOn ? 'スタート' : '停止'}</span> */}
-                        <span className="mic-text">{!isMicOn ? t('stopBtn') : t('startBtn')}</span>
+                        <span className="mic-text">{isMicOn ? t('stopBtn') : t('startBtn')}</span>
                     </div>
                   </div>
                 </div>
