@@ -67,6 +67,21 @@ function LiveViewer() {
   const [isMuted, setIsMuted] = useState(true);
   const [isPlay, setIsPlay] = useState(false);
 
+  // Add these references and callback:
+  const wakeLockRef = useRef(null);
+  const requestWakeLock = useCallback(async () => {
+    try {
+      if ('wakeLock' in navigator) {
+        wakeLockRef.current = await navigator.wakeLock.request('screen');
+        wakeLockRef.current.addEventListener('release', () => {
+          console.log('Wake Lock was released.');
+        });
+      }
+    } catch (error) {
+      console.error('Failed to request Wake Lock:', error);
+    }
+  }, []);
+
   const initializeMeetingSession = useCallback(async (meetingData, attendeeData) => {
     if (!meetingData || !attendeeData) {
       console.error('Invalid meeting or attendee information');
@@ -446,6 +461,13 @@ function LiveViewer() {
       setTour(null);
     }
   }, [joinAudioSession2, tourId]);
+
+  // Call requestWakeLock once the meeting session is set:
+  useEffect(() => {
+    if (meetingSession) {
+      requestWakeLock();
+    }
+  }, [meetingSession, requestWakeLock]);
 
   // Handle long text for translations and transcriptions
   const isLongText = translatedListRef.current.join(' ').length > 300;
