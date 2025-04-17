@@ -6,6 +6,8 @@
   "microChecking": "Checking your microphone... Please wait.",
   "noMicroMsg": "Your microphone is currently blocked. Please enable microphone access in your browser settings or on this site to proceed.",
   "microSelectionLbl": "Select Input Microphone",
+  "startBtn":"Start",
+  "stopBtn":"Stop",
   "chatSettingLbl": "Chat usage restrictions",
   "chatSettingOptions": {
     "allChat": "Everyone can chat",

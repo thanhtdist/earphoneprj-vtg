@@ -505,8 +505,8 @@ function StartLiveSession() {
       return;
     }
     const attendeeSet = new Set(); // List of sub-guides, listeners
-    const callback = (presentAttendeeId, present, externalUserId) => {
-      console.log(`Attendee ID: ${presentAttendeeId} Present: ${present} externalUserId: ${externalUserId}`);
+    const callback = (presentAttendeeId, present, externalUserId, dropped) => {
+      console.log(`Attendee ID: ${presentAttendeeId} Present: ${present} externalUserId: ${externalUserId} Dropped: ${dropped}`);
       if (present) {
         attendeeSet.add(presentAttendeeId);
       } else {
@@ -696,11 +696,12 @@ function StartLiveSession() {
                     </div>
                   )} 
                   <div className="controls">
-                    <div className={`mic-button ${!isMicOn ? 'mic-button-off' : 'mic-button-on'}`} onClick={toggleMicrophone}>
+                    <div className={`mic-button ${isMicOn ? 'mic-button-off' : 'mic-button-on'}`} onClick={toggleMicrophone}>
                       {/* {!isMicOn ? */}
                         <IoMicCircle size={30} />
                         {/* : <IoMicOffCircleSharp size={33} color="gray" />} */}
-                        <span className="mic-text">{isMicOn ? 'スタート' : '停止'}</span>
+                        {/* <span className="mic-text">{isMicOn ? 'スタート' : '停止'}</span> */}
+                        <span className="mic-text">{!isMicOn ? t('stopBtn') : t('startBtn')}</span>
                     </div>
                   </div>
                 </div>
