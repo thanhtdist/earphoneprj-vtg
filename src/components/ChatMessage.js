@@ -37,11 +37,11 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null, userT
   const [sending, setSending] = useState(false);
   const fileInputRef = useRef();
   const inputRef = useRef(null);
-  useEffect(() => {
-    if (chatSetting !== 'guideOnly') {
-      inputRef.current.focus();
-    }
-  }, [chatSetting]);
+  // useEffect(() => {
+  //   if (chatSetting !== 'guideOnly') {
+  //     inputRef.current.focus();
+  //   }
+  // }, [chatSetting]);
   const { t, i18n } = useTranslation();
   console.log('i18n', i18n);
   console.log('t', t);
