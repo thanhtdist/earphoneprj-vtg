@@ -15,23 +15,13 @@ export const handler: APIGatewayProxyHandler = async (event) => {
   // Extract page and pageSize from query parameters
   const page = parseInt(event.queryStringParameters?.page || '1', 10);
   const pageSize = parseInt(event.queryStringParameters?.pageSize || '10', 10);
-  const query = event.queryStringParameters?.query ? decodeURIComponent(event.queryStringParameters.query.trim()) : undefined;
+  const query = event.queryStringParameters?.query
+    ? decodeURIComponent(event.queryStringParameters.query.trim())
+    : undefined;
 
-  // Calculate the ExclusiveStartKey based on the page number
-  let ExclusiveStartKey;
-  if (page > 1) {
-    const previousPage = page - 1;
-    const previousPageSize = previousPage * pageSize;
-    const previousResult = await dynamoDB.scan({
-      TableName: "Tours",
-      Limit: previousPageSize,
-      FilterExpression: "deleteFlag = :deleteFlag",
-      ExpressionAttributeValues: {
-        ":deleteFlag": 0,
-      },
-    }).promise();
-    ExclusiveStartKey = previousResult.LastEvaluatedKey;
-  }
+  // console.log('Page Size:', pageSize);
+  // console.log('Last Evaluated Key:', lastEvaluatedKey);
+  console.log('Query:', query);
 
   try {
     console.log('Retrieving list of tours');
@@ -42,75 +32,62 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     const user = await verifyAuth(authHeader);
     console.log('Authenticated User:', user);
 
-    // Scan DynamoDB for Tours with pagination and search query
-    let result;
+    // Prepare DynamoDB scan parameters
+    let params: AWS.DynamoDB.DocumentClient.ScanInput = {
+      TableName: "Tours",
+      FilterExpression: "deleteFlag = :deleteFlag",
+      ExpressionAttributeValues: { ":deleteFlag": 0 },
+      //Limit: pageSize,
+      //ExclusiveStartKey: lastEvaluatedKey
+    };
+
+    console.log('Scan Parameters: ', params);
+
+    // Append search query filters if needed
     if (query) {
-      result = await dynamoDB.scan({
-        TableName: "Tours",
-        Limit: pageSize,
-        ExclusiveStartKey,
-        FilterExpression: 'deleteFlag = :deleteFlag AND (contains(tourNumber, :query) OR contains(processingNumber, :query) OR contains(tourName, :query))',
-        // ExpressionAttributeNames: {
-        //   '#tourName': 'tourName',
-        // },
-        ExpressionAttributeValues: {
-          ':deleteFlag': 0,
-          ':query': query,
-        },
-      }).promise();
-    } else {
-      result = await dynamoDB.scan({
-        TableName: "Tours",
-        Limit: pageSize,
-        ExclusiveStartKey,
-        FilterExpression: "deleteFlag = :deleteFlag",
-        ExpressionAttributeValues: {
-          ":deleteFlag": 0,
-        },
-      }).promise();
+      params.FilterExpression +=
+        " AND (contains(tourNumber, :query) OR contains(processingNumber, :query) OR contains(tourName, :query))";
+      params.ExpressionAttributeValues![":query"] = query;
     }
 
-    // Additional call to get total tours
-    const totalScan = await dynamoDB.scan({
-      TableName: "Tours",
-      Select: "COUNT",
-      FilterExpression: "deleteFlag = :deleteFlag",
-      ExpressionAttributeValues: {
-        ":deleteFlag": 0,
-      },
-    }).promise();
+    console.log('Updated Scan Parameters: (if any)', params);
+    // Run the scan to get all items matching your filters
+    const scanResult = await dynamoDB.scan(params).promise();
+    const allItems = scanResult.Items || [];
 
-    if (!result.Items || result.Items.length === 0) {
+    if (!allItems || allItems.length === 0) {
       console.error('No tours found');
       return {
         statusCode: 200,
-        //body: JSON.stringify({ error: 'No tours found.' }),
         body: JSON.stringify({
           data: {
             message: "No tours found.",
             data: [],
             count: 0,
-            lastEvaluatedKey: result.LastEvaluatedKey,
           }
         }),
         headers: Config.headers,
       };
     }
 
-    console.log('Tours successfully retrieved: ', result.Items);
+    // Now handle paging on the array of fetched items
+    const startIndex = (page - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
 
-    // Return success response
+    // Slice out the current page
+    const pageItems = allItems.slice(startIndex, endIndex);
+
+    // Return the current page without calling DynamoDB again
     return {
       statusCode: 200,
       body: JSON.stringify({
         data: {
           message: "Tours retrieved successfully",
-          data: result.Items,
-          count: totalScan.Count,
-          lastEvaluatedKey: result.LastEvaluatedKey,
+          data: pageItems,
+          count: allItems.length
         }
       }),
-      headers: Config.headers,
+      headers: Config.headers
     };
   } catch (error: any) {
     console.error('Failed to retrieve tours: ', { error, event });

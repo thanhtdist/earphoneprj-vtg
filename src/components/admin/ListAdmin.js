@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Sidebar from './Sidebar';
 import { Link } from 'react-router-dom';
 import { deleteAdmin, listAdmins, activeAdmin } from '../../apis/admin';
@@ -16,32 +16,33 @@ const ListAdmin = () => {
     const [selectedAdmin, setSelectedAdmin] = useState({ userId: null, userName: null });
     const [selectActiveAdmin, setSelectActiveAdmin] = useState({ userId: null, userName: null, password: null, active: null });
     const [isLoading, setIsLoading] = useState(false);
-    const [itemOffset, setItemOffset] = useState(0);
+    // const [itemOffset, setItemOffset] = useState(0);
     const itemsPerPage = 10;
-    const endOffset = itemOffset + itemsPerPage;
-    const currentItems = listAdmin.slice(itemOffset, endOffset);
-    const countPage = Math.ceil(listAdmin.length / itemsPerPage);
+
+    const countPage = Math.ceil(countList / itemsPerPage);
     // function get all list admin
-    const handleGetListAdmin = async (data) => {
+    const handleGetListAdmin = useCallback( async (data,page = 1) => {
         try {
             setIsLoading(true);
+            console.log("pageeeee", page);
+            console.log("dataaaaaa", data);
             const registerResponse = await listAdmins({
-                page: 1,
+                page: page,
                 pageSize: 10,
                 query: data
             });
-            console.log("Call API get list admin success:", registerResponse);
+            console.log("responeLIST", registerResponse.data);
             setListAdmin(registerResponse.data);
-            setCountList(registerResponse.length);
+            setCountList(registerResponse.count);
             setIsLoading(false);
         } catch (error) {
             console.log("error get list admin ", error);
         }
 
-    }
+    },[]);
     useEffect(() => {
         handleGetListAdmin('');
-    }, []);
+    }, [handleGetListAdmin]);
 
     //function search admin by name 
     const handleSearchClick = () => {
@@ -85,10 +86,11 @@ const ListAdmin = () => {
     // const [currentPage, setCurrentPage] = useState(1);
     // Invoke when user click to request another page.
     const handlePageClick = (event) => {
-        // const newPage = event.selected + 1; // `selected` bắt đầu từ 0
-        // setCurrentPage(newPage);           
-        const newOffset = event.selected * itemsPerPage % listAdmin.length;
-        setItemOffset(newOffset);
+        const currentPage = event.selected + 1; // `selected` bắt đầu từ 0
+        // setCurrentPage(newPage);
+        handleGetListAdmin(query,currentPage);
+        // const newOffset = event.selected * itemsPerPage % listAdmin.length;
+        // setItemOffset(newOffset);
     };
 
     const [nameActive, setNameActive] = useState('');
@@ -169,7 +171,7 @@ const ListAdmin = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {currentItems.map((admin, index) => (
+                                {listAdmin.map((admin, index) => (
                                     <tr key={index}>
                                         <th className="sticky">
                                             <Link to={admin.active === 1 ? "#" : `/admin/update?userId=${admin.userId}`}

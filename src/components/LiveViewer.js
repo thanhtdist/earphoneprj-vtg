@@ -72,6 +72,7 @@ function LiveViewer() {
   const requestWakeLock = useCallback(async () => {
     try {
       if ('wakeLock' in navigator) {
+        console.log('Requesting Wake Lock...');
         wakeLockRef.current = await navigator.wakeLock.request('screen');
         wakeLockRef.current.addEventListener('release', () => {
           console.log('Wake Lock was released.');
@@ -466,6 +467,11 @@ function LiveViewer() {
   useEffect(() => {
     if (meetingSession) {
       requestWakeLock();
+      // document.addEventListener('visibilitychange', async () => {
+      //   if (wakeLockRef.current && document.visibilityState === 'visible') {
+      //     await requestWakeLock();
+      //   }
+      // });
     }
   }, [meetingSession, requestWakeLock]);
 
@@ -536,7 +542,7 @@ function LiveViewer() {
               <div className={` ${!isPlay ? 'pauseButtonViewer' : 'playButtonViewer'}`} onClick={handlePlay}>
                 {/* {isPlay ? <FaPause size={30} /> : <IoPlay size={30} />} */}
                 <IoPlay size={30} />
-                <span className="startText">{!isPlay ? '停止' : 'スタート'}</span>
+                <span className="startText">{!isPlay ? t('stopBtn') : t('startBtn')}</span>
               </div>
 
               <div className='soundButton' onClick={handleMuteUnmute}>

@@ -19,22 +19,24 @@ export const handler: APIGatewayProxyHandler = async (event) => {
 
   console.log('Query Parameters:', { page, pageSize, query });
   // Calculate the ExclusiveStartKey based on the page number
-  let ExclusiveStartKey;
-  if (page > 1) {
-    const previousPage = page - 1;
-    const previousPageSize = previousPage * pageSize;
-    const previousResult = await dynamoDB.scan({
-      TableName: "Users",
-      Limit: previousPageSize,
-      FilterExpression: "deleteFlag = :deleteFlag",
-      ExpressionAttributeValues: {
-        ":deleteFlag": 0,
-      },
-    }).promise();
-    ExclusiveStartKey = previousResult.LastEvaluatedKey;
-  }
+  // let ExclusiveStartKey;
+  // if (page > 1) {
+  //   const previousPage = page - 1;
+  //   const previousPageSize = previousPage * pageSize;
+  //   const previousResult = await dynamoDB.scan({
+  //     TableName: "Users",
+  //     Limit: previousPageSize,
+  //     FilterExpression: "deleteFlag = :deleteFlag",
+  //     ExpressionAttributeValues: {
+  //       ":deleteFlag": 0,
+  //     },
+  //   }).promise();
+  //   ExclusiveStartKey = previousResult.LastEvaluatedKey;
+  // }
+
 
   try {
+    console.log('Retrieving list of tours');
 
     // Authenticate the user
     const authHeader = event.headers?.Authorization || '';
@@ -42,81 +44,62 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     const user = await verifyAuth(authHeader);
     console.log('Authenticated User:', user);
 
-    console.log('Retrieving list of Users');
-
-    // Scan DynamoDB for Users with pagination and search query
-    let items: any[] = [];
-    let result;
-    do {     
-      if (query) {
-        result = await dynamoDB.scan({
-          TableName: "Users",
-          Limit: pageSize,
-          // ExclusiveStartKey,
-          FilterExpression: 'deleteFlag = :deleteFlag AND contains(#userName, :query)',
-          ExpressionAttributeNames: {
-            '#userName': 'userName',
-          },
-          ExpressionAttributeValues: {
-            ':deleteFlag': 0,
-            ':query': query,
-          },
-        }).promise();
-      } else {
-        result = await dynamoDB.scan({
-          TableName: "Users",
-          Limit: pageSize,
-          // ExclusiveStartKey,
-          FilterExpression: "deleteFlag = :deleteFlag",
-          ExpressionAttributeValues: {
-            ":deleteFlag": 0,
-          },
-        }).promise();
-      }
-      items = items.concat(result.Items || []);
-      ExclusiveStartKey = result.LastEvaluatedKey;
-    } while (items.length < pageSize && ExclusiveStartKey);
-    // Additional call to get total user
-    const totalScan = await dynamoDB.scan({
+    // Prepare DynamoDB scan parameters
+    let params: AWS.DynamoDB.DocumentClient.ScanInput = {
       TableName: "Users",
-      Select: "COUNT",
       FilterExpression: "deleteFlag = :deleteFlag",
-      ExpressionAttributeValues: {
-        ":deleteFlag": 0,
-      },
-    }).promise();
+      ExpressionAttributeValues: { ":deleteFlag": 0 },
+      //Limit: pageSize,
+      //ExclusiveStartKey: lastEvaluatedKey
+    };
 
-    if (!result.Items || result.Items.length === 0) {
+    console.log('Scan Parameters: ', params);
+
+    // Append search query filters if needed
+    if (query) {
+      params.FilterExpression +=
+        " AND (contains(userName, :query))";
+      params.ExpressionAttributeValues![":query"] = query;
+    }
+
+    console.log('Updated Scan Parameters: (if any)', params);
+    // Run the scan to get all items matching your filters
+    const scanResult = await dynamoDB.scan(params).promise();
+    const allItems = scanResult.Items || [];
+
+    if (!allItems || allItems.length === 0) {
       console.error('No users found');
       return {
         statusCode: 200,
-        //body: JSON.stringify({ error: 'No tours found.' }),
         body: JSON.stringify({
           data: {
             message: "No users found.",
             data: [],
             count: 0,
-            lastEvaluatedKey: result.LastEvaluatedKey,
           }
         }),
         headers: Config.headers,
       };
     }
 
-    console.log('Users successfully retrieved: ', result.Items);
+    // Now handle paging on the array of fetched items
+    const startIndex = (page - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
 
-    // Return success response
+    // Slice out the current page
+    const pageItems = allItems.slice(startIndex, endIndex);
+
+    // Return the current page without calling DynamoDB again
     return {
       statusCode: 200,
       body: JSON.stringify({
         data: {
-          message: "Users retrieved successfully",
-          data: result.Items,
-          count: totalScan.Count,
-          lastEvaluatedKey: result.LastEvaluatedKey,
+          message: "users retrieved successfully",
+          data: pageItems,
+          count: allItems.length
         }
       }),
-      headers: Config.headers,
+      headers: Config.headers
     };
   } catch (error: any) {
     console.error('Failed to retrieve Users: ', { error, event });

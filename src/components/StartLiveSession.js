@@ -505,8 +505,8 @@ function StartLiveSession() {
       return;
     }
     const attendeeSet = new Set(); // List of sub-guides, listeners
-    const callback = (presentAttendeeId, present, externalUserId, dropped) => {
-      console.log(`Attendee ID: ${presentAttendeeId} Present: ${present} externalUserId: ${externalUserId} Dropped: ${dropped}`);
+    const callback = (presentAttendeeId, present, externalUserId) => {
+      console.log(`Attendee ID: ${presentAttendeeId} Present: ${present} externalUserId: ${externalUserId}`);
       if (present) {
         attendeeSet.add(presentAttendeeId);
       } else {
@@ -669,7 +669,7 @@ function StartLiveSession() {
         ) : (
           <>
             {meetingSession && (<AudioUploadBox meetingSession={meetingSession} logger={logger} />)}
-            {(noMicroMsg) ? (
+            {(!noMicroMsg) ? (
               <>
                 {!microChecking ? (
                   <p style={{ color: "red" }}>{t('noMicroMsg')}</p>
