@@ -104,13 +104,20 @@ function LiveViewer2() {
       if (audioElement) {
         console.log('Audio element found:', audioElement);
         await session.audioVideo.bindAudioElement(audioElement);
-        session.audioVideo.start();
       } else {
         console.error('Audio element not found');
       }
     }
     metricReport(session);
-    // session.audioVideo.start();
+    const observer = {
+      audioVideoDidStart: () => {
+        alert('Audio session started!');
+        console.log('Started');
+      }
+    };
+    
+    session.audioVideo.addObserver(observer);
+    session.audioVideo.start();
   }, [selectedVoiceLanguage]);
 
   const selectSpeaker = async (session) => {
@@ -426,7 +433,6 @@ function LiveViewer2() {
         alert('Audio is playing!');
       } else {
         console.log("Audio chưa phát hoặc đã dừng");
-        alert('Audio is not playing or has stopped!');
       }
       //audioElementRef.current.play();
     } else {
@@ -535,7 +541,6 @@ function LiveViewer2() {
           //className="audio-player"
           style={{ display: 'none' }}
         />
-        <audio id="audioElement" src="Track05.mp3" controls></audio>
         {!meeting && !attendee ? (
           isLoading ? (
             <div className="loading">
