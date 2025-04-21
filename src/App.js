@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import LiveViewer from './components/LiveViewer';
-import LiveViewer2 from './components/LiveViewer';
+import LiveViewer2 from './components/LiveViewer2';
 import LiveSubSpeaker from './components/LiveSubSpeaker';
 import StartLiveSession from './components/StartLiveSession';
 import StartFindTour from './components/StartFindTour';
