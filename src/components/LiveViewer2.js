@@ -426,49 +426,51 @@ function LiveViewer2() {
   };
 
   // Function to handle play/pause button click
-  const handlePlay = () => {
-    const audio = audioElementRef.current;
-    const stream = audio?.srcObject;
-  
-    if (!stream) {
-      alert('Audio stream is not available yet. Please wait for the guide to join.');
-      return;
-    }
-  
-    const hasAudioTrack = stream.getAudioTracks().length > 0;
-  
-    if (!hasAudioTrack) {
-      alert('No audio track found. Please wait...');
-      return;
-    }
-  
-    if (!isPlay) {
-      setIsPlay(true);
-      audio.play();
-    } else {
-      setIsPlay(false);
-      audio.pause();
-    }
-  };
-  
   // const handlePlay = () => {
-  //   if (isPlay === false) {
-  //     setIsPlay(true)
-  //     const audio = audioElementRef.current;
-  //     if (audio && !audio.paused && audio.currentTime > 0) {
-  //       console.log("Audio đang phát");
-  //       alert('Audio is playing!');
-  //     } else {
-  //       console.log("Audio chưa phát hoặc đã dừng");
-  //       alert('Audio is not playing or has stopped!');
-  //     }
-  //     //audioElementRef.current.play();
+  //   const audio = audioElementRef.current;
+  //   const stream = audio?.srcObject;
+  
+  //   if (!stream) {
+  //     alert('Audio stream is not available yet. Please wait for the guide to join.');
+  //     return;
+  //   }
+  
+  //   const hasAudioTrack = stream.getAudioTracks().length > 0;
+  
+  //   if (!hasAudioTrack) {
+  //     alert('No audio track found. Please wait...');
+  //     return;
+  //   }
+  
+  //   if (!isPlay) {
+  //     setIsPlay(true);
+  //     audio.play();
   //   } else {
   //     setIsPlay(false);
-  //     //audioElementRef.current.pause();
-  //     alert('Audio is paused!');
+  //     audio.pause();
   //   }
-  // }
+  // };
+  
+  // Function to handle play/pause button click
+  const handlePlay = () => {
+    if (isPlay === false) {
+      setIsPlay(true)
+      const audio = audioElementRef.current;
+      if (audio && !audio.paused && audio.currentTime > 0) {
+        console.log("Audio đang phát");
+        alert('Audio is playing!');
+        audioElementRef.current.play();
+      } else {
+        console.log("Audio chưa phát hoặc đã dừng");
+        alert('Audio is not playing or has stopped!');
+      }
+      //audioElementRef.current.play();
+    } else {
+      setIsPlay(false);
+      audioElementRef.current.pause();
+      alert('Audio is paused!');
+    }
+  }
 
   // Function to join the audio session
   const joinAudioSession = useCallback(async () => {
