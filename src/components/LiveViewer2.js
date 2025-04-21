@@ -420,10 +420,11 @@ function LiveViewer2() {
   const handlePlay = () => {
     if (isPlay === false) {
       setIsPlay(true)
-      if(audioElementRef.current) {
-        alert('Audio is playing!');
-      }else {
-        alert('Audio is not playing!');
+      const audio = audioElementRef.current;
+      if (audio && !audio.paused && audio.currentTime > 0) {
+        console.log("Audio đang phát");
+      } else {
+        console.log("Audio chưa phát hoặc đã dừng");
       }
       //audioElementRef.current.play();
     } else {
