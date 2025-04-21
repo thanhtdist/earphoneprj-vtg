@@ -423,8 +423,10 @@ function LiveViewer2() {
       const audio = audioElementRef.current;
       if (audio && !audio.paused && audio.currentTime > 0) {
         console.log("Audio đang phát");
+        alert('Audio is playing!');
       } else {
         console.log("Audio chưa phát hoặc đã dừng");
+        alert('Audio is not playing or has stopped!');
       }
       //audioElementRef.current.play();
     } else {
