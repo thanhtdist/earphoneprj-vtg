@@ -420,10 +420,16 @@ function LiveViewer2() {
   const handlePlay = () => {
     if (isPlay === false) {
       setIsPlay(true)
-      audioElementRef.current.play();
+      if(audioElementRef.current) {
+        alert('Audio is playing!');
+      }else {
+        alert('Audio is not playing!');
+      }
+      //audioElementRef.current.play();
     } else {
       setIsPlay(false);
-      audioElementRef.current.pause();
+      //audioElementRef.current.pause();
+      alert('Audio is paused!');
     }
   }
 
