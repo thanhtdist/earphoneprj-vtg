@@ -669,7 +669,7 @@ function StartLiveSession() {
         ) : (
           <>
             {meetingSession && (<AudioUploadBox meetingSession={meetingSession} logger={logger} />)}
-            {(!noMicroMsg) ? (
+            {(noMicroMsg) ? (
               <>
                 {!microChecking ? (
                   <p style={{ color: "red" }}>{t('noMicroMsg')}</p>
