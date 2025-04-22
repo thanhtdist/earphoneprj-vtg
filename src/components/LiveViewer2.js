@@ -120,6 +120,23 @@ function LiveViewer2() {
         if (currentMeetingAudioStream) {
           console.log('Meeting Audio Stream found:', currentMeetingAudioStream);
           alert('Meeting Audio Stream found!');
+          console.log('Applying lowpass filter to reduce static noise...');
+          const audioContext = new AudioContext();
+          const sourceNode = audioContext.createMediaStreamSource(currentMeetingAudioStream);
+
+          const filterNode = audioContext.createBiquadFilter();
+          filterNode.type = 'lowpass';
+          filterNode.frequency.value = 3000;
+
+          sourceNode.connect(filterNode);
+
+          const destination = audioContext.createMediaStreamDestination();
+          filterNode.connect(destination);
+
+          if (audioElementRef.current) {
+            audioElementRef.current.srcObject = destination.stream;
+            await audioElementRef.current.play();
+          }
         } else {
           console.error('Meeting Audio Stream not found');
           alert('Meeting Audio Stream not found!');
