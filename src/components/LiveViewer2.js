@@ -130,26 +130,34 @@ function LiveViewer2() {
           }
         );
         if (currentMeetingAudioStream) {
-          console.log('Meeting Audio Stream found:', currentMeetingAudioStream);
-          alert('Meeting Audio Stream found!');
-          console.log('Applying lowpass filter to reduce static noise...');
+          // console.log('Meeting Audio Stream found:', currentMeetingAudioStream);
+          // alert('Meeting Audio Stream found!');
+          // console.log('Applying lowpass filter to reduce static noise...');
+          // const audioContext = new AudioContext();
+          // const sourceNode = audioContext.createMediaStreamSource(currentMeetingAudioStream);
+
+          // const filterNode = audioContext.createBiquadFilter();
+          // filterNode.type = 'lowpass';
+          // filterNode.frequency.value = 3000;
+
+          // sourceNode.connect(filterNode);
+
+          // const destination = audioContext.createMediaStreamDestination();
+          // filterNode.connect(destination);
+
+          // if (audioElementRef.current) {
+          //   alert('Bind audio element to destination stream!');
+          //   audioElementRef.current.srcObject = destination.stream;
+          //   await audioElementRef.current.play();
+          // }
+          // 2. Create an AudioContext
           const audioContext = new AudioContext();
+
+          // 3. Create a MediaStreamSource from the meeting audio stream
           const sourceNode = audioContext.createMediaStreamSource(currentMeetingAudioStream);
 
-          const filterNode = audioContext.createBiquadFilter();
-          filterNode.type = 'lowpass';
-          filterNode.frequency.value = 3000;
-
-          sourceNode.connect(filterNode);
-
-          const destination = audioContext.createMediaStreamDestination();
-          filterNode.connect(destination);
-
-          if (audioElementRef.current) {
-            alert('Bind audio element to destination stream!');
-            audioElementRef.current.srcObject = destination.stream;
-            await audioElementRef.current.play();
-          }
+          // 4. Connect it to the destination (speakers)
+          sourceNode.connect(audioContext.destination);
         } else {
           console.error('Meeting Audio Stream not found');
           alert('Meeting Audio Stream not found!');
