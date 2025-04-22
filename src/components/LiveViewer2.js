@@ -103,9 +103,11 @@ function LiveViewer2() {
       console.log('Check audioElement:', audioElement);
       if (audioElement) {
         console.log('Audio element found:', audioElement);
+        alert('Audio element found!');
         await session.audioVideo.bindAudioElement(audioElement);
       } else {
         console.error('Audio element not found');
+        alert('Audio element not found!');
       }
     }
     metricReport(session);
