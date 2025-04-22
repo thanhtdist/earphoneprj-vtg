@@ -103,6 +103,13 @@ function LiveViewer2() {
       console.log('Check audioElement:', audioElement);
       const currentMeetingAudioStream = await session.audioVideo.getCurrentMeetingAudioStream();
       console.log('Check currentMeetingAudioStream:', currentMeetingAudioStream);
+      if( currentMeetingAudioStream) {
+        console.log('Audio stream found:', currentMeetingAudioStream);
+        alert('Audio stream found!');
+      } else {
+        console.error('Audio stream not found');
+        alert('Audio stream not found!');
+      }
       if (audioElement) {
         console.log('Audio element found:', audioElement);
         alert('Audio element found!');
