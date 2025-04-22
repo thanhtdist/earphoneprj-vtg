@@ -95,7 +95,7 @@ function LiveViewer2() {
     const session = new DefaultMeetingSession(meetingSessionConfig, logger, deviceController);
     setMeetingSession(session);
 
-    await selectSpeaker(session);
+    //await selectSpeaker(session);
     if (selectedVoiceLanguage === 'ja-JP') {
       console.log('Selected voice language is Japanese', selectedVoiceLanguage);
       //const audioElement = document.getElementById('audioElementListener');
@@ -115,7 +115,7 @@ function LiveViewer2() {
         console.log('Started');
       }
     };
-    
+
     session.audioVideo.addObserver(observer);
     session.audioVideo.start();
   }, [selectedVoiceLanguage]);
@@ -429,19 +429,19 @@ function LiveViewer2() {
   // const handlePlay = () => {
   //   const audio = audioElementRef.current;
   //   const stream = audio?.srcObject;
-  
+
   //   if (!stream) {
   //     alert('Audio stream is not available yet. Please wait for the guide to join.');
   //     return;
   //   }
-  
+
   //   const hasAudioTrack = stream.getAudioTracks().length > 0;
-  
+
   //   if (!hasAudioTrack) {
   //     alert('No audio track found. Please wait...');
   //     return;
   //   }
-  
+
   //   if (!isPlay) {
   //     setIsPlay(true);
   //     audio.play();
@@ -450,25 +450,36 @@ function LiveViewer2() {
   //     audio.pause();
   //   }
   // };
-  
+
+  // Function to handle play/pause button click
+  // const handlePlay = () => {
+  //   if (isPlay === false) {
+  //     setIsPlay(true)
+  //     const audio = audioElementRef.current;
+  //     if (audio && !audio.paused && audio.currentTime > 0) {
+  //       console.log("Audio đang phát");
+  //       alert('Audio is playing!');
+  //       audioElementRef.current.play();
+  //     } else {
+  //       console.log("Audio chưa phát hoặc đã dừng");
+  //       alert('Audio is not playing or has stopped!');
+  //     }
+  //     //audioElementRef.current.play();
+  //   } else {
+  //     setIsPlay(false);
+  //     audioElementRef.current.pause();
+  //     alert('Audio is paused!');
+  //   }
+  // }
+
   // Function to handle play/pause button click
   const handlePlay = () => {
     if (isPlay === false) {
       setIsPlay(true)
-      const audio = audioElementRef.current;
-      if (audio && !audio.paused && audio.currentTime > 0) {
-        console.log("Audio đang phát");
-        alert('Audio is playing!');
-        audioElementRef.current.play();
-      } else {
-        console.log("Audio chưa phát hoặc đã dừng");
-        alert('Audio is not playing or has stopped!');
-      }
-      //audioElementRef.current.play();
+      audioElementRef.current.play();
     } else {
       setIsPlay(false);
       audioElementRef.current.pause();
-      alert('Audio is paused!');
     }
   }
 
