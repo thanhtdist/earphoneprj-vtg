@@ -193,6 +193,25 @@ function LiveViewer2() {
     //     // Xử lý khi stream im lặng
     //   }
     // });
+    session.audioVideo.subscribeToActiveSpeakerDetector(
+      // Callback list of attendees sorted by activity (most active first)
+      (activeSpeakers) => {
+        console.log("Active Speakers:", activeSpeakers);
+        // You can highlight the first active speaker in UI
+      },
+      // Activity score callback
+      (attendeeId, score) => {
+        console.log(`Activity score for ${attendeeId}: ${score}`);
+      },
+      // Optional config
+      {
+        intervalMs: 1000,       // how often to check activity
+        scoreCallbackIntervalMs: 1000,
+        speakerThreshold: 0.6,  // adjust this sensitivity
+        silenceThreshold: 0.01, // when everyone is quiet
+      }
+    );
+    session.audioVideo.start();
 
   }, [selectedVoiceLanguage]);
 
