@@ -101,15 +101,6 @@ function LiveViewer2() {
       //const audioElement = document.getElementById('audioElementListener');
       const audioElement = audioElementRef.current;
       console.log('Check audioElement:', audioElement);
-      const currentMeetingAudioStream = await session.audioVideo.getCurrentMeetingAudioStream();
-      console.log('Check currentMeetingAudioStream:', currentMeetingAudioStream);
-      if( currentMeetingAudioStream) {
-        console.log('Audio stream found:', currentMeetingAudioStream);
-        alert('Audio stream found!');
-      } else {
-        console.error('Audio stream not found');
-        alert('Audio stream not found!');
-      }
       if (audioElement) {
         console.log('Audio element found:', audioElement);
         alert('Audio element found!');
@@ -129,17 +120,26 @@ function LiveViewer2() {
 
     session.audioVideo.addObserver(observer);
     session.audioVideo.start();
-    session.audioVideo.realtimeSubscribeToVolumeIndicator((attendeeId, volume, muted, signalStrength) => {
-      console.log('Attendee ID:', attendeeId);
-      console.log('Volume:', volume);
-      console.log('Muted:', muted);
-      console.log('Signal Strength:', signalStrength);
-      if (volume < 0.01 && !muted) {
-        console.log('Stream đang im lặng');
-        alert('Stream đang im lặng');
-        // Xử lý khi stream im lặng
-      }
-    });
+    // session.audioVideo.realtimeSubscribeToVolumeIndicator((attendeeId, volume, muted, signalStrength) => {
+    //   console.log('Attendee ID:', attendeeId);
+    //   console.log('Volume:', volume);
+    //   console.log('Muted:', muted);
+    //   console.log('Signal Strength:', signalStrength);
+    //   if (volume < 0.01 && !muted) {
+    //     console.log('Stream đang im lặng');
+    //     alert('Stream đang im lặng');
+    //     // Xử lý khi stream im lặng
+    //   }
+    // });
+    const currentMeetingAudioStream = await session.audioVideo.getCurrentMeetingAudioStream();
+    console.log('Check currentMeetingAudioStream:', currentMeetingAudioStream);
+    if (currentMeetingAudioStream) {
+      console.log('Meeting Audio Stream found:', currentMeetingAudioStream);
+      alert('Meeting Audio Stream found!');
+    } else {
+      console.error('Meeting Audio Stream not found');
+      alert('Meeting Audio Stream not found!');
+    }
   }, [selectedVoiceLanguage]);
 
   const selectSpeaker = async (session) => {
