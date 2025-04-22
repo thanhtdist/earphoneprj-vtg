@@ -112,9 +112,18 @@ function LiveViewer2() {
     }
     metricReport(session);
     const observer = {
-      audioVideoDidStart: () => {
+      audioVideoDidStart: async () => {
         alert('Audio session started!');
         console.log('Started');
+        const currentMeetingAudioStream = await session.audioVideo.getCurrentMeetingAudioStream();
+        console.log('Check currentMeetingAudioStream:', currentMeetingAudioStream);
+        if (currentMeetingAudioStream) {
+          console.log('Meeting Audio Stream found:', currentMeetingAudioStream);
+          alert('Meeting Audio Stream found!');
+        } else {
+          console.error('Meeting Audio Stream not found');
+          alert('Meeting Audio Stream not found!');
+        }
       }
     };
 
@@ -131,15 +140,7 @@ function LiveViewer2() {
     //     // Xử lý khi stream im lặng
     //   }
     // });
-    const currentMeetingAudioStream = await session.audioVideo.getCurrentMeetingAudioStream();
-    console.log('Check currentMeetingAudioStream:', currentMeetingAudioStream);
-    if (currentMeetingAudioStream) {
-      console.log('Meeting Audio Stream found:', currentMeetingAudioStream);
-      alert('Meeting Audio Stream found!');
-    } else {
-      console.error('Meeting Audio Stream not found');
-      alert('Meeting Audio Stream not found!');
-    }
+
   }, [selectedVoiceLanguage]);
 
   const selectSpeaker = async (session) => {
