@@ -118,6 +118,17 @@ function LiveViewer2() {
 
     session.audioVideo.addObserver(observer);
     session.audioVideo.start();
+    session.audioVideo.realtimeSubscribeToVolumeIndicator((attendeeId, volume, muted, signalStrength) => {
+      console.log('Attendee ID:', attendeeId);
+      console.log('Volume:', volume);
+      console.log('Muted:', muted);
+      console.log('Signal Strength:', signalStrength);
+      if (volume < 0.01 && !muted) {
+        console.log('Stream đang im lặng');
+        alert('Stream đang im lặng');
+        // Xử lý khi stream im lặng
+      }
+    });
   }, [selectedVoiceLanguage]);
 
   const selectSpeaker = async (session) => {
