@@ -181,7 +181,7 @@ function LiveViewer2() {
     };
 
     session.audioVideo.addObserver(observer);
-    session.audioVideo.start();
+    // session.audioVideo.start();
     // session.audioVideo.realtimeSubscribeToVolumeIndicator((attendeeId, volume, muted, signalStrength) => {
     //   console.log('Attendee ID:', attendeeId);
     //   console.log('Volume:', volume);
