@@ -117,6 +117,18 @@ function LiveViewer2() {
         console.log('Started');
         const currentMeetingAudioStream = await session.audioVideo.getCurrentMeetingAudioStream();
         console.log('Check currentMeetingAudioStream:', currentMeetingAudioStream);
+        session.audioVideo.realtimeSubscribeToVolumeIndicator(
+          (attendeeId, volume, muted, signalStrength) => {
+            alert('Attendee ID:', attendeeId);
+            alert('Volume:', volume);
+            alert('Muted:', muted);
+            alert('Signal Strength:', signalStrength);
+            if (volume < 0.01 && !muted) {
+              console.log('Stream đang im lặng');
+              alert('Stream đang im lặng');
+            }
+          }
+        );
         if (currentMeetingAudioStream) {
           console.log('Meeting Audio Stream found:', currentMeetingAudioStream);
           alert('Meeting Audio Stream found!');
@@ -134,6 +146,7 @@ function LiveViewer2() {
           filterNode.connect(destination);
 
           if (audioElementRef.current) {
+            alert('Bind audio element to destination stream!');
             audioElementRef.current.srcObject = destination.stream;
             await audioElementRef.current.play();
           }
