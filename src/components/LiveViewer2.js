@@ -67,6 +67,14 @@ function LiveViewer2() {
   const [isMuted, setIsMuted] = useState(true);
   const [isPlay, setIsPlay] = useState(false);
 
+  // Add these new states and refs for silence detection
+  const [isSilent, setIsSilent] = useState(false);
+  const audioContextRef = useRef(null);
+  const analyserRef = useRef(null);
+  const silenceTimeoutRef = useRef(null);
+  const silenceThreshold = useRef(0.01); // Adjust this value based on testing
+  const silenceDuration = useRef(1500); // 1.5 seconds of silence before muting
+
   // Add these references and callback:
   const wakeLockRef = useRef(null);
   const requestWakeLock = useCallback(async () => {
@@ -83,6 +91,90 @@ function LiveViewer2() {
     }
   }, []);
 
+  // Function to continuously monitor audio levels
+  const monitorAudioLevels = useCallback(() => {
+    if (!analyserRef.current) return;
+
+    const bufferLength = analyserRef.current.frequencyBinCount;
+    const dataArray = new Uint8Array(bufferLength);
+
+    const checkLevel = () => {
+      if (!analyserRef.current) return;
+
+      analyserRef.current.getByteFrequencyData(dataArray);
+
+      // Calculate average volume level
+      let sum = 0;
+      for (let i = 0; i < bufferLength; i++) {
+        sum += dataArray[i];
+      }
+      const average = sum / bufferLength / 255; // Normalize to 0-1
+
+      // Debug log - uncomment if needed during testing
+      // if (Math.round(Date.now() / 1000) % 5 === 0) {
+      //   console.log('Current audio level:', average);
+      // }
+
+      // If below threshold, start silence timeout
+      if (average < silenceThreshold.current) {
+        if (!silenceTimeoutRef.current && !isSilent) {
+          silenceTimeoutRef.current = setTimeout(() => {
+            console.log('Silence detected, muting audio');
+            if (audioElementRef.current) {
+              audioElementRef.current.muted = true;
+              setIsSilent(true);
+            }
+          }, silenceDuration.current);
+        }
+      } else {
+        // If above threshold, clear timeout and unmute if needed
+        if (silenceTimeoutRef.current) {
+          clearTimeout(silenceTimeoutRef.current);
+          silenceTimeoutRef.current = null;
+        }
+        if (isSilent && audioElementRef.current && !isMuted) {
+          console.log('Audio detected, unmuting');
+          audioElementRef.current.muted = false;
+          setIsSilent(false);
+        }
+      }
+
+      // Continue monitoring
+      requestAnimationFrame(checkLevel);
+    };
+
+    checkLevel();
+  }, [isMuted, isSilent]);
+
+  // Add this new function for silence detection
+  const setupSilenceDetection = useCallback((audioElement) => {
+    try {
+      // Create audio context if it doesn't exist
+      if (!audioContextRef.current) {
+        audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
+      }
+
+      // Create source from audio element
+      const source = audioContextRef.current.createMediaElementSource(audioElement);
+
+      // Create analyzer
+      analyserRef.current = audioContextRef.current.createAnalyser();
+      analyserRef.current.fftSize = 256;
+      analyserRef.current.smoothingTimeConstant = 0.8;
+
+      // Connect nodes: source -> analyser -> destination
+      source.connect(analyserRef.current);
+      analyserRef.current.connect(audioContextRef.current.destination);
+
+      // Start monitoring audio levels
+      monitorAudioLevels();
+
+      console.log('Silence detection setup complete');
+    } catch (error) {
+      console.error('Error setting up silence detection:', error);
+    }
+  }, [monitorAudioLevels]);
+
   const initializeMeetingSession = useCallback(async (meetingData, attendeeData) => {
     if (!meetingData || !attendeeData) {
       console.error('Invalid meeting or attendee information');
@@ -96,128 +188,22 @@ function LiveViewer2() {
     setMeetingSession(session);
 
     await selectSpeaker(session);
-    // if (selectedVoiceLanguage === 'ja-JP') {
-    //   console.log('Selected voice language is Japanese', selectedVoiceLanguage);
-    //   //const audioElement = document.getElementById('audioElementListener');
-    //   const audioElement = audioElementRef.current;
-    //   console.log('Check audioElement:', audioElement);
-    //   if (audioElement) {
-    //     console.log('Audio element found:', audioElement);
-    //     alert('Audio element found!');
-    //     await session.audioVideo.bindAudioElement(audioElement);
-    //   } else {
-    //     console.error('Audio element not found');
-    //     alert('Audio element not found!');
-    //   }
-    // }
-    metricReport(session);
-    const observer = {
-      audioVideoDidStart: async () => {
-        alert('Audio session started!');
-        console.log('Started');
-        const currentMeetingAudioStream = await session.audioVideo.getCurrentMeetingAudioStream();
-        console.log('Check currentMeetingAudioStream:', currentMeetingAudioStream);
-        session.audioVideo.realtimeSubscribeToVolumeIndicator(
-          (attendeeId, volume, muted, signalStrength) => {
-            alert('Attendee ID:', attendeeId);
-            alert('Volume:', volume);
-            alert('Muted:', muted);
-            alert('Signal Strength:', signalStrength);
-            if (volume < 0.01 && !muted) {
-              console.log('Stream đang im lặng');
-              alert('Stream đang im lặng');
-            }
-          }
-        );
-        // if (currentMeetingAudioStream) {
-        //   // console.log('Meeting Audio Stream found:', currentMeetingAudioStream);
-        //   // alert('Meeting Audio Stream found!');
-        //   // console.log('Applying lowpass filter to reduce static noise...');
-        //   // const audioContext = new AudioContext();
-        //   // const sourceNode = audioContext.createMediaStreamSource(currentMeetingAudioStream);
-
-        //   // const filterNode = audioContext.createBiquadFilter();
-        //   // filterNode.type = 'lowpass';
-        //   // filterNode.frequency.value = 3000;
-
-        //   // sourceNode.connect(filterNode);
-
-        //   // const destination = audioContext.createMediaStreamDestination();
-        //   // filterNode.connect(destination);
-
-        //   // if (audioElementRef.current) {
-        //   //   alert('Bind audio element to destination stream!');
-        //   //   audioElementRef.current.srcObject = destination.stream;
-        //   //   await audioElementRef.current.play();
-        //   // }
-        //   // 2. Create an AudioContext
-        //   const audioContext = new AudioContext();
-
-        //   // 3. Create a MediaStreamSource from the meeting audio stream
-        //   const sourceNode = audioContext.createMediaStreamSource(currentMeetingAudioStream);
-
-        //   // 4. Connect it to the destination (speakers)
-        //   sourceNode.connect(audioContext.destination);
-        // } else {
-        //   console.error('Meeting Audio Stream not found');
-        //   alert('Meeting Audio Stream not found!');
-        // }
-
-        if (selectedVoiceLanguage === 'ja-JP') {
-          console.log('Selected voice language is Japanese', selectedVoiceLanguage);
-          //const audioElement = document.getElementById('audioElementListener');
-          const audioElement = audioElementRef.current;
-          console.log('Check audioElement:', audioElement);
-          if (audioElement) {
-            console.log('Audio element found:', audioElement);
-            alert('Audio element found!');
-            await session.audioVideo.bindAudioElement(audioElement);
-          } else {
-            console.error('Audio element not found');
-            alert('Audio element not found!');
-          }
-        }
+    if (selectedVoiceLanguage === 'ja-JP') {
+      console.log('Selected voice language is Japanese', selectedVoiceLanguage);
+      //const audioElement = document.getElementById('audioElementListener');
+      const audioElement = audioElementRef.current;
+      console.log('Check audioElement:', audioElement);
+      if (audioElement) {
+        await session.audioVideo.bindAudioElement(audioElement);
+        // Initialize silence detection after binding audio element
+        setupSilenceDetection(audioElement);
+      } else {
+        console.error('Audio element not found');
       }
-    };
-
-    session.audioVideo.addObserver(observer);
-    // session.audioVideo.start();
-    // session.audioVideo.realtimeSubscribeToVolumeIndicator((attendeeId, volume, muted, signalStrength) => {
-    //   console.log('Attendee ID:', attendeeId);
-    //   console.log('Volume:', volume);
-    //   console.log('Muted:', muted);
-    //   console.log('Signal Strength:', signalStrength);
-    //   if (volume < 0.01 && !muted) {
-    //     console.log('Stream đang im lặng');
-    //     alert('Stream đang im lặng');
-    //     // Xử lý khi stream im lặng
-    //   }
-    // });
-    // session.audioVideo.subscribeToActiveSpeakerDetector(
-    //   // Callback list of attendees sorted by activity (most active first)
-    //   (activeSpeakers) => {
-    //     alert('Active speakers:', activeSpeakers);
-    //     console.log("Active Speakers:", activeSpeakers);
-    //     // You can highlight the first active speaker in UI
-    //   },
-    //   // Activity score callback
-    //   (attendeeId, score) => {
-    //     alert('Activity score:', score);
-    //     alert('Attendee ID:', attendeeId);
-    //     // You can use this score to determine if the attendee is active or not
-    //     console.log(`Activity score for ${attendeeId}: ${score}`);
-    //   },
-    //   // Optional config
-    //   {
-    //     intervalMs: 1000,       // how often to check activity
-    //     scoreCallbackIntervalMs: 1000,
-    //     speakerThreshold: 0.6,  // adjust this sensitivity
-    //     silenceThreshold: 0.01, // when everyone is quiet
-    //   }
-    // );
+    }
+    metricReport(session);
     session.audioVideo.start();
-
-  }, [selectedVoiceLanguage]);
+  }, [selectedVoiceLanguage, setupSilenceDetection]);
 
   const selectSpeaker = async (session) => {
     try {
@@ -525,53 +511,6 @@ function LiveViewer2() {
   };
 
   // Function to handle play/pause button click
-  // const handlePlay = () => {
-  //   const audio = audioElementRef.current;
-  //   const stream = audio?.srcObject;
-
-  //   if (!stream) {
-  //     alert('Audio stream is not available yet. Please wait for the guide to join.');
-  //     return;
-  //   }
-
-  //   const hasAudioTrack = stream.getAudioTracks().length > 0;
-
-  //   if (!hasAudioTrack) {
-  //     alert('No audio track found. Please wait...');
-  //     return;
-  //   }
-
-  //   if (!isPlay) {
-  //     setIsPlay(true);
-  //     audio.play();
-  //   } else {
-  //     setIsPlay(false);
-  //     audio.pause();
-  //   }
-  // };
-
-  // Function to handle play/pause button click
-  // const handlePlay = () => {
-  //   if (isPlay === false) {
-  //     setIsPlay(true)
-  //     const audio = audioElementRef.current;
-  //     if (audio && !audio.paused && audio.currentTime > 0) {
-  //       console.log("Audio đang phát");
-  //       alert('Audio is playing!');
-  //       audioElementRef.current.play();
-  //     } else {
-  //       console.log("Audio chưa phát hoặc đã dừng");
-  //       alert('Audio is not playing or has stopped!');
-  //     }
-  //     //audioElementRef.current.play();
-  //   } else {
-  //     setIsPlay(false);
-  //     audioElementRef.current.pause();
-  //     alert('Audio is paused!');
-  //   }
-  // }
-
-  // Function to handle play/pause button click
   const handlePlay = () => {
     if (isPlay === false) {
       setIsPlay(true)
@@ -681,6 +620,7 @@ function LiveViewer2() {
           //className="audio-player"
           style={{ display: 'none' }}
         />
+
         {!meeting && !attendee ? (
           isLoading ? (
             <div className="loading">
