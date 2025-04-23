@@ -196,7 +196,7 @@ function LiveViewer2() {
       if (audioElement) {
         await session.audioVideo.bindAudioElement(audioElement);
         // Initialize silence detection after binding audio element
-        setupSilenceDetection(audioElement);
+        //setupSilenceDetection(audioElement);
       } else {
         console.error('Audio element not found');
       }
@@ -512,12 +512,29 @@ function LiveViewer2() {
 
   // Function to handle play/pause button click
   const handlePlay = () => {
-    if (isPlay === false) {
-      setIsPlay(true)
-      audioElementRef.current.play();
+    // if (isPlay === false) {
+    //   setIsPlay(true)
+    //   audioElementRef.current.play();
+    // } else {
+    //   setIsPlay(false);
+    //   audioElementRef.current.pause();
+    // }
+    const audioElement = audioElementRef.current;
+    if (!audioElement) return;
+    
+    if (!isPlay) {
+      setIsPlay(true);
+      // If there's audio loaded and ready to play, play it
+      alert('Audio is playing with readyState!', audioElement.readyState);
+      if (audioElement.src && audioElement.readyState >= 2) {
+        audioElement.play().catch(err => {
+          console.error('Error playing audio:', err);
+        });
+      }
     } else {
       setIsPlay(false);
-      audioElementRef.current.pause();
+      // Pause any currently playing audio
+      audioElement.pause();
     }
   }
 
