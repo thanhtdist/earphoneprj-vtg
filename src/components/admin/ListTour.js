@@ -62,6 +62,7 @@ const ListTour = () => {
         // Call API to search tours
         // setItemOffset(0);
         getListTour(query);
+        setCurrentPage(1);
     };
 
     // export tours to csv

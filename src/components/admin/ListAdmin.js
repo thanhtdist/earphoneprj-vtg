@@ -18,7 +18,7 @@ const ListAdmin = () => {
     const [isLoading, setIsLoading] = useState(false);
     // const [itemOffset, setItemOffset] = useState(0);
     const itemsPerPage = 10;
-
+    const [currentPage, setCurrentPage] = useState(1);
     const countPage = Math.ceil(countList / itemsPerPage);
     // function get all list admin
     const handleGetListAdmin = useCallback( async (data,page = 1) => {
@@ -47,6 +47,7 @@ const ListAdmin = () => {
     //function search admin by name 
     const handleSearchClick = () => {
         handleGetListAdmin(query);
+        setCurrentPage(1);
     }
     // Handle search change
     const handleSearchChange = (e) => {
@@ -86,11 +87,9 @@ const ListAdmin = () => {
     // const [currentPage, setCurrentPage] = useState(1);
     // Invoke when user click to request another page.
     const handlePageClick = (event) => {
-        const currentPage = event.selected + 1; // `selected` bắt đầu từ 0
-        // setCurrentPage(newPage);
-        handleGetListAdmin(query,currentPage);
-        // const newOffset = event.selected * itemsPerPage % listAdmin.length;
-        // setItemOffset(newOffset);
+        const newPage = event.selected + 1; 
+        setCurrentPage(newPage);
+        handleGetListAdmin(query,newPage);
     };
 
     const [nameActive, setNameActive] = useState('');
@@ -233,7 +232,7 @@ const ListAdmin = () => {
                                     containerClassName="pagination"
                                     activeClassName="active"
                                     renderOnZeroPageCount={null}
-                                // forcePage={currentPage - 1}
+                                    forcePage={currentPage - 1}
                                 />
                             </ul>
                         </nav>
