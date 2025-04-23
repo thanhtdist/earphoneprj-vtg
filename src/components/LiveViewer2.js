@@ -196,11 +196,15 @@ function LiveViewer2() {
     session.audioVideo.subscribeToActiveSpeakerDetector(
       // Callback list of attendees sorted by activity (most active first)
       (activeSpeakers) => {
+        alert('Active speakers:', activeSpeakers);
         console.log("Active Speakers:", activeSpeakers);
         // You can highlight the first active speaker in UI
       },
       // Activity score callback
       (attendeeId, score) => {
+        alert('Activity score:', score);
+        alert('Attendee ID:', attendeeId);
+        // You can use this score to determine if the attendee is active or not
         console.log(`Activity score for ${attendeeId}: ${score}`);
       },
       // Optional config
