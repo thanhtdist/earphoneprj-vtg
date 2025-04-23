@@ -415,6 +415,8 @@ function LiveViewer() {
     setIsMuted(!isMuted);
     audioElementRef.current.muted = isMuted;
   };
+
+  // Function to handle play/pause button click
   const handlePlay = () => {
     if (isPlay === false) {
       setIsPlay(true)
