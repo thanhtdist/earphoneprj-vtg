@@ -68,12 +68,12 @@ function LiveViewer2() {
   const [isPlay, setIsPlay] = useState(false);
 
   // Add these new states and refs for silence detection
-  const [isSilent, setIsSilent] = useState(false);
-  const audioContextRef = useRef(null);
-  const analyserRef = useRef(null);
-  const silenceTimeoutRef = useRef(null);
-  const silenceThreshold = useRef(0.01); // Adjust this value based on testing
-  const silenceDuration = useRef(1500); // 1.5 seconds of silence before muting
+  // const [isSilent, setIsSilent] = useState(false);
+  // const audioContextRef = useRef(null);
+  // const analyserRef = useRef(null);
+  // const silenceTimeoutRef = useRef(null);
+  // const silenceThreshold = useRef(0.01); // Adjust this value based on testing
+  // const silenceDuration = useRef(1500); // 1.5 seconds of silence before muting
 
   // Add these references and callback:
   const wakeLockRef = useRef(null);
@@ -91,89 +91,89 @@ function LiveViewer2() {
     }
   }, []);
 
-  // Function to continuously monitor audio levels
-  const monitorAudioLevels = useCallback(() => {
-    if (!analyserRef.current) return;
+  // // Function to continuously monitor audio levels
+  // const monitorAudioLevels = useCallback(() => {
+  //   if (!analyserRef.current) return;
 
-    const bufferLength = analyserRef.current.frequencyBinCount;
-    const dataArray = new Uint8Array(bufferLength);
+  //   const bufferLength = analyserRef.current.frequencyBinCount;
+  //   const dataArray = new Uint8Array(bufferLength);
 
-    const checkLevel = () => {
-      if (!analyserRef.current) return;
+  //   const checkLevel = () => {
+  //     if (!analyserRef.current) return;
 
-      analyserRef.current.getByteFrequencyData(dataArray);
+  //     analyserRef.current.getByteFrequencyData(dataArray);
 
-      // Calculate average volume level
-      let sum = 0;
-      for (let i = 0; i < bufferLength; i++) {
-        sum += dataArray[i];
-      }
-      const average = sum / bufferLength / 255; // Normalize to 0-1
+  //     // Calculate average volume level
+  //     let sum = 0;
+  //     for (let i = 0; i < bufferLength; i++) {
+  //       sum += dataArray[i];
+  //     }
+  //     const average = sum / bufferLength / 255; // Normalize to 0-1
 
-      // Debug log - uncomment if needed during testing
-      // if (Math.round(Date.now() / 1000) % 5 === 0) {
-      //   console.log('Current audio level:', average);
-      // }
+  //     // Debug log - uncomment if needed during testing
+  //     // if (Math.round(Date.now() / 1000) % 5 === 0) {
+  //     //   console.log('Current audio level:', average);
+  //     // }
 
-      // If below threshold, start silence timeout
-      if (average < silenceThreshold.current) {
-        if (!silenceTimeoutRef.current && !isSilent) {
-          silenceTimeoutRef.current = setTimeout(() => {
-            console.log('Silence detected, muting audio');
-            if (audioElementRef.current) {
-              audioElementRef.current.muted = true;
-              setIsSilent(true);
-            }
-          }, silenceDuration.current);
-        }
-      } else {
-        // If above threshold, clear timeout and unmute if needed
-        if (silenceTimeoutRef.current) {
-          clearTimeout(silenceTimeoutRef.current);
-          silenceTimeoutRef.current = null;
-        }
-        if (isSilent && audioElementRef.current && !isMuted) {
-          console.log('Audio detected, unmuting');
-          audioElementRef.current.muted = false;
-          setIsSilent(false);
-        }
-      }
+  //     // If below threshold, start silence timeout
+  //     if (average < silenceThreshold.current) {
+  //       if (!silenceTimeoutRef.current && !isSilent) {
+  //         silenceTimeoutRef.current = setTimeout(() => {
+  //           console.log('Silence detected, muting audio');
+  //           if (audioElementRef.current) {
+  //             audioElementRef.current.muted = true;
+  //             setIsSilent(true);
+  //           }
+  //         }, silenceDuration.current);
+  //       }
+  //     } else {
+  //       // If above threshold, clear timeout and unmute if needed
+  //       if (silenceTimeoutRef.current) {
+  //         clearTimeout(silenceTimeoutRef.current);
+  //         silenceTimeoutRef.current = null;
+  //       }
+  //       if (isSilent && audioElementRef.current && !isMuted) {
+  //         console.log('Audio detected, unmuting');
+  //         audioElementRef.current.muted = false;
+  //         setIsSilent(false);
+  //       }
+  //     }
 
-      // Continue monitoring
-      requestAnimationFrame(checkLevel);
-    };
+  //     // Continue monitoring
+  //     requestAnimationFrame(checkLevel);
+  //   };
 
-    checkLevel();
-  }, [isMuted, isSilent]);
+  //   checkLevel();
+  // }, [isMuted, isSilent]);
 
-  // Add this new function for silence detection
-  const setupSilenceDetection = useCallback((audioElement) => {
-    try {
-      // Create audio context if it doesn't exist
-      if (!audioContextRef.current) {
-        audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
-      }
+  // // Add this new function for silence detection
+  // const setupSilenceDetection = useCallback((audioElement) => {
+  //   try {
+  //     // Create audio context if it doesn't exist
+  //     if (!audioContextRef.current) {
+  //       audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
+  //     }
 
-      // Create source from audio element
-      const source = audioContextRef.current.createMediaElementSource(audioElement);
+  //     // Create source from audio element
+  //     const source = audioContextRef.current.createMediaElementSource(audioElement);
 
-      // Create analyzer
-      analyserRef.current = audioContextRef.current.createAnalyser();
-      analyserRef.current.fftSize = 256;
-      analyserRef.current.smoothingTimeConstant = 0.8;
+  //     // Create analyzer
+  //     analyserRef.current = audioContextRef.current.createAnalyser();
+  //     analyserRef.current.fftSize = 256;
+  //     analyserRef.current.smoothingTimeConstant = 0.8;
 
-      // Connect nodes: source -> analyser -> destination
-      source.connect(analyserRef.current);
-      analyserRef.current.connect(audioContextRef.current.destination);
+  //     // Connect nodes: source -> analyser -> destination
+  //     source.connect(analyserRef.current);
+  //     analyserRef.current.connect(audioContextRef.current.destination);
 
-      // Start monitoring audio levels
-      monitorAudioLevels();
+  //     // Start monitoring audio levels
+  //     monitorAudioLevels();
 
-      console.log('Silence detection setup complete');
-    } catch (error) {
-      console.error('Error setting up silence detection:', error);
-    }
-  }, [monitorAudioLevels]);
+  //     console.log('Silence detection setup complete');
+  //   } catch (error) {
+  //     console.error('Error setting up silence detection:', error);
+  //   }
+  // }, [monitorAudioLevels]);
 
   const initializeMeetingSession = useCallback(async (meetingData, attendeeData) => {
     if (!meetingData || !attendeeData) {
@@ -203,7 +203,7 @@ function LiveViewer2() {
     }
     metricReport(session);
     session.audioVideo.start();
-  }, [selectedVoiceLanguage, setupSilenceDetection]);
+  }, [selectedVoiceLanguage]);
 
   const selectSpeaker = async (session) => {
     try {
@@ -525,7 +525,10 @@ function LiveViewer2() {
     if (!isPlay) {
       setIsPlay(true);
       // If there's audio loaded and ready to play, play it
-      alert('Audio is playing with readyState!', audioElement.readyState);
+      console.log('Audio is playing with audioElement!', audioElement);
+      alert('Audio is playing with readyState!' + audioElement.readyState);
+      console.log('Audio is playing with readyState!', audioElement.readyState);
+      console.log('Audio is playing with src!', audioElement.src);
       if (audioElement.src && audioElement.readyState >= 2) {
         audioElement.play().catch(err => {
           console.error('Error playing audio:', err);
