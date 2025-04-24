@@ -34,7 +34,7 @@ import MessageBox from './MessageBox';
 import { IoPlay } from "react-icons/io5";
 import { HiMiniSpeakerWave } from "react-icons/hi2";
 import { IoVolumeMute } from "react-icons/io5";
-import { IoMicCircle } from "react-icons/io5";
+import { IoMicCircle, IoMicOffCircleSharp } from "react-icons/io5";
 import { FaPause } from "react-icons/fa6";
 //import { useLocation } from 'react-router-dom';
 //import { useNavigate } from "react-router-dom";
@@ -694,14 +694,18 @@ function StartLiveSession() {
                         ))}
                       </select>
                     </div>
-                  )} 
+                  )}
                   <div className="controls">
                     <div className={`mic-button ${isMicOn ? 'mic-button-off' : 'mic-button-on'}`} onClick={toggleMicrophone}>
                       {/* {!isMicOn ? */}
+                      {isMicOn ? (
+                        <IoMicOffCircleSharp size={30} />) : (
                         <IoMicCircle size={30} />
-                        {/* : <IoMicOffCircleSharp size={33} color="gray" />} */}
-                        {/* <span className="mic-text">{isMicOn ? 'スタート' : '停止'}</span> */}
-                        <span className="mic-text">{isMicOn ? t('stopBtn') : t('startBtn')}</span>
+                      )}
+                      {/* <IoMicCircle size={30} /> */}
+                      {/* : <IoMicOffCircleSharp size={33} color="gray" />} */}
+                      {/* <span className="mic-text">{isMicOn ? 'スタート' : '停止'}</span> */}
+                      <span className="mic-text">{isMicOn ? t('stopBtn') : t('startBtn')}</span>
                     </div>
                   </div>
                 </div>
