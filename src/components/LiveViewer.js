@@ -542,17 +542,17 @@ function LiveViewer() {
         ) : (
           <>
             <div className='audioViewer'>
-              {!isPlay ? <div>
+              {!!isPlay ? <div>
                 <div className='pauseButtonViewer' onClick={handlePlay}>
                   {/* {isPlay ? <FaPause size={30} /> : <IoPlay size={30} />} */}
-                  <IoPlay size={30} />
+                  <FaPause size={30} />
                   <span className="startText">{t('stopBtn')}</span>
                 </div>
               </div>
                 : <div>
                   <div className='playButtonViewer' onClick={handlePlay}>
                     {/* {isPlay ? <FaPause size={30} /> : <IoPlay size={30} />} */}
-                    <FaPause size={30} />
+                    <IoPlay size={30} />
                     <span className="startText">{t('startBtn')}</span>
                   </div>
                 </div>}
