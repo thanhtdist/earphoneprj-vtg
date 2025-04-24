@@ -197,6 +197,19 @@ function LiveViewer2() {
         await session.audioVideo.bindAudioElement(audioElement);
         // Initialize silence detection after binding audio element
         //setupSilenceDetection(audioElement);
+  // Subscribe to volume indicator for the current attendee
+  session.audioVideo.realtimeSubscribeToVolumeIndicator(
+    attendeeData.AttendeeId,  // Use the actual attendee ID
+    (volume, muted, signalStrength) => {
+      // Update UI based on volume
+      console.log(`Volume: ${volume}, Muted: ${muted}, Signal: ${signalStrength}`);
+
+      alert(`Volume: ${volume}, Muted: ${muted}, Signal: ${signalStrength}`);
+      
+      // Automatically mute when volume is 0 or explicitly muted
+      audioElement.muted = muted || volume === 0;
+    }
+  );
       } else {
         console.error('Audio element not found');
       }
