@@ -32,6 +32,7 @@ import MessageBox from './MessageBox';
 import { useParams } from "react-router-dom";
 import NotFound from './NotFound';
 import TourTitle from './TourTitle';
+import { FaPause } from "react-icons/fa";
 
 function LiveViewer() {
   // Get the params from the URL
@@ -541,12 +542,20 @@ function LiveViewer() {
         ) : (
           <>
             <div className='audioViewer'>
-              <div className={` ${isPlay ? 'pauseButtonViewer' : 'playButtonViewer'}`} onClick={handlePlay}>
-                {/* {isPlay ? <FaPause size={30} /> : <IoPlay size={30} />} */}
-                <IoPlay size={30} />
-                <span className="startText">{isPlay ? t('stopBtn') : t('startBtn')}</span>
+              {!isPlay ? <div>
+                <div className='pauseButtonViewer' onClick={handlePlay}>
+                  {/* {isPlay ? <FaPause size={30} /> : <IoPlay size={30} />} */}
+                  <IoPlay size={30} />
+                  <span className="startText">{t('stopBtn')}</span>
+                </div>
               </div>
-
+                : <div>
+                  <div className='playButtonViewer' onClick={handlePlay}>
+                    {/* {isPlay ? <FaPause size={30} /> : <IoPlay size={30} />} */}
+                    <FaPause size={30} />
+                    <span className="startText">{t('startBtn')}</span>
+                  </div>
+                </div>}
               <div className='soundButton' onClick={handleMuteUnmute}>
                 {isMuted ? <HiMiniSpeakerWave size={30} /> : <IoVolumeMute size={30} />
                 }
