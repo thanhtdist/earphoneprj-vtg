@@ -179,7 +179,7 @@ function StartLiveSession2() {
     //logger.info('deviceController' + JSON.stringify(deviceController));
     const meetingSession = new DefaultMeetingSession(meetingSessionConfiguration, logger, deviceController);
     setMeetingSession(meetingSession);
-    selectSpeaker(meetingSession);
+    //selectSpeaker(meetingSession);
     console.log('Main Speaker - initializeMeetingSession--> Start');
     metricReport(meetingSession);
     console.log('Main Speaker - initializeMeetingSession--> End');
@@ -428,15 +428,15 @@ function StartLiveSession2() {
   // };
 
   // Async function to select audio output device
-  const selectSpeaker = async (meetingSession) => {
-    const audioOutputDevices = await meetingSession.audioVideo.listAudioOutputDevices();
+  // const selectSpeaker = async (meetingSession) => {
+  //   const audioOutputDevices = await meetingSession.audioVideo.listAudioOutputDevices();
 
-    if (audioOutputDevices.length > 0) {
-      await meetingSession.audioVideo.chooseAudioOutput(audioOutputDevices[0].deviceId);
-    } else {
-      console.log('No speaker devices found');
-    }
-  };
+  //   if (audioOutputDevices.length > 0) {
+  //     await meetingSession.audioVideo.chooseAudioOutput(audioOutputDevices[0].deviceId);
+  //   } else {
+  //     console.log('No speaker devices found');
+  //   }
+  // };
 
   // Function to get the list of audio input devices
   const getAudioInputDevices = useCallback(async () => {
