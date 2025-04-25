@@ -217,7 +217,7 @@ function StartLiveSession2() {
     meetingSession.audioVideo.addDeviceChangeObserver(observer);
 
     // Start audio video session
-    meetingSession.audioVideo.start();
+    //meetingSession.audioVideo.start();
 
   }, []);
 
