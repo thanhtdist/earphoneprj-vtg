@@ -24,7 +24,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { useTranslation } from 'react-i18next';
 import { LISTEN_VOICE_LANGUAGES, JA_LISTEN_VOICE_LANGUAGES } from '../utils/constant';
 import Header from './Header';
-import { IoPlay } from "react-icons/io5";
 import { HiMiniSpeakerWave } from "react-icons/hi2";
 import { IoVolumeMute } from "react-icons/io5";
 // import { IoMicCircle, IoMicOffCircleSharp } from "react-icons/io5";
@@ -32,7 +31,7 @@ import MessageBox from './MessageBox';
 import { useParams } from "react-router-dom";
 import NotFound from './NotFound';
 import TourTitle from './TourTitle';
-import { FaPause } from "react-icons/fa";
+import { FaPause, FaPlay } from "react-icons/fa";
 
 function LiveViewer() {
   // Get the params from the URL
@@ -545,14 +544,14 @@ function LiveViewer() {
               {!!isPlay ? <div>
                 <div className='pauseButtonViewer' onClick={handlePlay}>
                   {/* {isPlay ? <FaPause size={30} /> : <IoPlay size={30} />} */}
-                  <FaPause size={30} />
+                  <FaPause size={20} />
                   <span className="startText">{t('stopBtn')}</span>
                 </div>
               </div>
                 : <div>
                   <div className='playButtonViewer' onClick={handlePlay}>
                     {/* {isPlay ? <FaPause size={30} /> : <IoPlay size={30} />} */}
-                    <IoPlay size={30} />
+                    <FaPlay size={20} />
                     <span className="startText">{t('startBtn')}</span>
                   </div>
                 </div>}
