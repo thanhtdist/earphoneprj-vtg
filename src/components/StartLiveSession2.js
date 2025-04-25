@@ -34,7 +34,7 @@ import MessageBox from './MessageBox';
 import { IoPlay } from "react-icons/io5";
 import { HiMiniSpeakerWave } from "react-icons/hi2";
 import { IoVolumeMute } from "react-icons/io5";
-import { IoMicCircle } from "react-icons/io5";
+// import { IoMicCircle } from "react-icons/io5";
 import { FaPause } from "react-icons/fa6";
 //import { useLocation } from 'react-router-dom';
 //import { useNavigate } from "react-router-dom";
@@ -71,7 +71,7 @@ function StartLiveSession2() {
   const [userArn, setUserArn] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   //const [userId, setUserId] = useState('');
-  const [isMicOn, setIsMicOn] = useState(false); // State for microphone status
+  // const [isMicOn, setIsMicOn] = useState(false); // State for microphone status
   const [transformVFD, setTransformVFD] = useState(null);
   const [microChecking, setMicroChecking] = useState(t('microChecking'));
   const [noMicroMsg, setNoMicoMsg] = useState(t('noMicroMsg'));
@@ -369,63 +369,63 @@ function StartLiveSession2() {
 
 
   // Function to toggle microphone on/off
-  const toggleMicrophone = async () => {
-    if (meetingSession) {
-      try {
-        if (isMicOn) {
-          // Mute the microphone
-          const realtimeMuteLocalAudio = meetingSession.audioVideo.realtimeMuteLocalAudio();
-          //logger.info('toggleMicrophone realtimeMuteLocalAudio ' + JSON.stringify(realtimeMuteLocalAudio));
-          console.log('toggleMicrophone realtimeMuteLocalAudio', realtimeMuteLocalAudio);
-          const stopAudioInput = await meetingSession.audioVideo.stopAudioInput(); // Stops the audio input device
-          //logger.info('toggleMicrophone stopAudioInput ' + JSON.stringify(stopAudioInput));
-          console.log('toggleMicrophone stopAudioInput', stopAudioInput);
+  // const toggleMicrophone = async () => {
+  //   if (meetingSession) {
+  //     try {
+  //       if (isMicOn) {
+  //         // Mute the microphone
+  //         const realtimeMuteLocalAudio = meetingSession.audioVideo.realtimeMuteLocalAudio();
+  //         //logger.info('toggleMicrophone realtimeMuteLocalAudio ' + JSON.stringify(realtimeMuteLocalAudio));
+  //         console.log('toggleMicrophone realtimeMuteLocalAudio', realtimeMuteLocalAudio);
+  //         const stopAudioInput = await meetingSession.audioVideo.stopAudioInput(); // Stops the audio input device
+  //         //logger.info('toggleMicrophone stopAudioInput ' + JSON.stringify(stopAudioInput));
+  //         console.log('toggleMicrophone stopAudioInput', stopAudioInput);
 
-        } else {
-          // Start the audio input device
-          // Create a new transform device if Voice Focus is supported
-          const vfDevice = await transformVFD.createTransformDevice(selectedAudioInput);
-          //logger.info('toggleMicrophone vfDevice ' + JSON.stringify(vfDevice));
-          console.log('toggleMicrophone vfDevice', vfDevice);
-          // Enable Echo Reduction on this client
-          const observeMeetingAudio = await vfDevice.observeMeetingAudio(meetingSession.audioVideo);
-          //logger.info('toggleMicrophone Echo Reduction ' + JSON.stringify(observeMeetingAudio));
-          console.log('toggleMicrophone Echo Reduction', observeMeetingAudio);
-          const deviceToUse = vfDevice || selectedAudioInput;
-          //logger.info('toggleMicrophone deviceToUse ' + JSON.stringify(deviceToUse));
-          console.log('toggleMicrophone deviceToUse', deviceToUse);
-          const startAudioInput = await meetingSession.audioVideo.startAudioInput(deviceToUse);
-          //logger.info('toggleMicrophone startAudioInput ' + JSON.stringify(startAudioInput));
-          console.log('toggleMicrophone startAudioInput', startAudioInput);
+  //       } else {
+  //         // Start the audio input device
+  //         // Create a new transform device if Voice Focus is supported
+  //         const vfDevice = await transformVFD.createTransformDevice(selectedAudioInput);
+  //         //logger.info('toggleMicrophone vfDevice ' + JSON.stringify(vfDevice));
+  //         console.log('toggleMicrophone vfDevice', vfDevice);
+  //         // Enable Echo Reduction on this client
+  //         const observeMeetingAudio = await vfDevice.observeMeetingAudio(meetingSession.audioVideo);
+  //         //logger.info('toggleMicrophone Echo Reduction ' + JSON.stringify(observeMeetingAudio));
+  //         console.log('toggleMicrophone Echo Reduction', observeMeetingAudio);
+  //         const deviceToUse = vfDevice || selectedAudioInput;
+  //         //logger.info('toggleMicrophone deviceToUse ' + JSON.stringify(deviceToUse));
+  //         console.log('toggleMicrophone deviceToUse', deviceToUse);
+  //         const startAudioInput = await meetingSession.audioVideo.startAudioInput(deviceToUse);
+  //         //logger.info('toggleMicrophone startAudioInput ' + JSON.stringify(startAudioInput));
+  //         console.log('toggleMicrophone startAudioInput', startAudioInput);
 
-          if (vfDevice) {
-            // logger.info('Amazon Voice Focus enabled ');
-            console.log('Amazon Voice Focus enabled ');
-          }
-          // Unmute the microphone
-          const realtimeUnmuteLocalAudio = meetingSession.audioVideo.realtimeUnmuteLocalAudio();
-          //logger.info('toggleMicrophone realtimeUnmuteLocalAudio ' + JSON.stringify(realtimeUnmuteLocalAudio));
-          console.log('toggleMicrophone realtimeUnmuteLocalAudio', realtimeUnmuteLocalAudio);
-        }
+  //         if (vfDevice) {
+  //           // logger.info('Amazon Voice Focus enabled ');
+  //           console.log('Amazon Voice Focus enabled ');
+  //         }
+  //         // Unmute the microphone
+  //         const realtimeUnmuteLocalAudio = meetingSession.audioVideo.realtimeUnmuteLocalAudio();
+  //         //logger.info('toggleMicrophone realtimeUnmuteLocalAudio ' + JSON.stringify(realtimeUnmuteLocalAudio));
+  //         console.log('toggleMicrophone realtimeUnmuteLocalAudio', realtimeUnmuteLocalAudio);
+  //       }
 
-        setIsMicOn(!isMicOn); // Toggle mic status
+  //       setIsMicOn(!isMicOn); // Toggle mic status
 
-      } catch (error) {
-        //logger.error('toggleMicrophone error ' + error);
-        console.error('toggleMicrophone error', error);
-        if (error.name === "NotAllowedError" || error.name === "PermissionDeniedError") {
-          // Handle permission denial
-          alert(error);
-          console.error("Permission denied by browser. Please allow access to continue.");
-          //alert("Permission denied by browser. Please allow access to continue.");
-        } else {
-          // Handle other errors
-          alert(error);
-          console.error("Error accessing media devices:", error);
-        }
-      }
-    }
-  };
+  //     } catch (error) {
+  //       //logger.error('toggleMicrophone error ' + error);
+  //       console.error('toggleMicrophone error', error);
+  //       if (error.name === "NotAllowedError" || error.name === "PermissionDeniedError") {
+  //         // Handle permission denial
+  //         alert(error);
+  //         console.error("Permission denied by browser. Please allow access to continue.");
+  //         //alert("Permission denied by browser. Please allow access to continue.");
+  //       } else {
+  //         // Handle other errors
+  //         alert(error);
+  //         console.error("Error accessing media devices:", error);
+  //       }
+  //     }
+  //   }
+  // };
 
   // Async function to select audio output device
   const selectSpeaker = async (meetingSession) => {
@@ -695,15 +695,15 @@ function StartLiveSession2() {
                       </select>
                     </div>
                   )} 
-                  <div className="controls">
-                    <div className={`mic-button ${isMicOn ? 'mic-button-off' : 'mic-button-on'}`} onClick={toggleMicrophone}>
+                  {/* <div className="controls"> */}
+                    {/* <div className={`mic-button ${isMicOn ? 'mic-button-off' : 'mic-button-on'}`} onClick={toggleMicrophone}> */}
                       {/* {!isMicOn ? */}
-                        <IoMicCircle size={30} />
+                        {/* <IoMicCircle size={30} /> */}
                         {/* : <IoMicOffCircleSharp size={33} color="gray" />} */}
                         {/* <span className="mic-text">{isMicOn ? 'スタート' : '停止'}</span> */}
-                        <span className="mic-text">{isMicOn ? t('stopBtn') : t('startBtn')}</span>
-                    </div>
-                  </div>
+                        {/* <span className="mic-text">{isMicOn ? t('stopBtn') : t('startBtn')}</span> */}
+                    {/* </div> */}
+                  {/* </div> */}
                 </div>
               </>
             )}
