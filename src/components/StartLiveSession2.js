@@ -138,7 +138,7 @@ function StartLiveSession2() {
       console.log('transformVoiceFocusDevice transformer', transformer);
       setTransformVFD(transformer);
       isVoiceFocusSupported = transformer.isSupported();
-      alert("isVoiceFocusSupported" + isVoiceFocusSupported)
+      alert("isVoiceFocusSupported=: " + isVoiceFocusSupported)
       console.log('transformVoiceFocusDevice isVoiceFocusSupported', isVoiceFocusSupported);
     } catch (e) {
       // Will only occur due to invalid input or transient errors (e.g., network).
