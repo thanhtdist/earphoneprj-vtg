@@ -24,7 +24,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { useTranslation } from 'react-i18next';
 import { LISTEN_VOICE_LANGUAGES, JA_LISTEN_VOICE_LANGUAGES } from '../utils/constant';
 import Header from './Header';
-import { IoPlay } from "react-icons/io5";
 import { HiMiniSpeakerWave } from "react-icons/hi2";
 import { IoVolumeMute } from "react-icons/io5";
 // import { IoMicCircle, IoMicOffCircleSharp } from "react-icons/io5";
@@ -32,6 +31,7 @@ import MessageBox from './MessageBox';
 import { useParams } from "react-router-dom";
 import NotFound from './NotFound';
 import TourTitle from './TourTitle';
+import { FaPause, FaPlay } from "react-icons/fa";
 
 function LiveViewer2() {
   // Get the params from the URL
@@ -67,14 +67,6 @@ function LiveViewer2() {
   const [isMuted, setIsMuted] = useState(true);
   const [isPlay, setIsPlay] = useState(false);
 
-  // Add these new states and refs for silence detection
-  // const [isSilent, setIsSilent] = useState(false);
-  // const audioContextRef = useRef(null);
-  // const analyserRef = useRef(null);
-  // const silenceTimeoutRef = useRef(null);
-  // const silenceThreshold = useRef(0.01); // Adjust this value based on testing
-  // const silenceDuration = useRef(1500); // 1.5 seconds of silence before muting
-
   // Add these references and callback:
   const wakeLockRef = useRef(null);
   const requestWakeLock = useCallback(async () => {
@@ -90,90 +82,6 @@ function LiveViewer2() {
       console.error('Failed to request Wake Lock:', error);
     }
   }, []);
-
-  // // Function to continuously monitor audio levels
-  // const monitorAudioLevels = useCallback(() => {
-  //   if (!analyserRef.current) return;
-
-  //   const bufferLength = analyserRef.current.frequencyBinCount;
-  //   const dataArray = new Uint8Array(bufferLength);
-
-  //   const checkLevel = () => {
-  //     if (!analyserRef.current) return;
-
-  //     analyserRef.current.getByteFrequencyData(dataArray);
-
-  //     // Calculate average volume level
-  //     let sum = 0;
-  //     for (let i = 0; i < bufferLength; i++) {
-  //       sum += dataArray[i];
-  //     }
-  //     const average = sum / bufferLength / 255; // Normalize to 0-1
-
-  //     // Debug log - uncomment if needed during testing
-  //     // if (Math.round(Date.now() / 1000) % 5 === 0) {
-  //     //   console.log('Current audio level:', average);
-  //     // }
-
-  //     // If below threshold, start silence timeout
-  //     if (average < silenceThreshold.current) {
-  //       if (!silenceTimeoutRef.current && !isSilent) {
-  //         silenceTimeoutRef.current = setTimeout(() => {
-  //           console.log('Silence detected, muting audio');
-  //           if (audioElementRef.current) {
-  //             audioElementRef.current.muted = true;
-  //             setIsSilent(true);
-  //           }
-  //         }, silenceDuration.current);
-  //       }
-  //     } else {
-  //       // If above threshold, clear timeout and unmute if needed
-  //       if (silenceTimeoutRef.current) {
-  //         clearTimeout(silenceTimeoutRef.current);
-  //         silenceTimeoutRef.current = null;
-  //       }
-  //       if (isSilent && audioElementRef.current && !isMuted) {
-  //         console.log('Audio detected, unmuting');
-  //         audioElementRef.current.muted = false;
-  //         setIsSilent(false);
-  //       }
-  //     }
-
-  //     // Continue monitoring
-  //     requestAnimationFrame(checkLevel);
-  //   };
-
-  //   checkLevel();
-  // }, [isMuted, isSilent]);
-
-  // // Add this new function for silence detection
-  // const setupSilenceDetection = useCallback((audioElement) => {
-  //   try {
-  //     // Create audio context if it doesn't exist
-  //     if (!audioContextRef.current) {
-  //       audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
-  //     }
-
-  //     // Create source from audio element
-  //     const source = audioContextRef.current.createMediaElementSource(audioElement);
-
-  //     // Create analyzer
-  //     analyserRef.current = audioContextRef.current.createAnalyser();
-  //     analyserRef.current.fftSize = 256;
-  //     analyserRef.current.smoothingTimeConstant = 0.8;
-
-  //     // Connect nodes: source -> analyser -> destination
-  //     source.connect(analyserRef.current);
-  //     analyserRef.current.connect(audioContextRef.current.destination);
-
-  //     // Start monitoring audio levels
-  //     monitorAudioLevels();
-
-  //     console.log('Silence detection setup complete');
-  //   } catch (error) {
-  //     console.error('Error setting up silence detection:', error);
-  //   }
-  // }, [monitorAudioLevels]);
 
   const initializeMeetingSession = useCallback(async (meetingData, attendeeData) => {
     if (!meetingData || !attendeeData) {
@@ -195,21 +103,6 @@ function LiveViewer2() {
       console.log('Check audioElement:', audioElement);
       if (audioElement) {
         await session.audioVideo.bindAudioElement(audioElement);
-        // Initialize silence detection after binding audio element
-        //setupSilenceDetection(audioElement);
-        // Subscribe to volume indicator for the current attendee
-        // session.audioVideo.realtimeSubscribeToVolumeIndicator(
-        //   attendeeData.AttendeeId,  // Use the actual attendee ID
-        //   (volume, muted, signalStrength) => {
-        //     // Update UI based on volume
-        //     console.log(`Volume: ${volume}, Muted: ${muted}, Signal: ${signalStrength}`);
-
-        //     alert(`Volume: ${volume}, Muted: ${muted}, Signal: ${signalStrength}`);
-
-        //     // Automatically mute when volume is 0 or explicitly muted
-        //     audioElement.muted = muted || volume === 0;
-        //   }
-        // );
       } else {
         console.error('Audio element not found');
       }
@@ -408,105 +301,270 @@ function LiveViewer2() {
     // };
   }, [meetingSession]);
 
-  useEffect(() => {
+  // useEffect(() => {
 
-    const audioElement = audioElementRef.current;
-    if (!audioElement || !meetingSession || !sourceLanguageCode || !selectedVoiceLanguage) return;
-    setTranscriptText([]);
-    setTranslatedText([]);
+  //   const audioElement = audioElementRef.current;
+  //   if (!audioElement || !meetingSession || !sourceLanguageCode || !selectedVoiceLanguage) return;
+  //   setTranscriptText([]);
+  //   setTranslatedText([]);
 
-    if (
-      sourceLanguageCode !== selectedVoiceLanguage &&
-      transcripts?.results?.[0]?.alternatives?.[0]?.transcript &&
-      !transcripts.results[0].isPartial
-    ) {
-      // Process audio queue
-      const processAudioQueue = async () => {
-        if (audioQueueRef.current.length === 0) return;
+  //   if (
+  //     sourceLanguageCode !== selectedVoiceLanguage &&
+  //     transcripts?.results?.[0]?.alternatives?.[0]?.transcript &&
+  //     !transcripts.results[0].isPartial
+  //   ) {
+  //     // Process audio queue
+  //     const processAudioQueue = async () => {
+  //       if (audioQueueRef.current.length === 0) return;
 
-        const nextAudio = audioQueueRef.current.shift();
-        console.log("nextAudio", nextAudio);
-        try {
-          await translateAndPlay(nextAudio);
-        } catch (error) {
-          console.error('Error processing audio queue:', error);
-        }
+  //       const nextAudio = audioQueueRef.current.shift();
+  //       console.log("nextAudio", nextAudio);
+  //       try {
+  //         await translateAndPlay(nextAudio);
+  //       } catch (error) {
+  //         console.error('Error processing audio queue:', error);
+  //       }
 
-        //setImmediate(processAudioQueue);
-        setTimeout(processAudioQueue, 0);
-      };
+  //       //setImmediate(processAudioQueue);
+  //       setTimeout(processAudioQueue, 0);
+  //     };
 
-      // Translate and play the audio
-      const translateAndPlay = async (currentText) => {
-        try {
-          let targetLanguageCode = selectedVoiceLanguage;
-          if (selectedVoiceLanguage === 'cmn-CN') {
-            targetLanguageCode = "zh";
-          }
+  //     // Translate and play the audio
+  //     const translateAndPlay = async (currentText) => {
+  //       try {
+  //         let targetLanguageCode = selectedVoiceLanguage;
+  //         if (selectedVoiceLanguage === 'cmn-CN') {
+  //           targetLanguageCode = "zh";
+  //         }
 
-          console.log('Check sourceLanguageCode:', sourceLanguageCode);
-          console.log('Check targetLanguageCode:', targetLanguageCode);
-          const response = await translateTextSpeech(
-            currentText,
-            sourceLanguageCode,
-            targetLanguageCode,
-            "standard"
-          );
+  //         console.log('Check sourceLanguageCode:', sourceLanguageCode);
+  //         console.log('Check targetLanguageCode:', targetLanguageCode);
+  //         const response = await translateTextSpeech(
+  //           currentText,
+  //           sourceLanguageCode,
+  //           targetLanguageCode,
+  //           "standard"
+  //         );
 
-          console.log('Translated response:', response);
-          translatedListRef.current.push(response.translatedText);
+  //         console.log('Translated response:', response);
+  //         translatedListRef.current.push(response.translatedText);
 
-          if (!response.speech.AudioStream?.data)
-            throw new Error('Invalid AudioStream data');
+  //         if (!response.speech.AudioStream?.data)
+  //           throw new Error('Invalid AudioStream data');
 
-          const audioBlob = new Blob(
-            [Uint8Array.from(response.speech.AudioStream.data)],
-            { type: response.speech.ContentType || 'audio/mpeg' }
-          );
+  //         const audioBlob = new Blob(
+  //           [Uint8Array.from(response.speech.AudioStream.data)],
+  //           { type: response.speech.ContentType || 'audio/mpeg' }
+  //         );
 
-          const audioUrl = URL.createObjectURL(audioBlob);
+  //         const audioUrl = URL.createObjectURL(audioBlob);
 
-          const audioElement = audioElementRef.current;
-          if (audioElement) {
-            audioElement.src = audioUrl;
-            audioElement.onended = () => processAudioQueue();
-            // Only play automatically if “isPlay” is true
-            if (isPlay) {
-              audioElement.play();
-            }
-          }
-          setTranslatedText((prev) => [...prev, response.translatedText]);
-        } catch (error) {
-          console.error('Failed to translate text to speech:', error);
-        }
-      };
-      const currentText = transcripts.results[0].alternatives[0].transcript;
-      transcriptListRef.current.push(currentText);
-      transcriptList2Ref.current.push(currentText);
-      audioQueueRef.current.push(currentText);
-      audioQueue2Ref.current.push(currentText);
-      if (audioQueueRef.current.length === 1) {
-        processAudioQueue();  // Start processing the queue.
-      }
+  //         const audioElement = audioElementRef.current;
+  //         if (audioElement) {
+  //           audioElement.src = audioUrl;
+  //           audioElement.onended = () => processAudioQueue();
+  //           // Only play automatically if “isPlay” is true
+  //           if (isPlay) {
+  //             audioElement.play();
+  //           }
+  //         }
+  //         setTranslatedText((prev) => [...prev, response.translatedText]);
+  //       } catch (error) {
+  //         console.error('Failed to translate text to speech:', error);
+  //       }
+  //     };
+  //     const currentText = transcripts.results[0].alternatives[0].transcript;
+  //     transcriptListRef.current.push(currentText);
+  //     transcriptList2Ref.current.push(currentText);
+  //     audioQueueRef.current.push(currentText);
+  //     audioQueue2Ref.current.push(currentText);
+  //     if (audioQueueRef.current.length === 1) {
+  //       processAudioQueue();  // Start processing the queue.
+  //     }
 
-      setTranscriptText((prev) => [...prev, currentText]);
+  //     setTranscriptText((prev) => [...prev, currentText]);
+  //   }
+  //   // else {
+  //   //   if (sourceLanguageCode === selectedVoiceLanguage) {
+  //   //     const bindAudioElement = async () => {
+  //   //       await meetingSession.audioVideo.bindAudioElement(audioElement);
+  //   //     };
+  //   //     bindAudioElement();
+  //   //     //audioElement.play();
+  //   //   }
+  //   // }
+  // }, [
+  //   meetingSession,
+  //   transcripts,
+  //   sourceLanguageCode,
+  //   selectedVoiceLanguage,
+  //   isPlay
+  // ]);
+
+  // Extract these as separate callback functions outside the useEffect
+
+// Translate and play the audio
+const translateAndPlay = useCallback(async (currentText) => {
+  try {
+    let targetLanguageCode = selectedVoiceLanguage;
+    if (selectedVoiceLanguage === 'cmn-CN') {
+      targetLanguageCode = "zh";
     }
+
+    console.log('Check sourceLanguageCode:', sourceLanguageCode);
+    console.log('Check targetLanguageCode:', targetLanguageCode);
+    
+    const response = await translateTextSpeech(
+      currentText,
+      sourceLanguageCode,
+      targetLanguageCode,
+      "standard"
+    );
+
+    console.log('Translated response:', response);
+    translatedListRef.current.push(response.translatedText);
+
+    if (!response.speech.AudioStream?.data)
+      throw new Error('Invalid AudioStream data');
+
+    const audioBlob = new Blob(
+      [Uint8Array.from(response.speech.AudioStream.data)],
+      { type: response.speech.ContentType || 'audio/mpeg' }
+    );
+
+    // Clean up previous blob URL to prevent memory leaks
+    if (audioElementRef.current.src && audioElementRef.current.src.startsWith('blob:')) {
+      URL.revokeObjectURL(audioElementRef.current.src);
+    }
+
+    const audioUrl = URL.createObjectURL(audioBlob);
+    const audioElement = audioElementRef.current;
+    
+    if (audioElement) {
+      audioElement.src = audioUrl;
+      
+      // Set up the onended event handler
+      audioElement.onended = () => {
+        // Clean up URL object to prevent memory leaks
+        URL.revokeObjectURL(audioUrl);
+        // Only process next audio if still in play mode
+        if (isPlay) {
+          setTimeout(processNextAudio, 0);
+        }
+      };
+      
+      // Only play if isPlay is true
+      if (isPlay) {
+        try {
+          await audioElement.play();
+        } catch (err) {
+          console.error("Error playing audio:", err);
+        }
+      }
+    }
+    
+    setTranslatedText((prev) => [...prev, response.translatedText]);
+  } catch (error) {
+    console.error('Failed to translate text to speech:', error);
+    throw error;
+  }
+}, [sourceLanguageCode, selectedVoiceLanguage, isPlay, processNextAudio]);
+
+const processNextAudio = useCallback(async () => {
+  if (audioQueueRef.current.length === 0) return;
+
+  const nextAudio = audioQueueRef.current.shift();
+  console.log("Processing next audio:", nextAudio);
+  
+  try {
+    await translateAndPlay(nextAudio);
+  } catch (error) {
+    console.error('Error processing audio queue:', error);
+    // If there's an error, try processing the next audio
+    setTimeout(processNextAudio, 0);
+  }
+}, [translateAndPlay]);
+
+// Update useEffect
+useEffect(() => {
+  const audioElement = audioElementRef.current;
+  if (!audioElement || !meetingSession || !sourceLanguageCode || !selectedVoiceLanguage) return;
+
+  if (transcripts?.results?.[0]?.alternatives?.[0]?.transcript && 
+      !transcripts.results[0].isPartial) {
+    
+    const currentText = transcripts.results[0].alternatives[0].transcript;
+    
+    // Always update transcript displays
+    transcriptListRef.current.push(currentText);
+    transcriptList2Ref.current.push(currentText);
+    setTranscriptText((prev) => [...prev, currentText]);
+    
+    if (sourceLanguageCode !== selectedVoiceLanguage) {
+      // For different languages, use translation queue
+      // But don't add duplicates to the queue
+      const isDuplicate = audioQueueRef.current.includes(currentText);
+      if (!isDuplicate) {
+        audioQueueRef.current.push(currentText);
+        audioQueue2Ref.current.push(currentText);
+        
+        // Start processing if this is the first item and we're in play mode
+        if (audioQueueRef.current.length === 1 && isPlay) {
+          processNextAudio();
+        }
+      }
+    } 
     // else {
-    //   if (sourceLanguageCode === selectedVoiceLanguage) {
-    //     const bindAudioElement = async () => {
+    //   // For same language, direct audio from the meeting
+    //   // Just update the translation list with the original text
+    //   translatedListRef.current.push(currentText);
+    //   setTranslatedText((prev) => [...prev, currentText]);
+      
+    //   // Ensure audio binding for direct audio
+    //   const bindAudioElement = async () => {
+    //     try {
     //       await meetingSession.audioVideo.bindAudioElement(audioElement);
-    //     };
-    //     bindAudioElement();
-    //     //audioElement.play();
-    //   }
+    //     } catch (error) {
+    //       console.error("Error binding audio element:", error);
+    //     }
+    //   };
+    //   bindAudioElement();
     // }
-  }, [
-    meetingSession,
-    transcripts,
-    sourceLanguageCode,
-    selectedVoiceLanguage,
-    isPlay
-  ]);
+  }
+}, [
+  meetingSession,
+  transcripts,
+  sourceLanguageCode,
+  selectedVoiceLanguage,
+  isPlay,
+  processNextAudio
+]);
+
+// Update handlePlay function
+const handlePlay = useCallback(() => {
+  if (!isPlay) {
+    setIsPlay(true);
+    const audioElement = audioElementRef.current;
+    
+    if (audioElement) {
+      if (sourceLanguageCode === selectedVoiceLanguage) {
+        // For same language, just make sure audio is playing
+        audioElement.play().catch(err => console.error("Play error:", err));
+      } else if (audioElement.src) {
+        // Resume paused translated audio
+        audioElement.play().catch(err => console.error("Play error:", err));
+      } else if (audioQueueRef.current.length > 0) {
+        // Start processing translated audio queue
+        processNextAudio();
+      }
+    }
+  } else {
+    setIsPlay(false);
+    if (audioElementRef.current) {
+      audioElementRef.current.pause();
+    }
+  }
+}, [isPlay, sourceLanguageCode, selectedVoiceLanguage, processNextAudio]);
 
   const handleSelectedVoiceLanguageChange = (event) => {
     setSelectedVoiceLanguage(event.target.value);
@@ -524,35 +582,15 @@ function LiveViewer2() {
   };
 
   // Function to handle play/pause button click
-  const handlePlay = () => {
-    if (isPlay === false) {
-      setIsPlay(true)
-      audioElementRef.current.play();
-    } else {
-      setIsPlay(false);
-      audioElementRef.current.pause();
-    }
-    // const audioElement = audioElementRef.current;
-    // if (!audioElement) return;
-
-    // if (!isPlay) {
-    //   setIsPlay(true);
-    //   // If there's audio loaded and ready to play, play it
-    //   console.log('Audio is playing with audioElement!', audioElement);
-    //   alert('Audio is playing with readyState!' + audioElement.readyState);
-    //   console.log('Audio is playing with readyState!', audioElement.readyState);
-    //   console.log('Audio is playing with src!', audioElement.src);
-    //   if (audioElement.src && audioElement.readyState >= 2) {
-    //     audioElement.play().catch(err => {
-    //       console.error('Error playing audio:', err);
-    //     });
-    //   }
-    // } else {
-    //   setIsPlay(false);
-    //   // Pause any currently playing audio
-    //   audioElement.pause();
-    // }
-  }
+  // const handlePlay = () => {
+  //   if (isPlay === false) {
+  //     setIsPlay(true)
+  //     audioElementRef.current.play();
+  //   } else {
+  //     setIsPlay(false);
+  //     audioElementRef.current.pause();
+  //   }
+  // }
 
   // Function to join the audio session
   const joinAudioSession = useCallback(async () => {
@@ -668,12 +706,20 @@ function LiveViewer2() {
         ) : (
           <>
             <div className='audioViewer'>
-              <div className={` ${isPlay ? 'pauseButtonViewer' : 'playButtonViewer'}`} onClick={handlePlay}>
-                {/* {isPlay ? <FaPause size={30} /> : <IoPlay size={30} />} */}
-                <IoPlay size={30} />
-                <span className="startText">{isPlay ? t('stopBtn') : t('startBtn')}</span>
+              {!!isPlay ? <div>
+                <div className='pauseButtonViewer' onClick={handlePlay}>
+                  {/* {isPlay ? <FaPause size={30} /> : <IoPlay size={30} />} */}
+                  <FaPause size={20} />
+                  <span className="startText">{t('stopBtn')}</span>
+                </div>
               </div>
-
+                : <div>
+                  <div className='playButtonViewer' onClick={handlePlay}>
+                    {/* {isPlay ? <FaPause size={30} /> : <IoPlay size={30} />} */}
+                    <FaPlay size={20} />
+                    <span className="startText">{t('startBtn')}</span>
+                  </div>
+                </div>}
               <div className='soundButton' onClick={handleMuteUnmute}>
                 {isMuted ? <HiMiniSpeakerWave size={30} /> : <IoVolumeMute size={30} />
                 }
