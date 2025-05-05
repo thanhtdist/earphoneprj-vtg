@@ -364,9 +364,9 @@ function LiveViewer2() {
             audioElement.src = audioUrl;
             audioElement.onended = () => processAudioQueue();
             // Only play automatically if “isPlay” is true
-            if (isPlay) {
-              audioElement.play();
-            }
+            // if (isPlay) {
+            //   audioElement.play();
+            // }
           }
           setTranslatedText((prev) => [...prev, response.translatedText]);
         } catch (error) {
@@ -398,7 +398,7 @@ function LiveViewer2() {
     transcripts,
     sourceLanguageCode,
     selectedVoiceLanguage,
-    isPlay
+    // isPlay
   ]);
 
   const handleSelectedVoiceLanguageChange = (event) => {
