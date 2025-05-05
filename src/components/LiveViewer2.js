@@ -485,7 +485,9 @@ function LiveViewer2() {
     return <NotFound />;
   }
 
-  console.log("transcripts xxx:", transcripts);
+  console.log("transcripts event:", transcripts);
+  console.log("transcripts:", transcripts?.results?.[0]?.alternatives?.[0]?.transcript);
+  console.log("transcripts isPartial:", transcripts?.results?.[0]?.isPartial);
 
   return (
     <>
