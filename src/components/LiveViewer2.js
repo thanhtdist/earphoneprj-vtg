@@ -518,7 +518,7 @@ function LiveViewer2() {
 
     if (isPlay === false) {
       setIsPlay(true)
-      //audioElementRef.current.play();
+      audioElementRef.current.play();
       // Call the translation function when play is clicked
       await callTranslateTextSpeech();
     } else {
