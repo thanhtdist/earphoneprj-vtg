@@ -311,7 +311,8 @@ function LiveViewer2() {
     if (
       sourceLanguageCode !== selectedVoiceLanguage &&
       transcripts?.results?.[0]?.alternatives?.[0]?.transcript &&
-      !transcripts.results[0].isPartial
+      !transcripts.results[0].isPartial &&
+      isPlay
     ) {
       // Process audio queue
       const processAudioQueue = async () => {
@@ -367,6 +368,7 @@ function LiveViewer2() {
             // if (isPlay) {
             //   audioElement.play();
             // }
+            audioElement.play();
           }
           setTranslatedText((prev) => [...prev, response.translatedText]);
         } catch (error) {
@@ -398,7 +400,7 @@ function LiveViewer2() {
     transcripts,
     sourceLanguageCode,
     selectedVoiceLanguage,
-    // isPlay
+    isPlay
   ]);
 
   const handleSelectedVoiceLanguageChange = (event) => {
