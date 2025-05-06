@@ -453,11 +453,13 @@ function LiveViewer2() {
             const audioElement = audioElementRef.current;
             if (audioElement) {
               audioElement.src = audioUrl;
-              audioElement.onended = () => processAudioQueue();
-              // Only play automatically if “isPlay” is true
-              // if (isPlay) {
-              //   audioElement.play();
-              // }
+              //audioElement.onended = () => processAudioQueue();
+              audioElement.onended = () => {
+                // Release the Blob URL to free browser memory
+                // This prevents memory leaks when processing many audio files
+                URL.revokeObjectURL(audioUrl);
+                processAudioQueue();
+              };
               audioElement.play();
             }
             setTranslatedText((prev) => [...prev, response.translatedText]);
@@ -487,9 +489,12 @@ function LiveViewer2() {
       // If not playing, clear the audio queue and stop the audio
       audioQueueRef.current = [];
       if (audioElement) {
-        //audioElement.pause();
-        //audioElement.srcObject = null;
-        audioElement.src = ''; // Clear the source
+        if (audioElement.src) {
+          audioElement.src = ''; // Clear src URL if set
+        }
+        if (audioElement.srcObject) {
+          audioElement.srcObject = null; // Clear srcObject if streaming
+        }
       }
     }
   }, [
