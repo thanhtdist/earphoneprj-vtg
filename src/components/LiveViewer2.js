@@ -526,11 +526,11 @@ function LiveViewer2() {
 
     const transcript = transcripts?.results?.[0]?.alternatives?.[0]?.transcript;
     console.log('Check transcript:', transcript);
-    if (!transcript) {
-      console.log('No transcript available to play.');
-      //audioElementRef.current.src = '';
-      audioElementRef.current.srcObject = null;
-    }
+    // if (!transcript) {
+    //   console.log('No transcript available to play.');
+    //   //audioElementRef.current.src = '';
+    //   audioElementRef.current.srcObject = null;
+    // }
 
     if (isPlay === false) {
       setIsPlay(true)
