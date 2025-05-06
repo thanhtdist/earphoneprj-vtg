@@ -56,10 +56,8 @@ function LiveViewer2() {
   const [chatRestriction, setChatRestriction] = useState(null);
   // Replace local variables with refs
   const transcriptListRef = useRef([]);
-  const transcriptList2Ref = useRef([]);
   const translatedListRef = useRef([]);
   const audioQueueRef = useRef([]);
-  const audioQueue2Ref = useRef([]);
   const userID = uuidv4();
   const userType = 'User';
   // Ref for the audio element  
@@ -375,9 +373,7 @@ function LiveViewer2() {
   //     };
   //     const currentText = transcripts.results[0].alternatives[0].transcript;
   //     transcriptListRef.current.push(currentText);
-  //     transcriptList2Ref.current.push(currentText);
   //     audioQueueRef.current.push(currentText);
-  //     audioQueue2Ref.current.push(currentText);
   //     if (audioQueueRef.current.length === 1) {
   //       processAudioQueue();  // Start processing the queue.
   //     }
@@ -471,9 +467,7 @@ function LiveViewer2() {
         };
         const currentText = transcripts.results[0].alternatives[0].transcript;
         transcriptListRef.current.push(currentText);
-        transcriptList2Ref.current.push(currentText);
         audioQueueRef.current.push(currentText);
-        audioQueue2Ref.current.push(currentText);
         if (audioQueueRef.current.length === 1) {
           processAudioQueue();  // Start processing the queue.
         }
@@ -492,15 +486,12 @@ function LiveViewer2() {
     } else {
       // If not playing, clear the audio queue and stop the audio
       audioQueueRef.current = [];
-      audioQueue2Ref.current = [];
       if (audioElement) {
-        audioElement.pause();
-        audioElement.srcObject = null;
+        //audioElement.pause();
+        //audioElement.srcObject = null;
         audioElement.src = ''; // Clear the source
       }
     }
-
-
   }, [
     meetingSession,
     transcripts,
@@ -544,6 +535,8 @@ function LiveViewer2() {
     } else {
       setIsPlay(false);
       audioElementRef.current.pause();
+      //audioElementRef.current.src = '';
+      //audioElementRef.current.srcObject = null;
     }
   }
 
