@@ -403,7 +403,7 @@ function LiveViewer3() {
       console.log('Check isPlay audioElement src:', audioElement.src);
       console.log('Check isPlay audioElement srcObject:', audioElement.srcObject);
       console.log('Check isPlay transcript:', transcripts?.results?.[0]?.alternatives?.[0]?.transcript);
-      console.log('Check isPlay isPartial:', transcripts.results[0].isPartial);
+      console.log('Check isPlay isPartial:', transcripts?.results?.[0]?.isPartial);
       if (
         sourceLanguageCode !== selectedVoiceLanguage &&
         transcripts?.results?.[0]?.alternatives?.[0]?.transcript &&
