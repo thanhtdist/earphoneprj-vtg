@@ -47,8 +47,8 @@ function LiveViewer3() {
   const [isLoading, setIsLoading] = useState(false);
   const [participantsCount, setParticipantsCount] = useState(0);
   const [transcripts, setTranscriptions] = useState([]);
-  // const [transcriptText, setTranscriptText] = useState([]);
-  // const [translatedText, setTranslatedText] = useState([]);
+  const [transcriptText, setTranscriptText] = useState([]);
+  const [translatedText, setTranslatedText] = useState([]);
   const [sourceLanguageCode, setSourceLanguageCode] = useState(null);
   const [selectedVoiceLanguage, setSelectedVoiceLanguage] = useState(
     LISTEN_VOICE_LANGUAGES.find((lang) => lang.key.startsWith(i18n.language))?.key || 'ja-JP'
@@ -224,7 +224,7 @@ function LiveViewer3() {
     ]
   );
 
-  const joinAudioSession2 = useCallback(
+  const joinAudioAvailableSession = useCallback(
     async (meeting, channelId) => {
       try {
         const retrievedUser = JSONCookieUtils.getJSONCookie('User' + tourId);
@@ -395,8 +395,8 @@ function LiveViewer3() {
 
     const audioElement = audioElementRef.current;
     if (!audioElement || !meetingSession || !sourceLanguageCode || !selectedVoiceLanguage) return;
-    // setTranscriptText([]);
-    // setTranslatedText([]);
+    setTranscriptText([]);
+    setTranslatedText([]);
     console.log('Check isPlay audioElement:', audioElement);
     console.log('Check isPlay audioElement src:', audioElement.src);
     console.log('Check isPlay audioElement srcObject:', audioElement.srcObject);
@@ -468,9 +468,13 @@ function LiveViewer3() {
               URL.revokeObjectURL(audioUrl);
               processAudioQueue();
             };
-            audioElement.play();
+            // Check if audioElement is not paused before playing
+            console.log('YYYYY Check audioElement paused:', audioElement.paused);
+            if (!audioElement.paused) {
+               audioElement.play();
+            }
           }
-          //setTranslatedText((prev) => [...prev, response.translatedText]);
+          setTranslatedText((prev) => [...prev, response.translatedText]);
         } catch (error) {
           console.error('Failed to translate text to speech:', error);
         }
@@ -485,7 +489,7 @@ function LiveViewer3() {
         processAudioQueue();  // Start processing the queue.
       }
 
-      //setTranscriptText((prev) => [...prev, currentText]);
+      setTranscriptText((prev) => [...prev, currentText]);
     }
     // else {
     //   if (sourceLanguageCode === selectedVoiceLanguage) {
@@ -507,10 +511,10 @@ function LiveViewer3() {
     setSelectedVoiceLanguage(event.target.value);
   };
   // console.log('Check transcriptText:', transcriptText);
-  // console.log('Check transcriptText string:', transcriptText.join(' '));
+  console.log('Check transcriptText string:', transcriptText.join(' '));
 
   // console.log('Check translatedText:', translatedText);
-  // console.log('Check translatedText string:', translatedText.join(' '));
+  console.log('Check translatedText string:', translatedText.join(' '));
 
   // const audioRef = useRef(null);
   const handleMuteUnmute = () => {
@@ -540,14 +544,14 @@ function LiveViewer3() {
       audioElementRef.current.pause();
       const audioElement = audioElementRef.current;
       // Clear the audio queue and stop the audio
-      audioQueueRef.current = [];
+      //audioQueueRef.current = [];
       if (audioElement) {
         if (audioElement.src) {
           audioElement.src = ''; // Clear src URL if set
         }
-        if (audioElement.srcObject) {
-          audioElement.srcObject = null; // Clear srcObject if streaming
-        }
+        // if (audioElement.srcObject) {
+        //   audioElement.srcObject = null; // Clear srcObject if streaming
+        // }
       }
       //audioElementRef.current.src = '';
       //audioElementRef.current.srcObject = null;
@@ -576,7 +580,7 @@ function LiveViewer3() {
           // Join the meeting again and set the meeting session in the state
           console.log('Meeting not expired:', checkAvailableMeetingResponse);
           console.log('Check checkAvailableMeetingResponse:', checkAvailableMeetingResponse.data);
-          joinAudioSession2(checkAvailableMeetingResponse.data, getMeetingByTourIdResponse.data.channelId);
+          joinAudioAvailableSession(checkAvailableMeetingResponse.data, getMeetingByTourIdResponse.data.channelId);
 
         } else {
           console.log('Meeting error:', checkAvailableMeetingResponse);
@@ -590,7 +594,7 @@ function LiveViewer3() {
       // toast.error('Tour not found, please check the tour ID.');
       setTour(null);
     }
-  }, [joinAudioSession2, tourId]);
+  }, [joinAudioAvailableSession, tourId]);
 
   // Call requestWakeLock once the meeting session is set:
   useEffect(() => {
@@ -706,7 +710,7 @@ function LiveViewer3() {
                 I am listening in{' '}
                 {LISTEN_VOICE_LANGUAGES.find((lang) => lang.key === selectedVoiceLanguage)?.label}.
               </p> */}
-                {translatedListRef.current.length > 0 && (
+                {(translatedText && translatedListRef.current.length > 0) && (
 
                   <div className='trans-text-box'>
                     <div className={` ${isLongText ? 'long-text' : 'short-text'}`}></div>
@@ -716,7 +720,7 @@ function LiveViewer3() {
                   </div>
 
                 )}
-                {transcriptListRef.current.length > 0 && (
+                {(transcriptText && transcriptListRef.current.length > 0) && (
 
                   <div className='trans-text-box'>
                     {/* <div className="blur-mask"></div> */}
