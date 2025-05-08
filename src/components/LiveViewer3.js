@@ -47,8 +47,8 @@ function LiveViewer3() {
   const [isLoading, setIsLoading] = useState(false);
   const [participantsCount, setParticipantsCount] = useState(0);
   const [transcripts, setTranscriptions] = useState([]);
-  const [transcriptText, setTranscriptText] = useState([]);
-  const [translatedText, setTranslatedText] = useState([]);
+  // const [transcriptText, setTranscriptText] = useState([]);
+  // const [translatedText, setTranslatedText] = useState([]);
   const [sourceLanguageCode, setSourceLanguageCode] = useState(null);
   const [selectedVoiceLanguage, setSelectedVoiceLanguage] = useState(
     LISTEN_VOICE_LANGUAGES.find((lang) => lang.key.startsWith(i18n.language))?.key || 'ja-JP'
@@ -395,129 +395,122 @@ function LiveViewer3() {
 
     const audioElement = audioElementRef.current;
     if (!audioElement || !meetingSession || !sourceLanguageCode || !selectedVoiceLanguage) return;
-    setTranscriptText([]);
-    setTranslatedText([]);
+    // setTranscriptText([]);
+    // setTranslatedText([]);
+    console.log('Check isPlay audioElement:', audioElement);
+    console.log('Check isPlay audioElement src:', audioElement.src);
+    console.log('Check isPlay audioElement srcObject:', audioElement.srcObject);
+    console.log('Check isPlay transcripts:', transcripts);
+    console.log('Check isPlay transcript:', transcripts?.results?.[0]?.alternatives?.[0]?.transcript);
+    console.log('Check isPlay isPartial:', transcripts?.results?.[0]?.isPartial);
+    console.log('Check isPlay audioQueueRef.current:', audioQueueRef.current);
+    //transcriptListRef.current
+    console.log('Check isPlay transcriptListRef.current:', transcriptListRef.current);
+    console.log('Check isPlay translatedListRef.current:', translatedListRef.current);
+    if (
+      sourceLanguageCode !== selectedVoiceLanguage &&
+      transcripts?.results?.[0]?.alternatives?.[0]?.transcript &&
+      !transcripts.results[0].isPartial
+    ) {
+      // Process audio queue
+      const processAudioQueue = async () => {
+        if (audioQueueRef.current.length === 0) return;
 
-    if (isPlay) {
-      console.log('Check isPlay audioElement:', audioElement);
-      console.log('Check isPlay audioElement src:', audioElement.src);
-      console.log('Check isPlay audioElement srcObject:', audioElement.srcObject);
-      console.log('Check isPlay transcript:', transcripts?.results?.[0]?.alternatives?.[0]?.transcript);
-      console.log('Check isPlay isPartial:', transcripts?.results?.[0]?.isPartial);
-      if (
-        sourceLanguageCode !== selectedVoiceLanguage &&
-        transcripts?.results?.[0]?.alternatives?.[0]?.transcript &&
-        !transcripts.results[0].isPartial
-      ) {
-        // Process audio queue
-        const processAudioQueue = async () => {
-          if (audioQueueRef.current.length === 0) return;
+        const nextAudio = audioQueueRef.current.shift();
+        console.log("nextAudio", nextAudio);
+        try {
+          await translateAndPlay(nextAudio);
+        } catch (error) {
+          console.error('Error processing audio queue:', error);
+        }
 
-          const nextAudio = audioQueueRef.current.shift();
-          console.log("nextAudio", nextAudio);
-          try {
-            await translateAndPlay(nextAudio);
-          } catch (error) {
-            console.error('Error processing audio queue:', error);
+        //setImmediate(processAudioQueue);
+        setTimeout(processAudioQueue, 0);
+      };
+
+      // Translate and play the audio
+      const translateAndPlay = async (currentText) => {
+        try {
+          let targetLanguageCode = selectedVoiceLanguage;
+          if (selectedVoiceLanguage === 'cmn-CN') {
+            targetLanguageCode = "zh";
           }
 
-          //setImmediate(processAudioQueue);
-          setTimeout(processAudioQueue, 0);
-        };
+          console.log('Check sourceLanguageCode:', sourceLanguageCode);
+          console.log('Check targetLanguageCode:', targetLanguageCode);
+          const response = await translateTextSpeech(
+            currentText,
+            sourceLanguageCode,
+            targetLanguageCode,
+            "standard"
+          );
 
-        // Translate and play the audio
-        const translateAndPlay = async (currentText) => {
-          try {
-            let targetLanguageCode = selectedVoiceLanguage;
-            if (selectedVoiceLanguage === 'cmn-CN') {
-              targetLanguageCode = "zh";
-            }
+          console.log('Translated response:', response);
+          translatedListRef.current.push(response.translatedText);
 
-            console.log('Check sourceLanguageCode:', sourceLanguageCode);
-            console.log('Check targetLanguageCode:', targetLanguageCode);
-            const response = await translateTextSpeech(
-              currentText,
-              sourceLanguageCode,
-              targetLanguageCode,
-              "standard"
-            );
+          if (!response.speech.AudioStream?.data)
+            throw new Error('Invalid AudioStream data');
 
-            console.log('Translated response:', response);
-            translatedListRef.current.push(response.translatedText);
+          const audioBlob = new Blob(
+            [Uint8Array.from(response.speech.AudioStream.data)],
+            { type: response.speech.ContentType || 'audio/mpeg' }
+          );
 
-            if (!response.speech.AudioStream?.data)
-              throw new Error('Invalid AudioStream data');
+          const audioUrl = URL.createObjectURL(audioBlob);
 
-            const audioBlob = new Blob(
-              [Uint8Array.from(response.speech.AudioStream.data)],
-              { type: response.speech.ContentType || 'audio/mpeg' }
-            );
-
-            const audioUrl = URL.createObjectURL(audioBlob);
-
-            const audioElement = audioElementRef.current;
-            if (audioElement) {
-              audioElement.src = audioUrl;
-              //audioElement.onended = () => processAudioQueue();
-              audioElement.onended = () => {
-                // Release the Blob URL to free browser memory
-                // This prevents memory leaks when processing many audio files
-                URL.revokeObjectURL(audioUrl);
-                processAudioQueue();
-              };
-              audioElement.play();
-            }
-            setTranslatedText((prev) => [...prev, response.translatedText]);
-          } catch (error) {
-            console.error('Failed to translate text to speech:', error);
+          const audioElement = audioElementRef.current;
+          if (audioElement) {
+            audioElement.src = audioUrl;
+            //audioElement.onended = () => processAudioQueue();
+            audioElement.onended = () => {
+              // Release the Blob URL to free browser memory
+              // This prevents memory leaks when processing many audio files
+              URL.revokeObjectURL(audioUrl);
+              processAudioQueue();
+            };
+            audioElement.play();
           }
-        };
-        const currentText = transcripts.results[0].alternatives[0].transcript;
-        transcriptListRef.current.push(currentText);
-        audioQueueRef.current.push(currentText);
-        if (audioQueueRef.current.length === 1) {
-          processAudioQueue();  // Start processing the queue.
+          //setTranslatedText((prev) => [...prev, response.translatedText]);
+        } catch (error) {
+          console.error('Failed to translate text to speech:', error);
         }
+      };
+      const currentText = transcripts.results[0].alternatives[0].transcript;
+      console.log("XXX currentText", currentText);
+      transcriptListRef.current.push(currentText);
+      console.log("XXX transcriptListRef", transcriptListRef);
+      audioQueueRef.current.push(currentText);
+      console.log("XXX audioQueueRef", audioQueueRef.current);
+      if (audioQueueRef.current.length === 1) {
+        processAudioQueue();  // Start processing the queue.
+      }
 
-        setTranscriptText((prev) => [...prev, currentText]);
-      }
-      // else {
-      //   if (sourceLanguageCode === selectedVoiceLanguage) {
-      //     const bindAudioElement = async () => {
-      //       await meetingSession.audioVideo.bindAudioElement(audioElement);
-      //     };
-      //     bindAudioElement();
-      //     //audioElement.play();
-      //   }
-      // }
-    } else {
-      // If not playing, clear the audio queue and stop the audio
-      audioQueueRef.current = [];
-      if (audioElement) {
-        if (audioElement.src) {
-          audioElement.src = ''; // Clear src URL if set
-        }
-        if (audioElement.srcObject) {
-          audioElement.srcObject = null; // Clear srcObject if streaming
-        }
-      }
+      //setTranscriptText((prev) => [...prev, currentText]);
     }
+    // else {
+    //   if (sourceLanguageCode === selectedVoiceLanguage) {
+    //     const bindAudioElement = async () => {
+    //       await meetingSession.audioVideo.bindAudioElement(audioElement);
+    //     };
+    //     bindAudioElement();
+    //     //audioElement.play();
+    //   }
+    // }
   }, [
     meetingSession,
     transcripts,
     sourceLanguageCode,
-    selectedVoiceLanguage,
-    isPlay
+    selectedVoiceLanguage
   ]);
 
   const handleSelectedVoiceLanguageChange = (event) => {
     setSelectedVoiceLanguage(event.target.value);
   };
-  console.log('Check transcriptText:', transcriptText);
-  console.log('Check transcriptText string:', transcriptText.join(' '));
+  // console.log('Check transcriptText:', transcriptText);
+  // console.log('Check transcriptText string:', transcriptText.join(' '));
 
-  console.log('Check translatedText:', translatedText);
-  console.log('Check translatedText string:', translatedText.join(' '));
+  // console.log('Check translatedText:', translatedText);
+  // console.log('Check translatedText string:', translatedText.join(' '));
 
   // const audioRef = useRef(null);
   const handleMuteUnmute = () => {
@@ -545,6 +538,17 @@ function LiveViewer3() {
     } else {
       setIsPlay(false);
       audioElementRef.current.pause();
+      const audioElement = audioElementRef.current;
+      // Clear the audio queue and stop the audio
+      audioQueueRef.current = [];
+      if (audioElement) {
+        if (audioElement.src) {
+          audioElement.src = ''; // Clear src URL if set
+        }
+        if (audioElement.srcObject) {
+          audioElement.srcObject = null; // Clear srcObject if streaming
+        }
+      }
       //audioElementRef.current.src = '';
       //audioElementRef.current.srcObject = null;
     }
