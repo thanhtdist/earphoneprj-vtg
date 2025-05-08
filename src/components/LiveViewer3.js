@@ -408,6 +408,8 @@ function LiveViewer3() {
     console.log('Check isPlay transcriptListRef.current:', transcriptListRef.current);
     console.log('Check isPlay translatedListRef.current:', translatedListRef.current);
     console.log('YYYYY Check audioElement paused:', audioElement.paused);
+    console.log('YYYYY Check audioElement ended:', audioElement.ended);
+    console.log('YYYYY Check audioElement currentTime:', audioElement.currentTime);
     if (
       sourceLanguageCode !== selectedVoiceLanguage &&
       transcripts?.results?.[0]?.alternatives?.[0]?.transcript &&
