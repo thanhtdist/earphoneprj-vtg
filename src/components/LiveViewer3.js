@@ -413,8 +413,7 @@ function LiveViewer3() {
     if (
       sourceLanguageCode !== selectedVoiceLanguage &&
       transcripts?.results?.[0]?.alternatives?.[0]?.transcript &&
-      !transcripts.results[0].isPartial &&
-      !audioElement.paused
+      !transcripts.results[0].isPartial
     ) {
       // Process audio queue
       const processAudioQueue = async () => {
@@ -473,7 +472,9 @@ function LiveViewer3() {
               processAudioQueue();
             };
             // Check if audioElement is not paused before playing
-            audioElement.play();
+            if (!audioElement.paused) {
+              audioElement.play();
+            }
           }
           setTranslatedText((prev) => [...prev, response.translatedText]);
         } catch (error) {
