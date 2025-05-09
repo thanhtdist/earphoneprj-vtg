@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import {
     getTourByNumberAndDate,
 } from '../apis/api';
@@ -8,18 +8,22 @@ import { messages } from '../messages';
 import Header from './Header';
 import GuideTourConfirm from './GuideTourConfirm';
 import Loading from './Loading';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import '../styles/StartFindTour.css';
+import { format } from 'date-fns';
 
 const StartFindTour = () => {
     const {
         register,
         handleSubmit,
         formState: { errors },
+        control,
     } = useForm();
     const { t } = useTranslation();
     const [tour, setTour] = useState(null);
     const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
-
     const findTour = async (data) => {
         try {
             setIsLoading(true);
@@ -40,16 +44,26 @@ const StartFindTour = () => {
         }
     }
 
-    const onSubmit = (data) => {
-        console.log("Find data", data);
+    const onSubmit = (data) => {     
+        console.log("Find data old", data);
+        // console.log("Find data new", newData);
         // Perform any action with the form data here
         findTour(data);
     };
-
     console.log("Error", error);
     console.log("Tour", tour);
     // console.log("Error", error);
-
+    const CustomInput = React.forwardRef(({ value, onClick }, ref) => (
+        <input
+            className='date-picker'
+            type="text"
+            onClick={onClick}
+            value={value}
+            readOnly
+            ref={ref}
+            placeholder='YYYY-MM-DD'
+        />
+    ));
     return (
         <>
             {isLoading && <Loading />}
@@ -89,17 +103,49 @@ const StartFindTour = () => {
                                     <label htmlFor="departureDate" className="form-label fw-bold">
                                         {t('startGuidePage.startDate')}
                                     </label>
-                                    <input
+                                    {/* <input
                                         type="date"
                                         className="form-control"
                                         id="departureDate"
                                         {...register('departureDate', { required: true })}
+
                                     />
                                     {errors.departureDate && (
                                         <span className="text-danger">出発日を入力してください。</span>
-                                    )}
+                                    )}                                     */}
+                                    <div className="form-control">
+                                        {/* <DatePicker  
+                                            selected={startDate} 
+                                            onChange={setStartDate} 
+                                            dateFormat="YYYY-MM-dd" 
+                                            required 
+                                            customInput={<CustomInput />}
+                                             >                                                
+                                             </DatePicker> */}
+                                        <Controller
+                                            name="departureDate"
+                                            control={control}
+                                            defaultValue={null}
+                                            rules={{
+                                                required: '出発日を入力してください。',                                               
+                                              }}
+                                            render={({ field }) => (
+                                                <DatePicker
+                                                    {...field}
+                                                    selected={field.value}
+                                                    onChange={(date) => field.onChange(format(date, 'yyyy-MM-dd'))}
+                                                    dateFormat="YYYY-MM-dd"
+                                                    
+                                                    customInput={<CustomInput  />}
+                                                />
+                                            )}
+                                        />
+                                        
+                                    </div>
+                                    {errors.departureDate && <span className="text-danger">{errors.departureDate.message}</span>}
                                 </div>
                                 {error && <p className="text-danger">{error}</p>}
+                                {/* <DatePicker selected={startDate} onChange={setStartDate} dateFormat="YYYY-MM-dd" required showIcon></DatePicker> */}
                                 <div className="text-center">
                                     <button type="submit" className="btn btn-danger">
                                         {t('startGuidePage.nextBtn')}
