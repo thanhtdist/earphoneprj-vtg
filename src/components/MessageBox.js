@@ -74,7 +74,7 @@ const MessageBox = ({ userArn, sessionId, channelArn, userType, statusChat }) =>
                         <div className="popup-chat-content">
                             <span className="close-btn" style={styleCloseButton()} onClick={closeChat}>&times;</span>
                             <div className='contentChat'>
-                                <div>
+                                <div className='title-chat'>
                                     <h3>{t('chatPopup.title')}</h3>
                                 </div>
                                 <div className='status-chat'>

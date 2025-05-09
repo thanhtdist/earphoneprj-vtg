@@ -21,6 +21,9 @@
     border: 1px solid red;
     box-shadow: 0 4px 8px rgba(10, 10, 10, 0.2);
 }
+.title-chat {
+    margin-top: 5px;
+}
 .status-chat{
     margin: 25px 10px 0 10px;
     padding-left: 15px;
