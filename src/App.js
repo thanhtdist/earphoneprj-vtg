@@ -5,6 +5,7 @@ import StartLiveSession2 from './components/StartLiveSession2';
 import LiveViewer2 from './components/LiveViewer2';
 import LiveViewer3 from './components/LiveViewer3';
 import LiveViewer4 from './components/LiveViewer4';
+import LiveViewer5 from './components/LiveViewer5';
 import LiveSubSpeaker from './components/LiveSubSpeaker';
 import StartLiveSession from './components/StartLiveSession';
 import StartFindTour from './components/StartFindTour';
@@ -54,6 +55,7 @@ function App() {
               <Route path="/viewer2/:tourId" element={<LiveViewer2 />} />
               <Route path="/viewer3/:tourId" element={<LiveViewer3 />} />
               <Route path="/viewer4/:tourId" element={<LiveViewer4 />} />
+              <Route path="/viewer5/:tourId" element={<LiveViewer5 />} />
               {/* Wrap these routes with AdminLayout */}
               <Route path="/admin/login" element={<Login />} />
               <Route element={<AdminLayout />}>
