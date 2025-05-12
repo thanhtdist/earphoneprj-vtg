@@ -100,7 +100,7 @@ function LiveViewer5() {
       //const audioElement = document.getElementById('audioElementListener');
       const audioElement = audioElementRef.current;
       console.log('Check audioElement:', audioElement);
-      audioElement.srcObject = null;
+      //audioElement.srcObject = null;
       if (audioElement) {
         await session.audioVideo.bindAudioElement(audioElement);
       } else {
@@ -398,7 +398,7 @@ function LiveViewer5() {
     console.log('Check audioQueueRef:', audioQueueRef.current);
     console.log('Check transcripts:', transcripts);
 
-    if(currentTranscriptRef.current === null) return; 
+    //if (currentTranscriptRef.current === null) return;
 
     const audioElement = audioElementRef.current;
     console.log('Check audioElement:', audioElement);
@@ -501,7 +501,7 @@ function LiveViewer5() {
     } else {
       // If not playing, clear the audio queue and stop the audio
       audioQueueRef.current = [];
-      if(currentTranscriptRef.current !== undefined) {
+      if (currentTranscriptRef.current !== undefined) {
         currentTranscriptRef.current = null;
       }
 
@@ -509,9 +509,13 @@ function LiveViewer5() {
         if (audioElement.src) {
           audioElement.src = ''; // Clear src URL if set
         }
-        // if (audioElement.srcObject) {
-        //   audioElement.srcObject = null; // Clear srcObject if streaming
-        // }
+
+        if (selectedVoiceLanguage === 'ja-JP') {
+          if (audioElement.srcObject) {
+            audioElement.srcObject = null; // Clear srcObject if streaming
+          }
+        }
+
       }
       // Clear the transcript
       // setTranscriptions([]);
