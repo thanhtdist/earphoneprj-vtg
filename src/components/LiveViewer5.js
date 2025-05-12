@@ -503,9 +503,9 @@ function LiveViewer5() {
         if (audioElement.src) {
           audioElement.src = ''; // Clear src URL if set
         }
-        if (audioElement.srcObject) {
-          audioElement.srcObject = null; // Clear srcObject if streaming
-        }
+        // if (audioElement.srcObject) {
+        //   audioElement.srcObject = null; // Clear srcObject if streaming
+        // }
       }
       // Clear the transcript
       // setTranscriptions([]);

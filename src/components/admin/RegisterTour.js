@@ -7,11 +7,13 @@ import {
 } from '../../apis/admin';
 import '../../styles/Admin.css';
 import Sidebar from './Sidebar';
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { Link } from 'react-router-dom';
 //import { createMeetingAndChannel } from '../../utils/MeetingUtils';
 import { toast } from "react-toastify";
 import Loading from '../Loading';
+import DatePicker from 'react-datepicker';
+import { format } from 'date-fns';
 
 const RegisterTour = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -19,12 +21,14 @@ const RegisterTour = () => {
         register,
         handleSubmit,
         formState: { errors },
+        control,
     } = useForm();
 
     const onSubmit = (data) => {
         //alert(JSON.stringify(data, null, 2)); // Display form data in an alert
         setIsLoading(true);
         bookTour(data);
+        console.log("Tour data:", data);
     };
 
     // Book a new tour
@@ -76,7 +80,17 @@ const RegisterTour = () => {
     // const handleReturn = () => {
 
     // };
-
+    const CustomInput = React.forwardRef(({ value, onClick, lable }, ref) => (
+        <input
+            className='date-picker'
+            type="text"
+            onClick={onClick}
+            value={value}
+            readOnly
+            ref={ref}
+            placeholder= {lable === "acceptanceDate" ? '例）2025-1-1 15:42' : '例）2025-1-1'}
+        />
+    ));
     return (
         <div className="container-fluid">
             <div className="row py-4"></div>
@@ -132,10 +146,29 @@ const RegisterTour = () => {
                         <div className="form-group row mb-3">
                             <label htmlFor="acceptanceDate" className="col-sm-3 col-form-label">申込受付日時</label>
                             <div className="col-sm-9">
-                                <input type="datetime-local" className="form-control" id="acceptanceDate" placeholder="例）2025/1/1/15:42"
+                                {/* <input type="datetime-local" className="form-control" id="acceptanceDate" placeholder="例）2025/1/1/15:42"
                                     {...register("acceptanceDate")}
-                                />
+                                /> */}
+                                <div className="form-control">
+                                <Controller
+                                        name="acceptanceDate"
+                                        control={control}
+                                        defaultValue={null}                                                                 
+                                        render={({ field }) => (
+                                            <DatePicker
+                                                {...field}
+                                                selected={field.value}
+                                                onChange={(date) => field.onChange(format(date, 'yyyy-MM-dd HH:mm'))}
+                                                dateFormat="YYYY-MM-dd hh:mm a"
+                                                required                                               
+                                                showTimeInput
+                                                customInput={<CustomInput lable={"acceptanceDate"}/>}
+                                            />
+                                        )}
+                                    />
+                                </div>
                             </div>
+
                         </div>
                         <div className="form-group row mb-3">
                             <label htmlFor="planningOfficeName" className="col-sm-3 col-form-label">企画営業所名</label>
@@ -196,19 +229,67 @@ const RegisterTour = () => {
                         <div className="form-group row mb-3">
                             <label htmlFor="departureDate" className="col-sm-3 col-form-label">出発日</label>
                             <div className="col-sm-9">
-                                <input type="date" className="form-control" id="departureDate" placeholder="例）2025年4月4日"
+                                {/* <input type="date" className="form-control" id="departureDate" placeholder="例）2025年4月4日"
                                     {...register("departureDate", { required: "出発日を入力してください。" })}
                                 />
-                                {errors.departureDate && <p style={{ color: "red" }}>{errors.departureDate.message}</p>}
+                                {errors.departureDate && <p style={{ color: "red" }}>{errors.departureDate.message}</p>} */}
+                                <div className='form-control'>
+                                <Controller
+                                        name="departureDate"
+                                        control={control}
+                                        defaultValue={null}
+                                        rules={{
+                                            required: '出発日を入力してください。',                                               
+                                          }}
+                                        render={({ field }) => (
+                                            <DatePicker
+                                            {...field}
+                                            selected={field.value}
+                                            onChange={(date) => field.onChange(format(date, 'yyyy-MM-dd'))}
+                                            dateFormat="YYYY-MM-dd"
+                                            required
+                                            // placeholderText="YYYY-MM-DD HH:MM"
+                                            // showTimeInput
+                                            customInput={<CustomInput label={"departureDate"}/>}
+                                            />
+                                        )}
+                                    />
+                                </div>
+                                {errors.departureDate && <span className="text-danger">{errors.departureDate.message}</span>}
                             </div>
                         </div>
                         <div className="form-group row mb-3">
                             <label htmlFor="returnDate" className="col-sm-3 col-form-label">帰着日</label>
                             <div className="col-sm-9">
-                                <input type="date" className="form-control" id="returnDate" placeholder="例）2025年4月4日"
+                                {/* <input type="date" className="form-control" id="returnDate" placeholder="例）2025年4月4日"
                                     {...register("returnDate", { required: "帰着日を入力してください。" })}
                                 />
-                                {errors.returnDate && <p style={{ color: "red" }}>{errors.returnDate.message}</p>}
+                                {errors.returnDate && <p style={{ color: "red" }}>{errors.returnDate.message}</p>} */}
+                                <div className='form-control'>
+                                    <Controller
+                                        name="returnDate"
+                                        control={control}
+                                        defaultValue={null}
+                                        rules={{
+                                            required: '帰着日を入力してください。',                                               
+                                          }}
+                                        render={({ field }) => (
+                                            <DatePicker
+                                                 {...field}
+                                                selected={field.value}
+                                                onChange={(date) => field.onChange(format(date, 'yyyy-MM-dd'))}
+                                                dateFormat="YYYY-MM-dd"
+                                                required
+                                                // placeholderText="YYYY-MM-DD HH:MM"
+                                                // showTimeInput
+                                                customInput={<CustomInput label={"returnDate"}/>}
+                                            />
+                                        )}
+                                    />
+
+
+                                </div>
+                                {errors.returnDate && <span className="text-danger">{errors.returnDate.message}</span>}
                             </div>
                         </div>
                         <div className="form-group row mb-3">

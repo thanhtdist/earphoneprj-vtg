@@ -6,11 +6,13 @@ import {
 import '../../styles/Admin.css';
 import Sidebar from './Sidebar';
 import GenerateQRCode from './GenerateQRCode';
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { useSearchParams } from "react-router-dom";
 import { Link } from 'react-router-dom';
 import { toast } from "react-toastify";
 import Loading from '../Loading';
+import DatePicker from 'react-datepicker';
+import { format } from 'date-fns';
 
 const UpdateTour = () => {
 
@@ -25,6 +27,7 @@ const UpdateTour = () => {
     handleSubmit,
     reset,
     formState: { errors },
+    control,
   } = useForm();
 
   useEffect(() => {
@@ -54,6 +57,8 @@ const UpdateTour = () => {
 
   const onSubmit = (data) => {
     //alert(JSON.stringify(data, null, 2)); // Display form data in an alert
+    console.log('Form data:', data);
+
     setIsLoading(true);
     callUpdateTour(data);
   };
@@ -82,7 +87,17 @@ const UpdateTour = () => {
       setIsLoading(false);
     }
   };
+  const CustomInput = React.forwardRef(({ value, onClick }, ref) => (
+    <input
+      className='date-picker'
+      type="text"
+      onClick={onClick}
+      value={value}
+      readOnly
+      ref={ref}
 
+    />
+  ));
   return (
     <div className="container-fluid">
       <div className="row py-4"></div>
@@ -174,10 +189,29 @@ const UpdateTour = () => {
             <div className="form-group row mb-3">
               <label htmlFor="acceptanceDate" className="col-sm-3 col-form-label">申込受付日時</label>
               <div className="col-sm-9">
-                <input type="datetime-local" className="form-control" id="acceptanceDate" placeholder="例）2025/1/1/15:42"
+                {/* <input type="datetime-local" className="form-control" id="acceptanceDate" placeholder="例）2025/1/1/15:42"
                   defaultValue={tour.acceptanceDate}
                   {...register("acceptanceDate")}
                 />
+              </div> */}
+                <div className="form-control">
+                  <Controller
+                    name="acceptanceDate"
+                    control={control}
+                    defaultValue={null}
+                    render={({ field }) => (
+                      <DatePicker
+                        {...field}
+                        selected={field.value}
+                        onChange={(date) => field.onChange(format(date, 'yyyy-MM-dd HH:mm'))}
+                        dateFormat="YYYY-MM-dd hh:mm"
+                        required
+                        showTimeInput
+                        customInput={<CustomInput lable={"acceptanceDate"} />}
+                      />
+                    )}
+                  />
+                </div>
               </div>
             </div>
             <div className="form-group row mb-3">
@@ -246,21 +280,65 @@ const UpdateTour = () => {
             <div className="form-group row mb-3">
               <label htmlFor="departureDate" className="col-sm-3 col-form-label">出発日</label>
               <div className="col-sm-9">
-                <input type="date" className="form-control" id="departureDate" placeholder="例）2025年4月4日"
+                {/* <input type="date" className="form-control" id="departureDate" placeholder="例）2025年4月4日"
                   defaultValue={tour.departureDate}
                   {...register("departureDate", { required: "出発日を入力してください。" })}
                 />
-                {errors.departureDate && <p style={{ color: "red" }}>{errors.departureDate.message}</p>}
+                {errors.departureDate && <p style={{ color: "red" }}>{errors.departureDate.message}</p>} */}
+                <div className='form-control'>
+                  <Controller
+                    name="departureDate"
+                    control={control}
+                    defaultValue={null}
+                    rules={{
+                      required: '出発日を入力してください。',
+                    }}
+                    render={({ field }) => (
+                      <DatePicker
+                        {...field}
+                        selected={field.value}
+                        onChange={(date) => field.onChange(format(date, 'yyyy-MM-dd'))}
+                        dateFormat="YYYY-MM-dd"
+                        required
+                        // placeholderText="YYYY-MM-DD HH:MM"
+                        // showTimeInput
+                        customInput={<CustomInput />}
+                      />
+                    )}
+                  />
+                </div>
               </div>
             </div>
             <div className="form-group row mb-3">
               <label htmlFor="returnDate" className="col-sm-3 col-form-label">帰着日</label>
               <div className="col-sm-9">
-                <input type="date" className="form-control" id="returnDate" placeholder="例）2025年4月4日"
+                {/* <input type="date" className="form-control" id="returnDate" placeholder="例）2025年4月4日"
                   defaultValue={tour.returnDate}
                   {...register("returnDate", { required: "帰着日を入力してください。" })}
                 />
-                {errors.returnDate && <p style={{ color: "red" }}>{errors.returnDate.message}</p>}
+                {errors.returnDate && <p style={{ color: "red" }}>{errors.returnDate.message}</p>} */}
+                <div className='form-control'>
+                  <Controller
+                    name="returnDate"
+                    control={control}
+                    defaultValue={null}
+                    rules={{
+                      required: '出発日を入力してください。',
+                    }}
+                    render={({ field }) => (
+                      <DatePicker
+                        {...field}
+                        selected={field.value}
+                        onChange={(date) => field.onChange(format(date, 'yyyy-MM-dd'))}
+                        dateFormat="YYYY-MM-dd"
+                        required
+                        // placeholderText="YYYY-MM-DD HH:MM"
+                        // showTimeInput
+                        customInput={<CustomInput />}
+                      />
+                    )}
+                  />
+                </div>
               </div>
             </div>
             <div className="form-group row mb-3">
