@@ -55,6 +55,7 @@ function LiveViewer5() {
   );
   const [chatRestriction, setChatRestriction] = useState(null);
   // Replace local variables with refs
+  const currentTranscriptRef = useRef(undefined);
   const transcriptListRef = useRef([]);
   const translatedListRef = useRef([]);
   const audioQueueRef = useRef([]);
@@ -393,6 +394,8 @@ function LiveViewer5() {
 
   useEffect(() => {
 
+    if(currentTranscriptRef.current === null) return; 
+
     const audioElement = audioElementRef.current;
     console.log('Check audioElement:', audioElement);
     console.log('Check audioQueueRef:', audioQueueRef.current);
@@ -474,6 +477,7 @@ function LiveViewer5() {
           }
         };
         const currentText = transcripts.results[0].alternatives[0].transcript;
+        currentTranscriptRef.current = currentText;
         transcriptListRef.current.push(currentText);
         audioQueueRef.current.push(currentText);
         if (audioQueueRef.current.length === 1) {
@@ -494,6 +498,7 @@ function LiveViewer5() {
     } else {
       // If not playing, clear the audio queue and stop the audio
       audioQueueRef.current = [];
+      currentTranscriptRef.current = null;
       if (audioElement) {
         if (audioElement.src) {
           audioElement.src = ''; // Clear src URL if set
@@ -503,7 +508,7 @@ function LiveViewer5() {
         }
       }
       // Clear the transcript
-      setTranscriptions([]);
+      // setTranscriptions([]);
     }
   }, [
     meetingSession,
