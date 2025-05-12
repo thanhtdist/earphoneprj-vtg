@@ -94,7 +94,7 @@ function LiveViewer5() {
     const session = new DefaultMeetingSession(meetingSessionConfig, logger, deviceController);
     setMeetingSession(session);
 
-    await selectSpeaker(session);
+    //await selectSpeaker(session);
     if (selectedVoiceLanguage === 'ja-JP') {
       console.log('Selected voice language is Japanese', selectedVoiceLanguage);
       //const audioElement = document.getElementById('audioElementListener');
