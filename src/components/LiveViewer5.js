@@ -101,6 +101,7 @@ function LiveViewer5() {
       const audioElement = audioElementRef.current;
       console.log('Check audioElement:', audioElement);
       if (audioElement) {
+        audioElement.srcObject = null;
         await session.audioVideo.bindAudioElement(audioElement);
       } else {
         console.error('Audio element not found');
@@ -393,13 +394,15 @@ function LiveViewer5() {
   // };
 
   useEffect(() => {
+    console.log('Check currentTranscriptRef:', currentTranscriptRef.current);
+    console.log('Check audioQueueRef:', audioQueueRef.current);
+    console.log('Check transcripts:', transcripts);
 
     if(currentTranscriptRef.current === null) return; 
 
     const audioElement = audioElementRef.current;
     console.log('Check audioElement:', audioElement);
-    console.log('Check audioQueueRef:', audioQueueRef.current);
-    console.log('Check transcripts:', transcripts);
+
     if (!audioElement || !meetingSession || !sourceLanguageCode || !selectedVoiceLanguage || !transcripts) return;
     setTranscriptText([]);
     setTranslatedText([]);
@@ -493,12 +496,15 @@ function LiveViewer5() {
       //     };
       //     bindAudioElement();
       //     //audioElement.play();
-      //   }
+      //   
       // }
     } else {
       // If not playing, clear the audio queue and stop the audio
       audioQueueRef.current = [];
-      currentTranscriptRef.current = null;
+      if(currentTranscriptRef.current !== undefined) {
+        currentTranscriptRef.current = null;
+      }
+
       if (audioElement) {
         if (audioElement.src) {
           audioElement.src = ''; // Clear src URL if set
