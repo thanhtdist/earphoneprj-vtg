@@ -394,16 +394,22 @@ function LiveViewer5() {
   useEffect(() => {
 
     const audioElement = audioElementRef.current;
-    if (!audioElement || !meetingSession || !sourceLanguageCode || !selectedVoiceLanguage) return;
+    console.log('Check audioElement:', audioElement);
+    console.log('Check audioQueueRef:', audioQueueRef.current);
+    console.log('Check transcripts:', transcripts);
+    if (!audioElement || !meetingSession || !sourceLanguageCode || !selectedVoiceLanguage || !transcripts) return;
     setTranscriptText([]);
     setTranslatedText([]);
+    console.log('Check YYYYY transcripts:', transcripts);
 
     if (isPlay) {
+      console.log('Check ZZZZ transcripts:', transcripts);
       if (
         sourceLanguageCode !== selectedVoiceLanguage &&
         transcripts?.results?.[0]?.alternatives?.[0]?.transcript &&
         !transcripts.results?.[0]?.isPartial
       ) {
+        console.log('Check WWWW transcripts:', transcripts);
         // Process audio queue
         const processAudioQueue = async () => {
           if (audioQueueRef.current.length === 0) return;
@@ -496,6 +502,8 @@ function LiveViewer5() {
           audioElement.srcObject = null; // Clear srcObject if streaming
         }
       }
+      // Clear the transcript
+      setTranscriptions([]);
     }
   }, [
     meetingSession,
