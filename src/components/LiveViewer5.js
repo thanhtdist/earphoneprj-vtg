@@ -409,6 +409,12 @@ function LiveViewer5() {
     console.log('Check YYYYY transcripts:', transcripts);
 
     if (isPlay) {
+      
+        if (selectedVoiceLanguage === 'ja-JP') {
+          if (audioElement) {
+            meetingSession.audioVideo.bindAudioElement(audioElement);
+          }
+        }
       console.log('Check ZZZZ transcripts:', transcripts);
       if (
         sourceLanguageCode !== selectedVoiceLanguage &&
