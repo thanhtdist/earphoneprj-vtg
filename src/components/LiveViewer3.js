@@ -100,12 +100,17 @@ function LiveViewer3() {
       const audioElement = audioElementRef.current;
       console.log('Check audioElement:', audioElement);
       if (audioElement) {
+        audioElement.muted = false;
+        audioElement.volume = 1.0;
         await session.audioVideo.bindAudioElement(audioElement);
       } else {
         console.error('Audio element not found');
       }
     }
     metricReport(session);
+    // // VERY IMPORTANT: Disable mic and video
+    // session.audioVideo.stopLocalVideoTile();
+    // session.audioVideo.realtimeMuteLocalAudio(); // Prevents mic from broadcasting
     session.audioVideo.start();
   }, [selectedVoiceLanguage]);
 
@@ -399,11 +404,6 @@ function LiveViewer3() {
     setTranslatedText([]);
 
     if (isPlay) {
-      console.log('Check isPlay audioElement:', audioElement);
-      console.log('Check isPlay audioElement src:', audioElement.src);
-      console.log('Check isPlay audioElement srcObject:', audioElement.srcObject);
-      console.log('Check isPlay transcript:', transcripts?.results?.[0]?.alternatives?.[0]?.transcript);
-      console.log('Check isPlay isPartial:', transcripts?.results?.[0]?.isPartial);
       if (
         sourceLanguageCode !== selectedVoiceLanguage &&
         transcripts?.results?.[0]?.alternatives?.[0]?.transcript &&
@@ -493,14 +493,17 @@ function LiveViewer3() {
     } else {
       // If not playing, clear the audio queue and stop the audio
       audioQueueRef.current = [];
-      setTranscriptions([]); // Clear transcriptions
       if (audioElement) {
         if (audioElement.src) {
           audioElement.src = ''; // Clear src URL if set
         }
-        if (!audioElement.srcObject) {
-          audioElement.srcObject = null; // Clear srcObject if streaming
+        // if (audioElement.srcObject) {
+        //   audioElement.srcObject = null; // Clear srcObject if streaming
+        // }
+        if (transcripts?.results?.[0]?.alternatives?.[0]?.transcript) {
+          setTranscriptions([]);
         }
+
       }
     }
   }, [
