@@ -93,19 +93,86 @@ function LiveViewer5() {
     const session = new DefaultMeetingSession(meetingSessionConfig, logger, deviceController);
     setMeetingSession(session);
 
-    //await selectSpeaker(session);
-    if (selectedVoiceLanguage === 'ja-JP') {
-      console.log('Selected voice language is Japanese', selectedVoiceLanguage);
-      //const audioElement = document.getElementById('audioElementListener');
-      const audioElement = audioElementRef.current;
-      console.log('Check audioElement:', audioElement);
-      if (audioElement) {
-        await session.audioVideo.bindAudioElement(audioElement);
-      } else {
-        console.error('Audio element not found');
+    const audioElement = audioElementRef.current;
+
+    const observer = {
+      audioVideoDidStart: async () => {
+        console.log('Audio/Video started successfully');
+
+        // Only set up Web Audio API once the audio has actually started
+        if (selectedVoiceLanguage === 'ja-JP' && audioElement) {
+          try {
+            // Wait a moment for the audio stream to be fully available
+            setTimeout(async () => {
+              try {
+                const audioStream = await session.audioVideo.getCurrentMeetingAudioStream();
+
+                if (audioStream) {
+                  console.log('Audio stream available, setting up Web Audio API');
+                  alert('Audio stream available, setting up Web Audio API');
+
+                  // Create Web Audio API context
+                  const audioContext = new (window.AudioContext)();
+
+                  // Create a media stream source node
+                  const sourceNode = audioContext.createMediaStreamSource(audioStream);
+
+                  // Create gain node for volume control
+                  const gainNode = audioContext.createGain();
+                  gainNode.gain.value = 1.0; // Initial volume based on mute state
+
+                  // Connect nodes
+                  sourceNode.connect(gainNode);
+                  gainNode.connect(audioContext.destination);
+
+                  // Store these in refs if you need to access them later
+                  session.webAudioContext = audioContext;
+                  session.webAudioSource = sourceNode;
+                  session.webAudioGain = gainNode;
+
+                  console.log('Web Audio API setup complete');
+                } else {
+                  console.warn('No audio stream available after audioVideoDidStart, falling back to bindAudioElement');
+                  await session.audioVideo.bindAudioElement(audioElement);
+                }
+              } catch (error) {
+                console.error('Error setting up Web Audio after audioVideoDidStart:', error);
+                try {
+                  await session.audioVideo.bindAudioElement(audioElement);
+                } catch (fallbackError) {
+                  console.error('Fall back to bindAudioElement also failed:', fallbackError);
+                }
+              }
+            }, 500); // Short delay to ensure audio stream is ready
+          } catch (error) {
+            console.error('Error in audioVideoDidStart handler:', error);
+          }
+        }
+      },
+      audioVideoDidStop: (sessionStatus) => {
+        console.log('Audio/Video stopped:', sessionStatus);
+
+        // Clean up Web Audio API resources
+        if (session.webAudioContext) {
+          if (session.webAudioSource) {
+            session.webAudioSource.disconnect();
+          }
+          if (session.webAudioGain) {
+            session.webAudioGain.disconnect();
+          }
+          // Close audio context
+          session.webAudioContext.close().catch(err => console.error('Error closing audio context:', err));
+        }
+      },
+      audioVideoDidStartConnecting: () => {
+        console.log('Attempting to connect audio/video');
       }
-    }
-    //metricReport(session);
+    };
+
+    // Add the observer
+    session.audioVideo.addObserver(observer);
+
+    // Start the audio session
     session.audioVideo.start();
   }, [selectedVoiceLanguage]);
 
@@ -113,7 +180,7 @@ function LiveViewer5() {
   //   try {
   //     const audioOutputDevices = await session.audioVideo.listAudioOutputDevices();
   //     console.log('ZZZZZ Audio output devices:', audioOutputDevices.length);
-      
+
   //     if (audioOutputDevices.length > 0) {
   //       await session.audioVideo.chooseAudioOutput(audioOutputDevices[0].deviceId);
   //       alert('Speaker devices found: ' + audioOutputDevices.length);
@@ -305,26 +372,31 @@ function LiveViewer5() {
   }, [meetingSession]);
 
   useEffect(() => {
-    if (!meetingSession) return;
-    if (isPlay) {
-      // Subscribe to transcription events
-      console.log("subscribeToTranscriptEvent");
-      meetingSession.audioVideo.transcriptionController?.subscribeToTranscriptEvent(
-        (transcriptEvent) => {
-          // console.log('XXXX transcriptEvent:', transcriptEvent);
-          // if (transcriptEvent?.type === 'started') {
-          //   const transcriptionConfig = JSON.parse(transcriptEvent.transcriptionConfiguration);
-          //   setSourceLanguageCode(transcriptionConfig.EngineTranscribeSettings.LanguageCode);
-          // }
-          setTranscriptions(transcriptEvent);
-        }
-      );
-    } else {
-      // Unsubscribe from transcription events when not playing
-      meetingSession.audioVideo.transcriptionController?.unsubscribeFromTranscriptEvent();
+    if (!meetingSession || !selectedVoiceLanguage) return;
+
+    // Only handle transcription subscription for non-Japanese languages
+    if (selectedVoiceLanguage !== 'ja-JP') {
+      const transcriptionController = meetingSession.audioVideo.transcriptionController;
+      // Store the subscription callback so we can unsubscribe it later
+      let transcriptCallback = null;
+
+      if (isPlay) {
+      transcriptCallback = (transcriptEvent) => {
+        setTranscriptions(transcriptEvent);
+      };
+      transcriptionController?.subscribeToTranscriptEvent(transcriptCallback);
+      } else {
+      transcriptionController?.unsubscribeFromTranscriptEvent();
       setTranscriptions([]);
+      }
+
+      // Cleanup: Unsubscribe on unmount or dependency change
+      return () => {
+      transcriptionController?.unsubscribeFromTranscriptEvent();
+      };
     }
-  }, [meetingSession, isPlay]);
+
+  }, [meetingSession, selectedVoiceLanguage, isPlay]);
 
   // const callTranslateTextSpeech = async () => {
   //   const audioElement = audioElementRef.current;
@@ -424,122 +496,103 @@ function LiveViewer5() {
     // console.log('Check isPlay sourceLanguageCode:', sourceLanguageCode);
     console.log('Check isPlay selectedVoiceLanguage:', selectedVoiceLanguage);
     //if (!audioElement || !meetingSession || !sourceLanguageCode || !selectedVoiceLanguage) return;
-    if (!audioElement || !meetingSession || !selectedVoiceLanguage) return;
+    if (!audioElement) return;
     setTranscriptText([]);
     setTranslatedText([]);
 
-    if (isPlay) {
-      console.log('Check isPlay audioElement:', audioElement);
-      console.log('Check isPlay audioElement src:', audioElement.src);
-      console.log('Check isPlay audioElement srcObject:', audioElement.srcObject);
-      console.log('Check isPlay transcript:', transcripts?.results?.[0]?.alternatives?.[0]?.transcript);
-      console.log('Check isPlay isPartial:', transcripts?.results?.[0]?.isPartial);
-      if (
-        //sourceLanguageCode !== selectedVoiceLanguage &&
-        selectedVoiceLanguage !== 'ja-JP' &&
-        transcripts?.results?.[0]?.alternatives?.[0]?.transcript &&
-        !transcripts?.results?.[0]?.isPartial
-      ) {
-        // Process audio queue
-        const processAudioQueue = async () => {
-          if (audioQueueRef.current.length === 0) return;
+    console.log('Check isPlay audioElement:', audioElement);
+    console.log('Check isPlay audioElement src:', audioElement.src);
+    console.log('Check isPlay audioElement srcObject:', audioElement.srcObject);
+    console.log('Check isPlay transcript:', transcripts?.results?.[0]?.alternatives?.[0]?.transcript);
+    console.log('Check isPlay isPartial:', transcripts?.results?.[0]?.isPartial);
+    if (
+      //sourceLanguageCode !== selectedVoiceLanguage &&
+      selectedVoiceLanguage !== 'ja-JP' &&
+      transcripts?.results?.[0]?.alternatives?.[0]?.transcript &&
+      !transcripts?.results?.[0]?.isPartial
+    ) {
+      // Process audio queue
+      const processAudioQueue = async () => {
+        if (audioQueueRef.current.length === 0) return;
 
-          const nextAudio = audioQueueRef.current.shift();
-          console.log("nextAudio", nextAudio);
-          try {
-            await translateAndPlay(nextAudio);
-          } catch (error) {
-            console.error('Error processing audio queue:', error);
-          }
-
-          //setImmediate(processAudioQueue);
-          setTimeout(processAudioQueue, 0);
-        };
-
-        // Translate and play the audio
-        const translateAndPlay = async (currentText) => {
-          try {
-            let targetLanguageCode = selectedVoiceLanguage;
-            if (selectedVoiceLanguage === 'cmn-CN') {
-              targetLanguageCode = "zh";
-            }
-
-            //console.log('Check sourceLanguageCode:', sourceLanguageCode);
-            console.log('Check targetLanguageCode:', targetLanguageCode);
-            const response = await translateTextSpeech(
-              currentText,
-              'ja-JP',
-              targetLanguageCode,
-              "standard"
-            );
-
-            console.log('Translated response:', response);
-            translatedListRef.current.push(response.translatedText);
-
-            if (!response.speech.AudioStream?.data)
-              throw new Error('Invalid AudioStream data');
-
-            const audioBlob = new Blob(
-              [Uint8Array.from(response.speech.AudioStream.data)],
-              { type: response.speech.ContentType || 'audio/mpeg' }
-            );
-
-            const audioUrl = URL.createObjectURL(audioBlob);
-
-            const audioElement = audioElementRef.current;
-            if (audioElement) {
-              audioElement.src = audioUrl;
-              //audioElement.onended = () => processAudioQueue();
-              audioElement.onended = () => {
-                // Release the Blob URL to free browser memory
-                // This prevents memory leaks when processing many audio files
-                URL.revokeObjectURL(audioUrl);
-                processAudioQueue();
-              };
-              audioElement.play();
-            }
-            setTranslatedText((prev) => [...prev, response.translatedText]);
-          } catch (error) {
-            console.error('Failed to translate text to speech:', error);
-          }
-        };
-        const currentText = transcripts.results[0].alternatives[0].transcript;
-        transcriptListRef.current.push(currentText);
-        audioQueueRef.current.push(currentText);
-        if (audioQueueRef.current.length === 1) {
-          processAudioQueue();  // Start processing the queue.
+        const nextAudio = audioQueueRef.current.shift();
+        console.log("nextAudio", nextAudio);
+        try {
+          await translateAndPlay(nextAudio);
+        } catch (error) {
+          console.error('Error processing audio queue:', error);
         }
 
-        setTranscriptText((prev) => [...prev, currentText]);
+        //setImmediate(processAudioQueue);
+        setTimeout(processAudioQueue, 0);
+      };
+
+      // Translate and play the audio
+      const translateAndPlay = async (currentText) => {
+        try {
+          let targetLanguageCode = selectedVoiceLanguage;
+          if (selectedVoiceLanguage === 'cmn-CN') {
+            targetLanguageCode = "zh";
+          }
+
+          //console.log('Check sourceLanguageCode:', sourceLanguageCode);
+          console.log('Check targetLanguageCode:', targetLanguageCode);
+          const response = await translateTextSpeech(
+            currentText,
+            'ja-JP',
+            targetLanguageCode,
+            "standard"
+          );
+
+          console.log('Translated response:', response);
+          translatedListRef.current.push(response.translatedText);
+
+          if (!response.speech.AudioStream?.data)
+            throw new Error('Invalid AudioStream data');
+
+          const audioBlob = new Blob(
+            [Uint8Array.from(response.speech.AudioStream.data)],
+            { type: response.speech.ContentType || 'audio/mpeg' }
+          );
+
+          const audioUrl = URL.createObjectURL(audioBlob);
+
+          const audioElement = audioElementRef.current;
+          if (audioElement) {
+            audioElement.src = audioUrl;
+            //audioElement.onended = () => processAudioQueue();
+            audioElement.onended = () => {
+              // Release the Blob URL to free browser memory
+              // This prevents memory leaks when processing many audio files
+              URL.revokeObjectURL(audioUrl);
+              processAudioQueue();
+            };
+            audioElement.play();
+          }
+          setTranslatedText((prev) => [...prev, response.translatedText]);
+        } catch (error) {
+          console.error('Failed to translate text to speech:', error);
+        }
+      };
+      const currentText = transcripts.results[0].alternatives[0].transcript;
+      transcriptListRef.current.push(currentText);
+      audioQueueRef.current.push(currentText);
+      if (audioQueueRef.current.length === 1) {
+        processAudioQueue();  // Start processing the queue.
       }
-      // else {
-      //   if (sourceLanguageCode === selectedVoiceLanguage) {
-      //     const bindAudioElement = async () => {
-      //       await meetingSession.audioVideo.bindAudioElement(audioElement);
-      //     };
-      //     bindAudioElement();
-      //     //audioElement.play();
-      //   }
-      // }
+
+      setTranscriptText((prev) => [...prev, currentText]);
     } else {
       // If not playing, clear the audio queue and stop the audio
       audioQueueRef.current = [];
-      //setTranscriptions([]); // Clear transcriptions
-      if (audioElement) {
-        if (audioElement.src) {
-          audioElement.src = ''; // Clear src URL if set
-        }
-        // if (audioElement.srcObject) {
-        //   audioElement.srcObject = null; // Clear srcObject if streaming
-        // }
+      if (audioElement && audioElement.src) {
+        audioElement.src = ''; // Clear src URL if set
       }
     }
+
   }, [
-    meetingSession,
     transcripts,
-    //sourceLanguageCode,
-    selectedVoiceLanguage,
-    isPlay
+    selectedVoiceLanguage
   ]);
 
   const handleSelectedVoiceLanguageChange = (event) => {
