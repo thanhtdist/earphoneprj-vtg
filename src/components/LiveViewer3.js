@@ -100,17 +100,17 @@ function LiveViewer3() {
       const audioElement = audioElementRef.current;
       console.log('Check audioElement:', audioElement);
       if (audioElement) {
-        audioElement.muted = false;
-        audioElement.volume = 1.0;
+        // audioElement.muted = false;
+        // audioElement.volume = 1.0;
         await session.audioVideo.bindAudioElement(audioElement);
       } else {
         console.error('Audio element not found');
       }
     }
     //metricReport(session);
-    // // VERY IMPORTANT: Disable mic and video
-    // session.audioVideo.stopLocalVideoTile();
-    // session.audioVideo.realtimeMuteLocalAudio(); // Prevents mic from broadcasting
+    // VERY IMPORTANT: Disable mic and video
+    session.audioVideo.stopLocalVideoTile();
+    session.audioVideo.realtimeMuteLocalAudio(); // Prevents mic from broadcasting
     session.audioVideo.start();
   }, [selectedVoiceLanguage]);
 
