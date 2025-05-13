@@ -316,6 +316,7 @@ function LiveViewer4() {
     } else {
       // Unsubscribe from transcription events when not playing
       meetingSession.audioVideo.transcriptionController?.unsubscribeFromTranscriptEvent();
+      setTranscriptions([]);
     }
 
 
@@ -520,14 +521,14 @@ function LiveViewer4() {
     } else {
       // If not playing, clear the audio queue and stop the audio
       audioQueueRef.current = [];
-      setTranscriptions([]); // Clear transcriptions
+      //setTranscriptions([]); // Clear transcriptions
       if (audioElement) {
         if (audioElement.src) {
           audioElement.src = ''; // Clear src URL if set
         }
-        if (audioElement.srcObject) {
-          audioElement.srcObject = null; // Clear srcObject if streaming
-        }
+        // if (audioElement.srcObject) {
+        //   audioElement.srcObject = null; // Clear srcObject if streaming
+        // }
       }
     }
   }, [
