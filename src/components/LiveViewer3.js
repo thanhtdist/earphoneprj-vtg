@@ -65,6 +65,10 @@ function LiveViewer3() {
   const [isMuted, setIsMuted] = useState(true);
   const [isPlay, setIsPlay] = useState(false);
 
+  // Add this state near your other useState declarations
+  const [audioOutputDevices, setAudioOutputDevices] = useState([]);
+  const [selectedAudioOutputDevice, setSelectedAudioOutputDevice] = useState('');
+
   // Add these references and callback:
   const wakeLockRef = useRef(null);
   const requestWakeLock = useCallback(async () => {
@@ -114,16 +118,46 @@ function LiveViewer3() {
     session.audioVideo.start();
   }, [selectedVoiceLanguage]);
 
+  // const selectSpeaker = async (session) => {
+  //   try {
+  //     const audioOutputDevices = await session.audioVideo.listAudioOutputDevices();
+  //     if (audioOutputDevices.length > 0) {
+  //       await session.audioVideo.chooseAudioOutput(audioOutputDevices[0].deviceId);
+  //     } else {
+  //       console.log('No speaker devices found');
+  //     }
+  //   } catch (error) {
+  //     console.error('Error selecting speaker:', error);
+  //   }
+  // };
+
+  // Modify the selectSpeaker function to store available devices
   const selectSpeaker = async (session) => {
     try {
-      const audioOutputDevices = await session.audioVideo.listAudioOutputDevices();
-      if (audioOutputDevices.length > 0) {
-        await session.audioVideo.chooseAudioOutput(audioOutputDevices[0].deviceId);
+      const devices = await session.audioVideo.listAudioOutputDevices();
+      console.log('Available audio output devices:', devices);
+      setAudioOutputDevices(devices);
+      if (devices.length > 0) {
+        setSelectedAudioOutputDevice(devices[0].deviceId);
+        await session.audioVideo.chooseAudioOutput(devices[0].deviceId);
       } else {
         console.log('No speaker devices found');
       }
     } catch (error) {
       console.error('Error selecting speaker:', error);
+    }
+  };
+
+  // Add this handler function
+  const handleAudioOutputChange = async (event) => {
+    const deviceId = event.target.value;
+    setSelectedAudioOutputDevice(deviceId);
+    if (meetingSession) {
+      try {
+        await meetingSession.audioVideo.chooseAudioOutput(deviceId);
+      } catch (error) {
+        console.error('Error changing audio output device:', error);
+      }
     }
   };
 
@@ -649,6 +683,23 @@ function LiveViewer3() {
             </select>
           </div>
         )}
+        <h3 className='title-box' style={{ marginTop: '15px'}}>
+          {'Audio Output Device'}
+        </h3>
+        <select
+          style={{ marginTop: '15px', marginBottom: '15px' }}
+          className='selected-language'
+          id="selectedAudioOutput"
+          value={selectedAudioOutputDevice}
+          onChange={handleAudioOutputChange}
+          disabled={!meetingSession}
+        >
+          {audioOutputDevices.map((device) => (
+            <option key={device.deviceId} value={device.deviceId}>
+              {device.label || `Speaker ${audioOutputDevices.indexOf(device) + 1}`}
+            </option>
+          ))}
+        </select>
         <audio
           id="audioElementListener"
           //controls
