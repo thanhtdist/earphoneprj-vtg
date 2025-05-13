@@ -66,8 +66,8 @@ function LiveViewer3() {
   const [isPlay, setIsPlay] = useState(false);
 
   // Add this state near your other useState declarations
-  const [audioOutputDevices, setAudioOutputDevices] = useState([]);
-  const [selectedAudioOutputDevice, setSelectedAudioOutputDevice] = useState('');
+  const [outputDevices, setOutputDevices] = useState([]);
+  const [selectedDeviceId, setSelectedDeviceId] = useState('');
 
   // Add these references and callback:
   const wakeLockRef = useRef(null);
@@ -132,34 +132,28 @@ function LiveViewer3() {
   // };
 
   // Modify the selectSpeaker function to store available devices
-  const selectSpeaker = async (session) => {
-    try {
-      const devices = await session.audioVideo.listAudioOutputDevices();
-      console.log('Available audio output devices:', devices);
-      setAudioOutputDevices(devices);
-      if (devices.length > 0) {
-        setSelectedAudioOutputDevice(devices[0].deviceId);
-        await session.audioVideo.chooseAudioOutput(devices[0].deviceId);
-      } else {
-        console.log('No speaker devices found');
-      }
-    } catch (error) {
-      console.error('Error selecting speaker:', error);
+const selectSpeaker = async (meetingSession) => {
+  try {
+    const devices = await meetingSession.audioVideo.listAudioOutputDevices();
+    setOutputDevices(devices);
+    if (devices.length > 0) {
+      setSelectedDeviceId(devices[0].deviceId);
+      await meetingSession.audioVideo.chooseAudioOutput(devices[0].deviceId);
     }
-  };
+  } catch (error) {
+    console.error('Error fetching audio output devices:', error);
+  }
+};
 
-  // Add this handler function
-  const handleAudioOutputChange = async (event) => {
-    const deviceId = event.target.value;
-    setSelectedAudioOutputDevice(deviceId);
-    if (meetingSession) {
-      try {
-        await meetingSession.audioVideo.chooseAudioOutput(deviceId);
-      } catch (error) {
-        console.error('Error changing audio output device:', error);
-      }
-    }
-  };
+const handleOutputChange = async (deviceId) => {
+  try {
+    setSelectedDeviceId(deviceId);
+    await meetingSession.audioVideo.chooseAudioOutput(deviceId);
+    console.log(`Output changed to deviceId: ${deviceId}`);
+  } catch (error) {
+    console.error('Failed to change audio output device:', error);
+  }
+};
 
   const createAppUserAndJoinChannel = useCallback(
     async (meetingId, attendeeId, userID, userType, channelId) => {
@@ -649,6 +643,7 @@ function LiveViewer3() {
   console.log("transcripts event:", transcripts);
   console.log("transcripts:", transcripts?.results?.[0]?.alternatives?.[0]?.transcript);
   console.log("transcripts isPartial:", transcripts?.results?.[0]?.isPartial);
+  console.log("outputDevices results:", outputDevices);
 
   return (
     <>
@@ -683,23 +678,22 @@ function LiveViewer3() {
             </select>
           </div>
         )}
-        <h3 className='title-box' style={{ marginTop: '15px'}}>
-          {'Audio Output Device'}
-        </h3>
-        <select
-          style={{ marginTop: '15px', marginBottom: '15px' }}
-          className='selected-language'
-          id="selectedAudioOutput"
-          value={selectedAudioOutputDevice}
-          onChange={handleAudioOutputChange}
-          disabled={!meetingSession}
-        >
-          {audioOutputDevices.map((device) => (
-            <option key={device.deviceId} value={device.deviceId}>
-              {device.label || `Speaker ${audioOutputDevices.indexOf(device) + 1}`}
-            </option>
-          ))}
-        </select>
+        {outputDevices.length > 0 && (
+          <div className="audio-output-selector">
+            <label>Select output device</label>
+            <select
+              value={selectedDeviceId}
+              onChange={(e) => handleOutputChange(e.target.value)}
+            >
+              {outputDevices.map((device) => (
+                <option key={device.deviceId} value={device.deviceId}>
+                  {device.label || `Speaker (${device.deviceId})`}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+
         <audio
           id="audioElementListener"
           //controls

@@ -49,7 +49,7 @@ function LiveViewer4() {
   const [transcripts, setTranscriptions] = useState([]);
   const [transcriptText, setTranscriptText] = useState([]);
   const [translatedText, setTranslatedText] = useState([]);
-  const [sourceLanguageCode, setSourceLanguageCode] = useState(null);
+  // const [sourceLanguageCode, setSourceLanguageCode] = useState(null);
   const [selectedVoiceLanguage, setSelectedVoiceLanguage] = useState(
     LISTEN_VOICE_LANGUAGES.find((lang) => lang.key.startsWith(i18n.language))?.key || 'ja-JP'
   );
@@ -294,22 +294,23 @@ function LiveViewer4() {
     // );
     // splitUrl()
     // Cleanup on unmount
-    // return () => {
-    //   meetingSession.audioVideo.realtimeUnsubscribeFromAttendeeIdPresence(presenceCallback);
-    // };
+    return () => {
+      meetingSession.audioVideo.realtimeUnsubscribeFromAttendeeIdPresence(presenceCallback);
+    };
   }, [meetingSession]);
 
   useEffect(() => {
     if (!meetingSession) return;
     if (isPlay) {
       // Subscribe to transcription events
+      console.log("subscribeToTranscriptEvent");
       meetingSession.audioVideo.transcriptionController?.subscribeToTranscriptEvent(
         (transcriptEvent) => {
-          console.log('Check transcriptEvent:', transcriptEvent);
-          if (transcriptEvent?.type === 'started') {
-            const transcriptionConfig = JSON.parse(transcriptEvent.transcriptionConfiguration);
-            setSourceLanguageCode(transcriptionConfig.EngineTranscribeSettings.LanguageCode);
-          }
+          // console.log('XXXX transcriptEvent:', transcriptEvent);
+          // if (transcriptEvent?.type === 'started') {
+          //   const transcriptionConfig = JSON.parse(transcriptEvent.transcriptionConfiguration);
+          //   setSourceLanguageCode(transcriptionConfig.EngineTranscribeSettings.LanguageCode);
+          // }
           setTranscriptions(transcriptEvent);
         }
       );
@@ -318,13 +319,6 @@ function LiveViewer4() {
       meetingSession.audioVideo.transcriptionController?.unsubscribeFromTranscriptEvent();
       setTranscriptions([]);
     }
-
-
-    // splitUrl()
-    // Cleanup on unmount
-    // return () => {
-    //   meetingSession.audioVideo.realtimeUnsubscribeFromAttendeeIdPresence(presenceCallback);
-    // };
   }, [meetingSession, isPlay]);
 
   // const callTranslateTextSpeech = async () => {
@@ -422,7 +416,10 @@ function LiveViewer4() {
   useEffect(() => {
 
     const audioElement = audioElementRef.current;
-    if (!audioElement || !meetingSession || !sourceLanguageCode || !selectedVoiceLanguage) return;
+    // console.log('Check isPlay sourceLanguageCode:', sourceLanguageCode);
+    console.log('Check isPlay selectedVoiceLanguage:', selectedVoiceLanguage);
+    //if (!audioElement || !meetingSession || !sourceLanguageCode || !selectedVoiceLanguage) return;
+    if (!audioElement || !meetingSession || !selectedVoiceLanguage) return;
     setTranscriptText([]);
     setTranslatedText([]);
 
@@ -433,7 +430,8 @@ function LiveViewer4() {
       console.log('Check isPlay transcript:', transcripts?.results?.[0]?.alternatives?.[0]?.transcript);
       console.log('Check isPlay isPartial:', transcripts?.results?.[0]?.isPartial);
       if (
-        sourceLanguageCode !== selectedVoiceLanguage &&
+        //sourceLanguageCode !== selectedVoiceLanguage &&
+        selectedVoiceLanguage !== 'ja-JP' &&
         transcripts?.results?.[0]?.alternatives?.[0]?.transcript &&
         !transcripts?.results?.[0]?.isPartial
       ) {
@@ -461,11 +459,11 @@ function LiveViewer4() {
               targetLanguageCode = "zh";
             }
 
-            console.log('Check sourceLanguageCode:', sourceLanguageCode);
+            //console.log('Check sourceLanguageCode:', sourceLanguageCode);
             console.log('Check targetLanguageCode:', targetLanguageCode);
             const response = await translateTextSpeech(
               currentText,
-              sourceLanguageCode,
+              'ja-JP',
               targetLanguageCode,
               "standard"
             );
@@ -534,7 +532,7 @@ function LiveViewer4() {
   }, [
     meetingSession,
     transcripts,
-    sourceLanguageCode,
+    //sourceLanguageCode,
     selectedVoiceLanguage,
     isPlay
   ]);
