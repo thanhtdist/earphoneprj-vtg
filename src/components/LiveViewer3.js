@@ -139,6 +139,7 @@ const selectSpeaker = async (meetingSession) => {
     if (devices.length > 0) {
       setSelectedDeviceId(devices[0].deviceId);
       await meetingSession.audioVideo.chooseAudioOutput(devices[0].deviceId);
+      alert(`Audio output set to: ${devices[0].label || devices[0].deviceId}`);
     } else {
       console.log('No audio output devices found');
       await meetingSession.audioVideo.chooseAudioOutput('default');
