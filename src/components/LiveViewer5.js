@@ -17,7 +17,7 @@ import {
 } from 'amazon-chime-sdk-js';
 import '../styles/LiveViewer.css';
 import Config from '../utils/config';
-import metricReport from '../utils/MetricReport';
+//import metricReport from '../utils/MetricReport';
 import JSONCookieUtils from '../utils/JSONCookieUtils';
 import { checkAvailableMeeting } from '../utils/MeetingUtils';
 import { v4 as uuidv4 } from 'uuid';
@@ -49,13 +49,12 @@ function LiveViewer5() {
   const [transcripts, setTranscriptions] = useState([]);
   const [transcriptText, setTranscriptText] = useState([]);
   const [translatedText, setTranslatedText] = useState([]);
-  const [sourceLanguageCode, setSourceLanguageCode] = useState(null);
+  // const [sourceLanguageCode, setSourceLanguageCode] = useState(null);
   const [selectedVoiceLanguage, setSelectedVoiceLanguage] = useState(
     LISTEN_VOICE_LANGUAGES.find((lang) => lang.key.startsWith(i18n.language))?.key || 'ja-JP'
   );
   const [chatRestriction, setChatRestriction] = useState(null);
   // Replace local variables with refs
-  const currentTranscriptRef = useRef(undefined);
   const transcriptListRef = useRef([]);
   const translatedListRef = useRef([]);
   const audioQueueRef = useRef([]);
@@ -94,35 +93,39 @@ function LiveViewer5() {
     const session = new DefaultMeetingSession(meetingSessionConfig, logger, deviceController);
     setMeetingSession(session);
 
-    await selectSpeaker(session);
+    //await selectSpeaker(session);
     if (selectedVoiceLanguage === 'ja-JP') {
       console.log('Selected voice language is Japanese', selectedVoiceLanguage);
       //const audioElement = document.getElementById('audioElementListener');
       const audioElement = audioElementRef.current;
       console.log('Check audioElement:', audioElement);
-      //audioElement.srcObject = null;
       if (audioElement) {
         await session.audioVideo.bindAudioElement(audioElement);
       } else {
         console.error('Audio element not found');
       }
     }
-    metricReport(session);
+    //metricReport(session);
     session.audioVideo.start();
   }, [selectedVoiceLanguage]);
 
-  const selectSpeaker = async (session) => {
-    try {
-      const audioOutputDevices = await session.audioVideo.listAudioOutputDevices();
-      if (audioOutputDevices.length > 0) {
-        await session.audioVideo.chooseAudioOutput(audioOutputDevices[0].deviceId);
-      } else {
-        console.log('No speaker devices found');
-      }
-    } catch (error) {
-      console.error('Error selecting speaker:', error);
-    }
-  };
+  // const selectSpeaker = async (session) => {
+  //   try {
+  //     const audioOutputDevices = await session.audioVideo.listAudioOutputDevices();
+  //     console.log('ZZZZZ Audio output devices:', audioOutputDevices.length);
+      
+  //     if (audioOutputDevices.length > 0) {
+  //       await session.audioVideo.chooseAudioOutput(audioOutputDevices[0].deviceId);
+  //       alert('Speaker devices found: ' + audioOutputDevices.length);
+  //     } else {
+  //       console.log('No speaker devices found');
+  //       await session.audioVideo.chooseAudioOutput(null);
+  //       alert('No speaker devices found')
+  //     }
+  //   } catch (error) {
+  //     console.error('Error selecting speaker:', error);
+  //   }
+  // };
 
   const createAppUserAndJoinChannel = useCallback(
     async (meetingId, attendeeId, userID, userType, channelId) => {
@@ -284,22 +287,44 @@ function LiveViewer5() {
     meetingSession.audioVideo.realtimeSubscribeToAttendeeIdPresence(presenceCallback);
 
     // Subscribe to transcription events
-    meetingSession.audioVideo.transcriptionController?.subscribeToTranscriptEvent(
-      (transcriptEvent) => {
-        console.log('Check transcriptEvent:', transcriptEvent);
-        if (transcriptEvent?.type === 'started') {
-          const transcriptionConfig = JSON.parse(transcriptEvent.transcriptionConfiguration);
-          setSourceLanguageCode(transcriptionConfig.EngineTranscribeSettings.LanguageCode);
-        }
-        setTranscriptions(transcriptEvent);
-      }
-    );
+    // meetingSession.audioVideo.transcriptionController?.subscribeToTranscriptEvent(
+    //   (transcriptEvent) => {
+    //     console.log('Check transcriptEvent:', transcriptEvent);
+    //     if (transcriptEvent?.type === 'started') {
+    //       const transcriptionConfig = JSON.parse(transcriptEvent.transcriptionConfiguration);
+    //       setSourceLanguageCode(transcriptionConfig.EngineTranscribeSettings.LanguageCode);
+    //     }
+    //     setTranscriptions(transcriptEvent);
+    //   }
+    // );
     // splitUrl()
     // Cleanup on unmount
     // return () => {
     //   meetingSession.audioVideo.realtimeUnsubscribeFromAttendeeIdPresence(presenceCallback);
     // };
   }, [meetingSession]);
+
+  useEffect(() => {
+    if (!meetingSession) return;
+    if (isPlay) {
+      // Subscribe to transcription events
+      console.log("subscribeToTranscriptEvent");
+      meetingSession.audioVideo.transcriptionController?.subscribeToTranscriptEvent(
+        (transcriptEvent) => {
+          // console.log('XXXX transcriptEvent:', transcriptEvent);
+          // if (transcriptEvent?.type === 'started') {
+          //   const transcriptionConfig = JSON.parse(transcriptEvent.transcriptionConfiguration);
+          //   setSourceLanguageCode(transcriptionConfig.EngineTranscribeSettings.LanguageCode);
+          // }
+          setTranscriptions(transcriptEvent);
+        }
+      );
+    } else {
+      // Unsubscribe from transcription events when not playing
+      meetingSession.audioVideo.transcriptionController?.unsubscribeFromTranscriptEvent();
+      setTranscriptions([]);
+    }
+  }, [meetingSession, isPlay]);
 
   // const callTranslateTextSpeech = async () => {
   //   const audioElement = audioElementRef.current;
@@ -394,34 +419,27 @@ function LiveViewer5() {
   // };
 
   useEffect(() => {
-    console.log('Check currentTranscriptRef:', currentTranscriptRef.current);
-    console.log('Check audioQueueRef:', audioQueueRef.current);
-    console.log('Check transcripts:', transcripts);
-
-    //if (currentTranscriptRef.current === null) return;
 
     const audioElement = audioElementRef.current;
-    console.log('Check audioElement:', audioElement);
-
-    if (!audioElement || !meetingSession || !sourceLanguageCode || !selectedVoiceLanguage || !transcripts) return;
+    // console.log('Check isPlay sourceLanguageCode:', sourceLanguageCode);
+    console.log('Check isPlay selectedVoiceLanguage:', selectedVoiceLanguage);
+    //if (!audioElement || !meetingSession || !sourceLanguageCode || !selectedVoiceLanguage) return;
+    if (!audioElement || !meetingSession || !selectedVoiceLanguage) return;
     setTranscriptText([]);
     setTranslatedText([]);
-    console.log('Check YYYYY transcripts:', transcripts);
 
     if (isPlay) {
-      
-        if (selectedVoiceLanguage === 'ja-JP') {
-          if (audioElement) {
-            meetingSession.audioVideo.bindAudioElement(audioElement);
-          }
-        }
-      console.log('Check ZZZZ transcripts:', transcripts);
+      console.log('Check isPlay audioElement:', audioElement);
+      console.log('Check isPlay audioElement src:', audioElement.src);
+      console.log('Check isPlay audioElement srcObject:', audioElement.srcObject);
+      console.log('Check isPlay transcript:', transcripts?.results?.[0]?.alternatives?.[0]?.transcript);
+      console.log('Check isPlay isPartial:', transcripts?.results?.[0]?.isPartial);
       if (
-        sourceLanguageCode !== selectedVoiceLanguage &&
+        //sourceLanguageCode !== selectedVoiceLanguage &&
+        selectedVoiceLanguage !== 'ja-JP' &&
         transcripts?.results?.[0]?.alternatives?.[0]?.transcript &&
-        !transcripts.results?.[0]?.isPartial
+        !transcripts?.results?.[0]?.isPartial
       ) {
-        console.log('Check WWWW transcripts:', transcripts);
         // Process audio queue
         const processAudioQueue = async () => {
           if (audioQueueRef.current.length === 0) return;
@@ -446,11 +464,11 @@ function LiveViewer5() {
               targetLanguageCode = "zh";
             }
 
-            console.log('Check sourceLanguageCode:', sourceLanguageCode);
+            //console.log('Check sourceLanguageCode:', sourceLanguageCode);
             console.log('Check targetLanguageCode:', targetLanguageCode);
             const response = await translateTextSpeech(
               currentText,
-              sourceLanguageCode,
+              'ja-JP',
               targetLanguageCode,
               "standard"
             );
@@ -486,7 +504,6 @@ function LiveViewer5() {
           }
         };
         const currentText = transcripts.results[0].alternatives[0].transcript;
-        currentTranscriptRef.current = currentText;
         transcriptListRef.current.push(currentText);
         audioQueueRef.current.push(currentText);
         if (audioQueueRef.current.length === 1) {
@@ -502,34 +519,25 @@ function LiveViewer5() {
       //     };
       //     bindAudioElement();
       //     //audioElement.play();
-      //   
+      //   }
       // }
     } else {
       // If not playing, clear the audio queue and stop the audio
       audioQueueRef.current = [];
-      if (currentTranscriptRef.current !== undefined) {
-        currentTranscriptRef.current = null;
-      }
-
+      //setTranscriptions([]); // Clear transcriptions
       if (audioElement) {
         if (audioElement.src) {
           audioElement.src = ''; // Clear src URL if set
         }
-
-        if (selectedVoiceLanguage === 'ja-JP') {
-          if (audioElement.srcObject) {
-            audioElement.srcObject = null; // Clear srcObject if streaming
-          }
-        }
-
+        // if (audioElement.srcObject) {
+        //   audioElement.srcObject = null; // Clear srcObject if streaming
+        // }
       }
-      // Clear the transcript
-      // setTranscriptions([]);
     }
   }, [
     meetingSession,
     transcripts,
-    sourceLanguageCode,
+    //sourceLanguageCode,
     selectedVoiceLanguage,
     isPlay
   ]);
