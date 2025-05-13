@@ -17,7 +17,7 @@ import {
 } from 'amazon-chime-sdk-js';
 import '../styles/LiveViewer.css';
 import Config from '../utils/config';
-import metricReport from '../utils/MetricReport';
+//import metricReport from '../utils/MetricReport';
 import JSONCookieUtils from '../utils/JSONCookieUtils';
 import { checkAvailableMeeting } from '../utils/MeetingUtils';
 import { v4 as uuidv4 } from 'uuid';
@@ -93,7 +93,7 @@ function LiveViewer4() {
     const session = new DefaultMeetingSession(meetingSessionConfig, logger, deviceController);
     setMeetingSession(session);
 
-    await selectSpeaker(session);
+    //await selectSpeaker(session);
     if (selectedVoiceLanguage === 'ja-JP') {
       console.log('Selected voice language is Japanese', selectedVoiceLanguage);
       //const audioElement = document.getElementById('audioElementListener');
@@ -105,27 +105,27 @@ function LiveViewer4() {
         console.error('Audio element not found');
       }
     }
-    metricReport(session);
+    //metricReport(session);
     session.audioVideo.start();
   }, [selectedVoiceLanguage]);
 
-  const selectSpeaker = async (session) => {
-    try {
-      const audioOutputDevices = await session.audioVideo.listAudioOutputDevices();
-      console.log('ZZZZZ Audio output devices:', audioOutputDevices.length);
+  // const selectSpeaker = async (session) => {
+  //   try {
+  //     const audioOutputDevices = await session.audioVideo.listAudioOutputDevices();
+  //     console.log('ZZZZZ Audio output devices:', audioOutputDevices.length);
       
-      if (audioOutputDevices.length > 0) {
-        await session.audioVideo.chooseAudioOutput(audioOutputDevices[0].deviceId);
-        alert('Speaker devices found: ' + audioOutputDevices.length);
-      } else {
-        console.log('No speaker devices found');
-        await session.audioVideo.chooseAudioOutput(null);
-        alert('No speaker devices found')
-      }
-    } catch (error) {
-      console.error('Error selecting speaker:', error);
-    }
-  };
+  //     if (audioOutputDevices.length > 0) {
+  //       await session.audioVideo.chooseAudioOutput(audioOutputDevices[0].deviceId);
+  //       alert('Speaker devices found: ' + audioOutputDevices.length);
+  //     } else {
+  //       console.log('No speaker devices found');
+  //       await session.audioVideo.chooseAudioOutput(null);
+  //       alert('No speaker devices found')
+  //     }
+  //   } catch (error) {
+  //     console.error('Error selecting speaker:', error);
+  //   }
+  // };
 
   const createAppUserAndJoinChannel = useCallback(
     async (meetingId, attendeeId, userID, userType, channelId) => {
