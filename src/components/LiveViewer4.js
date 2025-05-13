@@ -112,10 +112,15 @@ function LiveViewer4() {
   const selectSpeaker = async (session) => {
     try {
       const audioOutputDevices = await session.audioVideo.listAudioOutputDevices();
+      console.log('ZZZZZ Audio output devices:', audioOutputDevices.length);
+      
       if (audioOutputDevices.length > 0) {
         await session.audioVideo.chooseAudioOutput(audioOutputDevices[0].deviceId);
+        alert('Speaker devices found: ' + audioOutputDevices.length);
       } else {
         console.log('No speaker devices found');
+        await session.audioVideo.chooseAudioOutput(null);
+        alert('No speaker devices found')
       }
     } catch (error) {
       console.error('Error selecting speaker:', error);
@@ -294,9 +299,9 @@ function LiveViewer4() {
     // );
     // splitUrl()
     // Cleanup on unmount
-    return () => {
-      meetingSession.audioVideo.realtimeUnsubscribeFromAttendeeIdPresence(presenceCallback);
-    };
+    // return () => {
+    //   meetingSession.audioVideo.realtimeUnsubscribeFromAttendeeIdPresence(presenceCallback);
+    // };
   }, [meetingSession]);
 
   useEffect(() => {
