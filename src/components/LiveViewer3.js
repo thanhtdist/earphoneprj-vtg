@@ -17,7 +17,7 @@ import {
 } from 'amazon-chime-sdk-js';
 import '../styles/LiveViewer.css';
 import Config from '../utils/config';
-import metricReport from '../utils/MetricReport';
+//import metricReport from '../utils/MetricReport';
 import JSONCookieUtils from '../utils/JSONCookieUtils';
 import { checkAvailableMeeting } from '../utils/MeetingUtils';
 import { v4 as uuidv4 } from 'uuid';
@@ -107,7 +107,7 @@ function LiveViewer3() {
         console.error('Audio element not found');
       }
     }
-    metricReport(session);
+    //metricReport(session);
     // // VERY IMPORTANT: Disable mic and video
     // session.audioVideo.stopLocalVideoTile();
     // session.audioVideo.realtimeMuteLocalAudio(); // Prevents mic from broadcasting
