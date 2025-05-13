@@ -113,8 +113,8 @@ function LiveViewer3() {
     }
     //metricReport(session);
     // VERY IMPORTANT: Disable mic and video
-    session.audioVideo.stopLocalVideoTile();
-    session.audioVideo.realtimeMuteLocalAudio(); // Prevents mic from broadcasting
+    // session.audioVideo.stopLocalVideoTile();
+    // session.audioVideo.realtimeMuteLocalAudio(); // Prevents mic from broadcasting
     session.audioVideo.start();
   }, [selectedVoiceLanguage]);
 
@@ -139,6 +139,11 @@ const selectSpeaker = async (meetingSession) => {
     if (devices.length > 0) {
       setSelectedDeviceId(devices[0].deviceId);
       await meetingSession.audioVideo.chooseAudioOutput(devices[0].deviceId);
+    } else {
+      console.log('No audio output devices found');
+      await meetingSession.audioVideo.chooseAudioOutput('default');
+      alert('No audio output devices found. Default output will be used.');
+      //await meetingSession.audioVideo.chooseAudioOutput(null);
     }
   } catch (error) {
     console.error('Error fetching audio output devices:', error);
