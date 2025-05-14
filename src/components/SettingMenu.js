@@ -15,18 +15,21 @@ function SettingMenu() {
   };
 
   // Close the menu if clicked outside
-  const closeMenuOutsideClick = (e) => {
+  const handleOutsideInteraction = (e) => {
     if (menuRef.current && !menuRef.current.contains(e.target)) {
       setIsMenuOpen(false); // Close the menu when clicked outside
     }
   };
 
-  // Listen for clicks outside of the menu to close it
+  // Listen for all types of interactions that could happen outside the menu
   useEffect(() => {
-    document.addEventListener('click', closeMenuOutsideClick);
-
+    // Handle clicks and touches outside
+    document.addEventListener('click', handleOutsideInteraction);
+    document.addEventListener('touchstart', handleOutsideInteraction);
+    
     return () => {
-      document.removeEventListener('click', closeMenuOutsideClick); // Cleanup the listener on unmount
+      document.removeEventListener('click', handleOutsideInteraction);
+      document.removeEventListener('touchstart', handleOutsideInteraction);
     };
   }, []);
 
@@ -42,13 +45,13 @@ function SettingMenu() {
       audioPlayer.setAttribute('lang', i18n.language);
       // Check if the status label exists for the audio player
       const statusLabel = document.querySelector(".status-label");
-        console.log('statusLabel', statusLabel);
-        if (statusLabel) {
-            //statusLabel.textContent = "Live Audio Session";  // Customize the label text
-            console.log("Status label found.", statusLabel.textContent);
-        } else {
-            console.log("Status label not found.");
-        }
+      console.log('statusLabel', statusLabel);
+      if (statusLabel) {
+        //statusLabel.textContent = "Live Audio Session";  // Customize the label text
+        console.log("Status label found.", statusLabel.textContent);
+      } else {
+        console.log("Status label not found.");
+      }
     }
 
   }, [i18n.language, t]); // Re-run effect when language changes
@@ -62,26 +65,29 @@ function SettingMenu() {
 
   return (
     <>
-      {/* Menu Toggle Button */}
+      <div ref={menuRef}>
+        {/* Menu Toggle Button */}
         <GrLanguage size={35} onClick={toggleMenu} />
-      {/* Collapsible Menu Content */}
-      <div className={`menu-content ${isMenuOpen ? 'open' : ''}`}>
-        {/* Language Selector */}
-        {isMenuOpen && (
-          <div className="language-selector">
-            <label htmlFor="language-select">{t('languagesLbl')}</label>
-            <select
-              id="language-select"
-              onChange={handleLanguageChange}
-              value={i18n.language || 'en'} // Ensure fallback if i18n.language is undefined
-            >
-              <option value="ja">日本語</option>
-              <option value="en">English</option>
-            </select>
-          </div>
-        )}
+        {/* Collapsible Menu Content */}
+        <div className={`menu-content ${isMenuOpen ? 'open' : ''}`} >
+          {/* Language Selector */}
+          {isMenuOpen && (
+            <div className="language-selector">
+              {/* <label htmlFor="language-select">{t('languagesLbl')}</label> */}
+              <select
+                id="language-select"
+                onChange={handleLanguageChange}
+                value={i18n.language || 'en'} // Ensure fallback if i18n.language is undefined
+              >
+                <option value="ja">日本語</option>
+                <option value="en">English</option>
+              </select>
+            </div>
+          )}
+        </div>
       </div>
-      </>
+
+    </>
   );
 }
 
