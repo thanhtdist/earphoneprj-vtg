@@ -150,24 +150,24 @@ function LiveViewer6() {
           }
         }
       },
-      audioVideoDidStop: (sessionStatus) => {
-        console.log('Audio/Video stopped:', sessionStatus);
+      // audioVideoDidStop: (sessionStatus) => {
+      //   console.log('Audio/Video stopped:', sessionStatus);
 
-        // Clean up Web Audio API resources
-        if (session.webAudioContext) {
-          if (session.webAudioSource) {
-            session.webAudioSource.disconnect();
-          }
-          if (session.webAudioGain) {
-            session.webAudioGain.disconnect();
-          }
-          // Close audio context
-          session.webAudioContext.close().catch(err => console.error('Error closing audio context:', err));
-        }
-      },
-      audioVideoDidStartConnecting: () => {
-        console.log('Attempting to connect audio/video');
-      }
+      //   // Clean up Web Audio API resources
+      //   if (session.webAudioContext) {
+      //     if (session.webAudioSource) {
+      //       session.webAudioSource.disconnect();
+      //     }
+      //     if (session.webAudioGain) {
+      //       session.webAudioGain.disconnect();
+      //     }
+      //     // Close audio context
+      //     session.webAudioContext.close().catch(err => console.error('Error closing audio context:', err));
+      //   }
+      // },
+      // audioVideoDidStartConnecting: () => {
+      //   console.log('Attempting to connect audio/video');
+      // }
     };
 
     // Add the observer
