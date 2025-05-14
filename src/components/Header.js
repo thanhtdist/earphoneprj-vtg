@@ -63,7 +63,8 @@ function Header({ tourId, count = null, userType = null }) {
                 <div className='selectLanguage'>
                     {/* <GrLanguage className='icon' size={24} /> */}
                     <SettingMenu></SettingMenu>
-                    <span>{t('headerSettings.language')}</span>
+                    {/* <span>{t('headerSettings.language')}</span> */}
+                    <span>Language</span>
                 </div>
             </div>
             {openQRCode === true && tourId &&
