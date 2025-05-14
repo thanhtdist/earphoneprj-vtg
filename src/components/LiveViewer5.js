@@ -109,7 +109,7 @@ function LiveViewer5() {
 
                 if (audioStream) {
                   console.log('Audio stream available, setting up Web Audio API');
-                  alert('Audio stream available, setting up Web Audio API');
+                  //alert('Audio stream available, setting up Web Audio API');
 
                   // Create Web Audio API context
                   const audioContext = new (window.AudioContext)();
