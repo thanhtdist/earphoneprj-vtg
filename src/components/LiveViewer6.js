@@ -326,11 +326,11 @@ useEffect(() => {
   }
   
   // Clean up subscription when component unmounts or dependencies change
-  return () => {
-    if (transcriptionController) {
-      transcriptionController.unsubscribeFromTranscriptEvent(transcriptEventHandler);
-    }
-  };
+  // return () => {
+  //   if (transcriptionController) {
+  //     transcriptionController.unsubscribeFromTranscriptEvent(transcriptEventHandler);
+  //   }
+  // };
 }, [meetingSession, isPlay]);
 
   // const callTranslateTextSpeech = async () => {
