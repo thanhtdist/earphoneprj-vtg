@@ -510,8 +510,8 @@ useEffect(() => {
                 // Release the Blob URL to free browser memory
                 // This prevents memory leaks when processing many audio files
                 URL.revokeObjectURL(audioUrl);
-                processAudioQueue();
-                //setTimeout(processAudioQueue, 100);
+                //processAudioQueue();
+                setTimeout(processAudioQueue, 100);
               };
               audioElement.play();
             }
