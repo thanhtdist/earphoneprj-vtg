@@ -448,13 +448,19 @@ function LiveViewer6() {
             await translateAndPlay(nextAudio);
           } catch (error) {
             console.error('Error processing audio queue:', error);
+          } finally {
+            // Check if there are more items in the queue
+            if (audioQueueRef.current.length > 0) {
+              //setImmediate(processAudioQueue);
+              //setTimeout(processAudioQueue, 0);
+              Promise.resolve().then(processAudioQueue);
+            }
           }
-
           //setImmediate(processAudioQueue);
           //setTimeout(processAudioQueue, 0);
-          if (audioQueueRef.current.length > 0) {
-            Promise.resolve().then(processAudioQueue);
-          }
+          // if (audioQueueRef.current.length > 0) {
+          //   Promise.resolve().then(processAudioQueue);
+          // }
         };
 
         // Translate and play the audio
