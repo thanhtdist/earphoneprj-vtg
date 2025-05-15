@@ -108,7 +108,7 @@ function LiveViewer4() {
 
                 if (audioStream) {
                   console.log('Audio stream available, setting up Web Audio API');
-                  //alert('Audio stream available, setting up Web Audio API');
+                  alert('Audio stream available, setting up Web Audio API');
 
                   // Create Web Audio API context
                   const audioContext = new (window.AudioContext)();
@@ -118,7 +118,7 @@ function LiveViewer4() {
 
                   // Create gain node for volume control
                   const gainNode = audioContext.createGain();
-                  gainNode.gain.value = 2.0; // Initial volume based on mute state
+                  gainNode.gain.value = 1.0; // Initial volume based on mute state
 
                   // Connect nodes
                   sourceNode.connect(gainNode);
