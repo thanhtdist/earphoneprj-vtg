@@ -178,9 +178,11 @@ function LiveViewer4() {
       const audioElement = audioElementRef.current;
       console.log('Check audioElement:', audioElement);
       if (audioElement) {
+        alert('audioElement.volume Before' + audioElement.volume);
         audioElement.muted = false;
         audioElement.volume = 1.0;
         await session.audioVideo.bindAudioElement(audioElement);
+        alert('audioElement.volume After' + audioElement.volume);
       } else {
         console.error('Audio element not found');
       }
