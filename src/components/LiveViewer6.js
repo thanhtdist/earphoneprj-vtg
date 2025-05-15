@@ -320,7 +320,7 @@ useEffect(() => {
     transcriptionController.subscribeToTranscriptEvent(transcriptEventHandler);
   } else {
     console.log("Unsubscribing from transcription events");
-    transcriptionController.unsubscribeFromTranscriptEvent(transcriptEventHandler);
+    //transcriptionController.unsubscribeFromTranscriptEvent(transcriptEventHandler);
     // Clear transcriptions when unsubscribing
     setTranscriptions([]);
   }
