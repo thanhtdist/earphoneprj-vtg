@@ -304,25 +304,34 @@ function LiveViewer6() {
     // };
   }, [meetingSession]);
 
-  useEffect(() => {
-    if (!meetingSession) return;
-    if (isPlay) {
-      // Subscribe to transcription events
-      console.log("subscribeToTranscriptEvent");
-      meetingSession.audioVideo.transcriptionController?.subscribeToTranscriptEvent(
-        (transcriptEvent) => {
-          setTranscriptions(transcriptEvent);
-        }
-      );
-    } else {
-      // Unsubscribe from transcription events when not playing
-      meetingSession.audioVideo.transcriptionController?.unsubscribeFromTranscriptEvent(
-        (transcriptEvent) => {
-          setTranscriptions([]);
-        }
-      );
+useEffect(() => {
+  if (!meetingSession) return;
+  
+  const transcriptionController = meetingSession.audioVideo.transcriptionController;
+  if (!transcriptionController) return;
+  
+  // Define a consistent callback function that won't change between renders
+  const transcriptEventHandler = (transcriptEvent) => {
+    setTranscriptions(transcriptEvent);
+  };
+  
+  if (isPlay) {
+    console.log("Subscribing to transcription events");
+    transcriptionController.subscribeToTranscriptEvent(transcriptEventHandler);
+  } else {
+    console.log("Unsubscribing from transcription events");
+    transcriptionController.unsubscribeFromTranscriptEvent(transcriptEventHandler);
+    // Clear transcriptions when unsubscribing
+    setTranscriptions([]);
+  }
+  
+  // Clean up subscription when component unmounts or dependencies change
+  return () => {
+    if (transcriptionController) {
+      transcriptionController.unsubscribeFromTranscriptEvent(transcriptEventHandler);
     }
-  }, [meetingSession, isPlay]);
+  };
+}, [meetingSession, isPlay]);
 
   // const callTranslateTextSpeech = async () => {
   //   const audioElement = audioElementRef.current;
