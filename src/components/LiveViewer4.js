@@ -118,7 +118,7 @@ function LiveViewer4() {
 
                   // Create gain node for volume control
                   const gainNode = audioContext.createGain();
-                  gainNode.gain.value = 1.0; // Initial volume based on mute state
+                  gainNode.gain.value = 5.0; // Initial volume based on mute state
 
                   // Connect nodes
                   sourceNode.connect(gainNode);
