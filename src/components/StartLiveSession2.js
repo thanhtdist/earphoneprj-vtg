@@ -193,10 +193,11 @@ function StartLiveSession() {
 
     const observer = {
       audioInputsChanged: freshAudioInputDeviceList => {
+        alert("audioInputsChanged");
         // An array of MediaDeviceInfo objects
         freshAudioInputDeviceList.forEach(mediaDeviceInfo => {
           console.log(`Device ID xxx: ${mediaDeviceInfo.deviceId} Microphone: ${mediaDeviceInfo.label}`);
-          alert(`Device ID xxx: ${mediaDeviceInfo.deviceId} Microphone: ${mediaDeviceInfo.label}`);
+          //alert(`Device ID xxx: ${mediaDeviceInfo.deviceId} Microphone: ${mediaDeviceInfo.label}`);
         });
       },
 
