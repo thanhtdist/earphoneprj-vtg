@@ -101,6 +101,8 @@ function LiveViewer2() {
       console.log('Check audioElement:', audioElement);
       if (audioElement) {
         await session.audioVideo.bindAudioElement(audioElement);
+        // Set volume to maximum (1.0) to fix low volume issue
+        audioElement.volume = 1.0;
       } else {
         console.error('Audio element not found');
       }
@@ -492,9 +494,9 @@ function LiveViewer2() {
         if (audioElement.src) {
           audioElement.src = ''; // Clear src URL if set
         }
-        if (audioElement.srcObject) {
-          audioElement.srcObject = null; // Clear srcObject if streaming
-        }
+        // if (audioElement.srcObject) {
+        //   audioElement.srcObject = null; // Clear srcObject if streaming
+        // }
       }
     }
   }, [
