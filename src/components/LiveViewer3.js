@@ -84,7 +84,6 @@ function LiveViewer3() {
       console.error('Failed to request Wake Lock:', error);
     }
   }, []);
-
   const initializeMeetingSession = useCallback(async (meetingData, attendeeData) => {
     if (!meetingData || !attendeeData) {
       console.error('Invalid meeting or attendee information');
@@ -97,15 +96,26 @@ function LiveViewer3() {
     const session = new DefaultMeetingSession(meetingSessionConfig, logger, deviceController);
     setMeetingSession(session);
 
-    await selectSpeaker(session);
+    //await selectSpeaker(session);
     if (selectedVoiceLanguage === 'ja-JP') {
       console.log('Selected voice language is Japanese', selectedVoiceLanguage);
-      //const audioElement = document.getElementById('audioElementListener');
       const audioElement = audioElementRef.current;
       console.log('Check audioElement:', audioElement);
       if (audioElement) {
-        // audioElement.muted = false;
-        // audioElement.volume = 1.0;
+        // Create your own Web Audio context
+        const audioContext = new AudioContext();
+
+        // Create a gain node (volume control)
+        const gainNode = audioContext.createGain();
+        gainNode.gain.value = 1; // set volume to 100%
+
+        // Connect the audio element to the Web Audio context
+        const sourceNode = audioContext.createMediaElementSource(audioElement);
+
+        // Connect sourceNode -> gainNode -> audioContext.destination
+        sourceNode.connect(gainNode).connect(audioContext.destination);
+
+        // Replace default audio output with custom element
         await session.audioVideo.bindAudioElement(audioElement);
       } else {
         console.error('Audio element not found');
@@ -132,34 +142,34 @@ function LiveViewer3() {
   // };
 
   // Modify the selectSpeaker function to store available devices
-const selectSpeaker = async (meetingSession) => {
-  try {
-    const devices = await meetingSession.audioVideo.listAudioOutputDevices();
-    setOutputDevices(devices);
-    if (devices.length > 0) {
-      setSelectedDeviceId(devices[0].deviceId);
-      await meetingSession.audioVideo.chooseAudioOutput(devices[0].deviceId);
-      alert(`Audio output set to: ${devices[0].label || devices[0].deviceId}`);
-    } else {
-      console.log('No audio output devices found');
-      await meetingSession.audioVideo.chooseAudioOutput('default');
-      alert('No audio output devices found. Default output will be used.');
-      //await meetingSession.audioVideo.chooseAudioOutput(null);
+  const selectSpeaker = async (meetingSession) => {
+    try {
+      const devices = await meetingSession.audioVideo.listAudioOutputDevices();
+      setOutputDevices(devices);
+      if (devices.length > 0) {
+        setSelectedDeviceId(devices[0].deviceId);
+        await meetingSession.audioVideo.chooseAudioOutput(devices[0].deviceId);
+        alert(`Audio output set to: ${devices[0].label || devices[0].deviceId}`);
+      } else {
+        console.log('No audio output devices found');
+        await meetingSession.audioVideo.chooseAudioOutput('default');
+        alert('No audio output devices found. Default output will be used.');
+        //await meetingSession.audioVideo.chooseAudioOutput(null);
+      }
+    } catch (error) {
+      console.error('Error fetching audio output devices:', error);
     }
-  } catch (error) {
-    console.error('Error fetching audio output devices:', error);
-  }
-};
+  };
 
-const handleOutputChange = async (deviceId) => {
-  try {
-    setSelectedDeviceId(deviceId);
-    await meetingSession.audioVideo.chooseAudioOutput(deviceId);
-    console.log(`Output changed to deviceId: ${deviceId}`);
-  } catch (error) {
-    console.error('Failed to change audio output device:', error);
-  }
-};
+  const handleOutputChange = async (deviceId) => {
+    try {
+      setSelectedDeviceId(deviceId);
+      await meetingSession.audioVideo.chooseAudioOutput(deviceId);
+      console.log(`Output changed to deviceId: ${deviceId}`);
+    } catch (error) {
+      console.error('Failed to change audio output device:', error);
+    }
+  };
 
   const createAppUserAndJoinChannel = useCallback(
     async (meetingId, attendeeId, userID, userType, channelId) => {
