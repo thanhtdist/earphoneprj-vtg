@@ -7,6 +7,7 @@ import LiveViewer3 from './components/LiveViewer3';
 import LiveViewer4 from './components/LiveViewer4';
 import LiveViewer5 from './components/LiveViewer5';
 import LiveViewer6 from './components/LiveViewer6';
+import LiveViewerJa from './components/LiveViewerJa';
 import LiveSubSpeaker from './components/LiveSubSpeaker';
 import StartLiveSession from './components/StartLiveSession';
 import StartFindTour from './components/StartFindTour';
@@ -26,62 +27,44 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 function App() {
   return (
-    <>
+    <>      
       <ToastContainer position="top-right" autoClose={3000} />
-      <AuthProvider>
-        <Router>
-          <div className="App">
-            {/* <SettingMenu></SettingMenu> */}
-            <Routes>
-              {/* Admin Router */}
-              {/* <Route path="/admin" element={<ProtectedRoute element={<ListAdmin />} />} /> */}
-              {/* <Route path="/admin" element={<ListAdmin />} /> */}
-              {/* <Route path="/admin/login" element={<Login />} /> */}
-              {/* <Route path="/admin/register" element={<RegisterAdmin />} /> */}
-              {/* <Route path="/update_admin" element={<ProtectedRoute element={<UpdateAdmin />} />} /> */}
-              {/* <Route path="/admin/update" element={<UpdateAdmin />} /> */}
-              {/* Tour Router */}
-              {/* <Route path="/admin/tour" element={<ProtectedRoute element={<ListTour />} />} /> */}
-              {/* <Route path="/admin/tour" element={<ListTour />} /> */}
-              {/* <Route path="/admin/tour" element={<ListTour />} /> */}
-              {/* <Route path="/admin/tour/register" element={<ProtectedRoute element={<RegisterTour />} />} /> */}
-              {/* <Route path="/admin/tour/register" element={<RegisterTour />} /> */}
-              {/* <Route path="/admin/tour/update/" element={<UpdateTour />} /> */}
-              {/* Puplic router */}
-              <Route path="/" element={<StartFindTour />} />
-              <Route path="/guide2/:tourId" element={<StartLiveSession2 />} />
-              <Route path="/guide/:tourId" element={<StartLiveSession />} />
-              <Route path="/sub-guide/:tourId" element={<LiveSubSpeaker />} />
-              <Route path="/viewer/:tourId" element={<LiveViewer />} />
-              <Route path="/viewer2/:tourId" element={<LiveViewer2 />} />
-              <Route path="/viewer3/:tourId" element={<LiveViewer3 />} />
-              <Route path="/viewer4/:tourId" element={<LiveViewer4 />} />
-              <Route path="/viewer5/:tourId" element={<LiveViewer5 />} />
-              <Route path="/viewer6/:tourId" element={<LiveViewer6 />} />
-              {/* Wrap these routes with AdminLayout */}
-              <Route path="/admin/login" element={<Login />} />
-              <Route element={<AdminLayout />}>
-                <Route path="/admin" element={<ListAdmin />} />
-                <Route path="/admin/update" element={<UpdateAdmin />} />
-                <Route path="/admin/register" element={<RegisterAdmin />} />
-                <Route path="/admin/tour" element={<ListTour />} />
-                <Route path="/admin/tour/update" element={<UpdateTour />} />
-                <Route path="/admin/tour/register" element={<RegisterTour />} />
-              </Route>
+      <Router>
+        <div className="App">
+          <Routes>
+            {/* Public routes - Not wrapped by AuthProvider */}
+            <Route path="/" element={<StartFindTour />} />
+            <Route path="/guide2/:tourId" element={<StartLiveSession2 />} />
+            <Route path="/guide/:tourId" element={<StartLiveSession />} />
+            <Route path="/sub-guide/:tourId" element={<LiveSubSpeaker />} />
+            <Route path="/viewer/:tourId" element={<LiveViewer />} />
+            <Route path="/viewer2/:tourId" element={<LiveViewer2 />} />
+            <Route path="/viewer3/:tourId" element={<LiveViewer3 />} />
+            <Route path="/viewer4/:tourId" element={<LiveViewer4 />} />
+            <Route path="/viewer5/:tourId" element={<LiveViewer5 />} />
+            <Route path="/viewer6/:tourId" element={<LiveViewer6 />} />
+            <Route path="/viewer_ja/:tourId" element={<LiveViewerJa />} />
+            <Route path="/admin/login" element={<Login />} />
 
-              {/* <Route element={<AdminLayout />}>
-                <Route path="/admin" element={<ProtectedRoute element={<ListAdmin />} />} />
-                <Route path="/admin/tour" element={<ProtectedRoute element={<ListTour />} />} />
-                <Route path="/admin/tour/updatex" element={<UpdateTour />} />
-              </Route> */}
-
-
-            </Routes>
-          </div>
-        </Router>
-      </AuthProvider>
+            {/* Admin routes - Wrapped by AuthProvider */}
+            <Route path="/admin/*" element={
+              <AuthProvider>
+                <Routes>
+                  <Route element={<AdminLayout />}>
+                    <Route path="" element={<ListAdmin />} />
+                    <Route path="update" element={<UpdateAdmin />} />
+                    <Route path="register" element={<RegisterAdmin />} />
+                    <Route path="tour" element={<ListTour />} />
+                    <Route path="tour/update" element={<UpdateTour />} />
+                    <Route path="tour/register" element={<RegisterTour />} />
+                  </Route>
+                </Routes>
+              </AuthProvider>
+            } />
+          </Routes>
+        </div>
+      </Router>
     </>
-
   );
 };
 
