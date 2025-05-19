@@ -101,7 +101,7 @@ function LiveViewer3() {
     //   }
     // }
     session.audioVideo.start();
-  }, [selectedVoiceLanguage]);
+  }, []);
 
   // Function to create app instance user and join channel
   const createAppUserAndJoinChannel = useCallback(
