@@ -93,6 +93,22 @@ function StartLiveSession() {
   const audioRef = useRef(null);
   const userType = `Guide`;
 
+  // Add these references and callback:
+  const wakeLockRef = useRef(null);
+  const requestWakeLock = useCallback(async () => {
+    try {
+      if ('wakeLock' in navigator) {
+        console.log('Requesting Wake Lock...');
+        wakeLockRef.current = await navigator.wakeLock.request('screen');
+        wakeLockRef.current.addEventListener('release', () => {
+          console.log('Wake Lock was released.');
+        });
+      }
+    } catch (error) {
+      console.error('Failed to request Wake Lock:', error);
+    }
+  }, []);
+
   const handleMuteUnmute = () => {
     setIsMuted(!isMuted);
     audioRef.current.muted = isMuted;
@@ -621,6 +637,13 @@ function StartLiveSession() {
     }
 
   }, [tourId, initializeMeetingSession, startLiveAduioSession, getMeetingAttendeeInfoFromCookies, rejoinLiveAduioSession]);
+
+  // Call requestWakeLock once the meeting session is set:
+  useEffect(() => {
+    if (meetingSession) {
+      requestWakeLock();
+    }
+  }, [meetingSession, requestWakeLock]);
 
   console.log("chatRestriction", chatRestriction);
   // Check if the tour exists, if not, show a not found page

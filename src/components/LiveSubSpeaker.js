@@ -68,6 +68,23 @@ function LiveSubSpeaker() {
   const audioRef = useRef(null);
   const [isMuted, setIsMuted] = useState(true);
   const [isPlay, setIsPlay] = useState(false);
+
+  // Add these references and callback:
+  const wakeLockRef = useRef(null);
+  const requestWakeLock = useCallback(async () => {
+    try {
+      if ('wakeLock' in navigator) {
+        console.log('Requesting Wake Lock...');
+        wakeLockRef.current = await navigator.wakeLock.request('screen');
+        wakeLockRef.current.addEventListener('release', () => {
+          console.log('Wake Lock was released.');
+        });
+      }
+    } catch (error) {
+      console.error('Failed to request Wake Lock:', error);
+    }
+  }, []);
+
   // Function to transform the audio input device to Voice Focus Device/Echo Reduction
   const transformVoiceFocusDevice = async (meeting, attendee, logger) => {
     let transformer = null;
@@ -484,6 +501,13 @@ function LiveSubSpeaker() {
       audioRef.current.pause();
     }
   }
+
+  // Call requestWakeLock once the meeting session is set:
+  useEffect(() => {
+    if (meetingSession) {
+      requestWakeLock();
+    }
+  }, [meetingSession, requestWakeLock]);
 
   // Check if the tour exists, if not, show a not found page
   if (tour === null) {
