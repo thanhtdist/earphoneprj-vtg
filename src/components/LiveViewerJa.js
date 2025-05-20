@@ -59,50 +59,50 @@ function LiveViewerJa() {
 
   // Replace your current alerts with this function in initializeMeetingSession
 
-  const debugAudioElement = (audioElement, prefix = '') => {
-    if (!audioElement) return;
+  // const debugAudioElement = (audioElement, prefix = '') => {
+  //   if (!audioElement) return;
 
-    // Gather all properties in an object
-    const props = {
-      // Basic properties
-      autoplay: audioElement.autoplay,
-      controls: audioElement.controls,
-      crossOrigin: audioElement.crossOrigin,
-      currentSrc: audioElement.currentSrc,
-      currentTime: audioElement.currentTime,
-      defaultMuted: audioElement.defaultMuted,
-      defaultPlaybackRate: audioElement.defaultPlaybackRate,
-      duration: audioElement.duration,
-      ended: audioElement.ended,
-      error: audioElement.error,
-      loop: audioElement.loop,
-      muted: audioElement.muted,
-      networkState: audioElement.networkState,
-      paused: audioElement.paused,
-      playbackRate: audioElement.playbackRate,
-      played: audioElement.played && audioElement.played.length,
-      preload: audioElement.preload,
-      readyState: audioElement.readyState,
-      seekable: audioElement.seekable && audioElement.seekable.length,
-      seeking: audioElement.seeking,
-      src: audioElement.src,
-      srcObject: audioElement.srcObject ? 'MediaStream object' : null,
-      volume: audioElement.volume
-    };
+  //   // Gather all properties in an object
+  //   const props = {
+  //     // Basic properties
+  //     autoplay: audioElement.autoplay,
+  //     controls: audioElement.controls,
+  //     crossOrigin: audioElement.crossOrigin,
+  //     currentSrc: audioElement.currentSrc,
+  //     currentTime: audioElement.currentTime,
+  //     defaultMuted: audioElement.defaultMuted,
+  //     defaultPlaybackRate: audioElement.defaultPlaybackRate,
+  //     duration: audioElement.duration,
+  //     ended: audioElement.ended,
+  //     error: audioElement.error,
+  //     loop: audioElement.loop,
+  //     muted: audioElement.muted,
+  //     networkState: audioElement.networkState,
+  //     paused: audioElement.paused,
+  //     playbackRate: audioElement.playbackRate,
+  //     played: audioElement.played && audioElement.played.length,
+  //     preload: audioElement.preload,
+  //     readyState: audioElement.readyState,
+  //     seekable: audioElement.seekable && audioElement.seekable.length,
+  //     seeking: audioElement.seeking,
+  //     src: audioElement.src,
+  //     srcObject: audioElement.srcObject ? 'MediaStream object' : null,
+  //     volume: audioElement.volume
+  //   };
 
-    // Create a formatted string with all properties
-    let message = `${prefix} Audio Element Properties:\n`;
-    Object.entries(props).forEach(([key, value]) => {
-      message += `${key}: ${value}\n`;
-    });
+  //   // Create a formatted string with all properties
+  //   let message = `${prefix} Audio Element Properties:\n`;
+  //   Object.entries(props).forEach(([key, value]) => {
+  //     message += `${key}: ${value}\n`;
+  //   });
 
-    // Log to console for more detailed view
-    console.log(`${prefix} Audio Element:`, audioElement);
-    console.log(`${prefix} Audio Properties:`, props);
+  //   // Log to console for more detailed view
+  //   console.log(`${prefix} Audio Element:`, audioElement);
+  //   console.log(`${prefix} Audio Properties:`, props);
 
-    // Show alert with all properties
-    alert(message);
-  };
+  //   // Show alert with all properties
+  //   alert(message);
+  // };
 
   // Function to keep wake lock
   const requestWakeLock = useCallback(async () => {
@@ -125,17 +125,16 @@ function LiveViewerJa() {
       console.error('Invalid meeting or attendee information');
       return;
     }
-    const logger = new ConsoleLogger('ChimeMeetingLogs', LogLevel.OFF);
+    const logger = new ConsoleLogger('ChimeMeetingLogs', LogLevel.DEBUG);
     const deviceController = new DefaultDeviceController(logger);
     const meetingSessionConfig = new MeetingSessionConfiguration(meetingData, attendeeData);
     const session = new DefaultMeetingSession(meetingSessionConfig, logger, deviceController);
     setMeetingSession(session);
     const audioElement = audioElementRef.current;
-    debugAudioElement(audioElement, 'Before binding');
+    //debugAudioElement(audioElement, 'Before binding');
 
     if (audioElement) {
       await session.audioVideo.bindAudioElement(audioElement);
-      debugAudioElement(audioElement, 'After binding');
     } else {
       console.error('Audio element not found');
     }
@@ -150,9 +149,64 @@ function LiveViewerJa() {
     //     console.error('Audio element not found');
     //   }
     // }
-
     session.audioVideo.start();
+    //debugAudioElement(audioElement, 'After binding');
   }, []);
+
+
+  // Function to apply noise filtering to audio stream
+  const applyNoiseFilter = (mediaStream) => {
+    if (!mediaStream) return;
+
+    try {
+      // Create audio context if it doesn't exist
+      const context = new (window.AudioContext)();
+
+      // Create source from the media stream
+      const source = context.createMediaStreamSource(mediaStream);
+
+      // Create a gain node to control volume
+      const gainNode = context.createGain();
+      gainNode.gain.value = 1.0; // Normal volume
+
+      // Create a biquad filter for noise reduction
+      const lowPassFilter = context.createBiquadFilter();
+      lowPassFilter.type = 'lowpass';
+      lowPassFilter.frequency.value = 8000; // Cut high frequencies (adjust as needed)
+
+      // Create a high-pass filter to remove low rumble
+      const highPassFilter = context.createBiquadFilter();
+      highPassFilter.type = 'highpass';
+      highPassFilter.frequency.value = 150; // Remove very low frequencies
+
+      // Create a compressor to even out volume levels
+      const compressor = context.createDynamicsCompressor();
+      compressor.threshold.value = -50;
+      compressor.knee.value = 40;
+      compressor.ratio.value = 12;
+      compressor.attack.value = 0;
+      compressor.release.value = 0.25;
+
+      // Connect the nodes: source -> highpass -> lowpass -> compressor -> gain -> destination
+      source.connect(highPassFilter);
+      highPassFilter.connect(lowPassFilter);
+      lowPassFilter.connect(compressor);
+      compressor.connect(gainNode);
+      gainNode.connect(context.destination);
+
+      console.log('✅ Noise filtering applied to audio stream');
+      return () => {
+        source.disconnect();
+        gainNode.disconnect();
+        lowPassFilter.disconnect();
+        highPassFilter.disconnect();
+        compressor.disconnect();
+      };
+    } catch (error) {
+      console.error('Failed to apply noise filtering:', error);
+      return null;
+    }
+  };
 
   // Event for handling selected voice language change
   const handleSelectedVoiceLanguageChange = (event) => {
@@ -167,13 +221,6 @@ function LiveViewerJa() {
 
   // Function to handle play/pause button click
   const handlePlay = () => {
-    // if (isPlay === false) {
-    //   setIsPlay(true);
-    //   audioElementRef.current.play();
-    // } else {
-    //   setIsPlay(false);
-    //   audioElementRef.current.pause();
-    // }
     const audioElement = audioElementRef.current;
     console.log('Audio srcObject:', audioElement.srcObject);
 
@@ -186,13 +233,21 @@ function LiveViewerJa() {
         alert('No audio available. The stream may be empty.');
         return;
       } else {
-        alert("MediaStream found");
-        audioElement.play();
+        setIsPlay(!isPlay);
+
+        if (!isPlay) {
+          // Start playback with noise filtering
+          alert('Noise filtering is enabled');
+          applyNoiseFilter(audioElement.srcObject);
+          audioElement.play();
+        } else {
+          audioElement.pause();
+        }
       }
     } else {
       console.warn('❌ No MediaStream found');
     }
-  }
+  };
 
   // Function to join the tour
   const joinTour = useCallback(async () => {
@@ -294,6 +349,16 @@ function LiveViewerJa() {
     }
   }, [meetingSession, requestWakeLock]);
 
+  useEffect(() => {
+    if (navigator.mediaDevices && navigator.mediaDevices.getSupportedConstraints) {
+      const constraints = navigator.mediaDevices.getSupportedConstraints();
+      console.log('Supported Constraints:', constraints);
+      alert(`Supported Constraints:\n${JSON.stringify(constraints, null, 2)}`);
+    } else {
+      console.warn('getSupportedConstraints is not supported in this browser');
+    }
+  }, []);
+
   // Check if the tour exists, if not, show a not found page
   if (tour === null) {
     return <NotFound />;
@@ -302,12 +367,12 @@ function LiveViewerJa() {
   return (
     <>
       <Header count={participantsCount} tourId={tourId} userType={userType} />
+      <audio
+        id="audioElementListener"
+        ref={audioElementRef}
+        style={{ display: 'none' }}
+      />
       <div className={` ${tour ? 'live-viewer-container' : 'live-viewer-container-center'}`}>
-        <audio
-          id="audioElementListener"
-          ref={audioElementRef}
-          style={{ display: 'none' }}
-        />
         {!tour ? (
           isLoading ? (
             <div className="loading">
