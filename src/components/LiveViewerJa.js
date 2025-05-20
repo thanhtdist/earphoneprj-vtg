@@ -57,6 +57,53 @@ function LiveViewerJa() {
   // Add these references and callback:
   const wakeLockRef = useRef(null);
 
+  // Replace your current alerts with this function in initializeMeetingSession
+
+  const debugAudioElement = (audioElement, prefix = '') => {
+    if (!audioElement) return;
+
+    // Gather all properties in an object
+    const props = {
+      // Basic properties
+      autoplay: audioElement.autoplay,
+      controls: audioElement.controls,
+      crossOrigin: audioElement.crossOrigin,
+      currentSrc: audioElement.currentSrc,
+      currentTime: audioElement.currentTime,
+      defaultMuted: audioElement.defaultMuted,
+      defaultPlaybackRate: audioElement.defaultPlaybackRate,
+      duration: audioElement.duration,
+      ended: audioElement.ended,
+      error: audioElement.error,
+      loop: audioElement.loop,
+      muted: audioElement.muted,
+      networkState: audioElement.networkState,
+      paused: audioElement.paused,
+      playbackRate: audioElement.playbackRate,
+      played: audioElement.played && audioElement.played.length,
+      preload: audioElement.preload,
+      readyState: audioElement.readyState,
+      seekable: audioElement.seekable && audioElement.seekable.length,
+      seeking: audioElement.seeking,
+      src: audioElement.src,
+      srcObject: audioElement.srcObject ? 'MediaStream object' : null,
+      volume: audioElement.volume
+    };
+
+    // Create a formatted string with all properties
+    let message = `${prefix} Audio Element Properties:\n`;
+    Object.entries(props).forEach(([key, value]) => {
+      message += `${key}: ${value}\n`;
+    });
+
+    // Log to console for more detailed view
+    console.log(`${prefix} Audio Element:`, audioElement);
+    console.log(`${prefix} Audio Properties:`, props);
+
+    // Show alert with all properties
+    alert(message);
+  };
+
   // Function to keep wake lock
   const requestWakeLock = useCallback(async () => {
     try {
@@ -84,21 +131,12 @@ function LiveViewerJa() {
     const session = new DefaultMeetingSession(meetingSessionConfig, logger, deviceController);
     setMeetingSession(session);
     const audioElement = audioElementRef.current;
-    alert('Audio Element autoplay: ' + audioElement.autoplay);
-    alert('Audio Element muted: ' + audioElement.muted);
-    alert('Audio Element src: ' + audioElement.src);
-    alert('Audio Element srcObject: ' + audioElement.srcObject);
-    console.log('Check audioElement:', audioElement);
+    debugAudioElement(audioElement, 'Before binding');
+
     if (audioElement) {
       await session.audioVideo.bindAudioElement(audioElement);
-
-      alert('xAudio Element autoplay: ' + audioElement.autoplay);
-      alert('xAudio Element muted: ' + audioElement.muted);
-      alert('xAudio Element src: ' + audioElement.src);
-      alert('xAudio Element srcObject: ' + audioElement.srcObject);
-      console.log('Check XaudioElement:', audioElement);
-      // Don't call play() here to prevent autoplay
-      audioElement.pause(); // Ensure it's paused after binding
+      debugAudioElement(audioElement, 'After binding');
+      audioElement.play();
     } else {
       console.error('Audio element not found');
     }
