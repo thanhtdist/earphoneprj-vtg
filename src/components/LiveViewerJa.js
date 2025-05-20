@@ -84,9 +84,13 @@ function LiveViewerJa() {
     const session = new DefaultMeetingSession(meetingSessionConfig, logger, deviceController);
     setMeetingSession(session);
     const audioElement = audioElementRef.current;
+    alert('Audio Element autoplay: ' +  audioElement.autoplay);
+    alert('Audio Element muted: ' +  audioElement.muted);
     console.log('Check audioElement:', audioElement);
     if (audioElement) {
       await session.audioVideo.bindAudioElement(audioElement);
+      // Don't call play() here to prevent autoplay
+      audioElement.pause(); // Ensure it's paused after binding
     } else {
       console.error('Audio element not found');
     }
