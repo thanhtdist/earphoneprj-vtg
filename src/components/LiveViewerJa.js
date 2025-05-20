@@ -59,50 +59,50 @@ function LiveViewerJa() {
 
   // Replace your current alerts with this function in initializeMeetingSession
 
-  // const debugAudioElement = (audioElement, prefix = '') => {
-  //   if (!audioElement) return;
+  const debugAudioElement = (audioElement, prefix = '') => {
+    if (!audioElement) return;
 
-  //   // Gather all properties in an object
-  //   const props = {
-  //     // Basic properties
-  //     autoplay: audioElement.autoplay,
-  //     controls: audioElement.controls,
-  //     crossOrigin: audioElement.crossOrigin,
-  //     currentSrc: audioElement.currentSrc,
-  //     currentTime: audioElement.currentTime,
-  //     defaultMuted: audioElement.defaultMuted,
-  //     defaultPlaybackRate: audioElement.defaultPlaybackRate,
-  //     duration: audioElement.duration,
-  //     ended: audioElement.ended,
-  //     error: audioElement.error,
-  //     loop: audioElement.loop,
-  //     muted: audioElement.muted,
-  //     networkState: audioElement.networkState,
-  //     paused: audioElement.paused,
-  //     playbackRate: audioElement.playbackRate,
-  //     played: audioElement.played && audioElement.played.length,
-  //     preload: audioElement.preload,
-  //     readyState: audioElement.readyState,
-  //     seekable: audioElement.seekable && audioElement.seekable.length,
-  //     seeking: audioElement.seeking,
-  //     src: audioElement.src,
-  //     srcObject: audioElement.srcObject ? 'MediaStream object' : null,
-  //     volume: audioElement.volume
-  //   };
+    // Gather all properties in an object
+    const props = {
+      // Basic properties
+      autoplay: audioElement.autoplay,
+      controls: audioElement.controls,
+      crossOrigin: audioElement.crossOrigin,
+      currentSrc: audioElement.currentSrc,
+      currentTime: audioElement.currentTime,
+      defaultMuted: audioElement.defaultMuted,
+      defaultPlaybackRate: audioElement.defaultPlaybackRate,
+      duration: audioElement.duration,
+      ended: audioElement.ended,
+      error: audioElement.error,
+      loop: audioElement.loop,
+      muted: audioElement.muted,
+      networkState: audioElement.networkState,
+      paused: audioElement.paused,
+      playbackRate: audioElement.playbackRate,
+      played: audioElement.played && audioElement.played.length,
+      preload: audioElement.preload,
+      readyState: audioElement.readyState,
+      seekable: audioElement.seekable && audioElement.seekable.length,
+      seeking: audioElement.seeking,
+      src: audioElement.src,
+      srcObject: audioElement.srcObject ? 'MediaStream object' : null,
+      volume: audioElement.volume
+    };
 
-  //   // Create a formatted string with all properties
-  //   let message = `${prefix} Audio Element Properties:\n`;
-  //   Object.entries(props).forEach(([key, value]) => {
-  //     message += `${key}: ${value}\n`;
-  //   });
+    // Create a formatted string with all properties
+    let message = `${prefix} Audio Element Properties:\n`;
+    Object.entries(props).forEach(([key, value]) => {
+      message += `${key}: ${value}\n`;
+    });
 
-  //   // Log to console for more detailed view
-  //   console.log(`${prefix} Audio Element:`, audioElement);
-  //   console.log(`${prefix} Audio Properties:`, props);
+    // Log to console for more detailed view
+    console.log(`${prefix} Audio Element:`, audioElement);
+    console.log(`${prefix} Audio Properties:`, props);
 
-  //   // Show alert with all properties
-  //   alert(message);
-  // };
+    // Show alert with all properties
+    alert(message);
+  };
 
   // Function to keep wake lock
   const requestWakeLock = useCallback(async () => {
