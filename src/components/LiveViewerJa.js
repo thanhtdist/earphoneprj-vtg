@@ -50,13 +50,6 @@ function LiveViewerJa() {
   // const [chatRestriction, setChatRestriction] = useState(null);
   const [isMuted, setIsMuted] = useState(true);
   const [isPlay, setIsPlay] = useState(false);
-
-  // Add these refs and state for Web Audio API
-  const [volume, setVolume] = useState(1); // Volume level from 0 to 1
-  const audioContextRef = useRef(null);
-  const gainNodeRef = useRef(null);
-  const sourceNodeRef = useRef(null);
-
   // const userID = uuidv4();
   const userType = 'User';
   // Ref for the audio element  
@@ -132,7 +125,7 @@ function LiveViewerJa() {
       console.error('Invalid meeting or attendee information');
       return;
     }
-    const logger = new ConsoleLogger('ChimeMeetingLogs', LogLevel.DEBUG);
+    const logger = new ConsoleLogger('ChimeMeetingLogs', LogLevel.OFF);
     const deviceController = new DefaultDeviceController(logger);
     const meetingSessionConfig = new MeetingSessionConfiguration(meetingData, attendeeData);
     const session = new DefaultMeetingSession(meetingSessionConfig, logger, deviceController);
@@ -143,26 +136,6 @@ function LiveViewerJa() {
     if (audioElement) {
       await session.audioVideo.bindAudioElement(audioElement);
       debugAudioElement(audioElement, 'After binding');
-      // Initialize Web Audio API
-      try {
-        // Create Audio Context
-        audioContextRef.current = new (window.AudioContext)();
-
-        // Create source node from the audio element
-        sourceNodeRef.current = audioContextRef.current.createMediaElementSource(audioElement);
-
-        // Create gain node for volume control
-        gainNodeRef.current = audioContextRef.current.createGain();
-        gainNodeRef.current.gain.value = volume;
-
-        // Connect the nodes: source -> gain -> destination (speakers)
-        sourceNodeRef.current.connect(gainNodeRef.current);
-        gainNodeRef.current.connect(audioContextRef.current.destination);
-
-        console.log('Web Audio API setup complete');
-      } catch (error) {
-        console.error('Failed to setup Web Audio API:', error);
-      }
     } else {
       console.error('Audio element not found');
     }
@@ -186,42 +159,38 @@ function LiveViewerJa() {
     setSelectedVoiceLanguage(event.target.value);
   };
 
-  // Add a volume control function
-  const handleVolumeChange = (newVolume) => {
-    setVolume(newVolume);
-    if (gainNodeRef.current) {
-      gainNodeRef.current.gain.value = newVolume;
-    }
-  }
-
-  // Update the handleMuteUnmute function to use gainNode
+  // Event for handling mute/unmute button click
   const handleMuteUnmute = () => {
     setIsMuted(!isMuted);
-    if (gainNodeRef.current) {
-      gainNodeRef.current.gain.value = isMuted ? volume : 0;
-    }
-  }
+    audioElementRef.current.muted = isMuted;
+  };
+
   // Function to handle play/pause button click
   const handlePlay = () => {
-    if (isPlay === false) {
-      setIsPlay(true);
+    // if (isPlay === false) {
+    //   setIsPlay(true);
+    //   audioElementRef.current.play();
+    // } else {
+    //   setIsPlay(false);
+    //   audioElementRef.current.pause();
+    // }
+    const audioElement = audioElementRef.current;
+    console.log('Audio srcObject:', audioElement.srcObject);
 
-      // Resume audio context if it was suspended (browser autoplay policy)
-      if (audioContextRef.current &&
-        audioContextRef.current.state === 'suspended') {
-        audioContextRef.current.resume();
+    if (audioElement.srcObject instanceof MediaStream) {
+      console.log('✅ MediaStream is bound to audioElement');
+      // Check audio tracks
+      const audioTracks = audioElement.srcObject.getAudioTracks();
+      if (audioTracks.length === 0) {
+        console.warn('❌ No audio tracks found in the MediaStream');
+        alert('No audio available. The stream may be empty.');
+        return;
+      } else {
+        alert("MediaStream found");
+        audioElement.play();
       }
-
-      audioElementRef.current.play()
-        .catch(error => {
-          console.error('Error playing audio:', error);
-          // Handle autoplay restrictions
-          alert('Please interact with the page to enable audio playback.');
-          setIsPlay(false);
-        });
     } else {
-      setIsPlay(false);
-      audioElementRef.current.pause();
+      console.warn('❌ No MediaStream found');
     }
   }
 
@@ -394,17 +363,6 @@ function LiveViewerJa() {
                 <div className='soundButton' onClick={handleMuteUnmute}>
                   {isMuted ? <HiMiniSpeakerWave size={30} /> : <IoVolumeMute size={30} />
                   }
-                </div>
-                {/* Volume slider */}
-                <div className='volumeControl'>
-                  <input
-                    type="range"
-                    min="0"
-                    max="1"
-                    step="0.1"
-                    value={volume}
-                    onChange={(e) => handleVolumeChange(parseFloat(e.target.value))}
-                  />
                 </div>
               </div>
               {/* {chatRestriction !== "nochat" && (<MessageBox userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} userType={userType} statusChat={chatRestriction} />)} */}
