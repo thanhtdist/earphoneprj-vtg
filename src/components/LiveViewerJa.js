@@ -78,7 +78,7 @@ function LiveViewerJa() {
       console.error('Invalid meeting or attendee information');
       return;
     }
-    const logger = new ConsoleLogger('ChimeMeetingLogs', LogLevel.INFO);
+    const logger = new ConsoleLogger('ChimeMeetingLogs', LogLevel.DEBUG);
     const deviceController = new DefaultDeviceController(logger);
     const meetingSessionConfig = new MeetingSessionConfiguration(meetingData, attendeeData);
     const session = new DefaultMeetingSession(meetingSessionConfig, logger, deviceController);
@@ -182,7 +182,7 @@ function LiveViewerJa() {
             console.error('Meeting error:', meetingResponse);
           }
         } else {
-          console.warn('No meeting ID in tour data');
+          alert(GUIDE_NOT_START);
         }
       } catch (error) {
         console.error('Error processing tour:', error);
@@ -236,6 +236,11 @@ function LiveViewerJa() {
     <>
       <Header count={participantsCount} tourId={tourId} userType={userType} />
       <div className={` ${tour ? 'live-viewer-container' : 'live-viewer-container-center'}`}>
+        <audio
+          id="audioElementListener"
+          ref={audioElementRef}
+          style={{ display: 'none' }}
+        />
         {!tour ? (
           isLoading ? (
             <div className="loading">
@@ -275,11 +280,6 @@ function LiveViewerJa() {
               </div>
             ) : (<>
               <TourTitle tour={tour} />
-              <audio
-                id="audioElementListener"
-                ref={audioElementRef}
-                style={{ display: 'none' }}
-              />
               <div className='audioViewer'>
                 {!!isPlay ? <div>
                   <div className='pauseButtonViewer' onClick={handlePlay}>
