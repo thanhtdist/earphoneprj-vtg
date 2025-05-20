@@ -38,8 +38,8 @@ function LiveViewerJa() {
   const { t, i18n } = useTranslation();
   const [tour, setTour] = useState(undefined);
   const [meetingSession, setMeetingSession] = useState(null);
-  const [meeting, setMeeting] = useState(null);
-  const [attendee, setAttendee] = useState(null);
+  // const [meeting, setMeeting] = useState(null);
+  // const [attendee, setAttendee] = useState(null);
   //const [channelArn, setChannelArn] = useState('');
   //const [userArn, setUserArn] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -104,135 +104,6 @@ function LiveViewerJa() {
     session.audioVideo.start();
   }, []);
 
-  // Function to create app instance user and join channel
-  // const createAppUserAndJoinChannel = useCallback(
-  //   async (meetingId, attendeeId, userID, userType, channelId) => {
-  //     try {
-  //       const channelArn = `${Config.appInstanceArn}/channel/${channelId}`;
-  //       const listAttendeeResponse = await listAttendee(meetingId);
-  //       const attendees = listAttendeeResponse.attendees || [];
-  //       const subGuideList = attendees.filter(
-  //         (member) => member.ExternalUserId && member.ExternalUserId.startsWith(userType)
-  //       );
-
-  //       subGuideList.sort(
-  //         (a, b) =>
-  //           parseInt(a.ExternalUserId.split('|')[1]) - parseInt(b.ExternalUserId.split('|')[1])
-  //       );
-
-  //       const index = subGuideList.findIndex((att) => att.AttendeeId === attendeeId);
-  //       const userName = `${userType}${index + 1}`;
-
-  //       const newUserArn = await createAppInstanceUsers(userID, userName);
-  //       await addChannelMembership(channelArn, newUserArn);
-
-  //       return { channelArn, userArn: newUserArn };
-  //     } catch (error) {
-  //       console.error('Error creating user and joining channel:', error);
-  //       throw error;
-  //     }
-  //   },
-  //   []
-  // );
-
-  // Function to check available meeting
-  // const getMeetingAttendeeInfoFromCookies = useCallback(
-  //   (retrievedUser) => {
-  //     setIsLoading(true);
-  //     initializeMeetingSession(retrievedUser.meeting, retrievedUser.attendee);
-  //     setMeeting(retrievedUser.meeting);
-  //     setAttendee(retrievedUser.attendee);
-  //     //setUserArn(retrievedUser.userArn);
-  //     //setChannelArn(retrievedUser.channelArn);
-  //     setIsLoading(false);
-  //   },
-  //   [initializeMeetingSession]
-  // );
-
-  // Function to join meeting
-  // const joinMeeting = useCallback(
-  //   async (meetingData, channelId) => {
-  //     setIsLoading(true);
-  //     try {
-  //       console.log('meeting:', meetingData);
-  //       console.log('channelId:', channelId);
-  //       const attendeeData = await createAttendee(
-  //         meetingData.MeetingId,
-  //         `${userType}|${Date.now()}`
-  //       );
-  //       await initializeMeetingSession(meetingData, attendeeData);
-
-  //       const { channelArn, userArn } = await createAppUserAndJoinChannel(
-  //         meetingData.MeetingId,
-  //         attendeeData.AttendeeId,
-  //         userID,
-  //         userType,
-  //         channelId
-  //       );
-
-  //       setMeeting(meetingData);
-  //       setAttendee(attendeeData);
-  //       //setChannelArn(channelArn);
-  //       //setUserArn(userArn);
-  //       console.log('Cookie set for 1 day!');
-  //       //setIsJoinAudio(true);
-  //       const user = {
-  //         meeting: meetingData,
-  //         attendee: attendeeData,
-  //         userArn,
-  //         channelArn,
-  //       };
-
-  //       JSONCookieUtils.setJSONCookie('User' + tourId, user, 1);
-
-  //     } catch (error) {
-  //       console.error('Error joining the meeting:', error);
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   },
-  //   [
-  //     userID,
-  //     initializeMeetingSession,
-  //     createAppUserAndJoinChannel,
-  //     tourId
-  //   ]
-  // );
-
-  // Function to check if the meeting is available
-  // const joinAudioSessionAvailable = useCallback(
-  //   async (meeting, channelId) => {
-  //     try {
-  //       const retrievedUser = JSONCookieUtils.getJSONCookie('User' + tourId);
-  //       if (retrievedUser) {
-  //         const isMeetingMatched =
-  //           retrievedUser.meeting.MeetingId === meeting.MeetingId;
-  //         const isChannelMatched =
-  //           retrievedUser.channelArn === `${Config.appInstanceArn}/channel/${channelId}`;
-
-  //         if (isMeetingMatched && isChannelMatched) {
-  //           const meetingData = await checkAvailableMeeting(
-  //             retrievedUser.meeting.MeetingId,
-  //             'User'
-  //           );
-  //           if (meetingData) {
-  //             getMeetingAttendeeInfoFromCookies(retrievedUser);
-  //             return;
-  //           }
-  //         }
-  //       }
-  //       joinMeeting(meeting, channelId);
-  //     } catch (error) {
-  //       console.error('Error processing the User cookie:', error);
-  //     }
-  //   },
-  //   [
-  //     getMeetingAttendeeInfoFromCookies,
-  //     joinMeeting,
-  //     tourId
-  //   ]
-  // );
-
   // Event for handling selected voice language change
   const handleSelectedVoiceLanguageChange = (event) => {
     setSelectedVoiceLanguage(event.target.value);
@@ -268,7 +139,6 @@ function LiveViewerJa() {
 
   // Function to join the meeting session
   const joinMeeting = useCallback(async (meetingData, channelId) => {
-    setIsLoading(true);
     try {
       console.log('meeting:', meetingData);
       console.log('channelId:', channelId);
@@ -277,8 +147,8 @@ function LiveViewerJa() {
         `${userType}|${Date.now()}`
       );
       await initializeMeetingSession(meetingData, attendeeData);
-      setMeeting(meetingData);
-      setAttendee(attendeeData);
+      // setMeeting(meetingData);
+      // setAttendee(attendeeData);
 
     } catch (error) {
       console.error('Error joining the meeting:', error);
@@ -304,25 +174,21 @@ function LiveViewerJa() {
             // Using console.error instead of alert for server-side issues
             alert(GUIDE_NOT_START);
             // Consider using a toast notification library or setting an error state
-            setIsLoading(false);
           } else if (meetingResponse.statusCode === 200) {
             // Join the meeting again and set the meeting session in the state
             console.log('Meeting available:', meetingResponse.data);
             joinMeeting(meetingResponse.data, tour.channelId);
           } else {
             console.error('Meeting error:', meetingResponse);
-            setIsLoading(false);
           }
         } else {
           console.warn('No meeting ID in tour data');
-          setIsLoading(false);
         }
       } catch (error) {
         console.error('Error processing tour:', error);
-        setIsLoading(false);
       }
     };
-
+    setIsLoading(true);
     processTour();
   }, [tour, joinMeeting]);
 
@@ -369,66 +235,72 @@ function LiveViewerJa() {
   return (
     <>
       <Header count={participantsCount} tourId={tourId} userType={userType} />
-      <div className={` ${meeting && attendee ? 'live-viewer-container' : 'live-viewer-container-center'}`}>
-        <TourTitle tour={tour} />
-        {!meeting && !attendee && (
-          <div className="box-selected-language">
-            <h3 className='title-box'>
-              {t('voiceLanguageLbl.listening')}
-            </h3>
-            <select
-              className='selected-language'
-              id="selectedVoiceLanguage"
-              value={selectedVoiceLanguage}
-              onChange={handleSelectedVoiceLanguageChange}
-            >
-              {(i18n.language === 'ja' ? JA_LISTEN_VOICE_LANGUAGES : LISTEN_VOICE_LANGUAGES).map((language) => (
-                <option key={language.key} value={language.key}>
-                  {language.label}
-                </option>
-              ))}
-
-            </select>
-          </div>
-        )}
-        <audio
-          id="audioElementListener"
-          ref={audioElementRef}
-          style={{ display: 'none' }}
-        />
-
-        {!meeting && !attendee ? (
+      <div className={` ${tour ? 'live-viewer-container' : 'live-viewer-container-center'}`}>
+        {!tour ? (
           isLoading ? (
             <div className="loading">
               <div className="spinner"></div>
               <p>{t('loading')}</p>
             </div>
           ) : (
-            <div className='btn' onClick={joinTour}>
-              <button className='btn-join'>{t('joinBtn')}</button>
-            </div>
+            <>
+              <div className="box-selected-language">
+                <h3 className='title-box'>
+                  {t('voiceLanguageLbl.listening')}
+                </h3>
+                <select
+                  className='selected-language'
+                  id="selectedVoiceLanguage"
+                  value={selectedVoiceLanguage}
+                  onChange={handleSelectedVoiceLanguageChange}
+                >
+                  {(i18n.language === 'ja' ? JA_LISTEN_VOICE_LANGUAGES : LISTEN_VOICE_LANGUAGES).map((language) => (
+                    <option key={language.key} value={language.key}>
+                      {language.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className='btn' onClick={joinTour}>
+                <button className='btn-join'>{t('joinBtn')}</button>
+              </div>
+            </>
           )
         ) : (
           <>
-            <div className='audioViewer'>
-              {!!isPlay ? <div>
-                <div className='pauseButtonViewer' onClick={handlePlay}>
-                  <FaPause size={20} />
-                  <span className="startText">{t('stopBtn')}</span>
+            {isLoading ? (
+              <div className="loading">
+                <div className="spinner"></div>
+                <p>{t('loading')}</p>
+              </div>
+            ) : (<>
+              <TourTitle tour={tour} />
+              <audio
+                id="audioElementListener"
+                ref={audioElementRef}
+                style={{ display: 'none' }}
+              />
+              <div className='audioViewer'>
+                {!!isPlay ? <div>
+                  <div className='pauseButtonViewer' onClick={handlePlay}>
+                    <FaPause size={20} />
+                    <span className="startText">{t('stopBtn')}</span>
+                  </div>
+                </div>
+                  : <div>
+                    <div className='playButtonViewer' onClick={handlePlay}>
+                      <FaPlay size={20} />
+                      <span className="startText">{t('startBtn')}</span>
+                    </div>
+                  </div>}
+                <div className='soundButton' onClick={handleMuteUnmute}>
+                  {isMuted ? <HiMiniSpeakerWave size={30} /> : <IoVolumeMute size={30} />
+                  }
                 </div>
               </div>
-                : <div>
-                  <div className='playButtonViewer' onClick={handlePlay}>
-                    <FaPlay size={20} />
-                    <span className="startText">{t('startBtn')}</span>
-                  </div>
-                </div>}
-              <div className='soundButton' onClick={handleMuteUnmute}>
-                {isMuted ? <HiMiniSpeakerWave size={30} /> : <IoVolumeMute size={30} />
-                }
-              </div>
-            </div>
-            {/* {chatRestriction !== "nochat" && (<MessageBox userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} userType={userType} statusChat={chatRestriction} />)} */}
+              {/* {chatRestriction !== "nochat" && (<MessageBox userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} userType={userType} statusChat={chatRestriction} />)} */}
+            </>)}
+
           </>
         )}
       </div>
