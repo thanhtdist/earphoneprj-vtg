@@ -135,6 +135,7 @@ function LiveViewerJa() {
 
     if (audioElement) {
       await session.audioVideo.bindAudioElement(audioElement);
+      audioElement.autoplay = false;
       debugAudioElement(audioElement, 'After binding');
     } else {
       console.error('Audio element not found');
@@ -289,7 +290,7 @@ function LiveViewerJa() {
           id="audioElementListener"
           ref={audioElementRef}
           style={{ display: 'none' }}
-          autoplay
+          // autoplay
         />
         {!tour ? (
           isLoading ? (
