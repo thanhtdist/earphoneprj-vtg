@@ -131,13 +131,13 @@ function LiveViewerJa() {
     const session = new DefaultMeetingSession(meetingSessionConfig, logger, deviceController);
     setMeetingSession(session);
     const audioElement = audioElementRef.current;
-    //debugAudioElement(audioElement, 'Before binding');
+    debugAudioElement(audioElement, 'Before binding');
 
-    // if (audioElement) {
-    //   await session.audioVideo.bindAudioElement(audioElement);
-    // } else {
-    //   console.error('Audio element not found');
-    // }
+    if (audioElement) {
+      await session.audioVideo.bindAudioElement(audioElement);
+    } else {
+      console.error('Audio element not found');
+    }
     // if (selectedVoiceLanguage === 'ja-JP') {
     //   console.log('Selected voice language is Japanese', selectedVoiceLanguage);
     //   //const audioElement = document.getElementById('audioElementListener');
@@ -149,85 +149,8 @@ function LiveViewerJa() {
     //     console.error('Audio element not found');
     //   }
     // }
-    const observer = {
-      audioVideoDidStart: async () => {
-        alert('Audio/Video started');
-        console.log('Audio/Video started successfully');
-
-        // Only set up Web Audio API once the audio has actually started
-        if (audioElement) {
-          try {
-            // Wait a moment for the audio stream to be fully available
-            setTimeout(async () => {
-              try {
-                const audioStream = await session.audioVideo.getCurrentMeetingAudioStream();
-
-                if (audioStream) {
-                  console.log('Audio stream available, setting up Web Audio API');
-                  //alert('Audio stream available, setting up Web Audio API');
-
-                  // Create Web Audio API context
-                  const audioContext = new (window.AudioContext)();
-
-                  // Create a media stream source node
-                  const sourceNode = audioContext.createMediaStreamSource(audioStream);
-
-                  // Create gain node for volume control
-                  const gainNode = audioContext.createGain();
-                  gainNode.gain.value = 1.0; // Initial volume based on mute state
-
-                  // Connect nodes
-                  sourceNode.connect(gainNode);
-                  gainNode.connect(audioContext.destination);
-
-                  // Store these in refs if you need to access them later
-                  session.webAudioContext = audioContext;
-                  session.webAudioSource = sourceNode;
-                  session.webAudioGain = gainNode;
-
-                  console.log('Web Audio API setup complete');
-                } else {
-                  console.warn('No audio stream available after audioVideoDidStart, falling back to bindAudioElement');
-                  await session.audioVideo.bindAudioElement(audioElement);
-                }
-              } catch (error) {
-                console.error('Error setting up Web Audio after audioVideoDidStart:', error);
-                try {
-                  await session.audioVideo.bindAudioElement(audioElement);
-                } catch (fallbackError) {
-                  console.error('Fall back to bindAudioElement also failed:', fallbackError);
-                }
-              }
-            }, 500); // Short delay to ensure audio stream is ready
-          } catch (error) {
-            console.error('Error in audioVideoDidStart handler:', error);
-          }
-        }
-      },
-      audioVideoDidStop: (sessionStatus) => {
-        console.log('Audio/Video stopped:', sessionStatus);
-
-        // Clean up Web Audio API resources
-        if (session.webAudioContext) {
-          if (session.webAudioSource) {
-            session.webAudioSource.disconnect();
-          }
-          if (session.webAudioGain) {
-            session.webAudioGain.disconnect();
-          }
-          // Close audio context
-          session.webAudioContext.close().catch(err => console.error('Error closing audio context:', err));
-        }
-      },
-      audioVideoDidStartConnecting: () => {
-        console.log('Attempting to connect audio/video');
-      }
-    };
-
-    // Add the observer
-    session.audioVideo.addObserver(observer);
     session.audioVideo.start();
-    //debugAudioElement(audioElement, 'After binding');
+    debugAudioElement(audioElement, 'After binding');
   }, []);
 
 
