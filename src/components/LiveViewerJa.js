@@ -138,7 +138,7 @@ function LiveViewerJa() {
       debugAudioElement(audioElement, 'After binding');
       audioElement.muted = true; // Mute the audio element
       audioElement.autoplay = false; // Disable autoplay
-      audioElement.play();
+      //audioElement.play();
     } else {
       console.error('Audio element not found');
     }
@@ -170,7 +170,8 @@ function LiveViewerJa() {
   // Function to handle play/pause button click
   const handlePlay = () => {
     if (isPlay === false) {
-      setIsPlay(true)
+      setIsPlay(true);
+       audioElement.muted = false; // UnMute the audio element
       audioElementRef.current.play();
     } else {
       setIsPlay(false);
