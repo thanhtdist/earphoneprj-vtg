@@ -37,13 +37,13 @@ function LiveViewerJa() {
   console.log('tourId:', tourId);
   const { t, i18n } = useTranslation();
   const [tour, setTour] = useState(undefined);
-  //const [meetingSession, setMeetingSession] = useState(null);
+  const [meetingSession, setMeetingSession] = useState(null);
   // const [meeting, setMeeting] = useState(null);
   // const [attendee, setAttendee] = useState(null);
   //const [channelArn, setChannelArn] = useState('');
   //const [userArn, setUserArn] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  //const [participantsCount, setParticipantsCount] = useState(0);
+  const [participantsCount, setParticipantsCount] = useState(0);
   const [selectedVoiceLanguage, setSelectedVoiceLanguage] = useState(
     LISTEN_VOICE_LANGUAGES.find((lang) => lang.key.startsWith(i18n.language))?.key || 'ja-JP'
   );
@@ -55,7 +55,7 @@ function LiveViewerJa() {
   // Ref for the audio element  
   const audioElementRef = useRef(null);
   // Add these references and callback:
-  // const wakeLockRef = useRef(null);
+  const wakeLockRef = useRef(null);
 
   // Replace your current alerts with this function in initializeMeetingSession
 
@@ -105,19 +105,19 @@ function LiveViewerJa() {
   };
 
   // Function to keep wake lock
-  // const requestWakeLock = useCallback(async () => {
-  //   try {
-  //     if ('wakeLock' in navigator) {
-  //       console.log('Requesting Wake Lock...');
-  //       wakeLockRef.current = await navigator.wakeLock.request('screen');
-  //       wakeLockRef.current.addEventListener('release', () => {
-  //         console.log('Wake Lock was released.');
-  //       });
-  //     }
-  //   } catch (error) {
-  //     console.error('Failed to request Wake Lock:', error);
-  //   }
-  // }, []);
+  const requestWakeLock = useCallback(async () => {
+    try {
+      if ('wakeLock' in navigator) {
+        console.log('Requesting Wake Lock...');
+        wakeLockRef.current = await navigator.wakeLock.request('screen');
+        wakeLockRef.current.addEventListener('release', () => {
+          console.log('Wake Lock was released.');
+        });
+      }
+    } catch (error) {
+      console.error('Failed to request Wake Lock:', error);
+    }
+  }, []);
 
   // Function intialize Meeting Session
   const initializeMeetingSession = useCallback(async (meetingData, attendeeData) => {
@@ -129,7 +129,7 @@ function LiveViewerJa() {
     const deviceController = new DefaultDeviceController(logger);
     const meetingSessionConfig = new MeetingSessionConfiguration(meetingData, attendeeData);
     const session = new DefaultMeetingSession(meetingSessionConfig, logger, deviceController);
-    //setMeetingSession(session);
+    setMeetingSession(session);
     const audioElement = audioElementRef.current;
     debugAudioElement(audioElement, 'Before binding');
 
@@ -201,10 +201,9 @@ function LiveViewerJa() {
 
     } catch (error) {
       console.error('Error joining the meeting:', error);
-    } 
-    // finally {
-    //   setIsLoading(false);
-    // }
+    } finally {
+      setIsLoading(false);
+    }
   }, [initializeMeetingSession]);
   // Process the tour when it changes
   useEffect(() => {
@@ -240,43 +239,42 @@ function LiveViewerJa() {
     };
     setIsLoading(true);
     processTour();
-    setIsLoading(false);
   }, [tour, joinMeeting]);
 
-  // // Check if the meeting session is available
-  // useEffect(() => {
-  //   if (!meetingSession) return;
+  // Check if the meeting session is available
+  useEffect(() => {
+    if (!meetingSession) return;
 
-  //   const attendeeSet = new Set();
-  //   const presenceCallback = (attendeeId, present) => {
-  //     if (present) {
-  //       attendeeSet.add(attendeeId);
-  //     } else {
-  //       attendeeSet.delete(attendeeId);
-  //     }
-  //     setParticipantsCount(attendeeSet.size);
-  //   };
+    const attendeeSet = new Set();
+    const presenceCallback = (attendeeId, present) => {
+      if (present) {
+        attendeeSet.add(attendeeId);
+      } else {
+        attendeeSet.delete(attendeeId);
+      }
+      setParticipantsCount(attendeeSet.size);
+    };
 
-  //   // Subscribe to attendee presence
-  //   meetingSession.audioVideo.realtimeSubscribeToAttendeeIdPresence(presenceCallback);
+    // Subscribe to attendee presence
+    meetingSession.audioVideo.realtimeSubscribeToAttendeeIdPresence(presenceCallback);
 
-  //   // Cleanup on unmount
-  //   return () => {
-  //     meetingSession.audioVideo.realtimeUnsubscribeFromAttendeeIdPresence(presenceCallback);
-  //   };
-  // }, [meetingSession]);
+    // Cleanup on unmount
+    return () => {
+      meetingSession.audioVideo.realtimeUnsubscribeFromAttendeeIdPresence(presenceCallback);
+    };
+  }, [meetingSession]);
 
-  // // Call requestWakeLock once the meeting session is set:
-  // useEffect(() => {
-  //   if (meetingSession) {
-  //     requestWakeLock();
-  //     // document.addEventListener('visibilitychange', async () => {
-  //     //   if (wakeLockRef.current && document.visibilityState === 'visible') {
-  //     //     await requestWakeLock();
-  //     //   }
-  //     // });
-  //   }
-  // }, [meetingSession, requestWakeLock]);
+  // Call requestWakeLock once the meeting session is set:
+  useEffect(() => {
+    if (meetingSession) {
+      requestWakeLock();
+      // document.addEventListener('visibilitychange', async () => {
+      //   if (wakeLockRef.current && document.visibilityState === 'visible') {
+      //     await requestWakeLock();
+      //   }
+      // });
+    }
+  }, [meetingSession, requestWakeLock]);
 
   // Check if the tour exists, if not, show a not found page
   if (tour === null) {
@@ -285,7 +283,7 @@ function LiveViewerJa() {
 
   return (
     <>
-      <Header count={0} tourId={tourId} userType={userType} />
+      <Header count={participantsCount} tourId={tourId} userType={userType} />
       <div className={` ${tour ? 'live-viewer-container' : 'live-viewer-container-center'}`}>
         <audio
           id="audioElementListener"
