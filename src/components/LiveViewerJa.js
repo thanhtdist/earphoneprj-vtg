@@ -84,11 +84,19 @@ function LiveViewerJa() {
     const session = new DefaultMeetingSession(meetingSessionConfig, logger, deviceController);
     setMeetingSession(session);
     const audioElement = audioElementRef.current;
-    alert('Audio Element autoplay: ' +  audioElement.autoplay);
-    alert('Audio Element muted: ' +  audioElement.muted);
+    alert('Audio Element autoplay: ' + audioElement.autoplay);
+    alert('Audio Element muted: ' + audioElement.muted);
+    alert('Audio Element src: ' + audioElement.src);
+    alert('Audio Element srcObject: ' + audioElement.srcObject);
     console.log('Check audioElement:', audioElement);
     if (audioElement) {
       await session.audioVideo.bindAudioElement(audioElement);
+
+      alert('xAudio Element autoplay: ' + audioElement.autoplay);
+      alert('xAudio Element muted: ' + audioElement.muted);
+      alert('xAudio Element src: ' + audioElement.src);
+      alert('xAudio Element srcObject: ' + audioElement.srcObject);
+      console.log('Check XaudioElement:', audioElement);
       // Don't call play() here to prevent autoplay
       audioElement.pause(); // Ensure it's paused after binding
     } else {
