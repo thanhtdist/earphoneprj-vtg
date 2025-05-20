@@ -136,6 +136,8 @@ function LiveViewerJa() {
     if (audioElement) {
       await session.audioVideo.bindAudioElement(audioElement);
       debugAudioElement(audioElement, 'After binding');
+      audioElement.muted = true; // Mute the audio element
+      audioElement.autoplay = false; // Disable autoplay
       audioElement.play();
     } else {
       console.error('Audio element not found');
