@@ -136,9 +136,6 @@ function LiveViewerJa() {
     if (audioElement) {
       await session.audioVideo.bindAudioElement(audioElement);
       debugAudioElement(audioElement, 'After binding');
-      audioElement.muted = true; // Mute the audio element
-      audioElement.autoplay = false; // Disable autoplay
-      //audioElement.play();
     } else {
       console.error('Audio element not found');
     }
@@ -171,7 +168,6 @@ function LiveViewerJa() {
   const handlePlay = () => {
     if (isPlay === false) {
       setIsPlay(true);
-      audioElementRef.current.muted = false; // UnMute the audio element
       audioElementRef.current.play();
     } else {
       setIsPlay(false);
@@ -293,6 +289,7 @@ function LiveViewerJa() {
           id="audioElementListener"
           ref={audioElementRef}
           style={{ display: 'none' }}
+          autoplay
         />
         {!tour ? (
           isLoading ? (
