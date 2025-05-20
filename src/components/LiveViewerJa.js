@@ -237,7 +237,7 @@ function LiveViewerJa() {
 
         if (!isPlay) {
           // Start playback with noise filtering
-          alert('Noise filtering is enabled');
+          //alert('Noise filtering is enabled');
           applyNoiseFilter(audioElement.srcObject);
           audioElement.play();
         } else {
@@ -350,6 +350,7 @@ function LiveViewerJa() {
   }, [meetingSession, requestWakeLock]);
 
   useEffect(() => {
+    if(!meetingSession) return;
     if (navigator.mediaDevices && navigator.mediaDevices.getSupportedConstraints) {
       const constraints = navigator.mediaDevices.getSupportedConstraints();
       console.log('Supported Constraints:', constraints);
@@ -357,7 +358,7 @@ function LiveViewerJa() {
     } else {
       console.warn('getSupportedConstraints is not supported in this browser');
     }
-  }, []);
+  }, [meetingSession]);
 
   // Check if the tour exists, if not, show a not found page
   if (tour === null) {
