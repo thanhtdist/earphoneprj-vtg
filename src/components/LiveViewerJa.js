@@ -171,7 +171,7 @@ function LiveViewerJa() {
   const handlePlay = () => {
     if (isPlay === false) {
       setIsPlay(true);
-       audioElement.muted = false; // UnMute the audio element
+      audioElementRef.current.muted = false; // UnMute the audio element
       audioElementRef.current.play();
     } else {
       setIsPlay(false);
