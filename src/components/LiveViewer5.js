@@ -97,6 +97,7 @@ function LiveViewer5() {
 
     const observer = {
       audioVideoDidStart: async () => {
+        alert('Audio/Video started');
         console.log('Audio/Video started successfully');
 
         // Only set up Web Audio API once the audio has actually started
