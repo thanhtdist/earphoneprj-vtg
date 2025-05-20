@@ -133,11 +133,11 @@ function LiveViewerJa() {
     const audioElement = audioElementRef.current;
     //debugAudioElement(audioElement, 'Before binding');
 
-    if (audioElement) {
-      await session.audioVideo.bindAudioElement(audioElement);
-    } else {
-      console.error('Audio element not found');
-    }
+    // if (audioElement) {
+    //   await session.audioVideo.bindAudioElement(audioElement);
+    // } else {
+    //   console.error('Audio element not found');
+    // }
     // if (selectedVoiceLanguage === 'ja-JP') {
     //   console.log('Selected voice language is Japanese', selectedVoiceLanguage);
     //   //const audioElement = document.getElementById('audioElementListener');
@@ -149,64 +149,141 @@ function LiveViewerJa() {
     //     console.error('Audio element not found');
     //   }
     // }
+    const observer = {
+      audioVideoDidStart: async () => {
+        alert('Audio/Video started');
+        console.log('Audio/Video started successfully');
+
+        // Only set up Web Audio API once the audio has actually started
+        if (audioElement) {
+          try {
+            // Wait a moment for the audio stream to be fully available
+            setTimeout(async () => {
+              try {
+                const audioStream = await session.audioVideo.getCurrentMeetingAudioStream();
+
+                if (audioStream) {
+                  console.log('Audio stream available, setting up Web Audio API');
+                  //alert('Audio stream available, setting up Web Audio API');
+
+                  // Create Web Audio API context
+                  const audioContext = new (window.AudioContext)();
+
+                  // Create a media stream source node
+                  const sourceNode = audioContext.createMediaStreamSource(audioStream);
+
+                  // Create gain node for volume control
+                  const gainNode = audioContext.createGain();
+                  gainNode.gain.value = 1.0; // Initial volume based on mute state
+
+                  // Connect nodes
+                  sourceNode.connect(gainNode);
+                  gainNode.connect(audioContext.destination);
+
+                  // Store these in refs if you need to access them later
+                  session.webAudioContext = audioContext;
+                  session.webAudioSource = sourceNode;
+                  session.webAudioGain = gainNode;
+
+                  console.log('Web Audio API setup complete');
+                } else {
+                  console.warn('No audio stream available after audioVideoDidStart, falling back to bindAudioElement');
+                  await session.audioVideo.bindAudioElement(audioElement);
+                }
+              } catch (error) {
+                console.error('Error setting up Web Audio after audioVideoDidStart:', error);
+                try {
+                  await session.audioVideo.bindAudioElement(audioElement);
+                } catch (fallbackError) {
+                  console.error('Fall back to bindAudioElement also failed:', fallbackError);
+                }
+              }
+            }, 500); // Short delay to ensure audio stream is ready
+          } catch (error) {
+            console.error('Error in audioVideoDidStart handler:', error);
+          }
+        }
+      },
+      audioVideoDidStop: (sessionStatus) => {
+        console.log('Audio/Video stopped:', sessionStatus);
+
+        // Clean up Web Audio API resources
+        if (session.webAudioContext) {
+          if (session.webAudioSource) {
+            session.webAudioSource.disconnect();
+          }
+          if (session.webAudioGain) {
+            session.webAudioGain.disconnect();
+          }
+          // Close audio context
+          session.webAudioContext.close().catch(err => console.error('Error closing audio context:', err));
+        }
+      },
+      audioVideoDidStartConnecting: () => {
+        console.log('Attempting to connect audio/video');
+      }
+    };
+
+    // Add the observer
+    session.audioVideo.addObserver(observer);
     session.audioVideo.start();
     //debugAudioElement(audioElement, 'After binding');
   }, []);
 
 
   // Function to apply noise filtering to audio stream
-  const applyNoiseFilter = (mediaStream) => {
-    if (!mediaStream) return;
+  // const applyNoiseFilter = (mediaStream) => {
+  //   if (!mediaStream) return;
 
-    try {
-      // Create audio context if it doesn't exist
-      const context = new (window.AudioContext)();
+  //   try {
+  //     // Create audio context if it doesn't exist
+  //     const context = new (window.AudioContext)();
 
-      // Create source from the media stream
-      const source = context.createMediaStreamSource(mediaStream);
+  //     // Create source from the media stream
+  //     const source = context.createMediaStreamSource(mediaStream);
 
-      // Create a gain node to control volume
-      const gainNode = context.createGain();
-      gainNode.gain.value = 1.0; // Normal volume
+  //     // Create a gain node to control volume
+  //     const gainNode = context.createGain();
+  //     gainNode.gain.value = 1.0; // Normal volume
 
-      // Create a biquad filter for noise reduction
-      const lowPassFilter = context.createBiquadFilter();
-      lowPassFilter.type = 'lowpass';
-      lowPassFilter.frequency.value = 8000; // Cut high frequencies (adjust as needed)
+  //     // Create a biquad filter for noise reduction
+  //     const lowPassFilter = context.createBiquadFilter();
+  //     lowPassFilter.type = 'lowpass';
+  //     lowPassFilter.frequency.value = 8000; // Cut high frequencies (adjust as needed)
 
-      // Create a high-pass filter to remove low rumble
-      const highPassFilter = context.createBiquadFilter();
-      highPassFilter.type = 'highpass';
-      highPassFilter.frequency.value = 150; // Remove very low frequencies
+  //     // Create a high-pass filter to remove low rumble
+  //     const highPassFilter = context.createBiquadFilter();
+  //     highPassFilter.type = 'highpass';
+  //     highPassFilter.frequency.value = 150; // Remove very low frequencies
 
-      // Create a compressor to even out volume levels
-      const compressor = context.createDynamicsCompressor();
-      compressor.threshold.value = -50;
-      compressor.knee.value = 40;
-      compressor.ratio.value = 12;
-      compressor.attack.value = 0;
-      compressor.release.value = 0.25;
+  //     // Create a compressor to even out volume levels
+  //     const compressor = context.createDynamicsCompressor();
+  //     compressor.threshold.value = -50;
+  //     compressor.knee.value = 40;
+  //     compressor.ratio.value = 12;
+  //     compressor.attack.value = 0;
+  //     compressor.release.value = 0.25;
 
-      // Connect the nodes: source -> highpass -> lowpass -> compressor -> gain -> destination
-      source.connect(highPassFilter);
-      highPassFilter.connect(lowPassFilter);
-      lowPassFilter.connect(compressor);
-      compressor.connect(gainNode);
-      gainNode.connect(context.destination);
+  //     // Connect the nodes: source -> highpass -> lowpass -> compressor -> gain -> destination
+  //     source.connect(highPassFilter);
+  //     highPassFilter.connect(lowPassFilter);
+  //     lowPassFilter.connect(compressor);
+  //     compressor.connect(gainNode);
+  //     gainNode.connect(context.destination);
 
-      console.log('✅ Noise filtering applied to audio stream');
-      return () => {
-        source.disconnect();
-        gainNode.disconnect();
-        lowPassFilter.disconnect();
-        highPassFilter.disconnect();
-        compressor.disconnect();
-      };
-    } catch (error) {
-      console.error('Failed to apply noise filtering:', error);
-      return null;
-    }
-  };
+  //     console.log('✅ Noise filtering applied to audio stream');
+  //     return () => {
+  //       source.disconnect();
+  //       gainNode.disconnect();
+  //       lowPassFilter.disconnect();
+  //       highPassFilter.disconnect();
+  //       compressor.disconnect();
+  //     };
+  //   } catch (error) {
+  //     console.error('Failed to apply noise filtering:', error);
+  //     return null;
+  //   }
+  // };
 
   // Event for handling selected voice language change
   const handleSelectedVoiceLanguageChange = (event) => {
@@ -219,35 +296,46 @@ function LiveViewerJa() {
     audioElementRef.current.muted = isMuted;
   };
 
-  // Function to handle play/pause button click
+// Function to handle play/pause button click
   const handlePlay = () => {
-    const audioElement = audioElementRef.current;
-    console.log('Audio srcObject:', audioElement.srcObject);
-
-    if (audioElement.srcObject instanceof MediaStream) {
-      console.log('✅ MediaStream is bound to audioElement');
-      // Check audio tracks
-      const audioTracks = audioElement.srcObject.getAudioTracks();
-      if (audioTracks.length === 0) {
-        console.warn('❌ No audio tracks found in the MediaStream');
-        alert('No audio available. The stream may be empty.');
-        return;
-      } else {
-        setIsPlay(!isPlay);
-
-        if (!isPlay) {
-          // Start playback with noise filtering
-          //alert('Noise filtering is enabled');
-          applyNoiseFilter(audioElement.srcObject);
-          audioElement.play();
-        } else {
-          audioElement.pause();
-        }
-      }
+    if (isPlay === false) {
+      setIsPlay(true)
+      audioElementRef.current.play();
     } else {
-      console.warn('❌ No MediaStream found');
+      setIsPlay(false);
+      audioElementRef.current.pause();
     }
-  };
+  }
+
+  // Function to handle play/pause button click
+  // const handlePlay = () => {
+  //   const audioElement = audioElementRef.current;
+  //   console.log('Audio srcObject:', audioElement.srcObject);
+
+  //   if (audioElement.srcObject instanceof MediaStream) {
+  //     console.log('✅ MediaStream is bound to audioElement');
+  //     // Check audio tracks
+  //     const audioTracks = audioElement.srcObject.getAudioTracks();
+  //     if (audioTracks.length === 0) {
+  //       console.warn('❌ No audio tracks found in the MediaStream');
+  //       alert('No audio available. The stream may be empty.');
+  //       return;
+  //     } else {
+  //       setIsPlay(!isPlay);
+
+  //       if (!isPlay) {
+  //         // Start playback with noise filtering
+  //         //alert('Noise filtering is enabled');
+  //         applyNoiseFilter(audioElement.srcObject);
+  //         audioElement.play();
+  //       } else {
+  //         audioElement.pause();
+  //       }
+  //     }
+  //   } else {
+  //     console.warn('❌ No MediaStream found');
+  //   }
+  // };
 
   // Function to join the tour
   const joinTour = useCallback(async () => {
@@ -350,7 +438,7 @@ function LiveViewerJa() {
   }, [meetingSession, requestWakeLock]);
 
   useEffect(() => {
-    if(!meetingSession) return;
+    if (!meetingSession) return;
     if (navigator.mediaDevices && navigator.mediaDevices.getSupportedConstraints) {
       const constraints = navigator.mediaDevices.getSupportedConstraints();
       console.log('Supported Constraints:', constraints);
