@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import {
   createAttendee,
-  createAppInstanceUsers,
-  addChannelMembership,
-  listAttendee,
-  translateTextSpeech,
+  //createAppInstanceUsers,
+  //addChannelMembership,
+  //listAttendee,
   getMeetingByTourId,
-  getMeeting,
+  getMeeting, // Uncomment this if needed
 } from '../apis/api';
 import {
   DefaultDeviceController,
@@ -16,22 +15,21 @@ import {
   MeetingSessionConfiguration,
 } from 'amazon-chime-sdk-js';
 import '../styles/LiveViewer.css';
-import Config from '../utils/config';
-//import metricReport from '../utils/MetricReport';
-import JSONCookieUtils from '../utils/JSONCookieUtils';
-import { checkAvailableMeeting } from '../utils/MeetingUtils';
-import { v4 as uuidv4 } from 'uuid';
+// import Config from '../utils/config';
+// import JSONCookieUtils from '../utils/JSONCookieUtils';
+//import { checkAvailableMeeting } from '../utils/MeetingUtils';
+// import { v4 as uuidv4 } from 'uuid';
 import { useTranslation } from 'react-i18next';
 import { LISTEN_VOICE_LANGUAGES, JA_LISTEN_VOICE_LANGUAGES } from '../utils/constant';
 import Header from './Header';
 import { HiMiniSpeakerWave } from "react-icons/hi2";
 import { IoVolumeMute } from "react-icons/io5";
-// import { IoMicCircle, IoMicOffCircleSharp } from "react-icons/io5";
-import MessageBox from './MessageBox';
+//import MessageBox from './MessageBox';
 import { useParams } from "react-router-dom";
 import NotFound from './NotFound';
 import TourTitle from './TourTitle';
 import { FaPause, FaPlay } from "react-icons/fa";
+import { GUIDE_NOT_START } from '../utils/messages';
 
 function LiveViewer6() {
   // Get the params from the URL
@@ -40,33 +38,73 @@ function LiveViewer6() {
   const { t, i18n } = useTranslation();
   const [tour, setTour] = useState(undefined);
   const [meetingSession, setMeetingSession] = useState(null);
-  const [meeting, setMeeting] = useState(null);
-  const [attendee, setAttendee] = useState(null);
-  const [channelArn, setChannelArn] = useState('');
-  const [userArn, setUserArn] = useState('');
+  // const [meeting, setMeeting] = useState(null);
+  // const [attendee, setAttendee] = useState(null);
+  //const [channelArn, setChannelArn] = useState('');
+  //const [userArn, setUserArn] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [participantsCount, setParticipantsCount] = useState(0);
-  const [transcripts, setTranscriptions] = useState([]);
-  const [transcriptText, setTranscriptText] = useState([]);
-  const [translatedText, setTranslatedText] = useState([]);
-  // const [sourceLanguageCode, setSourceLanguageCode] = useState(null);
   const [selectedVoiceLanguage, setSelectedVoiceLanguage] = useState(
     LISTEN_VOICE_LANGUAGES.find((lang) => lang.key.startsWith(i18n.language))?.key || 'ja-JP'
   );
-  const [chatRestriction, setChatRestriction] = useState(null);
-  // Replace local variables with refs
-  const transcriptListRef = useRef([]);
-  const translatedListRef = useRef([]);
-  const audioQueueRef = useRef([]);
-  const userID = uuidv4();
+  // const [chatRestriction, setChatRestriction] = useState(null);
+  const [isMuted, setIsMuted] = useState(true);
+  const [isPlay, setIsPlay] = useState(false);
+  // const userID = uuidv4();
   const userType = 'User';
   // Ref for the audio element  
   const audioElementRef = useRef(null);
-  const [isMuted, setIsMuted] = useState(true);
-  const [isPlay, setIsPlay] = useState(false);
-
   // Add these references and callback:
   const wakeLockRef = useRef(null);
+
+  // Replace your current alerts with this function in initializeMeetingSession
+
+  const debugAudioElement = (audioElement, prefix = '') => {
+    if (!audioElement) return;
+
+    // Gather all properties in an object
+    const props = {
+      // Basic properties
+      autoplay: audioElement.autoplay,
+      controls: audioElement.controls,
+      crossOrigin: audioElement.crossOrigin,
+      currentSrc: audioElement.currentSrc,
+      currentTime: audioElement.currentTime,
+      defaultMuted: audioElement.defaultMuted,
+      defaultPlaybackRate: audioElement.defaultPlaybackRate,
+      duration: audioElement.duration,
+      ended: audioElement.ended,
+      error: audioElement.error,
+      loop: audioElement.loop,
+      muted: audioElement.muted,
+      networkState: audioElement.networkState,
+      paused: audioElement.paused,
+      playbackRate: audioElement.playbackRate,
+      played: audioElement.played && audioElement.played.length,
+      preload: audioElement.preload,
+      readyState: audioElement.readyState,
+      seekable: audioElement.seekable && audioElement.seekable.length,
+      seeking: audioElement.seeking,
+      src: audioElement.src,
+      srcObject: audioElement.srcObject ? 'MediaStream object' : null,
+      volume: audioElement.volume
+    };
+
+    // Create a formatted string with all properties
+    let message = `${prefix} Audio Element Properties:\n`;
+    Object.entries(props).forEach(([key, value]) => {
+      message += `${key}: ${value}\n`;
+    });
+
+    // Log to console for more detailed view
+    console.log(`${prefix} Audio Element:`, audioElement);
+    console.log(`${prefix} Audio Properties:`, props);
+
+    // Show alert with all properties
+    alert(message);
+  };
+
+  // Function to keep wake lock
   const requestWakeLock = useCallback(async () => {
     try {
       if ('wakeLock' in navigator) {
@@ -81,285 +119,216 @@ function LiveViewer6() {
     }
   }, []);
 
+  // Function intialize Meeting Session
   const initializeMeetingSession = useCallback(async (meetingData, attendeeData) => {
     if (!meetingData || !attendeeData) {
       console.error('Invalid meeting or attendee information');
       return;
     }
-
-    const logger = new ConsoleLogger('ChimeMeetingLogs', LogLevel.INFO);
+    const logger = new ConsoleLogger('ChimeMeetingLogs', LogLevel.DEBUG);
     const deviceController = new DefaultDeviceController(logger);
     const meetingSessionConfig = new MeetingSessionConfiguration(meetingData, attendeeData);
     const session = new DefaultMeetingSession(meetingSessionConfig, logger, deviceController);
     setMeetingSession(session);
-    // const audioElement = audioElementRef.current;
+    const audioElement = audioElementRef.current;
+    debugAudioElement(audioElement, 'Before binding');
 
-    // const observer = {
-    //   audioVideoDidStart: async () => {
-    //     console.log('Audio/Video started successfully');
-
-    //     // Only set up Web Audio API once the audio has actually started
-    //     if (selectedVoiceLanguage === 'ja-JP' && audioElement) {
-    //       try {
-    //         // Wait a moment for the audio stream to be fully available
-    //         setTimeout(async () => {
-    //           try {
-    //             const audioStream = await session.audioVideo.getCurrentMeetingAudioStream();
-
-    //             if (audioStream) {
-    //               console.log('Audio stream available, setting up Web Audio API');
-    //               //alert('Audio stream available, setting up Web Audio API');
-
-    //               // Create Web Audio API context
-    //               const audioContext = new (window.AudioContext)();
-
-    //               // Create a media stream source node
-    //               const sourceNode = audioContext.createMediaStreamSource(audioStream);
-
-    //               // Create gain node for volume control
-    //               const gainNode = audioContext.createGain();
-    //               gainNode.gain.value = 1.0; // Initial volume based on mute state
-
-    //               // Connect nodes
-    //               sourceNode.connect(gainNode);
-    //               gainNode.connect(audioContext.destination);
-
-    //               // Store these in refs if you need to access them later
-    //               session.webAudioContext = audioContext;
-    //               session.webAudioSource = sourceNode;
-    //               session.webAudioGain = gainNode;
-
-    //               console.log('Web Audio API setup complete');
-    //             } else {
-    //               console.warn('No audio stream available after audioVideoDidStart, falling back to bindAudioElement');
-    //               await session.audioVideo.bindAudioElement(audioElement);
-    //             }
-    //           } catch (error) {
-    //             console.error('Error setting up Web Audio after audioVideoDidStart:', error);
-    //             try {
-    //               await session.audioVideo.bindAudioElement(audioElement);
-    //             } catch (fallbackError) {
-    //               console.error('Fall back to bindAudioElement also failed:', fallbackError);
-    //             }
-    //           }
-    //         }, 500); // Short delay to ensure audio stream is ready
-    //       } catch (error) {
-    //         console.error('Error in audioVideoDidStart handler:', error);
-    //       }
-    //     }
-    //   },
-    //   audioVideoDidStop: (sessionStatus) => {
-    //     console.log('Audio/Video stopped:', sessionStatus);
-
-    //     // Clean up Web Audio API resources
-    //     if (session.webAudioContext) {
-    //       if (session.webAudioSource) {
-    //         session.webAudioSource.disconnect();
-    //       }
-    //       if (session.webAudioGain) {
-    //         session.webAudioGain.disconnect();
-    //       }
-    //       // Close audio context
-    //       session.webAudioContext.close().catch(err => console.error('Error closing audio context:', err));
-    //     }
-    //   },
-    //   audioVideoDidStartConnecting: () => {
-    //     console.log('Attempting to connect audio/video');
-    //   }
-    // };
-
-    // // Add the observer
-    // session.audioVideo.addObserver(observer);
-
-    //await selectSpeaker(session);
-    if (selectedVoiceLanguage === 'ja-JP') {
-      console.log('Selected voice language is Japanese', selectedVoiceLanguage);
-      //const audioElement = document.getElementById('audioElementListener');
-      const audioElement = audioElementRef.current;
-
-      console.log('Check audioElement:', audioElement);
-      if (audioElement) {
-        // Check current volume before binding
-        console.log('Current audio volume:', audioElement.volume);
-        alert('Current audio volume: ' + audioElement.volume);
-
-        await session.audioVideo.bindAudioElement(audioElement);
-
-        // Check volume after binding to see if it changed
-        console.log('Audio volume after binding:', audioElement.volume);
-        alert('Audio volume after binding: ' + audioElement.volume);
-      } else {
-        console.error('Audio element not found');
-      }
+    if (audioElement) {
+      await session.audioVideo.bindAudioElement(audioElement);
+    } else {
+      console.error('Audio element not found');
     }
-    //metricReport(session);
-    session.audioVideo.start();
-  }, [selectedVoiceLanguage]);
+    // if (selectedVoiceLanguage === 'ja-JP') {
+    //   console.log('Selected voice language is Japanese', selectedVoiceLanguage);
+    //   //const audioElement = document.getElementById('audioElementListener');
+    //   const audioElement = audioElementRef.current;
+    //   console.log('Check audioElement:', audioElement);
+    //   if (audioElement) {
+    //     await session.audioVideo.bindAudioElement(audioElement);
+    //   } else {
+    //     console.error('Audio element not found');
+    //   }
+    // }
+    //session.audioVideo.start();
+    debugAudioElement(audioElement, 'After binding');
+  }, []);
 
-  // const selectSpeaker = async (session) => {
+
+  // Function to apply noise filtering to audio stream
+  // const applyNoiseFilter = (mediaStream) => {
+  //   if (!mediaStream) return;
+
   //   try {
-  //     const audioOutputDevices = await session.audioVideo.listAudioOutputDevices();
-  //     console.log('ZZZZZ Audio output devices:', audioOutputDevices.length);
+  //     // Create audio context if it doesn't exist
+  //     const context = new (window.AudioContext)();
 
-  //     if (audioOutputDevices.length > 0) {
-  //       await session.audioVideo.chooseAudioOutput(audioOutputDevices[0].deviceId);
-  //       alert('Speaker devices found: ' + audioOutputDevices.length);
-  //     } else {
-  //       console.log('No speaker devices found');
-  //       await session.audioVideo.chooseAudioOutput(null);
-  //       alert('No speaker devices found')
-  //     }
+  //     // Create source from the media stream
+  //     const source = context.createMediaStreamSource(mediaStream);
+
+  //     // Create a gain node to control volume
+  //     const gainNode = context.createGain();
+  //     gainNode.gain.value = 1.0; // Normal volume
+
+  //     // Create a biquad filter for noise reduction
+  //     const lowPassFilter = context.createBiquadFilter();
+  //     lowPassFilter.type = 'lowpass';
+  //     lowPassFilter.frequency.value = 8000; // Cut high frequencies (adjust as needed)
+
+  //     // Create a high-pass filter to remove low rumble
+  //     const highPassFilter = context.createBiquadFilter();
+  //     highPassFilter.type = 'highpass';
+  //     highPassFilter.frequency.value = 150; // Remove very low frequencies
+
+  //     // Create a compressor to even out volume levels
+  //     const compressor = context.createDynamicsCompressor();
+  //     compressor.threshold.value = -50;
+  //     compressor.knee.value = 40;
+  //     compressor.ratio.value = 12;
+  //     compressor.attack.value = 0;
+  //     compressor.release.value = 0.25;
+
+  //     // Connect the nodes: source -> highpass -> lowpass -> compressor -> gain -> destination
+  //     source.connect(highPassFilter);
+  //     highPassFilter.connect(lowPassFilter);
+  //     lowPassFilter.connect(compressor);
+  //     compressor.connect(gainNode);
+  //     gainNode.connect(context.destination);
+
+  //     console.log('✅ Noise filtering applied to audio stream');
+  //     return () => {
+  //       source.disconnect();
+  //       gainNode.disconnect();
+  //       lowPassFilter.disconnect();
+  //       highPassFilter.disconnect();
+  //       compressor.disconnect();
+  //     };
   //   } catch (error) {
-  //     console.error('Error selecting speaker:', error);
+  //     console.error('Failed to apply noise filtering:', error);
+  //     return null;
   //   }
   // };
 
-  const createAppUserAndJoinChannel = useCallback(
-    async (meetingId, attendeeId, userID, userType, channelId) => {
-      try {
-        const channelArn = `${Config.appInstanceArn}/channel/${channelId}`;
-        const listAttendeeResponse = await listAttendee(meetingId);
-        const attendees = listAttendeeResponse.attendees || [];
-        const subGuideList = attendees.filter(
-          (member) => member.ExternalUserId && member.ExternalUserId.startsWith(userType)
-        );
+  // Event for handling selected voice language change
+  const handleSelectedVoiceLanguageChange = (event) => {
+    setSelectedVoiceLanguage(event.target.value);
+  };
 
-        subGuideList.sort(
-          (a, b) =>
-            parseInt(a.ExternalUserId.split('|')[1]) - parseInt(b.ExternalUserId.split('|')[1])
-        );
+  // Event for handling mute/unmute button click
+  const handleMuteUnmute = () => {
+    setIsMuted(!isMuted);
+    audioElementRef.current.muted = isMuted;
+  };
 
-        const index = subGuideList.findIndex((att) => att.AttendeeId === attendeeId);
-        const userName = `${userType}${index + 1}`;
+// Function to handle play/pause button click
+  const handlePlay = () => {
+    if (isPlay === false) {
+      setIsPlay(true)
+      audioElementRef.current.play();
+    } else {
+      setIsPlay(false);
+      audioElementRef.current.pause();
+    }
+  }
 
-        const newUserArn = await createAppInstanceUsers(userID, userName);
-        await addChannelMembership(channelArn, newUserArn);
+  // Function to handle play/pause button click
+  // const handlePlay = () => {
+  //   const audioElement = audioElementRef.current;
+  //   console.log('Audio srcObject:', audioElement.srcObject);
 
-        return { channelArn, userArn: newUserArn };
-      } catch (error) {
-        console.error('Error creating user and joining channel:', error);
-        throw error;
-      }
-    },
-    []
-  );
+  //   if (audioElement.srcObject instanceof MediaStream) {
+  //     console.log('✅ MediaStream is bound to audioElement');
+  //     // Check audio tracks
+  //     const audioTracks = audioElement.srcObject.getAudioTracks();
+  //     if (audioTracks.length === 0) {
+  //       console.warn('❌ No audio tracks found in the MediaStream');
+  //       alert('No audio available. The stream may be empty.');
+  //       return;
+  //     } else {
+  //       setIsPlay(!isPlay);
 
-  const getMeetingAttendeeInfoFromCookies = useCallback(
-    (retrievedUser) => {
-      setIsLoading(true);
-      initializeMeetingSession(retrievedUser.meeting, retrievedUser.attendee);
-      setMeeting(retrievedUser.meeting);
-      setAttendee(retrievedUser.attendee);
-      setUserArn(retrievedUser.userArn);
-      setChannelArn(retrievedUser.channelArn);
+  //       if (!isPlay) {
+  //         // Start playback with noise filtering
+  //         //alert('Noise filtering is enabled');
+  //         applyNoiseFilter(audioElement.srcObject);
+  //         audioElement.play();
+  //       } else {
+  //         audioElement.pause();
+  //       }
+  //     }
+  //   } else {
+  //     console.warn('❌ No MediaStream found');
+  //   }
+  // };
+
+  // Function to join the tour
+  const joinTour = useCallback(async () => {
+    const tourResponse = await getMeetingByTourId(tourId);
+    console.log('tourResponse', tourResponse);
+    if (tourResponse?.statusCode === 200) {
+      setTour(tourResponse.data);
+    } else {
+      setTour(null);
+    }
+  }, [tourId]);
+
+  // Function to join the meeting session
+  const joinMeeting = useCallback(async (meetingData, channelId) => {
+    try {
+      console.log('meeting:', meetingData);
+      console.log('channelId:', channelId);
+      const attendeeData = await createAttendee(
+        meetingData.MeetingId,
+        `${userType}|${Date.now()}`
+      );
+      await initializeMeetingSession(meetingData, attendeeData);
+      // setMeeting(meetingData);
+      // setAttendee(attendeeData);
+
+    } catch (error) {
+      console.error('Error joining the meeting:', error);
+    } finally {
       setIsLoading(false);
-    },
-    [initializeMeetingSession]
-  );
+    }
+  }, [initializeMeetingSession]);
+  // Process the tour when it changes
+  useEffect(() => {
+    // Skip if tour is undefined
+    if (!tour) return;
 
-  const joinMeeting = useCallback(
-    async (meetingData, channelId) => {
-      setIsLoading(true);
+    const processTour = async () => {
       try {
-        // if (!meetingId || !channelId || !hostId) {
-        //   alert('Meeting ID, Channel ID, and Host ID are required');
-        //   return;
-        // }
+        if (tour.meetingId) {
+          console.log("Meeting Exists in Tour");
 
-        console.log('meeting:', meetingData);
-        console.log('channelId:', channelId);
+          // Check if the meeting is available in Chime Meeting
+          const meetingResponse = await getMeeting(tour.meetingId);
+          console.log('Meeting response:', meetingResponse);
 
-        // const meetingData = await checkAvailableMeeting(meetingId, userType);
-        // console.log('meetingData:', meetingData);
-        // if (!meetingData) return;
-
-        const attendeeData = await createAttendee(
-          meetingData.MeetingId,
-          `${userType}|${Date.now()}`
-        );
-        await initializeMeetingSession(meetingData, attendeeData);
-
-        const { channelArn, userArn } = await createAppUserAndJoinChannel(
-          meetingData.MeetingId,
-          attendeeData.AttendeeId,
-          userID,
-          userType,
-          channelId
-        );
-
-        setMeeting(meetingData);
-        setAttendee(attendeeData);
-        setChannelArn(channelArn);
-        setUserArn(userArn);
-        console.log('Cookie set for 1 day!');
-        //setIsJoinAudio(true);
-        const user = {
-          meeting: meetingData,
-          attendee: attendeeData,
-          userArn,
-          channelArn,
-        };
-
-        JSONCookieUtils.setJSONCookie('User' + tourId, user, 1);
-
-      } catch (error) {
-        console.error('Error joining the meeting:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    },
-    [
-      userID,
-      initializeMeetingSession,
-      createAppUserAndJoinChannel,
-      tourId
-    ]
-  );
-
-  const joinAudioSession2 = useCallback(
-    async (meeting, channelId) => {
-      try {
-        const retrievedUser = JSONCookieUtils.getJSONCookie('User' + tourId);
-        console.log('Check retrievedUser:', retrievedUser);
-        console.log('Check retrievedUser meeting:', retrievedUser?.meeting);
-        console.log('Check retrievedUser channel:', retrievedUser?.channelArn);
-        console.log('Check Input channelId:', channelId);
-        console.log('Check Input meeting:', meeting.MeetingId);
-        console.log('Check retrievedUser meetingId:', retrievedUser?.meeting.MeetingId);
-        console.log('Check retrievedUser channelId:', retrievedUser?.channelArn.split('/').pop());
-        console.log('Check retrievedUser channelId:', `${Config.appInstanceArn}/channel/${channelId}`);
-        if (retrievedUser) {
-          const isMeetingMatched =
-            retrievedUser.meeting.MeetingId === meeting.MeetingId;
-          const isChannelMatched =
-            retrievedUser.channelArn === `${Config.appInstanceArn}/channel/${channelId}`;
-
-          if (isMeetingMatched && isChannelMatched) {
-            const meetingData = await checkAvailableMeeting(
-              retrievedUser.meeting.MeetingId,
-              'User'
-            );
-            if (meetingData) {
-              getMeetingAttendeeInfoFromCookies(retrievedUser);
-              return;
-            }
+          if (meetingResponse.statusCode === 404) {
+            // Using console.error instead of alert for server-side issues
+            alert(GUIDE_NOT_START);
+            // Consider using a toast notification library or setting an error state
+          } else if (meetingResponse.statusCode === 200) {
+            // Join the meeting again and set the meeting session in the state
+            console.log('Meeting available:', meetingResponse.data);
+            joinMeeting(meetingResponse.data, tour.channelId);
+          } else {
+            console.error('Meeting error:', meetingResponse);
           }
+        } else {
+          alert(GUIDE_NOT_START);
         }
-        joinMeeting(meeting, channelId);
       } catch (error) {
-        console.error('Error processing the User cookie:', error);
+        console.error('Error processing tour:', error);
       }
-    },
-    [
-      getMeetingAttendeeInfoFromCookies,
-      joinMeeting,
-      tourId
-    ]
-  );
+    };
+    setIsLoading(true);
+    processTour();
+  }, [tour, joinMeeting]);
 
+  // Check if the meeting session is available
   useEffect(() => {
     if (!meetingSession) return;
-
     const attendeeSet = new Set();
     const presenceCallback = (attendeeId, present) => {
       if (present) {
@@ -373,339 +342,11 @@ function LiveViewer6() {
     // Subscribe to attendee presence
     meetingSession.audioVideo.realtimeSubscribeToAttendeeIdPresence(presenceCallback);
 
-    // Subscribe to transcription events
-    // meetingSession.audioVideo.transcriptionController?.subscribeToTranscriptEvent(
-    //   (transcriptEvent) => {
-    //     console.log('Check transcriptEvent:', transcriptEvent);
-    //     if (transcriptEvent?.type === 'started') {
-    //       const transcriptionConfig = JSON.parse(transcriptEvent.transcriptionConfiguration);
-    //       setSourceLanguageCode(transcriptionConfig.EngineTranscribeSettings.LanguageCode);
-    //     }
-    //     setTranscriptions(transcriptEvent);
-    //   }
-    // );
-    // splitUrl()
     // Cleanup on unmount
-    // return () => {
-    //   meetingSession.audioVideo.realtimeUnsubscribeFromAttendeeIdPresence(presenceCallback);
-    // };
+    return () => {
+      meetingSession.audioVideo.realtimeUnsubscribeFromAttendeeIdPresence(presenceCallback);
+    };
   }, [meetingSession]);
-
-  useEffect(() => {
-    if (!meetingSession) return;
-    if (isPlay) {
-      // Subscribe to transcription events
-      console.log("subscribeToTranscriptEvent");
-      meetingSession.audioVideo.transcriptionController?.subscribeToTranscriptEvent(
-        (transcriptEvent) => {
-          // console.log('XXXX transcriptEvent:', transcriptEvent);
-          // if (transcriptEvent?.type === 'started') {
-          //   const transcriptionConfig = JSON.parse(transcriptEvent.transcriptionConfiguration);
-          //   setSourceLanguageCode(transcriptionConfig.EngineTranscribeSettings.LanguageCode);
-          // }
-          setTranscriptions(transcriptEvent);
-        }
-      );
-    } else {
-      // Unsubscribe from transcription events when not playing
-      meetingSession.audioVideo.transcriptionController?.unsubscribeFromTranscriptEvent();
-      setTranscriptions([]);
-    }
-  }, [meetingSession, isPlay]);
-
-  // const callTranslateTextSpeech = async () => {
-  //   const audioElement = audioElementRef.current;
-  //   if (!audioElement || !meetingSession || !sourceLanguageCode || !selectedVoiceLanguage) return;
-  //   setTranscriptText([]);
-  //   setTranslatedText([]);
-
-  //   if (
-  //     sourceLanguageCode !== selectedVoiceLanguage &&
-  //     transcripts?.results?.[0]?.alternatives?.[0]?.transcript &&
-  //     !transcripts.results[0].isPartial
-  //   ) {
-  //     // Process audio queue
-  //     const processAudioQueue = async () => {
-  //       if (audioQueueRef.current.length === 0) return;
-
-  //       const nextAudio = audioQueueRef.current.shift();
-  //       console.log("nextAudio", nextAudio);
-  //       try {
-  //         await translateAndPlay(nextAudio);
-  //       } catch (error) {
-  //         console.error('Error processing audio queue:', error);
-  //       }
-
-  //       //setImmediate(processAudioQueue);
-  //       setTimeout(processAudioQueue, 0);
-  //     };
-
-  //     // Translate and play the audio
-  //     const translateAndPlay = async (currentText) => {
-  //       try {
-  //         let targetLanguageCode = selectedVoiceLanguage;
-  //         if (selectedVoiceLanguage === 'cmn-CN') {
-  //           targetLanguageCode = "zh";
-  //         }
-
-  //         console.log('Check sourceLanguageCode:', sourceLanguageCode);
-  //         console.log('Check targetLanguageCode:', targetLanguageCode);
-  //         const response = await translateTextSpeech(
-  //           currentText,
-  //           sourceLanguageCode,
-  //           targetLanguageCode,
-  //           "standard"
-  //         );
-
-  //         console.log('Translated response:', response);
-  //         translatedListRef.current.push(response.translatedText);
-
-  //         if (!response.speech.AudioStream?.data)
-  //           throw new Error('Invalid AudioStream data');
-
-  //         const audioBlob = new Blob(
-  //           [Uint8Array.from(response.speech.AudioStream.data)],
-  //           { type: response.speech.ContentType || 'audio/mpeg' }
-  //         );
-
-  //         const audioUrl = URL.createObjectURL(audioBlob);
-
-  //         const audioElement = audioElementRef.current;
-  //         if (audioElement) {
-  //           audioElement.src = audioUrl;
-  //           audioElement.onended = () => processAudioQueue();
-  //           // Only play automatically if “isPlay” is true
-  //           // if (isPlay) {
-  //           //   audioElement.play();
-  //           // }
-  //           audioElement.play();
-  //         }
-  //         setTranslatedText((prev) => [...prev, response.translatedText]);
-  //       } catch (error) {
-  //         console.error('Failed to translate text to speech:', error);
-  //       }
-  //     };
-  //     const currentText = transcripts.results[0].alternatives[0].transcript;
-  //     transcriptListRef.current.push(currentText);
-  //     audioQueueRef.current.push(currentText);
-  //     if (audioQueueRef.current.length === 1) {
-  //       processAudioQueue();  // Start processing the queue.
-  //     }
-
-  //     setTranscriptText((prev) => [...prev, currentText]);
-  //   }
-  //   // else {
-  //   //   if (sourceLanguageCode === selectedVoiceLanguage) {
-  //   //     const bindAudioElement = async () => {
-  //   //       await meetingSession.audioVideo.bindAudioElement(audioElement);
-  //   //     };
-  //   //     bindAudioElement();
-  //   //     //audioElement.play();
-  //   //   }
-  //   // }
-  // };
-
-  useEffect(() => {
-
-    const audioElement = audioElementRef.current;
-    // console.log('Check isPlay sourceLanguageCode:', sourceLanguageCode);
-    console.log('Check isPlay selectedVoiceLanguage:', selectedVoiceLanguage);
-    //if (!audioElement || !meetingSession || !sourceLanguageCode || !selectedVoiceLanguage) return;
-    if (!audioElement || !meetingSession || !selectedVoiceLanguage) return;
-    setTranscriptText([]);
-    setTranslatedText([]);
-
-    if (isPlay) {
-      console.log('Check isPlay audioElement:', audioElement);
-      console.log('Check isPlay audioElement src:', audioElement.src);
-      console.log('Check isPlay audioElement srcObject:', audioElement.srcObject);
-      console.log('Check isPlay transcript:', transcripts?.results?.[0]?.alternatives?.[0]?.transcript);
-      console.log('Check isPlay isPartial:', transcripts?.results?.[0]?.isPartial);
-      if (
-        //sourceLanguageCode !== selectedVoiceLanguage &&
-        selectedVoiceLanguage !== 'ja-JP' &&
-        transcripts?.results?.[0]?.alternatives?.[0]?.transcript &&
-        !transcripts?.results?.[0]?.isPartial
-      ) {
-        // Process audio queue
-        const processAudioQueue = async () => {
-          if (audioQueueRef.current.length === 0) return;
-
-          const nextAudio = audioQueueRef.current.shift();
-          console.log("nextAudio", nextAudio);
-          try {
-            await translateAndPlay(nextAudio);
-          } catch (error) {
-            console.error('Error processing audio queue:', error);
-          }
-
-          //setImmediate(processAudioQueue);
-          setTimeout(processAudioQueue, 0);
-        };
-
-        // Translate and play the audio
-        const translateAndPlay = async (currentText) => {
-          try {
-            let targetLanguageCode = selectedVoiceLanguage;
-            if (selectedVoiceLanguage === 'cmn-CN') {
-              targetLanguageCode = "zh";
-            }
-
-            //console.log('Check sourceLanguageCode:', sourceLanguageCode);
-            console.log('Check targetLanguageCode:', targetLanguageCode);
-            const response = await translateTextSpeech(
-              currentText,
-              'ja-JP',
-              targetLanguageCode,
-              "standard"
-            );
-
-            console.log('Translated response:', response);
-            translatedListRef.current.push(response.translatedText);
-
-            if (!response.speech.AudioStream?.data)
-              throw new Error('Invalid AudioStream data');
-
-            const audioBlob = new Blob(
-              [Uint8Array.from(response.speech.AudioStream.data)],
-              { type: response.speech.ContentType || 'audio/mpeg' }
-            );
-
-            const audioUrl = URL.createObjectURL(audioBlob);
-
-            const audioElement = audioElementRef.current;
-            if (audioElement) {
-              audioElement.src = audioUrl;
-              //audioElement.onended = () => processAudioQueue();
-              audioElement.onended = () => {
-                // Release the Blob URL to free browser memory
-                // This prevents memory leaks when processing many audio files
-                URL.revokeObjectURL(audioUrl);
-                processAudioQueue();
-              };
-              audioElement.play();
-            }
-            setTranslatedText((prev) => [...prev, response.translatedText]);
-          } catch (error) {
-            console.error('Failed to translate text to speech:', error);
-          }
-        };
-        const currentText = transcripts.results[0].alternatives[0].transcript;
-        transcriptListRef.current.push(currentText);
-        audioQueueRef.current.push(currentText);
-        if (audioQueueRef.current.length === 1) {
-          processAudioQueue();  // Start processing the queue.
-        }
-
-        setTranscriptText((prev) => [...prev, currentText]);
-      }
-      // else {
-      //   if (sourceLanguageCode === selectedVoiceLanguage) {
-      //     const bindAudioElement = async () => {
-      //       await meetingSession.audioVideo.bindAudioElement(audioElement);
-      //     };
-      //     bindAudioElement();
-      //     //audioElement.play();
-      //   }
-      // }
-    } else {
-      // If not playing, clear the audio queue and stop the audio
-      audioQueueRef.current = [];
-      //setTranscriptions([]); // Clear transcriptions
-      if (audioElement) {
-        if (audioElement.src) {
-          audioElement.src = ''; // Clear src URL if set
-        }
-        // if (audioElement.srcObject) {
-        //   audioElement.srcObject = null; // Clear srcObject if streaming
-        // }
-      }
-    }
-  }, [
-    meetingSession,
-    transcripts,
-    //sourceLanguageCode,
-    selectedVoiceLanguage,
-    isPlay
-  ]);
-
-  const handleSelectedVoiceLanguageChange = (event) => {
-    setSelectedVoiceLanguage(event.target.value);
-  };
-  console.log('Check transcriptText:', transcriptText);
-  console.log('Check transcriptText string:', transcriptText.join(' '));
-
-  console.log('Check translatedText:', translatedText);
-  console.log('Check translatedText string:', translatedText.join(' '));
-
-  // const audioRef = useRef(null);
-  const handleMuteUnmute = () => {
-    setIsMuted(!isMuted);
-    audioElementRef.current.muted = isMuted;
-  };
-
-  // Function to handle play/pause button click
-  const handlePlay = async () => {
-    console.log('Check src:', audioElementRef.current.src);
-
-    const transcript = transcripts?.results?.[0]?.alternatives?.[0]?.transcript;
-    console.log('Check transcript:', transcript);
-    // if (!transcript) {
-    //   console.log('No transcript available to play.');
-    //   //audioElementRef.current.src = '';
-    //   audioElementRef.current.srcObject = null;
-    // }
-
-    if (isPlay === false) {
-      setIsPlay(true)
-      audioElementRef.current.play();
-      // Call the translation function when play is clicked
-      //await callTranslateTextSpeech();
-    } else {
-      setIsPlay(false);
-      audioElementRef.current.pause();
-      //audioElementRef.current.src = '';
-      //audioElementRef.current.srcObject = null;
-    }
-  }
-
-  // Function to join the audio session
-  const joinAudioSession = useCallback(async () => {
-
-    const getMeetingByTourIdResponse = await getMeetingByTourId(tourId);
-    console.log('getMeetingByTourIdResponse', getMeetingByTourIdResponse);
-    if (getMeetingByTourIdResponse?.statusCode === 200) {
-      setChatRestriction(getMeetingByTourIdResponse.data.chatRestriction);
-      setTour(getMeetingByTourIdResponse.data);
-      console.log('Meeting found:', getMeetingByTourIdResponse.data.meetingId);
-
-      if (getMeetingByTourIdResponse.data.meetingId) {
-        console.log("Meeting Existed in Tour");
-        const checkAvailableMeetingResponse = await getMeeting(getMeetingByTourIdResponse.data.meetingId);
-        console.log('checkAvailableMeeting:', checkAvailableMeetingResponse);
-        console.log('checkAvailableMeeting statusCode:', checkAvailableMeetingResponse.statusCode);
-        if (checkAvailableMeetingResponse.statusCode === 404) {
-          //toast.info('Guide does not start, please wait...');
-          alert('Guide does not start, please wait...');
-        } else if (checkAvailableMeetingResponse.statusCode === 200) {
-          // Join the meeting again and set the meeting session in the state
-          console.log('Meeting not expired:', checkAvailableMeetingResponse);
-          console.log('Check checkAvailableMeetingResponse:', checkAvailableMeetingResponse.data);
-          joinAudioSession2(checkAvailableMeetingResponse.data, getMeetingByTourIdResponse.data.channelId);
-
-        } else {
-          console.log('Meeting error:', checkAvailableMeetingResponse);
-        }
-      } else {
-        alert('Guide does not start, please wait...');
-      }
-    } else {
-      // alert('Tour not found, please check the tour ID.');
-      console.log('Tour not found, please check the tour ID.');
-      // toast.error('Tour not found, please check the tour ID.');
-      setTour(null);
-    }
-  }, [joinAudioSession2, tourId]);
 
   // Call requestWakeLock once the meeting session is set:
   useEffect(() => {
@@ -719,145 +360,91 @@ function LiveViewer6() {
     }
   }, [meetingSession, requestWakeLock]);
 
-  // Handle long text for translations and transcriptions
-  const isLongText = translatedListRef.current.join(' ').length > 300;
+  useEffect(() => {
+    if (!meetingSession) return;
+    if (navigator.mediaDevices && navigator.mediaDevices.getSupportedConstraints) {
+      const constraints = navigator.mediaDevices.getSupportedConstraints();
+      console.log('Supported Constraints:', constraints);
+      alert(`Supported Constraints:\n${JSON.stringify(constraints, null, 2)}`);
+    } else {
+      console.warn('getSupportedConstraints is not supported in this browser');
+    }
+  }, [meetingSession]);
 
   // Check if the tour exists, if not, show a not found page
   if (tour === null) {
     return <NotFound />;
   }
 
-  console.log("transcripts event:", transcripts);
-  console.log("transcripts:", transcripts?.results?.[0]?.alternatives?.[0]?.transcript);
-  console.log("transcripts isPartial:", transcripts?.results?.[0]?.isPartial);
-
   return (
     <>
       <Header count={participantsCount} tourId={tourId} userType={userType} />
-      {/* <div className="live-viewer-container"> */}
-      <div className={` ${meeting && attendee ? 'live-viewer-container' : 'live-viewer-container-center'}`}>
-        {/* <div className='live-viewer-title'>
-          <div className='time'>
-            <span>2025年1月1日</span>
-          </div>
-
-          <span className='name-tour'>浅草寺ツアー</span>
-        </div> */}
-        <TourTitle tour={tour} />
-        {!meeting && !attendee && (
-          <div className="box-selected-language">
-            <h3 className='title-box'>
-              {t('voiceLanguageLbl.listening')}
-            </h3>
-            <select
-              className='selected-language'
-              id="selectedVoiceLanguage"
-              value={selectedVoiceLanguage}
-              onChange={handleSelectedVoiceLanguageChange}
-            >
-              {(i18n.language === 'ja' ? JA_LISTEN_VOICE_LANGUAGES : LISTEN_VOICE_LANGUAGES).map((language) => (
-                <option key={language.key} value={language.key}>
-                  {language.label}
-                </option>
-              ))}
-
-            </select>
-          </div>
-        )}
-        <audio
-          id="audioElementListener"
-          //controls
-          ref={audioElementRef}
-          //autoPlay
-          //className="audio-player"
-          style={{ display: 'none' }}
-        />
-
-        {!meeting && !attendee ? (
+      <audio
+        id="audioElementListener"
+        ref={audioElementRef}
+        style={{ display: 'none' }}
+      />
+      <div className={` ${tour ? 'live-viewer-container' : 'live-viewer-container-center'}`}>
+        {!tour ? (
           isLoading ? (
             <div className="loading">
               <div className="spinner"></div>
               <p>{t('loading')}</p>
             </div>
           ) : (
-            <div className='btn' onClick={joinAudioSession}>
-              <button className='btn-join'>{t('joinBtn')}</button>
-            </div>
+            <>
+              <div className="box-selected-language">
+                <h3 className='title-box'>
+                  {t('voiceLanguageLbl.listening')}
+                </h3>
+                <select
+                  className='selected-language'
+                  id="selectedVoiceLanguage"
+                  value={selectedVoiceLanguage}
+                  onChange={handleSelectedVoiceLanguageChange}
+                >
+                  {(i18n.language === 'ja' ? JA_LISTEN_VOICE_LANGUAGES : LISTEN_VOICE_LANGUAGES).map((language) => (
+                    <option key={language.key} value={language.key}>
+                      {language.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className='btn' onClick={joinTour}>
+                <button className='btn-join'>{t('joinBtn')}</button>
+              </div>
+            </>
           )
         ) : (
           <>
-            <div className='audioViewer'>
-              {!!isPlay ? <div>
-                <div className='pauseButtonViewer' onClick={handlePlay}>
-                  {/* {isPlay ? <FaPause size={30} /> : <IoPlay size={30} />} */}
-                  <FaPause size={20} />
-                  <span className="startText">{t('stopBtn')}</span>
+            {isLoading ? (
+              <div className="loading">
+                <div className="spinner"></div>
+                <p>{t('loading')}</p>
+              </div>
+            ) : (<>
+              <TourTitle tour={tour} />
+              <div className='audioViewer'>
+                {!!isPlay ? <div>
+                  <div className='pauseButtonViewer' onClick={handlePlay}>
+                    <FaPause size={20} />
+                    <span className="startText">{t('stopBtn')}</span>
+                  </div>
+                </div>
+                  : <div>
+                    <div className='playButtonViewer' onClick={handlePlay}>
+                      <FaPlay size={20} />
+                      <span className="startText">{t('startBtn')}</span>
+                    </div>
+                  </div>}
+                <div className='soundButton' onClick={handleMuteUnmute}>
+                  {isMuted ? <HiMiniSpeakerWave size={30} /> : <IoVolumeMute size={30} />
+                  }
                 </div>
               </div>
-                : <div>
-                  <div className='playButtonViewer' onClick={handlePlay}>
-                    {/* {isPlay ? <FaPause size={30} /> : <IoPlay size={30} />} */}
-                    <FaPlay size={20} />
-                    <span className="startText">{t('startBtn')}</span>
-                  </div>
-                </div>}
-              <div className='soundButton' onClick={handleMuteUnmute}>
-                {isMuted ? <HiMiniSpeakerWave size={30} /> : <IoVolumeMute size={30} />
-                }
-              </div>
-              {/* <audio id='audioElementListener' ref={audioElementRef} >
-              </audio> */}
-            </div>
-            {transcriptListRef.current.length > 0 && (
-              <div className='trans-box'>
-                <div style={{ textAlign: 'center', fontWeight: '700' }}>
-                  <p>{t('captureTranslations')}</p>
-                </div>
-                {/* <p>
-                The host is speaking in{' '}
-                {LISTEN_VOICE_LANGUAGES.find((lang) => lang.key === sourceLanguageCode)?.label}.
-              </p>
-              <p>
-                I am listening in{' '}
-                {LISTEN_VOICE_LANGUAGES.find((lang) => lang.key === selectedVoiceLanguage)?.label}.
-              </p> */}
-                {translatedListRef.current.length > 0 && (
+              {/* {chatRestriction !== "nochat" && (<MessageBox userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} userType={userType} statusChat={chatRestriction} />)} */}
+            </>)}
 
-                  <div className='trans-text-box'>
-                    <div className={` ${isLongText ? 'long-text' : 'short-text'}`}></div>
-                    <span className='trans-text'>
-                      {t('translations')}: <span>{translatedListRef.current.join(' ')}</span>
-                    </span>
-                  </div>
-
-                )}
-                {transcriptListRef.current.length > 0 && (
-
-                  <div className='trans-text-box'>
-                    {/* <div className="blur-mask"></div> */}
-                    <div className={` ${isLongText ? 'long-text' : 'short-text'}`}></div>
-                    <span className='trans-text'>
-                      {t('transcriptions')}: <span>{transcriptListRef.current.join(' ')}</span>
-                    </span>
-                  </div>
-                )}
-                <br />
-
-                <br />
-              </div>
-            )}
-
-            {/* <div>
-              {channelArn && (
-                <ChatMessage
-                  userArn={userArn}
-                  sessionId={Config.sessionId}
-                  channelArn={channelArn}
-                  chatSetting={chatSetting}
-                />
-              )}
-            </div> */}
-            {chatRestriction !== "nochat" && (<MessageBox userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} userType={userType} statusChat={chatRestriction} />)}
           </>
         )}
       </div>
