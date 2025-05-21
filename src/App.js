@@ -7,6 +7,7 @@ import LiveViewer3 from './components/LiveViewer3';
 import LiveViewer4 from './components/LiveViewer4';
 import LiveViewer5 from './components/LiveViewer5';
 import LiveViewer6 from './components/LiveViewer6';
+import LiveViewer7 from './components/LiveViewer7';
 import LiveViewerJa from './components/LiveViewerJa';
 import LiveSubSpeaker from './components/LiveSubSpeaker';
 import StartLiveSession from './components/StartLiveSession';
@@ -43,6 +44,7 @@ function App() {
             <Route path="/viewer4/:tourId" element={<LiveViewer4 />} />
             <Route path="/viewer5/:tourId" element={<LiveViewer5 />} />
             <Route path="/viewer6/:tourId" element={<LiveViewer6 />} />
+            <Route path="/viewer7/:tourId" element={<LiveViewer7 />} />
             <Route path="/viewer_ja/:tourId" element={<LiveViewerJa />} />
             <Route path="/admin/login" element={<Login />} />
 
