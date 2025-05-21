@@ -156,8 +156,7 @@ function LiveViewer6() {
     debugAudioElement(audioElement, 'After binding');
   }, []);
 
-
-  // Function to apply noise filtering to audio stream focusing on human voice
+  // Function to apply noise filtering to audio stream focusing on human voice and removing buzzing sounds
   const applyNoiseFilter = useCallback((mediaStream) => {
     if (!mediaStream) {
       console.error('No media stream available for noise filtering');
@@ -187,6 +186,30 @@ function LiveViewer6() {
       lowPassFilter.frequency.value = 8000; // Human voice rarely exceeds 8kHz
       lowPassFilter.Q.value = 0.7; // Quality factor
       
+      // Create multiple notch filters to target common buzzing frequencies
+      // Buzzing sounds often occur at 50-60Hz (power line hum) and harmonics
+      const notchFilter1 = audioContext.createBiquadFilter();
+      notchFilter1.type = 'notch';
+      notchFilter1.frequency.value = 60; // Power line hum (60Hz in US/JP, 50Hz in EU)
+      notchFilter1.Q.value = 4.0; // Narrow notch to target just the buzz
+      
+      const notchFilter2 = audioContext.createBiquadFilter();
+      notchFilter2.type = 'notch';
+      notchFilter2.frequency.value = 120; // First harmonic of power line hum
+      notchFilter2.Q.value = 4.0;
+      
+      const notchFilter3 = audioContext.createBiquadFilter();
+      notchFilter3.type = 'notch';
+      notchFilter3.frequency.value = 240; // Second harmonic
+      notchFilter3.Q.value = 5.0;
+
+      // Create a notch filter for mid-frequency buzzing (often from electronics)
+      const midBuzzFilter = audioContext.createBiquadFilter();
+      midBuzzFilter.type = 'notch';
+      midBuzzFilter.frequency.value = 1000; // Common frequency for electronic buzz
+      midBuzzFilter.Q.value = 2.5;
+      midBuzzFilter.gain.value = -10; // Deep cut
+      
       // Create a peaking filter to enhance voice frequencies (around 2-3kHz)
       const voiceEnhancer = audioContext.createBiquadFilter();
       voiceEnhancer.type = 'peaking';
@@ -201,24 +224,70 @@ function LiveViewer6() {
       compressor.ratio.value = 6;
       compressor.attack.value = 0.003;
       compressor.release.value = 0.25;
+
+      // Create a noise gate to silence periods without speech
+      const noiseGate = audioContext.createGain();
+      const analyser = audioContext.createAnalyser();
+      analyser.fftSize = 1024;
+      const bufferLength = analyser.frequencyBinCount;
+      const dataArray = new Uint8Array(bufferLength);
+      
+      // Set up a periodic check for audio levels to implement noise gate
+      let noiseGateInterval;
+      noiseGateInterval = setInterval(() => {
+        analyser.getByteFrequencyData(dataArray);
+        
+        // Calculate average volume
+        let sum = 0;
+        for (let i = 0; i < bufferLength; i++) {
+          sum += dataArray[i];
+        }
+        const average = sum / bufferLength;
+        
+        // Apply noise gate - if below threshold, reduce volume significantly
+        if (average < 20) { // Adjust threshold as needed
+          noiseGate.gain.exponentialRampToValueAtTime(
+            0.001, // Nearly silent
+            audioContext.currentTime + 0.1
+          );
+        } else {
+          noiseGate.gain.exponentialRampToValueAtTime(
+            1.0, // Full volume
+            audioContext.currentTime + 0.1
+          );
+        }
+      }, 50); // Check every 50ms
       
       // Connect the audio processing chain:
-      // source -> highPass -> lowPass -> voiceEnhancer -> compressor -> gain -> destination
+      // source -> highPass -> notchFilters -> lowPass -> midBuzzFilter -> voiceEnhancer -> analyser -> noiseGate -> compressor -> gain -> destination
       source.connect(highPassFilter);
-      highPassFilter.connect(lowPassFilter);
-      lowPassFilter.connect(voiceEnhancer);
-      voiceEnhancer.connect(compressor);
+      highPassFilter.connect(notchFilter1);
+      notchFilter1.connect(notchFilter2);
+      notchFilter2.connect(notchFilter3);
+      notchFilter3.connect(lowPassFilter);
+      lowPassFilter.connect(midBuzzFilter);
+      midBuzzFilter.connect(voiceEnhancer);
+      voiceEnhancer.connect(analyser);
+      analyser.connect(noiseGate);
+      noiseGate.connect(compressor);
       compressor.connect(gainNode);
       gainNode.connect(audioContext.destination);
       
-      console.log('✅ Voice-focused noise filtering applied to audio stream');
+      console.log('✅ Enhanced voice-focused noise filtering with buzz removal applied');
       
       // Return a cleanup function
       return () => {
+        clearInterval(noiseGateInterval);
         source.disconnect();
         highPassFilter.disconnect();
         lowPassFilter.disconnect();
+        notchFilter1.disconnect();
+        notchFilter2.disconnect();
+        notchFilter3.disconnect();
+        midBuzzFilter.disconnect();
         voiceEnhancer.disconnect();
+        analyser.disconnect();
+        noiseGate.disconnect();
         compressor.disconnect();
         gainNode.disconnect();
         audioContext.close();
@@ -228,7 +297,6 @@ function LiveViewer6() {
       return null;
     }
   }, []);
-
   // Function to apply noise reduction to the current audio stream
   const applyNoiseReduction = useCallback(() => {
     if (!meetingSession) {
@@ -238,13 +306,108 @@ function LiveViewer6() {
     
     const audioElement = audioElementRef.current;
     if (audioElement && audioElement.srcObject instanceof MediaStream) {
-      console.log('Applying noise reduction to audio stream');
-      return applyNoiseFilter(audioElement.srcObject);
+      // Log audio tracks for debugging
+      const audioTracks = audioElement.srcObject.getAudioTracks();
+      console.log(`Applying noise reduction to audio stream with ${audioTracks.length} tracks`);
+      
+      if (audioTracks.length > 0) {
+        // Log audio track settings for debugging
+        const settings = audioTracks[0].getSettings();
+        console.log('Audio track settings:', settings);
+        
+        // Check for any constraints that might help with buzzing
+        if (settings.echoCancellation === false) {
+          console.warn('Echo cancellation is disabled, might contribute to buzzing');
+        }
+        if (settings.noiseSuppression === false) {
+          console.warn('Noise suppression is disabled, enabling might help with buzzing');
+        }
+        
+        // Apply the custom noise filter that removes buzzing
+        console.log('Applying enhanced noise filter with buzz removal');
+        return applyNoiseFilter(audioElement.srcObject);
+      } else {
+        console.warn('No audio tracks found in the MediaStream');
+      }
     } else {
       console.warn('No MediaStream found in audio element');
     }
   }, [meetingSession, applyNoiseFilter]);
 
+  // Function to analyze audio for buzzing frequencies
+  const analyzeBuzzingFrequencies = useCallback((mediaStream) => {
+    if (!mediaStream) {
+      console.error('No media stream available for analysis');
+      return;
+    }
+
+    try {
+      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      const source = audioContext.createMediaStreamSource(mediaStream);
+      const analyser = audioContext.createAnalyser();
+      
+      analyser.fftSize = 2048;
+      const bufferLength = analyser.frequencyBinCount;
+      const dataArray = new Uint8Array(bufferLength);
+      
+      source.connect(analyser);
+      
+      // Analyze frequencies to detect buzzing
+      const sampleRate = audioContext.sampleRate;
+      const detectBuzz = () => {
+        analyser.getByteFrequencyData(dataArray);
+        
+        // Check for common buzzing frequency ranges
+        const checkRange = (minFreq, maxFreq) => {
+          const minIndex = Math.floor(minFreq / (sampleRate / analyser.fftSize));
+          const maxIndex = Math.ceil(maxFreq / (sampleRate / analyser.fftSize));
+          
+          let sum = 0;
+          for (let i = minIndex; i <= maxIndex && i < bufferLength; i++) {
+            sum += dataArray[i];
+          }
+          
+          const avgPower = sum / (maxIndex - minIndex + 1);
+          return avgPower;
+        };
+        
+        // Check different frequency bands for buzzing
+        const powerLineBuzz = checkRange(45, 75);  // 50/60Hz hum
+        const harmonicBuzz = checkRange(100, 140); // First harmonic
+        const midBuzz = checkRange(900, 1100);     // Mid-range buzz
+        
+        console.log('Buzz Analysis:', {
+          powerLineBuzz,
+          harmonicBuzz,
+          midBuzz,
+          timeStamp: new Date().toISOString()
+        });
+        
+        // Detect likely buzzing (high sustained power in these frequencies)
+        if (powerLineBuzz > 140 || harmonicBuzz > 130) {
+          console.warn('Strong power line buzz detected');
+        }
+        if (midBuzz > 120) {
+          console.warn('Mid-range electronic buzz detected');
+        }
+      };
+      
+      // Run analysis a few times to detect buzzing
+      const interval = setInterval(detectBuzz, 2000);
+      
+      // Stop analysis after 10 seconds
+      setTimeout(() => {
+        clearInterval(interval);
+        source.disconnect();
+        audioContext.close();
+        console.log('Buzz analysis completed');
+      }, 10000);
+      
+    } catch (error) {
+      console.error('Failed to analyze buzzing frequencies:', error);
+    }
+  }, []);
+  
   // Event for handling selected voice language change
   const handleSelectedVoiceLanguageChange = (event) => {
     setSelectedVoiceLanguage(event.target.value);
@@ -262,16 +425,29 @@ function LiveViewer6() {
     
     if (isPlay === false) {
       setIsPlay(true);
-      // Apply noise reduction when starting playback
-      const cleanupNoiseFilter = applyNoiseReduction();
-      audioElement.play().then(() => {
-        console.log('Audio playback started with noise reduction');
-      }).catch(error => {
-        console.error('Error starting audio playback:', error);
-      });
       
-      // Store cleanup function to be called when stopping
-      audioElement._noiseFilterCleanup = cleanupNoiseFilter;
+      if (audioElement && audioElement.srcObject instanceof MediaStream) {
+        // First analyze for buzzing sounds to optimize filtering
+        console.log('Analyzing audio for buzzing sounds...');
+        analyzeBuzzingFrequencies(audioElement.srcObject);
+        
+        // Apply enhanced noise reduction with buzz removal
+        const cleanupNoiseFilter = applyNoiseReduction();
+        
+        audioElement.play().then(() => {
+          console.log('Audio playback started with buzz reduction filter');
+        }).catch(error => {
+          console.error('Error starting audio playback:', error);
+        });
+        
+        // Store cleanup function to be called when stopping
+        audioElement._noiseFilterCleanup = cleanupNoiseFilter;
+      } else {
+        console.warn('No valid media stream to play');
+        audioElement.play().catch(error => {
+          console.error('Error starting audio playback:', error);
+        });
+      }
     } else {
       setIsPlay(false);
       audioElement.pause();
@@ -284,36 +460,6 @@ function LiveViewer6() {
       }
     }
   }
-
-  // Function to handle play/pause button click
-  // const handlePlay = () => {
-  //   const audioElement = audioElementRef.current;
-  //   console.log('Audio srcObject:', audioElement.srcObject);
-
-  //   if (audioElement.srcObject instanceof MediaStream) {
-  //     console.log('✅ MediaStream is bound to audioElement');
-  //     // Check audio tracks
-  //     const audioTracks = audioElement.srcObject.getAudioTracks();
-  //     if (audioTracks.length === 0) {
-  //       console.warn('❌ No audio tracks found in the MediaStream');
-  //       alert('No audio available. The stream may be empty.');
-  //       return;
-  //     } else {
-  //       setIsPlay(!isPlay);
-
-  //       if (!isPlay) {
-  //         // Start playback with noise filtering
-  //         //alert('Noise filtering is enabled');
-  //         applyNoiseFilter(audioElement.srcObject);
-  //         audioElement.play();
-  //       } else {
-  //         audioElement.pause();
-  //       }
-  //     }
-  //   } else {
-  //     console.warn('❌ No MediaStream found');
-  //   }
-  // };
 
   // Function to join the tour
   const joinTour = useCallback(async () => {
