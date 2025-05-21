@@ -138,21 +138,19 @@ function LiveViewer6() {
         if (deviceController.supportsSampleRateConstraint()) {
           await deviceController.setSampleRate(48000); // Higher sample rate for better quality
         }
-        
+
         // Bind audio element to the session
         await session.audioVideo.bindAudioElement(audioElement);
         console.log('Successfully bound audio element to session');
-        
-        // Start the audio-video connection
-        session.audioVideo.start();
-        console.log('Audio-video session started');
       } catch (error) {
         console.error('Error setting up audio:', error);
       }
     } else {
       console.error('Audio element not found');
     }
-    
+    // Start the audio-video connection
+    session.audioVideo.start();
+    console.log('Audio-video session started');
     debugAudioElement(audioElement, 'After binding');
   }, []);
 
@@ -166,38 +164,38 @@ function LiveViewer6() {
     try {
       // Create audio context
       const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-      
+
       // Create source from the media stream
       const source = audioContext.createMediaStreamSource(mediaStream);
-      
+
       // Create a gain node to control volume
       const gainNode = audioContext.createGain();
       gainNode.gain.value = 1.2; // Slightly boost volume
-      
+
       // Create a high-pass filter to remove low frequency noise (below 100Hz)
       const highPassFilter = audioContext.createBiquadFilter();
       highPassFilter.type = 'highpass';
       highPassFilter.frequency.value = 100; // Human voice typically starts around 85Hz
       highPassFilter.Q.value = 0.7; // Quality factor
-      
+
       // Create a low-pass filter to remove high frequency noise (above 8kHz)
       const lowPassFilter = audioContext.createBiquadFilter();
       lowPassFilter.type = 'lowpass';
       lowPassFilter.frequency.value = 8000; // Human voice rarely exceeds 8kHz
       lowPassFilter.Q.value = 0.7; // Quality factor
-      
+
       // Create multiple notch filters to target common buzzing frequencies
       // Buzzing sounds often occur at 50-60Hz (power line hum) and harmonics
       const notchFilter1 = audioContext.createBiquadFilter();
       notchFilter1.type = 'notch';
       notchFilter1.frequency.value = 60; // Power line hum (60Hz in US/JP, 50Hz in EU)
       notchFilter1.Q.value = 4.0; // Narrow notch to target just the buzz
-      
+
       const notchFilter2 = audioContext.createBiquadFilter();
       notchFilter2.type = 'notch';
       notchFilter2.frequency.value = 120; // First harmonic of power line hum
       notchFilter2.Q.value = 4.0;
-      
+
       const notchFilter3 = audioContext.createBiquadFilter();
       notchFilter3.type = 'notch';
       notchFilter3.frequency.value = 240; // Second harmonic
@@ -209,14 +207,14 @@ function LiveViewer6() {
       midBuzzFilter.frequency.value = 1000; // Common frequency for electronic buzz
       midBuzzFilter.Q.value = 2.5;
       midBuzzFilter.gain.value = -10; // Deep cut
-      
+
       // Create a peaking filter to enhance voice frequencies (around 2-3kHz)
       const voiceEnhancer = audioContext.createBiquadFilter();
       voiceEnhancer.type = 'peaking';
       voiceEnhancer.frequency.value = 2500; // Center frequency for voice clarity
       voiceEnhancer.gain.value = 6; // Boost by 6dB
       voiceEnhancer.Q.value = 1; // Moderate width
-      
+
       // Create a compressor to even out volume levels and reduce peaks
       const compressor = audioContext.createDynamicsCompressor();
       compressor.threshold.value = -30;
@@ -231,19 +229,19 @@ function LiveViewer6() {
       analyser.fftSize = 1024;
       const bufferLength = analyser.frequencyBinCount;
       const dataArray = new Uint8Array(bufferLength);
-      
+
       // Set up a periodic check for audio levels to implement noise gate
       let noiseGateInterval;
       noiseGateInterval = setInterval(() => {
         analyser.getByteFrequencyData(dataArray);
-        
+
         // Calculate average volume
         let sum = 0;
         for (let i = 0; i < bufferLength; i++) {
           sum += dataArray[i];
         }
         const average = sum / bufferLength;
-        
+
         // Apply noise gate - if below threshold, reduce volume significantly
         if (average < 20) { // Adjust threshold as needed
           noiseGate.gain.exponentialRampToValueAtTime(
@@ -257,7 +255,7 @@ function LiveViewer6() {
           );
         }
       }, 50); // Check every 50ms
-      
+
       // Connect the audio processing chain:
       // source -> highPass -> notchFilters -> lowPass -> midBuzzFilter -> voiceEnhancer -> analyser -> noiseGate -> compressor -> gain -> destination
       source.connect(highPassFilter);
@@ -272,9 +270,9 @@ function LiveViewer6() {
       noiseGate.connect(compressor);
       compressor.connect(gainNode);
       gainNode.connect(audioContext.destination);
-      
+
       console.log('✅ Enhanced voice-focused noise filtering with buzz removal applied');
-      
+
       // Return a cleanup function
       return () => {
         clearInterval(noiseGateInterval);
@@ -303,18 +301,18 @@ function LiveViewer6() {
       console.warn('No active meeting session for noise reduction');
       return;
     }
-    
+
     const audioElement = audioElementRef.current;
     if (audioElement && audioElement.srcObject instanceof MediaStream) {
       // Log audio tracks for debugging
       const audioTracks = audioElement.srcObject.getAudioTracks();
       console.log(`Applying noise reduction to audio stream with ${audioTracks.length} tracks`);
-      
+
       if (audioTracks.length > 0) {
         // Log audio track settings for debugging
         const settings = audioTracks[0].getSettings();
         console.log('Audio track settings:', settings);
-        
+
         // Check for any constraints that might help with buzzing
         if (settings.echoCancellation === false) {
           console.warn('Echo cancellation is disabled, might contribute to buzzing');
@@ -322,7 +320,7 @@ function LiveViewer6() {
         if (settings.noiseSuppression === false) {
           console.warn('Noise suppression is disabled, enabling might help with buzzing');
         }
-        
+
         // Apply the custom noise filter that removes buzzing
         console.log('Applying enhanced noise filter with buzz removal');
         return applyNoiseFilter(audioElement.srcObject);
@@ -345,44 +343,44 @@ function LiveViewer6() {
       const audioContext = new (window.AudioContext || window.webkitAudioContext)();
       const source = audioContext.createMediaStreamSource(mediaStream);
       const analyser = audioContext.createAnalyser();
-      
+
       analyser.fftSize = 2048;
       const bufferLength = analyser.frequencyBinCount;
       const dataArray = new Uint8Array(bufferLength);
-      
+
       source.connect(analyser);
-      
+
       // Analyze frequencies to detect buzzing
       const sampleRate = audioContext.sampleRate;
       const detectBuzz = () => {
         analyser.getByteFrequencyData(dataArray);
-        
+
         // Check for common buzzing frequency ranges
         const checkRange = (minFreq, maxFreq) => {
           const minIndex = Math.floor(minFreq / (sampleRate / analyser.fftSize));
           const maxIndex = Math.ceil(maxFreq / (sampleRate / analyser.fftSize));
-          
+
           let sum = 0;
           for (let i = minIndex; i <= maxIndex && i < bufferLength; i++) {
             sum += dataArray[i];
           }
-          
+
           const avgPower = sum / (maxIndex - minIndex + 1);
           return avgPower;
         };
-        
+
         // Check different frequency bands for buzzing
         const powerLineBuzz = checkRange(45, 75);  // 50/60Hz hum
         const harmonicBuzz = checkRange(100, 140); // First harmonic
         const midBuzz = checkRange(900, 1100);     // Mid-range buzz
-        
+
         console.log('Buzz Analysis:', {
           powerLineBuzz,
           harmonicBuzz,
           midBuzz,
           timeStamp: new Date().toISOString()
         });
-        
+
         // Detect likely buzzing (high sustained power in these frequencies)
         if (powerLineBuzz > 140 || harmonicBuzz > 130) {
           console.warn('Strong power line buzz detected');
@@ -391,10 +389,10 @@ function LiveViewer6() {
           console.warn('Mid-range electronic buzz detected');
         }
       };
-      
+
       // Run analysis a few times to detect buzzing
       const interval = setInterval(detectBuzz, 2000);
-      
+
       // Stop analysis after 10 seconds
       setTimeout(() => {
         clearInterval(interval);
@@ -402,12 +400,12 @@ function LiveViewer6() {
         audioContext.close();
         console.log('Buzz analysis completed');
       }, 10000);
-      
+
     } catch (error) {
       console.error('Failed to analyze buzzing frequencies:', error);
     }
   }, []);
-  
+
   // Event for handling selected voice language change
   const handleSelectedVoiceLanguageChange = (event) => {
     setSelectedVoiceLanguage(event.target.value);
@@ -419,27 +417,27 @@ function LiveViewer6() {
     audioElementRef.current.muted = isMuted;
   };
 
-// Function to handle play/pause button click
+  // Function to handle play/pause button click
   const handlePlay = () => {
     const audioElement = audioElementRef.current;
-    
+
     if (isPlay === false) {
       setIsPlay(true);
-      
+
       if (audioElement && audioElement.srcObject instanceof MediaStream) {
         // First analyze for buzzing sounds to optimize filtering
         console.log('Analyzing audio for buzzing sounds...');
         analyzeBuzzingFrequencies(audioElement.srcObject);
-        
+
         // Apply enhanced noise reduction with buzz removal
         const cleanupNoiseFilter = applyNoiseReduction();
-        
+
         audioElement.play().then(() => {
           console.log('Audio playback started with buzz reduction filter');
         }).catch(error => {
           console.error('Error starting audio playback:', error);
         });
-        
+
         // Store cleanup function to be called when stopping
         audioElement._noiseFilterCleanup = cleanupNoiseFilter;
       } else {
@@ -451,7 +449,7 @@ function LiveViewer6() {
     } else {
       setIsPlay(false);
       audioElement.pause();
-      
+
       // Clean up noise filter if it exists
       if (audioElement._noiseFilterCleanup && typeof audioElement._noiseFilterCleanup === 'function') {
         audioElement._noiseFilterCleanup();
@@ -578,7 +576,7 @@ function LiveViewer6() {
       // Apply noise reduction to enhance voice clarity
       console.log('Meeting session established, applying noise reduction');
       const cleanupNoiseFilter = applyNoiseReduction();
-      
+
       // Store cleanup function to be called on unmount
       return () => {
         if (cleanupNoiseFilter && typeof cleanupNoiseFilter === 'function') {
