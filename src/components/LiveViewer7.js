@@ -130,32 +130,21 @@ function LiveViewer7() {
     const meetingSessionConfig = new MeetingSessionConfiguration(meetingData, attendeeData);
     const session = new DefaultMeetingSession(meetingSessionConfig, logger, deviceController);
     //setMeetingSession(session);
-    alert('selectedVoiceLanguage: ' + selectedVoiceLanguage);
     if (selectedVoiceLanguage === 'ja-JP') {
-      console.log('Selected voice language is Japanese', selectedVoiceLanguage);
-      //const audioElement = document.getElementById('audioElementListener');
-      const audioElement = audioElementRef.current;
-      console.log('Check audioElement:', audioElement);
-      if (audioElement) {
-        alert('Audio Element Found');
-        await session.audioVideo.bindAudioElement(audioElement);
-      } else {
-        alert('Audio element not found');
-        console.error('Audio element not found');
-      }
+      alert('selectedVoiceLanguage: ' + selectedVoiceLanguage);
     }
 
-    // const audioElement = audioElementRef.current;
-    // console.log('Check audioElement:', audioElement);
-    // if (audioElement) {
-    //   alert('Audio Element Found');
-    //   await session.audioVideo.bindAudioElement(audioElement);
-    // } else {
-    //   console.error('Audio element not found');
-    //   alert('Audio element not found');
-    // }
+    const audioElement = audioElementRef.current;
+    console.log('Check audioElement:', audioElement);
+    if (audioElement) {
+      alert('Audio Element Found');
+      await session.audioVideo.bindAudioElement(audioElement);
+    } else {
+      console.error('Audio element not found');
+      alert('Audio element not found');
+    }
     session.audioVideo.start();
-  }, []);
+  }, [selectedVoiceLanguage]);
 
   // Event for handling selected voice language change
   const handleSelectedVoiceLanguageChange = (event) => {
