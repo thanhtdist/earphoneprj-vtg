@@ -118,7 +118,6 @@ function LiveViewer6() {
       console.error('Failed to request Wake Lock:', error);
     }
   }, []);
-
   // Function intialize Meeting Session
   const initializeMeetingSession = useCallback(async (meetingData, attendeeData) => {
     if (!meetingData || !attendeeData) {
@@ -134,79 +133,117 @@ function LiveViewer6() {
     debugAudioElement(audioElement, 'Before binding');
 
     if (audioElement) {
-      await session.audioVideo.bindAudioElement(audioElement);
+      try {
+        // Configure audio settings for better voice quality if supported
+        if (deviceController.supportsSampleRateConstraint()) {
+          await deviceController.setSampleRate(48000); // Higher sample rate for better quality
+        }
+        
+        // Bind audio element to the session
+        await session.audioVideo.bindAudioElement(audioElement);
+        console.log('Successfully bound audio element to session');
+        
+        // Start the audio-video connection
+        session.audioVideo.start();
+        console.log('Audio-video session started');
+      } catch (error) {
+        console.error('Error setting up audio:', error);
+      }
     } else {
       console.error('Audio element not found');
     }
-    // if (selectedVoiceLanguage === 'ja-JP') {
-    //   console.log('Selected voice language is Japanese', selectedVoiceLanguage);
-    //   //const audioElement = document.getElementById('audioElementListener');
-    //   const audioElement = audioElementRef.current;
-    //   console.log('Check audioElement:', audioElement);
-    //   if (audioElement) {
-    //     await session.audioVideo.bindAudioElement(audioElement);
-    //   } else {
-    //     console.error('Audio element not found');
-    //   }
-    // }
-    //session.audioVideo.start();
+    
     debugAudioElement(audioElement, 'After binding');
   }, []);
 
 
-  // Function to apply noise filtering to audio stream
-  // const applyNoiseFilter = (mediaStream) => {
-  //   if (!mediaStream) return;
+  // Function to apply noise filtering to audio stream focusing on human voice
+  const applyNoiseFilter = useCallback((mediaStream) => {
+    if (!mediaStream) {
+      console.error('No media stream available for noise filtering');
+      return null;
+    }
 
-  //   try {
-  //     // Create audio context if it doesn't exist
-  //     const context = new (window.AudioContext)();
+    try {
+      // Create audio context
+      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      
+      // Create source from the media stream
+      const source = audioContext.createMediaStreamSource(mediaStream);
+      
+      // Create a gain node to control volume
+      const gainNode = audioContext.createGain();
+      gainNode.gain.value = 1.2; // Slightly boost volume
+      
+      // Create a high-pass filter to remove low frequency noise (below 100Hz)
+      const highPassFilter = audioContext.createBiquadFilter();
+      highPassFilter.type = 'highpass';
+      highPassFilter.frequency.value = 100; // Human voice typically starts around 85Hz
+      highPassFilter.Q.value = 0.7; // Quality factor
+      
+      // Create a low-pass filter to remove high frequency noise (above 8kHz)
+      const lowPassFilter = audioContext.createBiquadFilter();
+      lowPassFilter.type = 'lowpass';
+      lowPassFilter.frequency.value = 8000; // Human voice rarely exceeds 8kHz
+      lowPassFilter.Q.value = 0.7; // Quality factor
+      
+      // Create a peaking filter to enhance voice frequencies (around 2-3kHz)
+      const voiceEnhancer = audioContext.createBiquadFilter();
+      voiceEnhancer.type = 'peaking';
+      voiceEnhancer.frequency.value = 2500; // Center frequency for voice clarity
+      voiceEnhancer.gain.value = 6; // Boost by 6dB
+      voiceEnhancer.Q.value = 1; // Moderate width
+      
+      // Create a compressor to even out volume levels and reduce peaks
+      const compressor = audioContext.createDynamicsCompressor();
+      compressor.threshold.value = -30;
+      compressor.knee.value = 12;
+      compressor.ratio.value = 6;
+      compressor.attack.value = 0.003;
+      compressor.release.value = 0.25;
+      
+      // Connect the audio processing chain:
+      // source -> highPass -> lowPass -> voiceEnhancer -> compressor -> gain -> destination
+      source.connect(highPassFilter);
+      highPassFilter.connect(lowPassFilter);
+      lowPassFilter.connect(voiceEnhancer);
+      voiceEnhancer.connect(compressor);
+      compressor.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+      
+      console.log('✅ Voice-focused noise filtering applied to audio stream');
+      
+      // Return a cleanup function
+      return () => {
+        source.disconnect();
+        highPassFilter.disconnect();
+        lowPassFilter.disconnect();
+        voiceEnhancer.disconnect();
+        compressor.disconnect();
+        gainNode.disconnect();
+        audioContext.close();
+      };
+    } catch (error) {
+      console.error('Failed to apply noise filtering:', error);
+      return null;
+    }
+  }, []);
 
-  //     // Create source from the media stream
-  //     const source = context.createMediaStreamSource(mediaStream);
-
-  //     // Create a gain node to control volume
-  //     const gainNode = context.createGain();
-  //     gainNode.gain.value = 1.0; // Normal volume
-
-  //     // Create a biquad filter for noise reduction
-  //     const lowPassFilter = context.createBiquadFilter();
-  //     lowPassFilter.type = 'lowpass';
-  //     lowPassFilter.frequency.value = 8000; // Cut high frequencies (adjust as needed)
-
-  //     // Create a high-pass filter to remove low rumble
-  //     const highPassFilter = context.createBiquadFilter();
-  //     highPassFilter.type = 'highpass';
-  //     highPassFilter.frequency.value = 150; // Remove very low frequencies
-
-  //     // Create a compressor to even out volume levels
-  //     const compressor = context.createDynamicsCompressor();
-  //     compressor.threshold.value = -50;
-  //     compressor.knee.value = 40;
-  //     compressor.ratio.value = 12;
-  //     compressor.attack.value = 0;
-  //     compressor.release.value = 0.25;
-
-  //     // Connect the nodes: source -> highpass -> lowpass -> compressor -> gain -> destination
-  //     source.connect(highPassFilter);
-  //     highPassFilter.connect(lowPassFilter);
-  //     lowPassFilter.connect(compressor);
-  //     compressor.connect(gainNode);
-  //     gainNode.connect(context.destination);
-
-  //     console.log('✅ Noise filtering applied to audio stream');
-  //     return () => {
-  //       source.disconnect();
-  //       gainNode.disconnect();
-  //       lowPassFilter.disconnect();
-  //       highPassFilter.disconnect();
-  //       compressor.disconnect();
-  //     };
-  //   } catch (error) {
-  //     console.error('Failed to apply noise filtering:', error);
-  //     return null;
-  //   }
-  // };
+  // Function to apply noise reduction to the current audio stream
+  const applyNoiseReduction = useCallback(() => {
+    if (!meetingSession) {
+      console.warn('No active meeting session for noise reduction');
+      return;
+    }
+    
+    const audioElement = audioElementRef.current;
+    if (audioElement && audioElement.srcObject instanceof MediaStream) {
+      console.log('Applying noise reduction to audio stream');
+      return applyNoiseFilter(audioElement.srcObject);
+    } else {
+      console.warn('No MediaStream found in audio element');
+    }
+  }, [meetingSession, applyNoiseFilter]);
 
   // Event for handling selected voice language change
   const handleSelectedVoiceLanguageChange = (event) => {
@@ -221,12 +258,30 @@ function LiveViewer6() {
 
 // Function to handle play/pause button click
   const handlePlay = () => {
+    const audioElement = audioElementRef.current;
+    
     if (isPlay === false) {
-      setIsPlay(true)
-      audioElementRef.current.play();
+      setIsPlay(true);
+      // Apply noise reduction when starting playback
+      const cleanupNoiseFilter = applyNoiseReduction();
+      audioElement.play().then(() => {
+        console.log('Audio playback started with noise reduction');
+      }).catch(error => {
+        console.error('Error starting audio playback:', error);
+      });
+      
+      // Store cleanup function to be called when stopping
+      audioElement._noiseFilterCleanup = cleanupNoiseFilter;
     } else {
       setIsPlay(false);
-      audioElementRef.current.pause();
+      audioElement.pause();
+      
+      // Clean up noise filter if it exists
+      if (audioElement._noiseFilterCleanup && typeof audioElement._noiseFilterCleanup === 'function') {
+        audioElement._noiseFilterCleanup();
+        audioElement._noiseFilterCleanup = null;
+        console.log('Noise reduction filter removed');
+      }
     }
   }
 
@@ -370,6 +425,22 @@ function LiveViewer6() {
       console.warn('getSupportedConstraints is not supported in this browser');
     }
   }, [meetingSession]);
+
+  // Apply noise filtering when meeting session is established
+  useEffect(() => {
+    if (meetingSession && isPlay) {
+      // Apply noise reduction to enhance voice clarity
+      console.log('Meeting session established, applying noise reduction');
+      const cleanupNoiseFilter = applyNoiseReduction();
+      
+      // Store cleanup function to be called on unmount
+      return () => {
+        if (cleanupNoiseFilter && typeof cleanupNoiseFilter === 'function') {
+          cleanupNoiseFilter();
+        }
+      };
+    }
+  }, [meetingSession, isPlay, applyNoiseReduction]);
 
   // Check if the tour exists, if not, show a not found page
   if (tour === null) {
