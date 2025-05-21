@@ -130,42 +130,32 @@ function LiveViewer7() {
     const meetingSessionConfig = new MeetingSessionConfiguration(meetingData, attendeeData);
     const session = new DefaultMeetingSession(meetingSessionConfig, logger, deviceController);
     //setMeetingSession(session);
-    if (selectedVoiceLanguage === 'ja-JP') {
-      console.log('Selected voice language is Japanese', selectedVoiceLanguage);
-      //const audioElement = document.getElementById('audioElementListener');
-      const audioElement = audioElementRef.current;
-      console.log('Check audioElement:', audioElement);
-      if (audioElement) {
-        await session.audioVideo.bindAudioElement(audioElement);
-      } else {
-        console.error('Audio element not found');
-      }
+    // if (selectedVoiceLanguage === 'ja-JP') {
+    //   console.log('Selected voice language is Japanese', selectedVoiceLanguage);
+    //   //const audioElement = document.getElementById('audioElementListener');
+    //   const audioElement = audioElementRef.current;
+    //   console.log('Check audioElement:', audioElement);
+    //   if (audioElement) {
+    //     await session.audioVideo.bindAudioElement(audioElement);
+    //   } else {
+    //     console.error('Audio element not found');
+    //   }
+    // }
+
+    const audioElement = audioElementRef.current;
+    console.log('Check audioElement:', audioElement);
+    if (audioElement) {
+      await session.audioVideo.bindAudioElement(audioElement);
+    } else {
+      console.error('Audio element not found');
     }
     session.audioVideo.start();
-  }, [selectedVoiceLanguage]);
+  }, []);
 
   // Event for handling selected voice language change
   const handleSelectedVoiceLanguageChange = (event) => {
     setSelectedVoiceLanguage(event.target.value);
   };
-
-  // Event for handling mute/unmute button click
-  // const handleMuteUnmute = () => {
-  //   setIsMuted(!isMuted);
-  //   audioElementRef.current.muted = isMuted;
-  // };
-
-// Function to handle play/pause button click
-  // const handlePlay = () => {
-  //   console.log('xCheck audioElement:', audioElementRef.current);
-  //   if (isPlay === false) {
-  //     setIsPlay(true)
-  //     audioElementRef.current.play();
-  //   } else {
-  //     setIsPlay(false);
-  //     audioElementRef.current.pause();
-  //   }
-  // }
 
   // Function to join the tour
   const joinTour = useCallback(async () => {
