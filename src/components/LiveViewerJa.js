@@ -135,84 +135,78 @@ function LiveViewerJa() {
 
     if (audioElement) {
       await session.audioVideo.bindAudioElement(audioElement);
-      
-      // Apply noise filtering after binding the audio element
-      if (audioElement.srcObject && audioElement.srcObject instanceof MediaStream) {
-        applyNoiseFilter(audioElement.srcObject);
-        console.log('✅ Noise filtering applied after audio binding');
-      } else {
-        console.log('⚠️ No MediaStream available for noise filtering yet');
-        // We'll apply noise filtering when the stream becomes available
-        session.audioVideo.addObserver({
-          audioVideoDidStart: () => {
-            if (audioElement.srcObject && audioElement.srcObject instanceof MediaStream) {
-              applyNoiseFilter(audioElement.srcObject);
-              console.log('✅ Noise filtering applied after audioVideoDidStart');
-            }
-          }
-        });
-      }
     } else {
       console.error('Audio element not found');
     }
+    // if (selectedVoiceLanguage === 'ja-JP') {
+    //   console.log('Selected voice language is Japanese', selectedVoiceLanguage);
+    //   //const audioElement = document.getElementById('audioElementListener');
+    //   const audioElement = audioElementRef.current;
+    //   console.log('Check audioElement:', audioElement);
+    //   if (audioElement) {
+    //     await session.audioVideo.bindAudioElement(audioElement);
+    //   } else {
+    //     console.error('Audio element not found');
+    //   }
+    // }
     session.audioVideo.start();
     debugAudioElement(audioElement, 'After binding');
   }, []);
 
 
   // Function to apply noise filtering to audio stream
-  const applyNoiseFilter = (mediaStream) => {
-    if (!mediaStream) return;
+  // const applyNoiseFilter = (mediaStream) => {
+  //   if (!mediaStream) return;
 
-    try {
-      // Create audio context if it doesn't exist
-      const context = new (window.AudioContext)();
+  //   try {
+  //     // Create audio context if it doesn't exist
+  //     const context = new (window.AudioContext)();
 
-      // Create source from the media stream
-      const source = context.createMediaStreamSource(mediaStream);
+  //     // Create source from the media stream
+  //     const source = context.createMediaStreamSource(mediaStream);
 
-      // Create a gain node to control volume
-      const gainNode = context.createGain();
-      gainNode.gain.value = 1.0; // Normal volume
+  //     // Create a gain node to control volume
+  //     const gainNode = context.createGain();
+  //     gainNode.gain.value = 1.0; // Normal volume
 
-      // Create a biquad filter for noise reduction
-      const lowPassFilter = context.createBiquadFilter();
-      lowPassFilter.type = 'lowpass';
-      lowPassFilter.frequency.value = 8000; // Cut high frequencies (adjust as needed)
+  //     // Create a biquad filter for noise reduction
+  //     const lowPassFilter = context.createBiquadFilter();
+  //     lowPassFilter.type = 'lowpass';
+  //     lowPassFilter.frequency.value = 8000; // Cut high frequencies (adjust as needed)
 
-      // Create a high-pass filter to remove low rumble
-      const highPassFilter = context.createBiquadFilter();
-      highPassFilter.type = 'highpass';
-      highPassFilter.frequency.value = 150; // Remove very low frequencies
+  //     // Create a high-pass filter to remove low rumble
+  //     const highPassFilter = context.createBiquadFilter();
+  //     highPassFilter.type = 'highpass';
+  //     highPassFilter.frequency.value = 150; // Remove very low frequencies
 
-      // Create a compressor to even out volume levels
-      const compressor = context.createDynamicsCompressor();
-      compressor.threshold.value = -50;
-      compressor.knee.value = 40;
-      compressor.ratio.value = 12;
-      compressor.attack.value = 0;
-      compressor.release.value = 0.25;
+  //     // Create a compressor to even out volume levels
+  //     const compressor = context.createDynamicsCompressor();
+  //     compressor.threshold.value = -50;
+  //     compressor.knee.value = 40;
+  //     compressor.ratio.value = 12;
+  //     compressor.attack.value = 0;
+  //     compressor.release.value = 0.25;
 
-      // Connect the nodes: source -> highpass -> lowpass -> compressor -> gain -> destination
-      source.connect(highPassFilter);
-      highPassFilter.connect(lowPassFilter);
-      lowPassFilter.connect(compressor);
-      compressor.connect(gainNode);
-      gainNode.connect(context.destination);
+  //     // Connect the nodes: source -> highpass -> lowpass -> compressor -> gain -> destination
+  //     source.connect(highPassFilter);
+  //     highPassFilter.connect(lowPassFilter);
+  //     lowPassFilter.connect(compressor);
+  //     compressor.connect(gainNode);
+  //     gainNode.connect(context.destination);
 
-      console.log('✅ Noise filtering applied to audio stream');
-      return () => {
-        source.disconnect();
-        gainNode.disconnect();
-        lowPassFilter.disconnect();
-        highPassFilter.disconnect();
-        compressor.disconnect();
-      };
-    } catch (error) {
-      console.error('Failed to apply noise filtering:', error);
-      return null;
-    }
-  };
+  //     console.log('✅ Noise filtering applied to audio stream');
+  //     return () => {
+  //       source.disconnect();
+  //       gainNode.disconnect();
+  //       lowPassFilter.disconnect();
+  //       highPassFilter.disconnect();
+  //       compressor.disconnect();
+  //     };
+  //   } catch (error) {
+  //     console.error('Failed to apply noise filtering:', error);
+  //     return null;
+  //   }
+  // };
 
   // Event for handling selected voice language change
   const handleSelectedVoiceLanguageChange = (event) => {
@@ -227,26 +221,12 @@ function LiveViewerJa() {
 
 // Function to handle play/pause button click
   const handlePlay = () => {
-    const audioElement = audioElementRef.current;
-    
     if (isPlay === false) {
-      setIsPlay(true);
-      
-      // Apply noise filtering if needed before playing
-      if (audioElement.srcObject instanceof MediaStream) {
-        const audioTracks = audioElement.srcObject.getAudioTracks();
-        if (audioTracks.length > 0) {
-          console.log('✅ Audio tracks found, ensuring noise filtering is applied');
-          applyNoiseFilter(audioElement.srcObject);
-        } else {
-          console.warn('❌ No audio tracks found in the MediaStream');
-        }
-      }
-      
-      audioElement.play();
+      setIsPlay(true)
+      audioElementRef.current.play();
     } else {
       setIsPlay(false);
-      audioElement.pause();
+      audioElementRef.current.pause();
     }
   }
 
@@ -372,30 +352,13 @@ function LiveViewerJa() {
   useEffect(() => {
     if (meetingSession) {
       requestWakeLock();
-      
-      // Handle page visibility changes
-      document.addEventListener('visibilitychange', async () => {
-        if (document.visibilityState === 'visible') {
-          // Reapply wake lock
-          if ('wakeLock' in navigator) {
-            await requestWakeLock();
-          }
-          
-          // Reapply noise filtering when page becomes visible again
-          const audioElement = audioElementRef.current;
-          if (audioElement && audioElement.srcObject && isPlay) {
-            applyNoiseFilter(audioElement.srcObject);
-            console.log('✅ Noise filtering reapplied after page became visible');
-          }
-        }
-      });
-      
-      // Clean up event listener
-      return () => {
-        document.removeEventListener('visibilitychange', async () => {});
-      };
+      // document.addEventListener('visibilitychange', async () => {
+      //   if (wakeLockRef.current && document.visibilityState === 'visible') {
+      //     await requestWakeLock();
+      //   }
+      // });
     }
-  }, [meetingSession, requestWakeLock, isPlay]);
+  }, [meetingSession, requestWakeLock]);
 
   useEffect(() => {
     if (!meetingSession) return;
