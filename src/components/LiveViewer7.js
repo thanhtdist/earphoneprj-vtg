@@ -145,7 +145,9 @@ function LiveViewer7() {
     }
     if (session.audioVideo) {
       //alert('AudioVideo Prepared Start');
-      session.audioVideo.start();
+      setTimeout(() => {
+        session.audioVideo.start();
+      }, 500); // Adjust the delay (ms) as needed
     }
   }, []);
 
