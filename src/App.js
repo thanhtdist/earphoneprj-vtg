@@ -46,12 +46,12 @@ function App() {
             <Route path="/viewer6/:tourId" element={<LiveViewer6 />} />
             <Route path="/viewer7/:tourId" element={<LiveViewer7 />} />
             <Route path="/viewer_ja/:tourId" element={<LiveViewerJa />} />
-            <Route path="/admin/login" element={<Login />} />
-
+            
             {/* Admin routes - Wrapped by AuthProvider */}
             <Route path="/admin/*" element={
               <AuthProvider>
                 <Routes>
+                  <Route path="login" element={<Login />} />
                   <Route element={<AdminLayout />}>
                     <Route path="" element={<ListAdmin />} />
                     <Route path="update" element={<UpdateAdmin />} />
