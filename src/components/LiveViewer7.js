@@ -120,7 +120,7 @@ function LiveViewer7() {
   // }, []);
 
   // Function intialize Meeting Session
-  const initializeMeetingSession = useCallback(async (meetingData, attendeeData) => {
+const initializeMeetingSession = useCallback(async (meetingData, attendeeData) => {
     if (!meetingData || !attendeeData) {
       console.error('Invalid meeting or attendee information');
       return;
@@ -129,26 +129,105 @@ function LiveViewer7() {
     const deviceController = new DefaultDeviceController(logger);
     const meetingSessionConfig = new MeetingSessionConfiguration(meetingData, attendeeData);
     const session = new DefaultMeetingSession(meetingSessionConfig, logger, deviceController);
-    // //setMeetingSession(session);
-    // if (selectedVoiceLanguage === 'ja-JP') {
-    //   alert('selectedVoiceLanguage: ' + selectedVoiceLanguage);
-    // }
+    
+    // Create log collection for aggregated reporting
+    const sessionLogs = [];
+    const addLog = (type, message, details = null) => {
+      const timestamp = new Date().toISOString();
+      sessionLogs.push({ timestamp, type, message, details });
+      console.log(`[${type}] ${message}`, details || '');
+      
+      // Display aggregated logs after 5 seconds
+      if (sessionLogs.length === 1) {
+        setTimeout(() => {
+          const logSummary = sessionLogs.map(log => 
+            `[${log.timestamp.substring(11, 19)}] [${log.type}] ${log.message}`
+          ).join('\n');
+          
+          console.log('Session log summary:', sessionLogs);
+          // Uncomment to show alert with logs
+          alert(`Session Activity Summary:\n${logSummary}`);
+        }, 5000);
+      }
+    };
+
+    // Add complete observer with logging
+    session.audioVideo.addObserver({
+      // Connection events
+      audioVideoDidStart: () => {
+        addLog('CONNECTION', 'Meeting started successfully');
+      },
+      audioVideoDidStop: sessionStatus => {
+        addLog('CONNECTION', 'Meeting stopped', sessionStatus);
+      },
+      audioVideoDidStartConnecting: reconnecting => {
+        addLog('CONNECTION', `Meeting is connecting${reconnecting ? ' (reconnecting)' : ''}`);
+      },
+      connectionDidBecomePoor: () => {
+        addLog('CONNECTION', 'Connection quality became poor');
+      },
+      connectionDidSuggestStopVideo: () => {
+        addLog('CONNECTION', 'Connection quality suggests stopping video');
+      },
+      connectionDidBecomeGood: () => {
+        addLog('CONNECTION', 'Connection quality improved to good');
+      },
+      
+      // Volume indicators
+      volumeDidChange: (attendeeId, volume, muted, signalStrength) => {
+        if (volume > 0) { // Only log meaningful volume changes
+          addLog('AUDIO', `Volume ${Math.round(volume * 100)}% from ${attendeeId.substring(0, 8)}...`, 
+            { muted, signalStrength });
+        }
+      },
+      
+      // Audio state changes
+      audioInputDidStop: () => {
+        addLog('AUDIO_INPUT', 'Audio input stopped');
+      },
+      audioInputDidStart: () => {
+        addLog('AUDIO_INPUT', 'Audio input started');
+      },
+      audioOutputDidStop: () => {
+        addLog('AUDIO_OUTPUT', 'Audio output stopped');
+      },
+      audioOutputDidStart: () => {
+        addLog('AUDIO_OUTPUT', 'Audio output started');
+      },
+      
+      // Error events
+      meetingDidFail: (status) => {
+        addLog('ERROR', 'Meeting failed', status);
+      },
+      estimatedDownlinkBandwidthLessThanRequired: (estimatedBandwidth, requiredBandwidth) => {
+        addLog('BANDWIDTH', `Bandwidth issue: estimated ${Math.round(estimatedBandwidth/1000)} kbps < required ${Math.round(requiredBandwidth/1000)} kbps`);
+      },
+      
+      // Video events (even though you're not using video, for completeness)
+      videoTileDidUpdate: tileState => {
+        addLog('VIDEO', `Video tile updated: ${tileState.tileId}`);
+      },
+      videoTileWasRemoved: tileId => {
+        addLog('VIDEO', `Video tile removed: ${tileId}`);
+      }
+    });
 
     const audioElement = audioElementRef.current;
     console.log('Check audioElement:', audioElement);
     if (audioElement) {
-      //alert('Audio Element Found');
       await session.audioVideo.bindAudioElement(audioElement);
+      addLog('AUDIO_ELEMENT', 'Audio element bound successfully');
     } else {
       console.error('Audio element not found');
-      //alert('Audio element not found');
+      addLog('ERROR', 'Audio element not found');
     }
+    
     if (session.audioVideo) {
-      //alert('AudioVideo Prepared Start');
-      setTimeout(() => {
-        session.audioVideo.start();
-      }, 500); // Adjust the delay (ms) as needed
+      session.audioVideo.start();
+      addLog('CONNECTION', 'AudioVideo session started');
     }
+    
+    return session; // Return the session in case you want to store it
   }, []);
 
   // Event for handling selected voice language change
