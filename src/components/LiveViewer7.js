@@ -129,10 +129,10 @@ function LiveViewer7() {
     const deviceController = new DefaultDeviceController(logger);
     const meetingSessionConfig = new MeetingSessionConfiguration(meetingData, attendeeData);
     const session = new DefaultMeetingSession(meetingSessionConfig, logger, deviceController);
-    //setMeetingSession(session);
-    if (selectedVoiceLanguage === 'ja-JP') {
-      alert('selectedVoiceLanguage: ' + selectedVoiceLanguage);
-    }
+    // //setMeetingSession(session);
+    // if (selectedVoiceLanguage === 'ja-JP') {
+    //   alert('selectedVoiceLanguage: ' + selectedVoiceLanguage);
+    // }
 
     const audioElement = audioElementRef.current;
     console.log('Check audioElement:', audioElement);
@@ -143,8 +143,11 @@ function LiveViewer7() {
       console.error('Audio element not found');
       alert('Audio element not found');
     }
-    session.audioVideo.start();
-  }, [selectedVoiceLanguage]);
+    if (session.audioVideo) {
+      alert('AudioVideo Prepared Start');
+      session.audioVideo.start();
+    }
+  }, []);
 
   // Event for handling selected voice language change
   const handleSelectedVoiceLanguageChange = (event) => {
