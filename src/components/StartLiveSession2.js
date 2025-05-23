@@ -195,7 +195,7 @@ function StartLiveSession2() {
     //logger.info('deviceController' + JSON.stringify(deviceController));
     const meetingSession = new DefaultMeetingSession(meetingSessionConfiguration, logger, deviceController);
     setMeetingSession(meetingSession);
-    selectSpeaker(meetingSession);
+    //selectSpeaker(meetingSession);
     console.log('Main Speaker - initializeMeetingSession--> Start');
     metricReport(meetingSession);
     console.log('Main Speaker - initializeMeetingSession--> End');
@@ -385,6 +385,90 @@ function StartLiveSession2() {
   //   }
   // }, [meeting, channelID, valueChatSetting, navigate]);
 
+  // Add this function to apply audio constraints when starting microphone
+  const applyAudioConstraints = async (deviceId) => {
+    try {
+      if (!meetingSession) return null;
+
+      // Define audio constraints with echo cancellation, noise suppression and auto gain control
+      const constraints = {
+        audio: {
+          deviceId: deviceId ? { exact: deviceId } : undefined,
+          echoCancellation: true,
+          noiseSuppression: true,
+          autoGainControl: true
+        }
+      };
+
+      console.log('Applying audio constraints:', constraints);
+
+      // Get the audio stream with these constraints
+      const stream = await navigator.mediaDevices.getUserMedia(constraints);
+      return stream;
+    } catch (error) {
+      console.error('Error applying audio constraints:', error);
+      return null;
+    }
+  };
+
+  // // Function to toggle microphone on/off
+  // const toggleMicrophone = async () => {
+  //   if (meetingSession) {
+  //     try {
+  //       if (isMicOn) {
+  //         // Mute the microphone
+  //         const realtimeMuteLocalAudio = meetingSession.audioVideo.realtimeMuteLocalAudio();
+  //         //logger.info('toggleMicrophone realtimeMuteLocalAudio ' + JSON.stringify(realtimeMuteLocalAudio));
+  //         console.log('toggleMicrophone realtimeMuteLocalAudio', realtimeMuteLocalAudio);
+  //         const stopAudioInput = await meetingSession.audioVideo.stopAudioInput(); // Stops the audio input device
+  //         //logger.info('toggleMicrophone stopAudioInput ' + JSON.stringify(stopAudioInput));
+  //         console.log('toggleMicrophone stopAudioInput', stopAudioInput);
+
+  //       } else {
+  //         // Start the audio input device
+  //         // Create a new transform device if Voice Focus is supported
+  //         const vfDevice = await transformVFD.createTransformDevice(selectedAudioInput);
+  //         //logger.info('toggleMicrophone vfDevice ' + JSON.stringify(vfDevice));
+  //         console.log('toggleMicrophone vfDevice', vfDevice);
+  //         // Enable Echo Reduction on this client
+  //         const observeMeetingAudio = await vfDevice.observeMeetingAudio(meetingSession.audioVideo);
+  //         //logger.info('toggleMicrophone Echo Reduction ' + JSON.stringify(observeMeetingAudio));
+  //         console.log('toggleMicrophone Echo Reduction', observeMeetingAudio);
+  //         const deviceToUse = vfDevice || selectedAudioInput;
+  //         //logger.info('toggleMicrophone deviceToUse ' + JSON.stringify(deviceToUse));
+  //         console.log('toggleMicrophone deviceToUse', deviceToUse);
+  //         const startAudioInput = await meetingSession.audioVideo.startAudioInput(deviceToUse);
+  //         //logger.info('toggleMicrophone startAudioInput ' + JSON.stringify(startAudioInput));
+  //         console.log('toggleMicrophone startAudioInput', startAudioInput);
+
+  //         if (vfDevice) {
+  //           // logger.info('Amazon Voice Focus enabled ');
+  //           console.log('Amazon Voice Focus enabled ');
+  //         }
+  //         // Unmute the microphone
+  //         const realtimeUnmuteLocalAudio = meetingSession.audioVideo.realtimeUnmuteLocalAudio();
+  //         //logger.info('toggleMicrophone realtimeUnmuteLocalAudio ' + JSON.stringify(realtimeUnmuteLocalAudio));
+  //         console.log('toggleMicrophone realtimeUnmuteLocalAudio', realtimeUnmuteLocalAudio);
+  //       }
+
+  //       setIsMicOn(!isMicOn); // Toggle mic status
+
+  //     } catch (error) {
+  //       //logger.error('toggleMicrophone error ' + error);
+  //       console.error('toggleMicrophone error', error);
+  //       if (error.name === "NotAllowedError" || error.name === "PermissionDeniedError") {
+  //         // Handle permission denial
+  //         alert(error);
+  //         console.error("Permission denied by browser. Please allow access to continue.");
+  //         //alert("Permission denied by browser. Please allow access to continue.");
+  //       } else {
+  //         // Handle other errors
+  //         alert(error);
+  //         console.error("Error accessing media devices:", error);
+  //       }
+  //     }
+  //   }
+  // };
 
   // Function to toggle microphone on/off
   const toggleMicrophone = async () => {
@@ -392,52 +476,61 @@ function StartLiveSession2() {
       try {
         if (isMicOn) {
           // Mute the microphone
-          const realtimeMuteLocalAudio = meetingSession.audioVideo.realtimeMuteLocalAudio();
-          //logger.info('toggleMicrophone realtimeMuteLocalAudio ' + JSON.stringify(realtimeMuteLocalAudio));
-          console.log('toggleMicrophone realtimeMuteLocalAudio', realtimeMuteLocalAudio);
-          const stopAudioInput = await meetingSession.audioVideo.stopAudioInput(); // Stops the audio input device
-          //logger.info('toggleMicrophone stopAudioInput ' + JSON.stringify(stopAudioInput));
-          console.log('toggleMicrophone stopAudioInput', stopAudioInput);
-
+          meetingSession.audioVideo.realtimeMuteLocalAudio();
+          await meetingSession.audioVideo.stopAudioInput();
         } else {
-          // Start the audio input device
-          // Create a new transform device if Voice Focus is supported
-          const vfDevice = await transformVFD.createTransformDevice(selectedAudioInput);
-          //logger.info('toggleMicrophone vfDevice ' + JSON.stringify(vfDevice));
-          console.log('toggleMicrophone vfDevice', vfDevice);
-          // Enable Echo Reduction on this client
-          const observeMeetingAudio = await vfDevice.observeMeetingAudio(meetingSession.audioVideo);
-          //logger.info('toggleMicrophone Echo Reduction ' + JSON.stringify(observeMeetingAudio));
-          console.log('toggleMicrophone Echo Reduction', observeMeetingAudio);
-          const deviceToUse = vfDevice || selectedAudioInput;
-          //logger.info('toggleMicrophone deviceToUse ' + JSON.stringify(deviceToUse));
-          console.log('toggleMicrophone deviceToUse', deviceToUse);
-          const startAudioInput = await meetingSession.audioVideo.startAudioInput(deviceToUse);
-          //logger.info('toggleMicrophone startAudioInput ' + JSON.stringify(startAudioInput));
-          console.log('toggleMicrophone startAudioInput', startAudioInput);
+          // Apply audio constraints and start the audio input
+          const stream = await applyAudioConstraints(selectedAudioInput);
 
-          if (vfDevice) {
-            // logger.info('Amazon Voice Focus enabled ');
-            console.log('Amazon Voice Focus enabled ');
+          if (stream) {
+            // If Voice Focus is supported, apply it to the stream
+            if (transformVFD) {
+              try {
+                const vfDevice = await transformVFD.createTransformDevice(stream);
+                console.log('toggleMicrophone vfDevice', vfDevice);
+
+                // Enable Echo Reduction on this client
+                await vfDevice.observeMeetingAudio(meetingSession.audioVideo);
+
+                // Use the Voice Focus device
+                await meetingSession.audioVideo.startAudioInput(vfDevice);
+                console.log('Amazon Voice Focus enabled with custom constraints');
+              } catch (err) {
+                console.error('Failed to create Voice Focus device, using raw stream:', err);
+                await meetingSession.audioVideo.startAudioInput(stream);
+              }
+            } else {
+              // Use the stream directly if Voice Focus is not available
+              await meetingSession.audioVideo.startAudioInput(stream);
+              console.log('Using audio stream with constraints but without Voice Focus');
+            }
+
+            // Unmute the microphone
+            meetingSession.audioVideo.realtimeUnmuteLocalAudio();
+          } else {
+            // Fallback to previous approach if stream couldn't be obtained
+            console.warn('Could not get stream with constraints, falling back to default method');
+
+            if (transformVFD) {
+              const vfDevice = await transformVFD.createTransformDevice(selectedAudioInput);
+              await vfDevice.observeMeetingAudio(meetingSession.audioVideo);
+              await meetingSession.audioVideo.startAudioInput(vfDevice || selectedAudioInput);
+            } else {
+              await meetingSession.audioVideo.startAudioInput(selectedAudioInput);
+            }
+
+            meetingSession.audioVideo.realtimeUnmuteLocalAudio();
           }
-          // Unmute the microphone
-          const realtimeUnmuteLocalAudio = meetingSession.audioVideo.realtimeUnmuteLocalAudio();
-          //logger.info('toggleMicrophone realtimeUnmuteLocalAudio ' + JSON.stringify(realtimeUnmuteLocalAudio));
-          console.log('toggleMicrophone realtimeUnmuteLocalAudio', realtimeUnmuteLocalAudio);
         }
 
         setIsMicOn(!isMicOn); // Toggle mic status
 
       } catch (error) {
-        //logger.error('toggleMicrophone error ' + error);
         console.error('toggleMicrophone error', error);
         if (error.name === "NotAllowedError" || error.name === "PermissionDeniedError") {
-          // Handle permission denial
           alert(error);
           console.error("Permission denied by browser. Please allow access to continue.");
-          //alert("Permission denied by browser. Please allow access to continue.");
         } else {
-          // Handle other errors
           alert(error);
           console.error("Error accessing media devices:", error);
         }
@@ -445,16 +538,16 @@ function StartLiveSession2() {
     }
   };
 
-  // Async function to select audio output device
-  const selectSpeaker = async (meetingSession) => {
-    const audioOutputDevices = await meetingSession.audioVideo.listAudioOutputDevices();
+  // // Async function to select audio output device
+  // const selectSpeaker = async (meetingSession) => {
+  //   const audioOutputDevices = await meetingSession.audioVideo.listAudioOutputDevices();
 
-    if (audioOutputDevices.length > 0) {
-      await meetingSession.audioVideo.chooseAudioOutput(audioOutputDevices[0].deviceId);
-    } else {
-      console.log('No speaker devices found');
-    }
-  };
+  //   if (audioOutputDevices.length > 0) {
+  //     await meetingSession.audioVideo.chooseAudioOutput(audioOutputDevices[0].deviceId);
+  //   } else {
+  //     console.log('No speaker devices found');
+  //   }
+  // };
 
   // Function to get the list of audio input devices
   const getAudioInputDevices = useCallback(async () => {
@@ -647,7 +740,7 @@ function StartLiveSession2() {
     }
   }, [meetingSession, requestWakeLock]);
 
-    useEffect(() => {
+  useEffect(() => {
     if (!meetingSession) return;
     if (navigator.mediaDevices && navigator.mediaDevices.getSupportedConstraints) {
       const constraints = navigator.mediaDevices.getSupportedConstraints();
@@ -658,16 +751,16 @@ function StartLiveSession2() {
     }
   }, [meetingSession]);
 
-    useEffect(() => {
-      if (!meetingSession) return;
-      if (navigator.mediaDevices && navigator.mediaDevices.getSupportedConstraints) {
-        const constraints = navigator.mediaDevices.getSupportedConstraints();
-        console.log('Supported Constraints:', constraints);
-        alert(`Supported Constraints:\n${JSON.stringify(constraints, null, 2)}`);
-      } else {
-        console.warn('getSupportedConstraints is not supported in this browser');
-      }
-    }, [meetingSession]);
+  useEffect(() => {
+    if (!meetingSession) return;
+    if (navigator.mediaDevices && navigator.mediaDevices.getSupportedConstraints) {
+      const constraints = navigator.mediaDevices.getSupportedConstraints();
+      console.log('Supported Constraints:', constraints);
+      alert(`Supported Constraints:\n${JSON.stringify(constraints, null, 2)}`);
+    } else {
+      console.warn('getSupportedConstraints is not supported in this browser');
+    }
+  }, [meetingSession]);
 
   console.log("chatRestriction", chatRestriction);
   // Check if the tour exists, if not, show a not found page
