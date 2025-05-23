@@ -28,9 +28,9 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 function App() {
   return (
-    <>      
+    <>
       <ToastContainer position="top-right" autoClose={3000} />
-      <Router basename="/clobtourism">
+      <Router>
         <div className="App">
           <Routes>
             {/* Public routes - Not wrapped by AuthProvider */}
@@ -46,7 +46,7 @@ function App() {
             <Route path="/viewer6/:tourId" element={<LiveViewer6 />} />
             <Route path="/viewer7/:tourId" element={<LiveViewer7 />} />
             <Route path="/viewer_ja/:tourId" element={<LiveViewerJa />} />
-            
+
             {/* Admin routes - Wrapped by AuthProvider */}
             <Route path="/admin/*" element={
               <AuthProvider>
