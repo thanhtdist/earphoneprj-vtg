@@ -234,6 +234,7 @@ function StartLiveSession2() {
 
     // Start audio video session
     meetingSession.audioVideo.start();
+    meetingSession.audioVideo.realtimeMuteLocalAudio();
 
   }, []);
 
