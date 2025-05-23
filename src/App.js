@@ -30,7 +30,7 @@ function App() {
   return (
     <>      
       <ToastContainer position="top-right" autoClose={3000} />
-      <Router>
+      <Router basename="/clobtourism">
         <div className="App">
           <Routes>
             {/* Public routes - Not wrapped by AuthProvider */}
