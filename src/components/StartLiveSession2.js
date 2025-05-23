@@ -50,7 +50,7 @@ import TourTitle from './TourTitle';
  * The main speaker can talk & listen from the sub-speaker
  * The main speaker can also chat with the sub-speaker or listener
  */
-function StartLiveSession() {
+function StartLiveSession2() {
   // Get the params from the URL
   const { tourId } = useParams(); // Extracts 'tourId' from the URL
   // Use translation
@@ -92,6 +92,22 @@ function StartLiveSession() {
   const [isPlay, setIsPlay] = useState(false);
   const audioRef = useRef(null);
   const userType = `Guide`;
+
+  // Add these references and callback:
+  const wakeLockRef = useRef(null);
+  const requestWakeLock = useCallback(async () => {
+    try {
+      if ('wakeLock' in navigator) {
+        console.log('Requesting Wake Lock...');
+        wakeLockRef.current = await navigator.wakeLock.request('screen');
+        wakeLockRef.current.addEventListener('release', () => {
+          console.log('Wake Lock was released.');
+        });
+      }
+    } catch (error) {
+      console.error('Failed to request Wake Lock:', error);
+    }
+  }, []);
 
   const handleMuteUnmute = () => {
     setIsMuted(!isMuted);
@@ -193,11 +209,9 @@ function StartLiveSession() {
 
     const observer = {
       audioInputsChanged: freshAudioInputDeviceList => {
-        alert("audioInputsChanged");
         // An array of MediaDeviceInfo objects
         freshAudioInputDeviceList.forEach(mediaDeviceInfo => {
           console.log(`Device ID xxx: ${mediaDeviceInfo.deviceId} Microphone: ${mediaDeviceInfo.label}`);
-          //alert(`Device ID xxx: ${mediaDeviceInfo.deviceId} Microphone: ${mediaDeviceInfo.label}`);
         });
       },
 
@@ -450,8 +464,8 @@ function StartLiveSession() {
       setMicroChecking('microChecking');
 
       // Check if there are no devices or if any device label is empty
-      //if (devices.length === 0 || devices.some(device => !device.label.trim())) {
-      if (devices.length === 0) {
+      if (devices.length === 0 || devices.some(device => !device.label.trim())) {
+        // if (devices.length === 0) {
         console.log('No audio input devices found');
         // Display a message after 5 seconds
         setTimeout(() => {
@@ -496,7 +510,6 @@ function StartLiveSession() {
 
     if (selectedAudioInput) {
       console.log('Selected Audio Input:', selectedAudioInput);
-      alert('Selected Audio Input:' + selectedAudioInput);
     }
 
   }, [selectedAudioInput]);
@@ -625,6 +638,35 @@ function StartLiveSession() {
 
   }, [tourId, initializeMeetingSession, startLiveAduioSession, getMeetingAttendeeInfoFromCookies, rejoinLiveAduioSession]);
 
+  // Call requestWakeLock once the meeting session is set:
+  useEffect(() => {
+    if (meetingSession) {
+      requestWakeLock();
+    }
+  }, [meetingSession, requestWakeLock]);
+
+    useEffect(() => {
+    if (!meetingSession) return;
+    if (navigator.mediaDevices && navigator.mediaDevices.getSupportedConstraints) {
+      const constraints = navigator.mediaDevices.getSupportedConstraints();
+      console.log('Supported Constraints:', constraints);
+      //alert(`Supported Constraints:\n${JSON.stringify(constraints, null, 2)}`);
+    } else {
+      console.warn('getSupportedConstraints is not supported in this browser');
+    }
+  }, [meetingSession]);
+
+    useEffect(() => {
+      if (!meetingSession) return;
+      if (navigator.mediaDevices && navigator.mediaDevices.getSupportedConstraints) {
+        const constraints = navigator.mediaDevices.getSupportedConstraints();
+        console.log('Supported Constraints:', constraints);
+        alert(`Supported Constraints:\n${JSON.stringify(constraints, null, 2)}`);
+      } else {
+        console.warn('getSupportedConstraints is not supported in this browser');
+      }
+    }, [meetingSession]);
+
   console.log("chatRestriction", chatRestriction);
   // Check if the tour exists, if not, show a not found page
   if (tour === null) {
@@ -724,4 +766,4 @@ function StartLiveSession() {
   );
 }
 
-export default StartLiveSession;
+export default StartLiveSession2;
