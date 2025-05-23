@@ -8,37 +8,37 @@ import {
   LambdaIntegration,
   RestApi,
 } from "aws-cdk-lib/aws-apigateway";
-import { createMeeting } from './functions/create-meeting/resource';
-import { getMeeting } from './functions/get-meeting/resource';
-import { createAttendee } from './functions/create-attendee/resource';
-import { createAppInstanceUser } from './functions/create-app-instance-user/resource';
-import { createChannel } from './functions/create-channel/resource';
-import { addChannelMembership } from './functions/add-channel-membership/resource';
-import { sendChannelMessage } from './functions/send-channel-message/resource';
-import { listChannelMembership } from './functions/list-channel-membership/resource';
-import { listAttendee } from './functions/list-attendee/resource';
+import { createMeeting } from './functions/meetings/create-meeting/resource';
+import { getMeeting } from './functions/meetings/get-meeting/resource';
+import { createAttendee } from './functions/meetings/create-attendee/resource';
+import { createAppInstanceUser } from './functions/channels/create-app-instance-user/resource';
+import { createChannel } from './functions/channels/create-channel/resource';
+import { addChannelMembership } from './functions/channels/add-channel-membership/resource';
+import { sendChannelMessage } from './functions/channels/send-channel-message/resource';
+import { listChannelMembership } from './functions/channels/list-channel-membership/resource';
+import { listAttendee } from './functions/meetings/list-attendee/resource';
 // import { listAppInstanceUser } from './functions/list-app-instance-user/resource';
-import { addCloudWatchLogs } from './functions/add-cloud-watch-logs/resource';
-import { startMeetingTranscription } from './functions/start-meeting-transcription/resource';
-import { translateTextSpeech } from './functions/translate-text-speech/resource';
-import { createTour } from './functions/create-tour/resource';
-import { createAdmin } from './functions/create-admin/resource';
-import { getTour } from './functions/get-tour/resource';
-import { listTour } from './functions/list-tour/resource';
-import { updateTour } from './functions/update-tour/resource';
-import { deleteTour } from './functions/delete-tour/resource';
-import { login } from './functions/login/resource';
-import { listAdmin } from './functions/list-admin/resource';
-import { createBatchTour } from './functions/create-batch-tour/resource';
-import { getAdmin } from './functions/get-admin/resource';
-import { updateAdmin } from './functions/update-admin/resource';
-import { deleteAdmin } from './functions/delete-admin/resource';
-import { checkAuth } from './functions/check-auth/resource';
-import { activeAdmin } from './functions/active-admin/resource';
-import { refreshToken } from './functions/refresh-token/resource';
-import { getMeetingByTourId } from './functions/get-meeting-by-tourid/resource';
-import { getTourByNumberAndDate } from './functions/get-tour-by-number-and-date/resource';
-import { updateMeetingByTourId } from './functions/update-meeting-by-tourid/resource'
+import { addCloudWatchLogs } from './functions/cloudwatchlogs/add-cloud-watch-logs/resource';
+import { startMeetingTranscription } from './functions/meetings/start-meeting-transcription/resource';
+import { translateTextSpeech } from './functions/translates/translate-text-speech/resource';
+import { createTour } from './functions/tours/create-tour/resource';
+import { createAdmin } from './functions/users/create-admin/resource';
+import { getTour } from './functions/tours/get-tour/resource';
+import { listTour } from './functions/tours/list-tour/resource';
+import { updateTour } from './functions/tours/update-tour/resource';
+import { deleteTour } from './functions/tours/delete-tour/resource';
+import { login } from './functions/users/login/resource';
+import { listAdmin } from './functions/users/list-admin/resource';
+import { createBatchTour } from './functions/tours/create-batch-tour/resource';
+import { getAdmin } from './functions/users/get-admin/resource';
+import { updateAdmin } from './functions/users/update-admin/resource';
+import { deleteAdmin } from './functions/users/delete-admin/resource';
+import { checkAuth } from './functions/users/check-auth/resource';
+import { activeAdmin } from './functions/users/active-admin/resource';
+import { refreshToken } from './functions/users/refresh-token/resource';
+import { getMeetingByTourId } from './functions/tours/get-meeting-by-tourid/resource';
+import { getTourByNumberAndDate } from './functions/tours/get-tour-by-number-and-date/resource';
+import { updateMeetingByTourId } from './functions/tours/update-meeting-by-tourid/resource'
 
 /**
  * Define the backend resources 
