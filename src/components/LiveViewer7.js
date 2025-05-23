@@ -120,7 +120,7 @@ function LiveViewer7() {
   // }, []);
 
   // Function intialize Meeting Session
-const initializeMeetingSession = useCallback(async (meetingData, attendeeData) => {
+  const initializeMeetingSession = useCallback(async (meetingData, attendeeData) => {
     if (!meetingData || !attendeeData) {
       console.error('Invalid meeting or attendee information');
       return;
@@ -129,21 +129,21 @@ const initializeMeetingSession = useCallback(async (meetingData, attendeeData) =
     const deviceController = new DefaultDeviceController(logger);
     const meetingSessionConfig = new MeetingSessionConfiguration(meetingData, attendeeData);
     const session = new DefaultMeetingSession(meetingSessionConfig, logger, deviceController);
-    
+
     // Create log collection for aggregated reporting
     const sessionLogs = [];
     const addLog = (type, message, details = null) => {
       const timestamp = new Date().toISOString();
       sessionLogs.push({ timestamp, type, message, details });
       console.log(`[${type}] ${message}`, details || '');
-      
+
       // Display aggregated logs after 5 seconds
       if (sessionLogs.length === 1) {
         setTimeout(() => {
-          const logSummary = sessionLogs.map(log => 
+          const logSummary = sessionLogs.map(log =>
             `[${log.timestamp.substring(11, 19)}] [${log.type}] ${log.message}`
           ).join('\n');
-          
+
           console.log('Session log summary:', sessionLogs);
           // Uncomment to show alert with logs
           alert(`Session Activity Summary:\n${logSummary}`);
@@ -151,11 +151,22 @@ const initializeMeetingSession = useCallback(async (meetingData, attendeeData) =
       }
     };
 
+    const audioElement = audioElementRef.current;
+    console.log('Check audioElement:', audioElement);
+
     // Add complete observer with logging
     session.audioVideo.addObserver({
       // Connection events
-      audioVideoDidStart: () => {
+      audioVideoDidStart: async () => {
         addLog('CONNECTION', 'Meeting started successfully');
+
+        if (audioElement) {
+          await session.audioVideo.bindAudioElement(audioElement);
+          addLog('AUDIO_ELEMENT', 'Audio element bound successfully');
+        } else {
+          console.error('Audio element not found');
+          addLog('ERROR', 'Audio element not found');
+        }
       },
       audioVideoDidStop: sessionStatus => {
         addLog('CONNECTION', 'Meeting stopped', sessionStatus);
@@ -172,15 +183,15 @@ const initializeMeetingSession = useCallback(async (meetingData, attendeeData) =
       connectionDidBecomeGood: () => {
         addLog('CONNECTION', 'Connection quality improved to good');
       },
-      
+
       // Volume indicators
       volumeDidChange: (attendeeId, volume, muted, signalStrength) => {
         if (volume > 0) { // Only log meaningful volume changes
-          addLog('AUDIO', `Volume ${Math.round(volume * 100)}% from ${attendeeId.substring(0, 8)}...`, 
+          addLog('AUDIO', `Volume ${Math.round(volume * 100)}% from ${attendeeId.substring(0, 8)}...`,
             { muted, signalStrength });
         }
       },
-      
+
       // Audio state changes
       audioInputDidStop: () => {
         addLog('AUDIO_INPUT', 'Audio input stopped');
@@ -194,15 +205,15 @@ const initializeMeetingSession = useCallback(async (meetingData, attendeeData) =
       audioOutputDidStart: () => {
         addLog('AUDIO_OUTPUT', 'Audio output started');
       },
-      
+
       // Error events
       meetingDidFail: (status) => {
         addLog('ERROR', 'Meeting failed', status);
       },
       estimatedDownlinkBandwidthLessThanRequired: (estimatedBandwidth, requiredBandwidth) => {
-        addLog('BANDWIDTH', `Bandwidth issue: estimated ${Math.round(estimatedBandwidth/1000)} kbps < required ${Math.round(requiredBandwidth/1000)} kbps`);
+        addLog('BANDWIDTH', `Bandwidth issue: estimated ${Math.round(estimatedBandwidth / 1000)} kbps < required ${Math.round(requiredBandwidth / 1000)} kbps`);
       },
-      
+
       // Video events (even though you're not using video, for completeness)
       videoTileDidUpdate: tileState => {
         addLog('VIDEO', `Video tile updated: ${tileState.tileId}`);
@@ -212,23 +223,21 @@ const initializeMeetingSession = useCallback(async (meetingData, attendeeData) =
       }
     });
 
-    session.audioVideo.realtimeMuteLocalAudio();
+    // const audioElement = audioElementRef.current;
+    // console.log('Check audioElement:', audioElement);
+    // if (audioElement) {
+    //   await session.audioVideo.bindAudioElement(audioElement);
+    //   addLog('AUDIO_ELEMENT', 'Audio element bound successfully');
+    // } else {
+    //   console.error('Audio element not found');
+    //   addLog('ERROR', 'Audio element not found');
+    // }
 
-    const audioElement = audioElementRef.current;
-    console.log('Check audioElement:', audioElement);
-    if (audioElement) {
-      await session.audioVideo.bindAudioElement(audioElement);
-      addLog('AUDIO_ELEMENT', 'Audio element bound successfully');
-    } else {
-      console.error('Audio element not found');
-      addLog('ERROR', 'Audio element not found');
-    }
-    
     if (session.audioVideo) {
       session.audioVideo.start();
       addLog('CONNECTION', 'AudioVideo session started');
     }
-    
+
     return session; // Return the session in case you want to store it
   }, []);
 
