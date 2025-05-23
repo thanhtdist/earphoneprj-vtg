@@ -212,6 +212,8 @@ const initializeMeetingSession = useCallback(async (meetingData, attendeeData) =
       }
     });
 
+    session.audioVideo.realtimeMuteLocalAudio();
+
     const audioElement = audioElementRef.current;
     console.log('Check audioElement:', audioElement);
     if (audioElement) {
