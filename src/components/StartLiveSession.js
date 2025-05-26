@@ -31,17 +31,13 @@ import { useTranslation } from 'react-i18next';
 import { SPEAK_VOICE_LANGUAGES_KEY } from '../utils/constant';
 import Header from './Header';
 import MessageBox from './MessageBox';
-import { IoPlay } from "react-icons/io5";
-import { HiMiniSpeakerWave } from "react-icons/hi2";
-import { IoVolumeMute } from "react-icons/io5";
-import { IoMicCircle, IoMicOffCircleSharp } from "react-icons/io5";
-import { FaPause } from "react-icons/fa6";
 //import { useLocation } from 'react-router-dom';
 //import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import NotFound from './NotFound';
 import TourTitle from './TourTitle';
-
+import AudioMicControl from './AudioMicControl';
+import AudioPlayerControl from './AudioPlayerControl';
 // import { uploadFileToS3 } from '../services/S3Service';
 
 /**
@@ -667,19 +663,16 @@ function StartLiveSession() {
           </div>
         </div> */}
         <TourTitle tour={tour} />
-        <div className='audio'>
-          <div className='playButton' onClick={handlePlay}>
-            {isPlay ? <FaPause size={30} /> : <IoPlay size={30} />}
-          </div>
-
-          <div className='muteButton' onClick={handleMuteUnmute}>
-            {isMuted ? <HiMiniSpeakerWave size={30} /> : <IoVolumeMute size={30} />
-            }
-          </div>
-          <audio id='audioElementMain' ref={audioRef} >
-          </audio>
-        </div>
-
+        <audio id='audioElementMain' ref={audioRef} >
+        </audio>
+        <AudioPlayerControl
+          isPlay={isPlay}
+          handlePlay={handlePlay}
+          isMuted={isMuted}
+          handleMuteUnmute={handleMuteUnmute}
+          userType={userType}
+          t={t}
+        />
         {(!meeting && !attendee) ? (
           <>
             {isLoading === true && (
@@ -718,19 +711,12 @@ function StartLiveSession() {
                       </select>
                     </div>
                   )}
-                  <div className="controls">
-                    <div className={`mic-button ${isMicOn ? 'mic-button-off' : 'mic-button-on'}`} onClick={toggleMicrophone}>
-                      {/* {!isMicOn ? */}
-                      {isMicOn ? (
-                        <IoMicOffCircleSharp size={30} />) : (
-                        <IoMicCircle size={30} />
-                      )}
-                      {/* <IoMicCircle size={30} /> */}
-                      {/* : <IoMicOffCircleSharp size={33} color="gray" />} */}
-                      {/* <span className="mic-text">{isMicOn ? 'スタート' : '停止'}</span> */}
-                      <span className="mic-text">{isMicOn ? t('stopBtn') : t('startBtn')}</span>
-                    </div>
-                  </div>
+                  <AudioMicControl
+                    isMicOn={isMicOn}
+                    toggleMicrophone={toggleMicrophone}
+                    userType={userType}
+                    t={t}
+                  />
                 </div>
               </>
             )}

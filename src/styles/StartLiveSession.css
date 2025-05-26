@@ -26,10 +26,6 @@ select {
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  button {
-    /* width: 100%; */
-  }
-
   select {
     width: 100%;
   }
@@ -159,12 +155,12 @@ select {
   width: 50%;
 }
 .mic-button-off {
-  border: 1px solid #C60226;
-  color: #C60226;  
+  border: 1px solid var(--page-color);
+  color: var(--page-color);  
 }
 .mic-button-on {
   align-items: center;
-  background-color: #C60226;
+  background-color: var(--page-color);
   color: white; 
 }
 .controls{
@@ -174,7 +170,6 @@ select {
 .mic-text{
   font-size: 20px;
   margin-left: 10px;
-  
 }
 .nameTour {
   font-size: 22px;

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-//import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
     loginAdmin
 } from '../../apis/admin';
@@ -9,8 +9,8 @@ import { messages } from '../../messages';
 import { useAuth } from "../admin/auth/AuthContext";
 
 const Login = () => {
-    const { login, logout, isAuthenticated } = useAuth();
-    //const navigate = useNavigate();
+    const { login, logout } = useAuth();
+    const navigate = useNavigate();
     const {
         register,
         handleSubmit,
@@ -39,10 +39,10 @@ const Login = () => {
                 // Set new cookies with the new tokens
                 login(loginAdminResponse.data.accessToken, loginAdminResponse.data.refreshToken);
                 //console.log("login tesst", tesst);
-               // navigate("/admin/tour");
+               navigate("/admin/tour");
                 //window.location.href = "/admin/tour";
-                window.location.href = "/admin/tour";
-                console.log("Login isAuthenticated", isAuthenticated);
+                // window.location.href = "/admin/tour";
+                // console.log("Login isAuthenticated", isAuthenticated);
             } else {
                 setError(messages.login.incorrectEmailPassword);
             }

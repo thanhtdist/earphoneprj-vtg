@@ -24,14 +24,11 @@ import { v4 as uuidv4 } from 'uuid';
 import { useTranslation } from 'react-i18next';
 import { LISTEN_VOICE_LANGUAGES, JA_LISTEN_VOICE_LANGUAGES } from '../utils/constant';
 import Header from './Header';
-import { HiMiniSpeakerWave } from "react-icons/hi2";
-import { IoVolumeMute } from "react-icons/io5";
-// import { IoMicCircle, IoMicOffCircleSharp } from "react-icons/io5";
 import MessageBox from './MessageBox';
 import { useParams } from "react-router-dom";
 import NotFound from './NotFound';
 import TourTitle from './TourTitle';
-import { FaPause, FaPlay } from "react-icons/fa";
+import AudioPlayerControl from './AudioPlayerControl';
 
 function LiveViewer() {
   // Get the params from the URL
@@ -503,19 +500,21 @@ function LiveViewer() {
             <h3 className='title-box'>
               {t('voiceLanguageLbl.listening')}
             </h3>
-            <select
-              className='selected-language'
-              id="selectedVoiceLanguage"
-              value={selectedVoiceLanguage}
-              onChange={handleSelectedVoiceLanguageChange}
-            >
-              {(i18n.language === 'ja' ? JA_LISTEN_VOICE_LANGUAGES : LISTEN_VOICE_LANGUAGES).map((language) => (
-                <option key={language.key} value={language.key}>
-                  {language.label}
-                </option>
-              ))}
+            <div class="select-container">
+              <select
+                className='selected-language'
+                id="selectedVoiceLanguage"
+                value={selectedVoiceLanguage}
+                onChange={handleSelectedVoiceLanguageChange}
+              >
+                {(i18n.language === 'ja' ? JA_LISTEN_VOICE_LANGUAGES : LISTEN_VOICE_LANGUAGES).map((language) => (
+                  <option key={language.key} value={language.key}>
+                    {language.label}
+                  </option>
+                ))}
 
-            </select>
+              </select>
+            </div>
           </div>
         )}
         <audio
@@ -540,28 +539,14 @@ function LiveViewer() {
           )
         ) : (
           <>
-            <div className='audioViewer'>
-              {!!isPlay ? <div>
-                <div className='pauseButtonViewer' onClick={handlePlay}>
-                  {/* {isPlay ? <FaPause size={30} /> : <IoPlay size={30} />} */}
-                  <FaPause size={20} />
-                  <span className="startText">{t('stopBtn')}</span>
-                </div>
-              </div>
-                : <div>
-                  <div className='playButtonViewer' onClick={handlePlay}>
-                    {/* {isPlay ? <FaPause size={30} /> : <IoPlay size={30} />} */}
-                    <FaPlay size={20} />
-                    <span className="startText">{t('startBtn')}</span>
-                  </div>
-                </div>}
-              <div className='soundButton' onClick={handleMuteUnmute}>
-                {isMuted ? <HiMiniSpeakerWave size={30} /> : <IoVolumeMute size={30} />
-                }
-              </div>
-              {/* <audio id='audioElementListener' ref={audioElementRef} >
-              </audio> */}
-            </div>
+            <AudioPlayerControl
+              isPlay={isPlay}
+              handlePlay={handlePlay}
+              isMuted={isMuted}
+              handleMuteUnmute={handleMuteUnmute}
+              userType={userType}
+              t={t}
+            />
             {transcriptListRef.current.length > 0 && (
               <div className='trans-box'>
                 <div style={{ textAlign: 'center', fontWeight: '700' }}>

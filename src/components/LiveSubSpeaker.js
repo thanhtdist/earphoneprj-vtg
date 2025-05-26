@@ -25,15 +25,12 @@ import JSONCookieUtils from '../utils/JSONCookieUtils';
 import { v4 as uuidv4 } from 'uuid';
 import { useTranslation } from 'react-i18next';
 import Header from './Header';
-import { IoPlay } from "react-icons/io5";
-import { HiMiniSpeakerWave } from "react-icons/hi2";
-import { IoVolumeMute } from "react-icons/io5";
-import { FaPause } from "react-icons/fa6";
-import { IoMicCircle, IoMicOffCircleSharp } from "react-icons/io5";
 import MessageBox from './MessageBox';
 import { useParams } from "react-router-dom";
 import NotFound from './NotFound';
 import TourTitle from './TourTitle';
+import AudioMicControl from './AudioMicControl';
+import AudioPlayerControl from './AudioPlayerControl';
 /**
  *  Component to start a live audio session for the sub speaker
  * The sub speaker can talk & listen to the audio from the main speaker
@@ -519,7 +516,7 @@ function LiveSubSpeaker() {
       {/* <Participants count={participantsCount} /> */}
       <Header count={participantsCount} tourId={tourId} userType={userType} />
       <div className="live-sub-container">
-        <p className='title-sub-live'>
+        <p className='titleSubLive'>
           {t('pageTitles.subGuide')}
         </p>
         {/* <div className='title-sub-live-upload'>
@@ -529,18 +526,16 @@ function LiveSubSpeaker() {
           <h3 className='nameTour'>浅草寺ツアー</h3>
         </div> */}
         <TourTitle tour={tour} />
-        <div className='audio-sub'>
-          <div className='play-button' onClick={handlePlay}>
-            {isPlay ? <FaPause size={30} /> : <IoPlay size={30} />}
-          </div>
-
-          <div className='mute-button' onClick={handleMuteUnmute}>
-            {isMuted ? <HiMiniSpeakerWave size={30} /> : <IoVolumeMute size={30} />
-            }
-          </div>
-          <audio id='audioElementSub' ref={audioRef} >
-          </audio>
-        </div>
+        <audio id='audioElementSub' ref={audioRef} >
+        </audio>
+        <AudioPlayerControl
+          isPlay={isPlay}
+          handlePlay={handlePlay}
+          isMuted={isMuted}
+          handleMuteUnmute={handleMuteUnmute}
+          userType={userType}
+          t={t}
+        />
         {(isLoading) ? (
           <div className="loading">
             <div className="spinner"></div>
@@ -574,13 +569,12 @@ function LiveSubSpeaker() {
                       </select>
                     </div>
                   )}
-                  <div className="controls">
-                    <div className='mic-button' onClick={toggleMicrophone}>
-                      {isMicOn ?
-                        <IoMicCircle size={60} color="#E57A00" />
-                        : <IoMicOffCircleSharp size={60} color="gray" />}
-                    </div>
-                  </div>
+                  <AudioMicControl
+                    isMicOn={isMicOn}
+                    toggleMicrophone={toggleMicrophone}
+                    userType={userType}
+                    t={t}
+                  />
                 </div>
               </>
             )}
