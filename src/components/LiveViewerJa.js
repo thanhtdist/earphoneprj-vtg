@@ -125,7 +125,7 @@ function LiveViewerJa() {
       console.error('Invalid meeting or attendee information');
       return;
     }
-    const logger = new ConsoleLogger('ChimeMeetingLogs', LogLevel.DEBUG);
+    const logger = new ConsoleLogger('ChimeMeetingLogs', LogLevel.OFF);
     const deviceController = new DefaultDeviceController(logger);
     const meetingSessionConfig = new MeetingSessionConfiguration(meetingData, attendeeData);
     const session = new DefaultMeetingSession(meetingSessionConfig, logger, deviceController);
@@ -157,6 +157,7 @@ function LiveViewerJa() {
 
 // Function to handle play/pause button click
   const handlePlay = () => {
+    console.log('xCheck audioElement:', audioElementRef.current);
     if (isPlay === false) {
       setIsPlay(true)
       audioElementRef.current.play();

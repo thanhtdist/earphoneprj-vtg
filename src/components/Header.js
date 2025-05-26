@@ -6,6 +6,7 @@ import SettingMenu from './SettingMenu';
 import '../styles/Header.css';
 import { useTranslation } from 'react-i18next';
 import Config from '../utils/config';
+import { getUserStyle } from "../utils/get-user-style";
 
 function Header({ tourId, count = null, userType = null }) {
     const { t } = useTranslation();
@@ -20,29 +21,12 @@ function Header({ tourId, count = null, userType = null }) {
     const handleQRSelectionChange = (e) => {
         setSelectedQR(e.target.value);
     };
-    const style = () => {
-        if (userType === "Guide") {
-            return {
-                color: '#C60226'
-            }
-        }
-        else if (userType === "User") {
-            return {
-                color: '#16A085'
-
-            }
-        }
-        else if (userType === "Sub-Guide") {
-            return {
-                color: '#E57A00'
-
-            }
-        }
-
-    }
+    // This function should return a color based on the userType
+    const pageColor = getUserStyle(userType);
+    
     return (
         // <div className='containerHeader' style={style()}>
-        <div className={`${count !== null ? 'container-header' : 'container-header-startguide'}`} style={style()} >
+        <div className={`${count !== null ? 'container-header' : 'container-header-startguide'}`} style={{ 'color': pageColor }} >
             {count !== null && <Participants count={count}></Participants>}
 
             <div className='rightMenu'>

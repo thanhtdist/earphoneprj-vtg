@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import {
   createAttendee,
-  createAppInstanceUsers,
-  addChannelMembership,
-  listAttendee,
+  //createAppInstanceUsers,
+  //addChannelMembership,
+  //listAttendee,
   getMeetingByTourId,
-  getMeeting,
+  getMeeting, // Uncomment this if needed
 } from '../apis/api';
 import {
   DefaultDeviceController,
@@ -15,20 +15,21 @@ import {
   MeetingSessionConfiguration,
 } from 'amazon-chime-sdk-js';
 import '../styles/LiveViewer.css';
-import Config from '../utils/config';
-import JSONCookieUtils from '../utils/JSONCookieUtils';
-import { checkAvailableMeeting } from '../utils/MeetingUtils';
-import { v4 as uuidv4 } from 'uuid';
+// import Config from '../utils/config';
+// import JSONCookieUtils from '../utils/JSONCookieUtils';
+//import { checkAvailableMeeting } from '../utils/MeetingUtils';
+// import { v4 as uuidv4 } from 'uuid';
 import { useTranslation } from 'react-i18next';
 import { LISTEN_VOICE_LANGUAGES, JA_LISTEN_VOICE_LANGUAGES } from '../utils/constant';
 import Header from './Header';
 import { HiMiniSpeakerWave } from "react-icons/hi2";
 import { IoVolumeMute } from "react-icons/io5";
-import MessageBox from './MessageBox';
+//import MessageBox from './MessageBox';
 import { useParams } from "react-router-dom";
 import NotFound from './NotFound';
 import TourTitle from './TourTitle';
 import { FaPause, FaPlay } from "react-icons/fa";
+import { GUIDE_NOT_START } from '../utils/messages';
 
 function LiveViewer3() {
   // Get the params from the URL
@@ -37,24 +38,71 @@ function LiveViewer3() {
   const { t, i18n } = useTranslation();
   const [tour, setTour] = useState(undefined);
   const [meetingSession, setMeetingSession] = useState(null);
-  const [meeting, setMeeting] = useState(null);
-  const [attendee, setAttendee] = useState(null);
-  const [channelArn, setChannelArn] = useState('');
-  const [userArn, setUserArn] = useState('');
+  // const [meeting, setMeeting] = useState(null);
+  // const [attendee, setAttendee] = useState(null);
+  //const [channelArn, setChannelArn] = useState('');
+  //const [userArn, setUserArn] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [participantsCount, setParticipantsCount] = useState(0);
   const [selectedVoiceLanguage, setSelectedVoiceLanguage] = useState(
     LISTEN_VOICE_LANGUAGES.find((lang) => lang.key.startsWith(i18n.language))?.key || 'ja-JP'
   );
-  const [chatRestriction, setChatRestriction] = useState(null);
+  // const [chatRestriction, setChatRestriction] = useState(null);
   const [isMuted, setIsMuted] = useState(true);
   const [isPlay, setIsPlay] = useState(false);
-  const userID = uuidv4();
+  // const userID = uuidv4();
   const userType = 'User';
   // Ref for the audio element  
   const audioElementRef = useRef(null);
   // Add these references and callback:
   const wakeLockRef = useRef(null);
+
+  // Replace your current alerts with this function in initializeMeetingSession
+
+  const debugAudioElement = (audioElement, prefix = '') => {
+    if (!audioElement) return;
+
+    // Gather all properties in an object
+    const props = {
+      // Basic properties
+      autoplay: audioElement.autoplay,
+      controls: audioElement.controls,
+      crossOrigin: audioElement.crossOrigin,
+      currentSrc: audioElement.currentSrc,
+      currentTime: audioElement.currentTime,
+      defaultMuted: audioElement.defaultMuted,
+      defaultPlaybackRate: audioElement.defaultPlaybackRate,
+      duration: audioElement.duration,
+      ended: audioElement.ended,
+      error: audioElement.error,
+      loop: audioElement.loop,
+      muted: audioElement.muted,
+      networkState: audioElement.networkState,
+      paused: audioElement.paused,
+      playbackRate: audioElement.playbackRate,
+      played: audioElement.played && audioElement.played.length,
+      preload: audioElement.preload,
+      readyState: audioElement.readyState,
+      seekable: audioElement.seekable && audioElement.seekable.length,
+      seeking: audioElement.seeking,
+      src: audioElement.src,
+      srcObject: audioElement.srcObject ? 'MediaStream object' : null,
+      volume: audioElement.volume
+    };
+
+    // Create a formatted string with all properties
+    let message = `${prefix} Audio Element Properties:\n`;
+    Object.entries(props).forEach(([key, value]) => {
+      message += `${key}: ${value}\n`;
+    });
+
+    // Log to console for more detailed view
+    console.log(`${prefix} Audio Element:`, audioElement);
+    console.log(`${prefix} Audio Properties:`, props);
+
+    // Show alert with all properties
+    alert(message);
+  };
 
   // Function to keep wake lock
   const requestWakeLock = useCallback(async () => {
@@ -77,13 +125,14 @@ function LiveViewer3() {
       console.error('Invalid meeting or attendee information');
       return;
     }
-    const logger = new ConsoleLogger('ChimeMeetingLogs', LogLevel.INFO);
+    const logger = new ConsoleLogger('ChimeMeetingLogs', LogLevel.OFF);
     const deviceController = new DefaultDeviceController(logger);
     const meetingSessionConfig = new MeetingSessionConfiguration(meetingData, attendeeData);
     const session = new DefaultMeetingSession(meetingSessionConfig, logger, deviceController);
     setMeetingSession(session);
     const audioElement = audioElementRef.current;
-    console.log('Check audioElement:', audioElement);
+    debugAudioElement(audioElement, 'Before binding');
+
     if (audioElement) {
       await session.audioVideo.bindAudioElement(audioElement);
     } else {
@@ -100,140 +149,23 @@ function LiveViewer3() {
     //     console.error('Audio element not found');
     //   }
     // }
-    session.audioVideo.start();
-  }, []);
-
-  // Function to create app instance user and join channel
-  const createAppUserAndJoinChannel = useCallback(
-    async (meetingId, attendeeId, userID, userType, channelId) => {
-      try {
-        const channelArn = `${Config.appInstanceArn}/channel/${channelId}`;
-        const listAttendeeResponse = await listAttendee(meetingId);
-        const attendees = listAttendeeResponse.attendees || [];
-        const subGuideList = attendees.filter(
-          (member) => member.ExternalUserId && member.ExternalUserId.startsWith(userType)
-        );
-
-        subGuideList.sort(
-          (a, b) =>
-            parseInt(a.ExternalUserId.split('|')[1]) - parseInt(b.ExternalUserId.split('|')[1])
-        );
-
-        const index = subGuideList.findIndex((att) => att.AttendeeId === attendeeId);
-        const userName = `${userType}${index + 1}`;
-
-        const newUserArn = await createAppInstanceUsers(userID, userName);
-        await addChannelMembership(channelArn, newUserArn);
-
-        return { channelArn, userArn: newUserArn };
-      } catch (error) {
-        console.error('Error creating user and joining channel:', error);
-        throw error;
-      }
-    },
-    []
-  );
-
-  // Function to check available meeting
-  const getMeetingAttendeeInfoFromCookies = useCallback(
-    (retrievedUser) => {
-      setIsLoading(true);
-      initializeMeetingSession(retrievedUser.meeting, retrievedUser.attendee);
-      setMeeting(retrievedUser.meeting);
-      setAttendee(retrievedUser.attendee);
-      setUserArn(retrievedUser.userArn);
-      setChannelArn(retrievedUser.channelArn);
-      setIsLoading(false);
-    },
-    [initializeMeetingSession]
-  );
-
-  // Function to join meeting
-  const joinMeeting = useCallback(
-    async (meetingData, channelId) => {
-      setIsLoading(true);
-      try {
-        console.log('meeting:', meetingData);
-        console.log('channelId:', channelId);
-        const attendeeData = await createAttendee(
-          meetingData.MeetingId,
-          `${userType}|${Date.now()}`
-        );
-        await initializeMeetingSession(meetingData, attendeeData);
-
-        const { channelArn, userArn } = await createAppUserAndJoinChannel(
-          meetingData.MeetingId,
-          attendeeData.AttendeeId,
-          userID,
-          userType,
-          channelId
-        );
-
-        setMeeting(meetingData);
-        setAttendee(attendeeData);
-        setChannelArn(channelArn);
-        setUserArn(userArn);
-        console.log('Cookie set for 1 day!');
-        //setIsJoinAudio(true);
-        const user = {
-          meeting: meetingData,
-          attendee: attendeeData,
-          userArn,
-          channelArn,
-        };
-
-        JSONCookieUtils.setJSONCookie('User' + tourId, user, 1);
-
-      } catch (error) {
-        console.error('Error joining the meeting:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    },
-    [
-      userID,
-      initializeMeetingSession,
-      createAppUserAndJoinChannel,
-      tourId
-    ]
-  );
-
-  // Function to check if the meeting is available
-  const joinAudioSessionAvailable = useCallback(
-    async (meeting, channelId) => {
-      try {
-        const retrievedUser = JSONCookieUtils.getJSONCookie('User' + tourId);
-        if (retrievedUser) {
-          const isMeetingMatched =
-            retrievedUser.meeting.MeetingId === meeting.MeetingId;
-          const isChannelMatched =
-            retrievedUser.channelArn === `${Config.appInstanceArn}/channel/${channelId}`;
-
-          if (isMeetingMatched && isChannelMatched) {
-            const meetingData = await checkAvailableMeeting(
-              retrievedUser.meeting.MeetingId,
-              'User'
-            );
-            if (meetingData) {
-              getMeetingAttendeeInfoFromCookies(retrievedUser);
-              return;
-            }
-          }
+    const observer = {
+      audioVideoDidStart: async () => {
+        alert('Audio Video Did Start');
+        const stream = await session.audioVideo.getCurrentMeetingAudioStream();
+        if (stream) {
+          console.log('Audio stream:', stream);
+          console.log('audioElement', audioElement);
+        } else {
+          console.error('No audio stream available');
         }
-        joinMeeting(meeting, channelId);
-      } catch (error) {
-        console.error('Error processing the User cookie:', error);
       }
-    },
-    [
-      getMeetingAttendeeInfoFromCookies,
-      joinMeeting,
-      tourId
-    ]
-  );
+    };
 
-
-
+    session.audioVideo.addObserver(observer);
+    session.audioVideo.start();
+    debugAudioElement(audioElement, 'After binding');
+  }, []);
 
   // Event for handling selected voice language change
   const handleSelectedVoiceLanguageChange = (event) => {
@@ -257,48 +189,75 @@ function LiveViewer3() {
     }
   }
 
-  // Function to join the audio session
-  const joinAudioSession = useCallback(async () => {
-
-    const getMeetingByTourIdResponse = await getMeetingByTourId(tourId);
-    console.log('getMeetingByTourIdResponse', getMeetingByTourIdResponse);
-    if (getMeetingByTourIdResponse?.statusCode === 200) {
-      setChatRestriction(getMeetingByTourIdResponse.data.chatRestriction);
-      setTour(getMeetingByTourIdResponse.data);
-      console.log('Meeting found:', getMeetingByTourIdResponse.data.meetingId);
-
-      if (getMeetingByTourIdResponse.data.meetingId) {
-        console.log("Meeting Existed in Tour");
-        const checkAvailableMeetingResponse = await getMeeting(getMeetingByTourIdResponse.data.meetingId);
-        console.log('checkAvailableMeeting:', checkAvailableMeetingResponse);
-        console.log('checkAvailableMeeting statusCode:', checkAvailableMeetingResponse.statusCode);
-        if (checkAvailableMeetingResponse.statusCode === 404) {
-          //toast.info('Guide does not start, please wait...');
-          alert('Guide does not start, please wait...');
-        } else if (checkAvailableMeetingResponse.statusCode === 200) {
-          // Join the meeting again and set the meeting session in the state
-          console.log('Meeting not expired:', checkAvailableMeetingResponse);
-          console.log('Check checkAvailableMeetingResponse:', checkAvailableMeetingResponse.data);
-          joinAudioSessionAvailable(checkAvailableMeetingResponse.data, getMeetingByTourIdResponse.data.channelId);
-
-        } else {
-          console.log('Meeting error:', checkAvailableMeetingResponse);
-        }
-      } else {
-        alert('Guide does not start, please wait...');
-      }
+  // Function to join the tour
+  const joinTour = useCallback(async () => {
+    const tourResponse = await getMeetingByTourId(tourId);
+    console.log('tourResponse', tourResponse);
+    if (tourResponse?.statusCode === 200) {
+      setTour(tourResponse.data);
     } else {
-      // alert('Tour not found, please check the tour ID.');
-      console.log('Tour not found, please check the tour ID.');
-      // toast.error('Tour not found, please check the tour ID.');
       setTour(null);
     }
-  }, [joinAudioSessionAvailable, tourId]);
+  }, [tourId]);
+
+  // Function to join the meeting session
+  const joinMeeting = useCallback(async (meetingData, channelId) => {
+    try {
+      console.log('meeting:', meetingData);
+      console.log('channelId:', channelId);
+      const attendeeData = await createAttendee(
+        meetingData.MeetingId,
+        `${userType}|${Date.now()}`
+      );
+      await initializeMeetingSession(meetingData, attendeeData);
+      // setMeeting(meetingData);
+      // setAttendee(attendeeData);
+
+    } catch (error) {
+      console.error('Error joining the meeting:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [initializeMeetingSession]);
+  // Process the tour when it changes
+  useEffect(() => {
+    // Skip if tour is undefined
+    if (!tour) return;
+
+    const processTour = async () => {
+      try {
+        if (tour.meetingId) {
+          console.log("Meeting Exists in Tour");
+
+          // Check if the meeting is available in Chime Meeting
+          const meetingResponse = await getMeeting(tour.meetingId);
+          console.log('Meeting response:', meetingResponse);
+
+          if (meetingResponse.statusCode === 404) {
+            // Using console.error instead of alert for server-side issues
+            alert(GUIDE_NOT_START);
+            // Consider using a toast notification library or setting an error state
+          } else if (meetingResponse.statusCode === 200) {
+            // Join the meeting again and set the meeting session in the state
+            console.log('Meeting available:', meetingResponse.data);
+            joinMeeting(meetingResponse.data, tour.channelId);
+          } else {
+            console.error('Meeting error:', meetingResponse);
+          }
+        } else {
+          alert(GUIDE_NOT_START);
+        }
+      } catch (error) {
+        console.error('Error processing tour:', error);
+      }
+    };
+    setIsLoading(true);
+    processTour();
+  }, [tour, joinMeeting]);
 
   // Check if the meeting session is available
   useEffect(() => {
     if (!meetingSession) return;
-
     const attendeeSet = new Set();
     const presenceCallback = (attendeeId, present) => {
       if (present) {
@@ -330,6 +289,17 @@ function LiveViewer3() {
     }
   }, [meetingSession, requestWakeLock]);
 
+  useEffect(() => {
+    if (!meetingSession) return;
+    if (navigator.mediaDevices && navigator.mediaDevices.getSupportedConstraints) {
+      const constraints = navigator.mediaDevices.getSupportedConstraints();
+      console.log('Supported Constraints:', constraints);
+      alert(`Supported Constraints:\n${JSON.stringify(constraints, null, 2)}`);
+    } else {
+      console.warn('getSupportedConstraints is not supported in this browser');
+    }
+  }, [meetingSession]);
+
   // Check if the tour exists, if not, show a not found page
   if (tour === null) {
     return <NotFound />;
@@ -338,66 +308,72 @@ function LiveViewer3() {
   return (
     <>
       <Header count={participantsCount} tourId={tourId} userType={userType} />
-      <div className={` ${meeting && attendee ? 'live-viewer-container' : 'live-viewer-container-center'}`}>
-        <TourTitle tour={tour} />
-        {!meeting && !attendee && (
-          <div className="box-selected-language">
-            <h3 className='title-box'>
-              {t('voiceLanguageLbl.listening')}
-            </h3>
-            <select
-              className='selected-language'
-              id="selectedVoiceLanguage"
-              value={selectedVoiceLanguage}
-              onChange={handleSelectedVoiceLanguageChange}
-            >
-              {(i18n.language === 'ja' ? JA_LISTEN_VOICE_LANGUAGES : LISTEN_VOICE_LANGUAGES).map((language) => (
-                <option key={language.key} value={language.key}>
-                  {language.label}
-                </option>
-              ))}
-
-            </select>
-          </div>
-        )}
-        <audio
-          id="audioElementListener"
-          ref={audioElementRef}
-          style={{ display: 'none' }}
-        />
-
-        {!meeting && !attendee ? (
+      <audio
+        id="audioElementListener"
+        ref={audioElementRef}
+        style={{ display: 'none' }}
+      />
+      <div className={` ${tour ? 'live-viewer-container' : 'live-viewer-container-center'}`}>
+        {!tour ? (
           isLoading ? (
             <div className="loading">
               <div className="spinner"></div>
               <p>{t('loading')}</p>
             </div>
           ) : (
-            <div className='btn' onClick={joinAudioSession}>
-              <button className='btn-join'>{t('joinBtn')}</button>
-            </div>
+            <>
+              <div className="box-selected-language">
+                <h3 className='title-box'>
+                  {t('voiceLanguageLbl.listening')}
+                </h3>
+                <select
+                  className='selected-language'
+                  id="selectedVoiceLanguage"
+                  value={selectedVoiceLanguage}
+                  onChange={handleSelectedVoiceLanguageChange}
+                >
+                  {(i18n.language === 'ja' ? JA_LISTEN_VOICE_LANGUAGES : LISTEN_VOICE_LANGUAGES).map((language) => (
+                    <option key={language.key} value={language.key}>
+                      {language.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className='btn' onClick={joinTour}>
+                <button className='btn-join'>{t('joinBtn')}</button>
+              </div>
+            </>
           )
         ) : (
           <>
-            <div className='audioViewer'>
-              {!!isPlay ? <div>
-                <div className='pauseButtonViewer' onClick={handlePlay}>
-                  <FaPause size={20} />
-                  <span className="startText">{t('stopBtn')}</span>
+            {isLoading ? (
+              <div className="loading">
+                <div className="spinner"></div>
+                <p>{t('loading')}</p>
+              </div>
+            ) : (<>
+              <TourTitle tour={tour} />
+              <div className='audioViewer'>
+                {!!isPlay ? <div>
+                  <div className='pauseButtonViewer' onClick={handlePlay}>
+                    <FaPause size={20} />
+                    <span className="startText">{t('stopBtn')}</span>
+                  </div>
+                </div>
+                  : <div>
+                    <div className='playButtonViewer' onClick={handlePlay}>
+                      <FaPlay size={20} />
+                      <span className="startText">{t('startBtn')}</span>
+                    </div>
+                  </div>}
+                <div className='soundButton' onClick={handleMuteUnmute}>
+                  {isMuted ? <HiMiniSpeakerWave size={30} /> : <IoVolumeMute size={30} />
+                  }
                 </div>
               </div>
-                : <div>
-                  <div className='playButtonViewer' onClick={handlePlay}>
-                    <FaPlay size={20} />
-                    <span className="startText">{t('startBtn')}</span>
-                  </div>
-                </div>}
-              <div className='soundButton' onClick={handleMuteUnmute}>
-                {isMuted ? <HiMiniSpeakerWave size={30} /> : <IoVolumeMute size={30} />
-                }
-              </div>
-            </div>
-            {chatRestriction !== "nochat" && (<MessageBox userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} userType={userType} statusChat={chatRestriction} />)}
+              {/* {chatRestriction !== "nochat" && (<MessageBox userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} userType={userType} statusChat={chatRestriction} />)} */}
+            </>)}
+
           </>
         )}
       </div>

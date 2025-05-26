@@ -92,8 +92,3 @@
   padding: 12px 15px;
   
 }
-.select-container{
-  display: flex;
-  justify-content: center; /* Căn giữa theo chiều ngang */
-  align-items: center;
-}
