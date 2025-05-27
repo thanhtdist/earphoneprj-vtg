@@ -1,10 +1,7 @@
-/* App.css */
-/* html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  overflow: hidden;
-} */
+/* Reset some default styles */
+html, body {
+  touch-action: pan-x pan-y;
+}
 
 /* General styling */
 .App {
@@ -15,13 +12,6 @@
   padding-top: 10px;
   /* Adjust to prevent overlap with the sticky menu */
 }
-
-/* nav {
-  display: flex;
-  justify-content: space-around;
-  background-color: #333;
-  padding: 1rem;
-} */
 
 :root {
   --page-color: black;
