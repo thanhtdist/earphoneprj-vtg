@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from "react-router-dom";
+import Config from '../utils/config';
 
 const GuideTourConfirm = ({ tour }) => {
+  const navigate = useNavigate();
   const { t } = useTranslation();
   const [agreed, setAgreed] = useState(false);
 
@@ -69,7 +72,7 @@ const GuideTourConfirm = ({ tour }) => {
               onClick={() => {
                 // Handle the button click event here
                 // For example, navigate to the guide screen or perform an action
-                window.location.href = "/guide/" + tour?.tourId;
+                navigate(`${Config.pathNames.guide}/${tour?.tourId}`);
               }}
             >
               {t('startGuidePage.startBtn')}

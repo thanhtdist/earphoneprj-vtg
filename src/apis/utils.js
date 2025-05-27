@@ -1,9 +1,11 @@
 import { get, post, put } from 'aws-amplify/api';
 import Cookies from "js-cookie";
 import { refreshToken } from './admin'; // import your refreshToken function
+import Config from '../utils/config'; // Importing the configuration file
 
 async function requestWithRefresh(method, params) {
   try {
+    console.log("requestWithRefresh params",  `${Config.subPath}/${Config.pathNames.login}`);
     const restOperation = method(params); // Call the original method
     await restOperation.response;
     return restOperation
@@ -30,7 +32,7 @@ async function requestWithRefresh(method, params) {
     if (error.response?.statusCode === 404) {
       Cookies.remove("accessToken");
       Cookies.remove("refreshToken");
-      window.location.href = "/admin/login";
+      window.location.href = `${Config.subPath}/${Config.pathNames.login}`; // Redirect to login page
       return;
     }
     throw error;

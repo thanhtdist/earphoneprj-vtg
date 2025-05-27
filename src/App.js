@@ -1,4 +1,3 @@
-import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import LiveViewer from './components/LiveViewer';
 import StartLiveSession2 from './components/StartLiveSession2';
@@ -12,25 +11,32 @@ import LiveViewerJa from './components/LiveViewerJa';
 import LiveSubSpeaker from './components/LiveSubSpeaker';
 import StartLiveSession from './components/StartLiveSession';
 import StartFindTour from './components/StartFindTour';
-import RegisterTour from './components/admin/RegisterTour';
-import ListTour from './components/admin/ListTour';
-import UpdateTour from './components/admin/UpdateTour';
+import RegisterTour from './components/admin/tours/RegisterTour';
+import ListTour from './components/admin/tours/ListTour';
+import UpdateTour from './components/admin/tours/UpdateTour';
 import './styles/App.css';  // Importing the updated CSS for responsiveness
 import '@aws-amplify/ui-react/styles.css';
-import RegisterAdmin from './components/admin/RegisterAdmin';
-import ListAdmin from './components/admin/ListAdmin';
-import UpdateAdmin from './components/admin/UpdateAdmin';
-import Login from './components/admin/Login';
-//import ProtectedRoute from './components/admin/auth/ProtectedRoute';
-import AdminLayout from "./components/admin/AdminLayout";
-import { AuthProvider } from './components/admin/auth/AuthContext';
+import RegisterAdmin from './components/admin/users/RegisterAdmin';
+import ListAdmin from './components/admin/users/ListAdmin';
+import UpdateAdmin from './components/admin/users/UpdateAdmin';
+import Login from './components/admin/users/Login';
+import AdminLayout from "./components/admin/commons/AdminLayout";
+import { AuthProvider } from './components/admin/commons/AuthContext';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Config from './utils/config'; // Importing the configuration file
+import NotFound from './components/NotFound'; // Importing the NotFound component
+
 function App() {
+  // Check if we're at the bare root URL
+  const isRootUrl = window.location.pathname === '/';
+  console.log("pathname: ", window.location.pathname);
+  console.log("isRootUrl: ", isRootUrl);
+  if (isRootUrl) return <NotFound />;
   return (
     <>
       <ToastContainer position="top-right" autoClose={3000} />
-      <Router>
+      <Router basename={Config.subPath}>
         <div className="App">
           <Routes>
             {/* Public routes - Not wrapped by AuthProvider */}
@@ -54,10 +60,10 @@ function App() {
                   <Route path="login" element={<Login />} />
                   <Route element={<AdminLayout />}>
                     <Route path="" element={<ListAdmin />} />
-                    <Route path="update" element={<UpdateAdmin />} />
+                    <Route path="/:userId" element={<UpdateAdmin />} />
                     <Route path="register" element={<RegisterAdmin />} />
                     <Route path="tour" element={<ListTour />} />
-                    <Route path="tour/update" element={<UpdateTour />} />
+                    <Route path="tour/:tourId" element={<UpdateTour />} />
                     <Route path="tour/register" element={<RegisterTour />} />
                   </Route>
                 </Routes>

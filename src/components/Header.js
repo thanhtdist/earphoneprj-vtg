@@ -7,6 +7,7 @@ import '../styles/Header.css';
 import { useTranslation } from 'react-i18next';
 import Config from '../utils/config';
 import { getUserStyle } from "../utils/get-user-style";
+import { Link } from 'react-router-dom';
 
 function Header({ tourId, count = null, userType = null }) {
     const { t } = useTranslation();
@@ -23,9 +24,14 @@ function Header({ tourId, count = null, userType = null }) {
     };
     // This function should return a color based on the userType
     const pageColor = getUserStyle(userType);
-    
+    const appUrl = {
+        guide: Config.appGuideURL(),
+        subGuide: Config.appSubGuideURL(),
+        viewer: Config.appViewerURL()
+    }
+    console.log("Viewer App URL: ", appUrl);
+
     return (
-        // <div className='containerHeader' style={style()}>
         <div className={`${count !== null ? 'container-header' : 'container-header-startguide'}`} style={{ 'color': pageColor }} >
             {count !== null && <Participants count={count}></Participants>}
 
@@ -33,11 +39,6 @@ function Header({ tourId, count = null, userType = null }) {
                 {userType === "Guide" && (
                     <div className='qrCode' onClick={openPopup}>
                         <BsQrCode className='icon' size={30} />
-                        {/* <span>{t('headerSettings.qrCode')}</span> */}
-                        {/* <div className='qrText'>
-                            <span>お客様用</span>
-                            <span>QRコードを表示</span>
-                        </div> */}
                         <div className='qrText' style={{ textAlign: "center" }}>
                             <span dangerouslySetInnerHTML={{ __html: t('headerSettings.qrCode') }} />
                         </div>
@@ -45,9 +46,7 @@ function Header({ tourId, count = null, userType = null }) {
                 )}
 
                 <div className='selectLanguage'>
-                    {/* <GrLanguage className='icon' size={24} /> */}
                     <SettingMenu></SettingMenu>
-                    {/* <span>{t('headerSettings.language')}</span> */}
                     <span>Language</span>
                 </div>
             </div>
@@ -67,17 +66,13 @@ function Header({ tourId, count = null, userType = null }) {
                                 <>
                                     <div className='qrCodeContainer'>
                                         <div className="qrCodeContent">
-                                            <QRCodeSVG value={`${Config.appSubGuideURL}/${tourId}`} size={256} level="H" />
-                                        </div>
-                                        <div style={{ textAlign: "center", fontWeight: "bold" }}>
-                                            <a style={{ display: "unset" }} className='link' target="_blank" rel="noopener noreferrer"
-                                                href={`${Config.appSubGuideURL}/${tourId}`}
+                                            <QRCodeSVG value={`${appUrl.subGuide}/${tourId}`} size={256} level="H" />
+                                        </div>                                        <div style={{ textAlign: "center", fontWeight: "bold" }}>
+                                            <Link style={{ display: "unset" }} className='link' target="_blank" rel="noopener noreferrer"
+                                                to={`${appUrl.subGuide}/${tourId}`}
                                             >
-                                                {/* {t('scanQRCodeTxt.subGuide')} */}
-                                                {/* <span>QRコードをサブガイドのスマートフォンで</span>
-                                                <span>読み取ってください</span> */}
                                                 <span dangerouslySetInnerHTML={{ __html: t('scanQRCodeTxt.subGuide') }} />
-                                            </a>
+                                            </Link>
                                         </div>
 
                                     </div>
@@ -86,17 +81,13 @@ function Header({ tourId, count = null, userType = null }) {
                                 <>
                                     <div className='qrCodeContainer'>
                                         <div className="qrCodeContent">
-                                            <QRCodeSVG value={`${Config.appViewerURL}/${tourId}`} size={256} level="H" />
-                                        </div>
-                                        <div style={{ textAlign: "center", fontWeight: "bold" }}>
-                                            <a style={{ display: "unset" }} className='link' target="_blank" rel="noopener noreferrer"
-                                                href={`${Config.appViewerURL}/${tourId}`}
+                                            <QRCodeSVG value={`${appUrl.viewer}/${tourId}`} size={256} level="H" />
+                                        </div>                                        <div style={{ textAlign: "center", fontWeight: "bold" }}>
+                                            <Link style={{ display: "unset" }} className='link' target="_blank" rel="noopener noreferrer"
+                                                to={`${appUrl.viewer}/${tourId}`}
                                             >
-                                                {/* {t('scanQRCodeTxt.listener')} */}
                                                 <span dangerouslySetInnerHTML={{ __html: t('scanQRCodeTxt.listener') }} />
-                                                {/* <span>QRコードをリスナーのスマートフォンで</span>
-                                            <span>読み取ってください</span> */}
-                                            </a>
+                                            </Link>
                                         </div>
 
                                     </div>

@@ -1,30 +1,68 @@
-// This file contains the configuration for the app.
+/**
+ * Configuration file for the application
+ * Contains all the necessary configuration settings for the app
+ */
 const Config = {
-    // Apply for app instance for chat messaging
+    /**
+     * AWS Chime SDK Configuration
+     */
+    // Amazon Chime SDK app instance ARN
     appInstanceArn: "arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0",
-    // Apply for app instance user and channel(group chat) for chat messaging
+    // Number of days before app instance user expires
     appInstanceUserExpirationDays: 1,
+    // Number of days before a channel expires
     channelExpirationDays: 1,
-    // Region for the Amazon Chime SDK
+    // AWS region for Chime SDK
     region: 'us-east-1',
-    // Session ID for the chat messaging
+    // Session ID for chat messaging
     sessionId: 'sessionChatVTG',
-    // Access key and secret key of the AWS account to authenticate with the Amazon Chime SDK for chat messaging
-    // accessKeyId: '',
-    // secretAccessKey: '',
+    // AWS credentials - use environment variables for security
     accessKeyId: process.env.REACT_APP_MY_APP_AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.REACT_APP_MY_APP_AWS_SECRET_ACCESS_KEY,
-    // URL for the web app for participants to join listen to audio
-    // appGuideURL: 'http:localhost:3000/guide',
-    // appSubGuideURL: 'http://localhost:3000/sub-guide',
-    // appViewerURL: 'http://localhost:3000/viewer',
-    appGuideURL: 'https://earphoneguide.d1mxns0xu1qyis.amplifyapp.com/guide',
-    appSubGuideURL: 'https://earphoneguide.d1mxns0xu1qyis.amplifyapp.com/sub-guide',
-    appViewerURL: 'https://earphoneguide.d1mxns0xu1qyis.amplifyapp.com/viewer',
-    // S3 attchment bucket name
+
+    /**
+     * Application URLs and Paths
+     */
+    // Base URL for API endpoints
+    baseURL: 'http://192.168.201.23:3000',
+    // Base path for the application
+    subPath: '/clubtourism',
+    // Path names for different user roles
+    pathNames: {
+        guide: '/guide',
+        subGuide: '/sub-guide',
+        viewer: '/viewer',
+        user: '/admin',
+        login: '/admin/login',
+        registerUser: '/admin/register',
+        tour: '/admin/tour',
+        registerTour: '/admin/tour/register',
+    },
+    
+    /**
+     * Storage and Logging Configuration
+     */
+    // S3 bucket name for chat attachments
     attachmentBucketName: 'vtg-chat-attachments',
-    // Write logs from client side to CloudWatch using API Gateway      
+    // API Gateway endpoint for CloudWatch logging
     cloudWatchLogRestApiVTGRestApi: 'https://4ipuok618b.execute-api.us-east-1.amazonaws.com/prod/',
-    cookiesExpirationDays: 1
+    // Number of days before cookies expire
+    cookiesExpirationDays: 1,
+    
+    /**
+     * Helper methods to construct application URLs
+     */
+    // Returns the full URL for the guide interface
+    appGuideURL: function() {
+        return `${this.baseURL}${this.subPath}${this.pathNames.guide}`;
+    },
+    // Returns the full URL for the sub-guide interface
+    appSubGuideURL: function() {
+        return `${this.baseURL}${this.subPath}${this.pathNames.subGuide}`;
+    },
+    // Returns the full URL for the viewer interface
+    appViewerURL: function() {
+        return `${this.baseURL}${this.subPath}${this.pathNames.viewer}`;
+    }
 };
 export default Config;
