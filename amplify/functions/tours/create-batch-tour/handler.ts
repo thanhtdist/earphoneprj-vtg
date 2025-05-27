@@ -89,6 +89,8 @@ export const handler: APIGatewayProxyHandler = async (event) => {
             updatedAt: '',
             updatedBy: '',
             deleteFlag: 0,
+            tourTestStatus: 'test', // Test and Production
+            tourType: 'tour'
           }
         }
       };
@@ -97,7 +99,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     // Batch write to DynamoDB
     const params = {
       RequestItems: {
-        "tours" : putRequests
+        "tours": putRequests
       }
     };
 
