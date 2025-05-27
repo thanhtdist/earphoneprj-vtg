@@ -24,7 +24,7 @@ const Config = {
      * Application URLs and Paths
      */
     // Base URL for API endpoints
-    baseURL: 'http://192.168.201.23:3000',
+    baseURL: 'https://earphoneguide.d1mxns0xu1qyis.amplifyapp.com',
     // Base path for the application
     subPath: '/clubtourism',
     // Path names for different user roles
