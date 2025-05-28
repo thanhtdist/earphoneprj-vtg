@@ -385,7 +385,13 @@ function StartLiveSession2() {
     // Create a new transform device if Voice Focus is supported
     const vfDevice = await transformVFD.createTransformDevice(selectedAudioInput);
     //logger.info('toggleMicrophone vfDevice ' + JSON.stringify(vfDevice));
-    console.log('toggleMicrophone vfDevice', vfDevice);
+    console.log('vfDevice', vfDevice);
+    alert("Selected vfDevice: " + selectedAudioInput);
+    if (vfDevice) {
+      // logger.info('Amazon Voice Focus enabled ');
+      console.log('Amazon Voice Focus enabled ');
+      alert("Amazon Voice Focus enabled");
+    }
     // Enable Echo Reduction on this client
     const observeMeetingAudio = await vfDevice.observeMeetingAudio(meetingSession.audioVideo);
     //logger.info('toggleMicrophone Echo Reduction ' + JSON.stringify(observeMeetingAudio));
@@ -396,11 +402,6 @@ function StartLiveSession2() {
     const startAudioInput = await meetingSession.audioVideo.startAudioInput(deviceToUse);
     //logger.info('toggleMicrophone startAudioInput ' + JSON.stringify(startAudioInput));
     console.log('toggleMicrophone startAudioInput', startAudioInput);
-
-    if (vfDevice) {
-      // logger.info('Amazon Voice Focus enabled ');
-      console.log('Amazon Voice Focus enabled ');
-    }
     // Unmute the microphone
     //const realtimeUnmuteLocalAudio = meetingSession.audioVideo.realtimeUnmuteLocalAudio();
     //logger.info('toggleMicrophone realtimeUnmuteLocalAudio ' + JSON.stringify(realtimeUnmuteLocalAudio));
