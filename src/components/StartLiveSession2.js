@@ -414,6 +414,7 @@ function StartLiveSession2() {
       try {
         if (isMicOn) {
           // Mute the microphone
+          alert("Microphone Start -> Stop");
           const realtimeMuteLocalAudio = meetingSession.audioVideo.realtimeMuteLocalAudio();
           //logger.info('toggleMicrophone realtimeMuteLocalAudio ' + JSON.stringify(realtimeMuteLocalAudio));
           console.log('toggleMicrophone realtimeMuteLocalAudio', realtimeMuteLocalAudio);
@@ -443,6 +444,7 @@ function StartLiveSession2() {
           //   console.log('Amazon Voice Focus enabled ');
           // }
           // Unmute the microphone
+          alert("Microphone Stop -> Start");
           const realtimeUnmuteLocalAudio = meetingSession.audioVideo.realtimeUnmuteLocalAudio();
           //logger.info('toggleMicrophone realtimeUnmuteLocalAudio ' + JSON.stringify(realtimeUnmuteLocalAudio));
           console.log('toggleMicrophone realtimeUnmuteLocalAudio', realtimeUnmuteLocalAudio);
@@ -533,6 +535,7 @@ function StartLiveSession2() {
   useEffect(() => {
 
     if (selectedAudioInput) {
+      alert("Selected Audio Input Device: " + selectedAudioInput);
       connectAudioInput(meetingSession, transformVFD, selectedAudioInput)
     }
 
