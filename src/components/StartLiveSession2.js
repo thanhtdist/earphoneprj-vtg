@@ -386,7 +386,7 @@ function StartLiveSession2() {
     const vfDevice = await transformVFD.createTransformDevice(selectedAudioInput);
     //logger.info('toggleMicrophone vfDevice ' + JSON.stringify(vfDevice));
     console.log('vfDevice', vfDevice);
-    alert("Selected vfDevice: " + selectedAudioInput);
+    alert("Selected vfDevice: " + vfDevice);
     if (vfDevice) {
       // logger.info('Amazon Voice Focus enabled ');
       console.log('Amazon Voice Focus enabled ');
