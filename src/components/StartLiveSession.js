@@ -204,6 +204,51 @@ function StartLiveSession() {
         console.log('Audio Video Started', meetingSession.audioVideo);
         const stream = await meetingSession.audioVideo.getCurrentMeetingAudioStream();
         console.log('Audio Video Started Media Stream:', stream);
+        // Check if stream exists
+        if (stream) {
+          // Create an audio context to analyze the stream
+          const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+          const audioSource = audioContext.createMediaStreamSource(stream);
+          const analyser = audioContext.createAnalyser();
+
+          analyser.fftSize = 256;
+          audioSource.connect(analyser);
+
+          const bufferLength = analyser.frequencyBinCount;
+          const dataArray = new Uint8Array(bufferLength);
+
+          // Function to check if audio is silent
+          function checkSilence() {
+            analyser.getByteFrequencyData(dataArray);
+
+            // Calculate average volume
+            let sum = 0;
+            for (let i = 0; i < bufferLength; i++) {
+              sum += dataArray[i];
+            }
+            const averageVolume = sum / bufferLength;
+
+            // Define silence threshold (adjust as needed)
+            const silenceThreshold = 5;
+            const isSilent = averageVolume < silenceThreshold;
+
+            console.log('Is silent:', isSilent, 'Average volume:', averageVolume);
+            return isSilent;
+          }
+
+          // Check silence immediately
+          // checkSilence();
+          const isSilent = checkSilence();
+          alert("Is silent: " + isSilent);
+
+          // // Or monitor continuously
+          // setInterval(() => {
+          //   const isSliene = checkSilence();
+          // }, 500);
+
+          // Stop monitoring when needed
+          // clearInterval(silenceMonitor);
+        }
       },
       // audioVideoDidStop: sessionStatus => {
       //   alert("Audio Video Stopped");
