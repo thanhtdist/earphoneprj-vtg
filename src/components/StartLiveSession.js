@@ -9,6 +9,7 @@ import {
   startMeetingTranscription,
   getMeetingByTourId,
   updateMeetingByTourId,
+  startCapture,
 } from '../apis/api';
 import {
   DefaultDeviceController,
@@ -300,7 +301,9 @@ function StartLiveSession() {
 
     // Start audio video session
     meetingSession.audioVideo.start();
-
+    console.log("meeting.MeetingId", meeting.MeetingId);
+    const startCaptureResponse = await startCapture(meeting.MeetingId);
+    console.log('startCaptureResponse:', startCaptureResponse);
   }, []);
 
   // Function to update MeetingId, Channel Id

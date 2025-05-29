@@ -5,6 +5,7 @@
   "dependencies": {
     "@aws-amplify/ui-react": "^6.5.2",
     "@aws-sdk/client-chime-sdk-identity": "^3.665.0",
+    "@aws-sdk/client-chime-sdk-media-pipelines": "^3.817.0",
     "@aws-sdk/client-chime-sdk-messaging": "^3.665.0",
     "@fortawesome/fontawesome-free": "^6.6.0",
     "@fortawesome/free-solid-svg-icons": "^6.6.0",

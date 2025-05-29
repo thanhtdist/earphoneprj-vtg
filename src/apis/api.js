@@ -1,6 +1,10 @@
 // This file contains the API functions to interact with the backend services
 import { get, post, put } from 'aws-amplify/api';
 import Config from '../utils/config';
+import {
+  ChimeSDKMediaPipelinesClient,
+  CreateMediaCapturePipelineCommand
+} from "@aws-sdk/client-chime-sdk-media-pipelines";
 
 const { v4: uuid } = require('uuid');
 
@@ -430,5 +434,31 @@ export async function getTourByNumberAndDate(data) {
       statusCode: error.response?.statusCode || 500,
       error: errorMessage,
     };
+  }
+}
+
+export async function startCapture(meetingId) {
+  const client = new ChimeSDKMediaPipelinesClient({
+      region: Config.region,
+      credentials: {
+        accessKeyId: Config.accessKeyId,
+        secretAccessKey: Config.secretAccessKey,
+      },
+    });
+
+  const command = new CreateMediaCapturePipelineCommand({
+    SourceType: 'ChimeSdkMeeting',
+    SourceArn: `arn:aws:chime:us-east-1:647755634525:meeting/${meetingId}`,
+    SinkType: 'S3Bucket',
+    SinkArn: `arn:aws:s3:::i-stech-earphoneprj-outputs-s3`
+  });
+
+  try {
+    console.log("Creating media capture pipeline for meeting:", meetingId);
+    const response = await client.send(command);
+    console.log("Media Capture Pipeline Created:", response);
+    return response.MediaCapturePipeline;
+  } catch (error) {
+    console.error("Error creating media capture pipeline:", error);
   }
 }
