@@ -558,9 +558,8 @@ function StartLiveSession() {
 
 
   useEffect(() => {
-
+    alert("Selected Audio Input Device: " + selectedAudioInput);
     if (selectedAudioInput) {
-      alert("Selected Audio Input Device: " + selectedAudioInput);
       connectAudioInput(meetingSession, transformVFD, selectedAudioInput)
     }
 
