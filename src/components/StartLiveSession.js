@@ -9,7 +9,7 @@ import {
   startMeetingTranscription,
   getMeetingByTourId,
   updateMeetingByTourId,
-  startCapture,
+  // startCapture,
 } from '../apis/api';
 import {
   DefaultDeviceController,
@@ -153,7 +153,7 @@ function StartLiveSession() {
       setTransformVFD(transformer);
       isVoiceFocusSupported = transformer.isSupported();
       console.log('transformVoiceFocusDevice isVoiceFocusSupported', isVoiceFocusSupported);
-      alert("is Voice Focus Supported: " + isVoiceFocusSupported);
+      //alert("is Voice Focus Supported: " + isVoiceFocusSupported);
     } catch (e) {
       // Will only occur due to invalid input or transient errors (e.g., network).
       console.error('Failed to create VoiceFocusDeviceTransformer:', e);
@@ -200,57 +200,57 @@ function StartLiveSession() {
     // Add complete observer with logging
     meetingSession.audioVideo.addObserver({
       // Connection events
-      audioVideoDidStart: async () => {
-        alert("Audio Video Started");
-        console.log('Audio Video Started', meetingSession.audioVideo);
-        const stream = await meetingSession.audioVideo.getCurrentMeetingAudioStream();
-        console.log('Audio Video Started Media Stream:', stream);
-        // Check if stream exists
-        if (stream) {
-          // Create an audio context to analyze the stream
-          const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-          const audioSource = audioContext.createMediaStreamSource(stream);
-          const analyser = audioContext.createAnalyser();
+      // audioVideoDidStart: async () => {
+      //   //alert("Audio Video Started");
+      //   console.log('Audio Video Started', meetingSession.audioVideo);
+      //   const stream = await meetingSession.audioVideo.getCurrentMeetingAudioStream();
+      //   console.log('Audio Video Started Media Stream:', stream);
+      //   // Check if stream exists
+      //   if (stream) {
+      //     // Create an audio context to analyze the stream
+      //     const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      //     const audioSource = audioContext.createMediaStreamSource(stream);
+      //     const analyser = audioContext.createAnalyser();
 
-          analyser.fftSize = 256;
-          audioSource.connect(analyser);
+      //     analyser.fftSize = 256;
+      //     audioSource.connect(analyser);
 
-          const bufferLength = analyser.frequencyBinCount;
-          const dataArray = new Uint8Array(bufferLength);
+      //     const bufferLength = analyser.frequencyBinCount;
+      //     const dataArray = new Uint8Array(bufferLength);
 
-          // Function to check if audio is silent
-          function checkSilence() {
-            analyser.getByteFrequencyData(dataArray);
+      //     // Function to check if audio is silent
+      //     function checkSilence() {
+      //       analyser.getByteFrequencyData(dataArray);
 
-            // Calculate average volume
-            let sum = 0;
-            for (let i = 0; i < bufferLength; i++) {
-              sum += dataArray[i];
-            }
-            const averageVolume = sum / bufferLength;
+      //       // Calculate average volume
+      //       let sum = 0;
+      //       for (let i = 0; i < bufferLength; i++) {
+      //         sum += dataArray[i];
+      //       }
+      //       const averageVolume = sum / bufferLength;
 
-            // Define silence threshold (adjust as needed)
-            const silenceThreshold = 5;
-            const isSilent = averageVolume < silenceThreshold;
+      //       // Define silence threshold (adjust as needed)
+      //       const silenceThreshold = 5;
+      //       const isSilent = averageVolume < silenceThreshold;
 
-            console.log('Is silent:', isSilent, 'Average volume:', averageVolume);
-            return isSilent;
-          }
+      //       console.log('Is silent:', isSilent, 'Average volume:', averageVolume);
+      //       return isSilent;
+      //     }
 
-          // Check silence immediately
-          // checkSilence();
-          const isSilent = checkSilence();
-          alert("Is silent: " + isSilent);
+      //     // Check silence immediately
+      //     // checkSilence();
+      //     const isSilent = checkSilence();
+      //     //alert("Is silent: " + isSilent);
 
-          // // Or monitor continuously
-          // setInterval(() => {
-          //   const isSliene = checkSilence();
-          // }, 500);
+      //     // // Or monitor continuously
+      //     // setInterval(() => {
+      //     //   const isSliene = checkSilence();
+      //     // }, 500);
 
-          // Stop monitoring when needed
-          // clearInterval(silenceMonitor);
-        }
-      },
+      //     // Stop monitoring when needed
+      //     // clearInterval(silenceMonitor);
+      //   }
+      // },
       // audioVideoDidStop: sessionStatus => {
       //   alert("Audio Video Stopped");
       // },
@@ -269,41 +269,40 @@ function StartLiveSession() {
     const audioElement = document.getElementById('audioElementMain');
     if (audioElement) {
       await meetingSession.audioVideo.bindAudioElement(audioElement);
-
     } else {
       console.error('Audio element not found');
     }
 
-    const observer = {
-      audioInputsChanged: freshAudioInputDeviceList => {
-        // An array of MediaDeviceInfo objects
-        freshAudioInputDeviceList.forEach(mediaDeviceInfo => {
-          console.log(`Device ID xxx: ${mediaDeviceInfo.deviceId} Microphone: ${mediaDeviceInfo.label}`);
-        });
-      },
+    // const observer = {
+    //   audioInputsChanged: freshAudioInputDeviceList => {
+    //     // An array of MediaDeviceInfo objects
+    //     freshAudioInputDeviceList.forEach(mediaDeviceInfo => {
+    //       console.log(`Device ID xxx: ${mediaDeviceInfo.deviceId} Microphone: ${mediaDeviceInfo.label}`);
+    //     });
+    //   },
 
-      audioOutputsChanged: freshAudioOutputDeviceList => {
-        console.log('Audio outputs updated xxx: ', freshAudioOutputDeviceList);
-      },
+    //   audioOutputsChanged: freshAudioOutputDeviceList => {
+    //     console.log('Audio outputs updated xxx: ', freshAudioOutputDeviceList);
+    //   },
 
-      videoInputsChanged: freshVideoInputDeviceList => {
-        console.log('Video inputs updated xxx: ', freshVideoInputDeviceList);
-      },
+    //   videoInputsChanged: freshVideoInputDeviceList => {
+    //     console.log('Video inputs updated xxx: ', freshVideoInputDeviceList);
+    //   },
 
-      audioInputMuteStateChanged: (device, muted) => {
-        // console.log('Device xxx', device, muted ? 'is muted in hardware' : 'is not muted');
-        console.log('Device yyy:', device);
-        console.log('Status yyy:', muted ? 'is muted in hardware' : 'is not muted');
-      },
-    };
+    //   audioInputMuteStateChanged: (device, muted) => {
+    //     // console.log('Device xxx', device, muted ? 'is muted in hardware' : 'is not muted');
+    //     console.log('Device yyy:', device);
+    //     console.log('Status yyy:', muted ? 'is muted in hardware' : 'is not muted');
+    //   },
+    // };
 
-    meetingSession.audioVideo.addDeviceChangeObserver(observer);
+    // meetingSession.audioVideo.addDeviceChangeObserver(observer);
 
     // Start audio video session
     meetingSession.audioVideo.start();
-    console.log("meeting.MeetingId", meeting.MeetingId);
-    const startCaptureResponse = await startCapture(meeting.MeetingId);
-    console.log('startCaptureResponse:', startCaptureResponse);
+    // console.log("meeting.MeetingId", meeting.MeetingId);
+    // const startCaptureResponse = await startCapture(meeting.MeetingId);
+    // console.log('startCaptureResponse:', startCaptureResponse);
   }, []);
 
   // Function to update MeetingId, Channel Id
@@ -459,11 +458,11 @@ function StartLiveSession() {
     const vfDevice = await transformVFD.createTransformDevice(selectedAudioInput);
     //logger.info('toggleMicrophone vfDevice ' + JSON.stringify(vfDevice));
     console.log('vfDevice', vfDevice);
-    alert("Selected vfDevice: " + vfDevice);
+    //alert("Selected vfDevice: " + vfDevice);
     if (vfDevice) {
       // logger.info('Amazon Voice Focus enabled ');
       console.log('Amazon Voice Focus enabled ');
-      alert("Amazon Voice Focus enabled");
+      //alert("Amazon Voice Focus enabled");
     }
     // Enable Echo Reduction on this client
     const observeMeetingAudio = await vfDevice.observeMeetingAudio(meetingSession.audioVideo);
@@ -488,7 +487,7 @@ function StartLiveSession() {
       try {
         if (isMicOn) {
           // Mute the microphone
-          alert("Microphone Start -> Stop");
+          //alert("Microphone Start -> Stop");
           const realtimeMuteLocalAudio = meetingSession.audioVideo.realtimeMuteLocalAudio();
           //logger.info('toggleMicrophone realtimeMuteLocalAudio ' + JSON.stringify(realtimeMuteLocalAudio));
           console.log('toggleMicrophone realtimeMuteLocalAudio', realtimeMuteLocalAudio);
@@ -518,7 +517,7 @@ function StartLiveSession() {
           //   console.log('Amazon Voice Focus enabled ');
           // }
           // Unmute the microphone
-          alert("Microphone Stop -> Start");
+          //alert("Microphone Stop -> Start");
           const realtimeUnmuteLocalAudio = meetingSession.audioVideo.realtimeUnmuteLocalAudio();
           //logger.info('toggleMicrophone realtimeUnmuteLocalAudio ' + JSON.stringify(realtimeUnmuteLocalAudio));
           console.log('toggleMicrophone realtimeUnmuteLocalAudio', realtimeUnmuteLocalAudio);
@@ -607,7 +606,7 @@ function StartLiveSession() {
 
 
   useEffect(() => {
-    alert("Selected Audio Input Device: " + selectedAudioInput);
+    //alert("Selected Audio Input Device: " + selectedAudioInput);
     if (selectedAudioInput) {
       connectAudioInput(meetingSession, transformVFD, selectedAudioInput)
     }
@@ -753,14 +752,14 @@ function StartLiveSession() {
     console.log(`Version: ${browser.version}`);
     console.log(`Major Version: ${browser.majorVersion}`);
     console.log(`User Agent: ${browser.userAgent}`);
-    alert(`Browser: ${browser.name}, Version: ${browser.version}, Major Version: ${browser.majorVersion}`);
+    //alert(`Browser: ${browser.name}, Version: ${browser.version}, Major Version: ${browser.majorVersion}`);
   }, []);
 
   useEffect(() => {
     if (!meetingSession) return;
     // Get browser information from meeting.audioVideo
     const browser = meetingSession.audioVideo.audioMixController.browserBehavior.browser;
-    alert(`Browser meetingSession: ${browser.name}, Version: ${browser.version}, Type: ${browser.type}, Os: ${browser.type}`);
+    //alert(`Browser meetingSession: ${browser.name}, Version: ${browser.version}, Type: ${browser.type}, Os: ${browser.type}`);
     console.log('xxaudioMixController:', browser);
     // const browserVersion = meetingSession.audioVideo.browserBehavior.browserVersion();
     // const browserMajorVersion = meetingSession.audioVideo.browserBehavior.majorVersion();
