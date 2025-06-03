@@ -198,7 +198,7 @@ function StartLiveSession() {
     console.log('Main Speaker - initializeMeetingSession--> Start');
     //metricReport(meetingSession);
     // Add complete observer with logging
-    meetingSession.audioVideo.addObserver({
+    //meetingSession.audioVideo.addObserver({
       // Connection events
       // audioVideoDidStart: async () => {
       //   //alert("Audio Video Started");
@@ -263,7 +263,7 @@ function StartLiveSession() {
       // connectionDidBecomeGood: () => {
       //   alert("Your connection is good");
       // }
-    });
+    //});
     console.log('Main Speaker - initializeMeetingSession--> End');
     // Bind the audio element to the meeting session
     const audioElement = document.getElementById('audioElementMain');
@@ -299,7 +299,8 @@ function StartLiveSession() {
     // meetingSession.audioVideo.addDeviceChangeObserver(observer);
 
     // Start audio video session
-    meetingSession.audioVideo.start();
+    //meetingSession.audioVideo.start();
+    meetingSession.audioVideo.start({ signalingOnly: true });
     // console.log("meeting.MeetingId", meeting.MeetingId);
     // const startCaptureResponse = await startCapture(meeting.MeetingId);
     // console.log('startCaptureResponse:', startCaptureResponse);
