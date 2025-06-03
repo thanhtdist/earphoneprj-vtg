@@ -299,8 +299,8 @@ function StartLiveSession() {
     // meetingSession.audioVideo.addDeviceChangeObserver(observer);
 
     // Start audio video session
-    //meetingSession.audioVideo.start();
-    meetingSession.audioVideo.start({ signalingOnly: true });
+    meetingSession.audioVideo.start();
+    //meetingSession.audioVideo.start({ signalingOnly: true });
     // console.log("meeting.MeetingId", meeting.MeetingId);
     // const startCaptureResponse = await startCapture(meeting.MeetingId);
     // console.log('startCaptureResponse:', startCaptureResponse);
