@@ -111,7 +111,7 @@ function LiveViewer() {
       audioVideoDidStart: async () => {
         //alert("Audio Video Started");
         if (audioElement) {
-          await meetingSession.audioVideo.bindAudioElement(audioElement);
+          await session.audioVideo.bindAudioElement(audioElement);
         } else {
           console.error('Audio element not found');
         }
