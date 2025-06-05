@@ -268,23 +268,23 @@ function StartLiveSession() {
     // Bind the audio element to the meeting session
     // const audioElement = document.getElementById('audioElementMain');
     const audioElement = audioRef.current;
-    if (audioElement) {
-      await meetingSession.audioVideo.bindAudioElement(audioElement);
-    } else {
-      console.error('Audio element not found');
-    }
+    // if (audioElement) {
+    //   await meetingSession.audioVideo.bindAudioElement(audioElement);
+    // } else {
+    //   console.error('Audio element not found');
+    // }
     
-    // meetingSession.audioVideo.addObserver({
-    //   //Connection events
-    //   audioVideoDidStart: async () => {
-    //     //alert("Audio Video Started");
-    //     if (audioElement) {
-    //       await meetingSession.audioVideo.bindAudioElement(audioElement);
-    //     } else {
-    //       console.error('Audio element not found');
-    //     }
-    //   }
-    // });
+    meetingSession.audioVideo.addObserver({
+      //Connection events
+      audioVideoDidStart: async () => {
+        //alert("Audio Video Started");
+        if (audioElement) {
+          await meetingSession.audioVideo.bindAudioElement(audioElement);
+        } else {
+          console.error('Audio element not found');
+        }
+      }
+    });
 
     // const observer = {
     //   audioInputsChanged: freshAudioInputDeviceList => {
