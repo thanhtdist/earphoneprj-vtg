@@ -93,18 +93,30 @@ function LiveViewer() {
     setMeetingSession(session);
 
     await selectSpeaker(session);
-    if (selectedVoiceLanguage === 'ja-JP') {
-      console.log('Selected voice language is Japanese', selectedVoiceLanguage);
-      //const audioElement = document.getElementById('audioElementListener');
-      const audioElement = audioElementRef.current;
-      console.log('Check audioElement:', audioElement);
-      if (audioElement) {
-        await session.audioVideo.bindAudioElement(audioElement);
-      } else {
-        console.error('Audio element not found');
-      }
-    }
-    metricReport(session);
+    // if (selectedVoiceLanguage === 'ja-JP') {
+    //   console.log('Selected voice language is Japanese', selectedVoiceLanguage);
+    //   //const audioElement = document.getElementById('audioElementListener');
+    //   const audioElement = audioElementRef.current;
+    //   console.log('Check audioElement:', audioElement);
+    //   if (audioElement) {
+    //     await session.audioVideo.bindAudioElement(audioElement);
+    //   } else {
+    //     console.error('Audio element not found');
+    //   }
+    // }
+    // metricReport(session);
+    // const audioElement = audioElementRef.current;
+    // session.audioVideo.addObserver({
+    //   //Connection events
+    //   audioVideoDidStart: async () => {
+    //     //alert("Audio Video Started");
+    //     if (audioElement) {
+    //       await meetingSession.audioVideo.bindAudioElement(audioElement);
+    //     } else {
+    //       console.error('Audio element not found');
+    //     }
+    //   }
+    // });
     session.audioVideo.start();
     if (selectedVoiceLanguage === 'ja-JP') {
       console.log('Selected voice language is Japanese', selectedVoiceLanguage);

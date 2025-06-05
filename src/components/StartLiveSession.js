@@ -227,6 +227,18 @@ function StartLiveSession() {
     // };
 
     // meetingSession.audioVideo.addDeviceChangeObserver(observer);
+    // const audioElement = document.getElementById('audioElementMain');
+    // meetingSession.audioVideo.addObserver({
+    //   //Connection events
+    //   audioVideoDidStart: async () => {
+    //     //alert("Audio Video Started");
+    //     if (audioElement) {
+    //       await meetingSession.audioVideo.bindAudioElement(audioElement);
+    //     } else {
+    //       console.error('Audio element not found');
+    //     }
+    //   }
+    // });
 
     // Start audio video session
     meetingSession.audioVideo.start();
