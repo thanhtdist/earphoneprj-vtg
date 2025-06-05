@@ -104,7 +104,7 @@ function LiveViewer() {
         console.error('Audio element not found');
       }
     }
-    // metricReport(session);
+    metricReport(session);
     // const audioElement = audioElementRef.current;
     // session.audioVideo.addObserver({
     //   //Connection events
