@@ -106,6 +106,17 @@ function LiveViewer() {
     }
     metricReport(session);
     session.audioVideo.start();
+    if (selectedVoiceLanguage === 'ja-JP') {
+      console.log('Selected voice language is Japanese', selectedVoiceLanguage);
+      //const audioElement = document.getElementById('audioElementListener');
+      const audioElement = audioElementRef.current;
+      console.log('Check audioElement:', audioElement);
+      if (audioElement) {
+        await session.audioVideo.bindAudioElement(audioElement);
+      } else {
+        console.error('Audio element not found');
+      }
+    }
   }, [selectedVoiceLanguage]);
 
   const selectSpeaker = async (session) => {
@@ -487,20 +498,13 @@ function LiveViewer() {
       <Header count={participantsCount} tourId={tourId} userType={userType} />
       {/* <div className="live-viewer-container"> */}
       <div className={` ${meeting && attendee ? 'live-viewer-container' : 'live-viewer-container-center'}`}>
-        {/* <div className='live-viewer-title'>
-          <div className='time'>
-            <span>2025年1月1日</span>
-          </div>
-
-          <span className='name-tour'>浅草寺ツアー</span>
-        </div> */}
         <TourTitle tour={tour} />
         {!meeting && !attendee && (
           <div className="box-selected-language">
             <h3 className='title-box'>
               {t('voiceLanguageLbl.listening')}
             </h3>
-            <div class="select-container">
+            <div className="select-container">
               <select
                 className='selected-language'
                 id="selectedVoiceLanguage"
