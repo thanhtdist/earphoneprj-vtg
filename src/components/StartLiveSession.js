@@ -488,6 +488,7 @@ function StartLiveSession() {
     const startAudioInput = await meetingSession.audioVideo.startAudioInput(deviceToUse);
     //logger.info('toggleMicrophone startAudioInput ' + JSON.stringify(startAudioInput));
     console.log('toggleMicrophone startAudioInput', startAudioInput);
+    meetingSession.audioVideo.realtimeMuteLocalAudio();
     // Unmute the microphone
     //const realtimeUnmuteLocalAudio = meetingSession.audioVideo.realtimeUnmuteLocalAudio();
     //logger.info('toggleMicrophone realtimeUnmuteLocalAudio ' + JSON.stringify(realtimeUnmuteLocalAudio));

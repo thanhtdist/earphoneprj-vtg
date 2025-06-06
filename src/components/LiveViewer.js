@@ -129,7 +129,7 @@ function LiveViewer() {
     //     console.error('Audio element not found');
     //   }
     // }
-  }, [selectedVoiceLanguage]);
+  }, []);
 
   // const selectSpeaker = async (session) => {
   //   try {
