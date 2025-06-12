@@ -141,8 +141,8 @@ function LiveViewerJa() {
         console.error('Audio element not found');
       }
     }
+    await meetingSession.audioVideo.startAudioInput(null);
     session.audioVideo.start();
-    session.audioVideo.realtimeMuteLocalAudio();
   }, [selectedVoiceLanguage]);
 
   // Event for handling selected voice language change
