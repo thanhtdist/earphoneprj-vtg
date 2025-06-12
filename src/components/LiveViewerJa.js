@@ -142,6 +142,7 @@ function LiveViewerJa() {
       }
     }
     session.audioVideo.start();
+    session.audioVideo.realtimeMuteLocalAudio();
   }, [selectedVoiceLanguage]);
 
   // Event for handling selected voice language change
