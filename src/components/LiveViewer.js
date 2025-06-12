@@ -92,7 +92,7 @@ function LiveViewer() {
     const session = new DefaultMeetingSession(meetingSessionConfig, logger, deviceController);
     setMeetingSession(session);
 
-    await selectSpeaker(session);
+    //await selectSpeaker(session);
     if (selectedVoiceLanguage === 'ja-JP') {
       console.log('Selected voice language is Japanese', selectedVoiceLanguage);
       //const audioElement = document.getElementById('audioElementListener');
@@ -108,18 +108,18 @@ function LiveViewer() {
     session.audioVideo.start();
   }, [selectedVoiceLanguage]);
 
-  const selectSpeaker = async (session) => {
-    try {
-      const audioOutputDevices = await session.audioVideo.listAudioOutputDevices();
-      if (audioOutputDevices.length > 0) {
-        await session.audioVideo.chooseAudioOutput(audioOutputDevices[0].deviceId);
-      } else {
-        console.log('No speaker devices found');
-      }
-    } catch (error) {
-      console.error('Error selecting speaker:', error);
-    }
-  };
+  // const selectSpeaker = async (session) => {
+  //   try {
+  //     const audioOutputDevices = await session.audioVideo.listAudioOutputDevices();
+  //     if (audioOutputDevices.length > 0) {
+  //       await session.audioVideo.chooseAudioOutput(audioOutputDevices[0].deviceId);
+  //     } else {
+  //       console.log('No speaker devices found');
+  //     }
+  //   } catch (error) {
+  //     console.error('Error selecting speaker:', error);
+  //   }
+  // };
 
   const createAppUserAndJoinChannel = useCallback(
     async (meetingId, attendeeId, userID, userType, channelId) => {
