@@ -5,7 +5,7 @@ import {
   updateTour
 } from '../../../apis/admin';
 // import './../../../styles/Admin.css';
-import Sidebar from '../commons/Sidebar';
+import Sidebar from '../common/Sidebar';
 import GenerateQRCode from './GenerateQRCode';
 import { Controller, useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";

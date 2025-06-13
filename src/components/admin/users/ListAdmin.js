@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import Sidebar from '../commons/Sidebar';
+import Sidebar from '../common/Sidebar';
 import { Link } from 'react-router-dom';
 import { deleteAdmin, listAdmins, activeAdmin } from '../../../apis/admin';
 import { toast } from 'react-toastify';

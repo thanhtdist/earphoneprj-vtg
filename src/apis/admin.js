@@ -1,6 +1,7 @@
 
 import { get, post } from 'aws-amplify/api';
-import { getWithAuth, postWithAuth, putWithAuth } from './utils';
+import { getWithAuth, postWithAuth, putWithAuth } from './common';
+import { apiWrapper } from './utils'; // Import the apiWrapper function
 import Cookies from "js-cookie";
 /**
  * Book a tour by the admin
@@ -9,44 +10,33 @@ import Cookies from "js-cookie";
  * @throws {Error} Logs the error details if the POST call fails.
  */
 export async function createTour(data) {
-  try {
-    const restOperation = await postWithAuth({
-      apiName: 'TourVTGRestApi', // The name of the API defined in backend.ts
-      path: 'tours', // endpoint defined in backend.ts 
-      options: {
-        body: {
-          tourNumber: data.tourNumber,
-          tourName: data.tourName,
-          departureDate: data.departureDate,
-          returnDate: data.returnDate,
-          processingNumber: data.processingNumber,
-          acceptanceDate: data.acceptanceDate,
-          planningOfficeName: data.planningOfficeName,
-          planningSalesOfficeName: data.planningSalesOfficeName,
-          planningSalesOfficeTeamName: data.planningSalesOfficeTeamName,
-          contactPersonName: data.contactPersonName,
-          contactPersonEmail: data.contactPersonEmail,
-          numberOfDevices: data.numberOfDevices,
-          numberOfTransmitters: data.numberOfTransmitters,
-          qrCodeDestination: data.qrCodeDestination,
-          emailCustomer: data.emailCustomer,
-          phoneNumberCustomer: data.phoneNumberCustomer,
-          otherRemarks: data.otherRemarks,
-          meetingId: data.meetingId,
-          channelId: data.channelId,
-          chatRestriction: data.chatRestriction,
-        }
-      }
-    });
-
-    const { body } = await restOperation.response;
-    const response = await body.json();
-    return response.data;
-  } catch (error) {
-    console.log('POST call createTour failed: ', JSON.parse(error.response.body));
-    return JSON.parse(error.response.body);
-  }
-
+  // const payload = {
+  //   tourNumber: "", // hoặc set default ở chỗ khác
+  //   tourName: data.tourName,
+  //   departureDate: data.departureDate,
+  //   returnDate: data.returnDate,
+  //   processingNumber: data.processingNumber,
+  //   acceptanceDate: data.acceptanceDate,
+  //   planningOfficeName: data.planningOfficeName,
+  //   planningSalesOfficeName: data.planningSalesOfficeName,
+  //   planningSalesOfficeTeamName: data.planningSalesOfficeTeamName,
+  //   contactPersonName: data.contactPersonName,
+  //   contactPersonEmail: data.contactPersonEmail,
+  //   numberOfDevices: data.numberOfDevices,
+  //   numberOfTransmitters: data.numberOfTransmitters,
+  //   qrCodeDestination: data.qrCodeDestination,
+  //   emailCustomer: data.emailCustomer,
+  //   phoneNumberCustomer: data.phoneNumberCustomer,
+  //   otherRemarks: data.otherRemarks,
+  //   meetingId: data.meetingId,
+  //   channelId: data.channelId,
+  //   chatRestriction: data.chatRestriction,
+  // };
+  return apiWrapper(postWithAuth({
+    apiName: 'TourVTGRestApi',
+    path: 'tours',
+    options: { body: data }
+  }));
 }
 
 /**
@@ -56,23 +46,11 @@ export async function createTour(data) {
  * @throws {Error} Logs the error details if the POST call fails.
  */
 export async function createBatchTour(data) {
-  console.log('createBatchTour data', data);
-  try {
-    const restOperation = await postWithAuth({
-      apiName: 'TourVTGRestApi', // The name of the API defined in backend.ts
-      path: 'tours/batch', // endpoint defined in backend.ts 
-      options: {
-        body: data
-      }
-    });
-
-    const { body } = await restOperation.response;
-    const response = await body.json();
-    return response.data;
-  } catch (error) {
-    console.log('POST call createBatchTour failed: ', JSON.parse(error.response.body));
-  }
-
+  return apiWrapper(postWithAuth({
+    apiName: 'TourVTGRestApi',
+    path: 'tours/batch',
+    options: { body: data }
+  }));
 }
 
 /**
@@ -150,21 +128,27 @@ export async function deleteTour(data) {
  * @throws {Error} Logs the error details if the POST call fails.
  */
 export async function listTours(data) {
-  try {
-    const restOperation = await getWithAuth({
-      apiName: 'TourVTGRestApi', // The name of the API defined in backend.ts
-      path: 'tours/?page=' + data.page + '&pageSize=' + data.pageSize + '&query=' + encodeURIComponent(data.query), // endpoint defined in backend.ts, appInstanceArn is dynamically passed
-    });
-    console.log('listTours restOperation', restOperation);
-    const { body } = await restOperation.response;
-    console.log('listTours body', body);
-    const response = await body.json();
-    console.log('listTours response', response);
-    return response.data;
-  } catch (error) {
-    console.log('GET call listTours failed: ', JSON.parse(error.response.body));
-    //console.log('GET call listTours failed: ', JSON.parse(error.response.body));
-  }
+  // try {
+  //   const restOperation = await getWithAuth({
+  //     apiName: 'TourVTGRestApi', // The name of the API defined in backend.ts
+  //     path: 'tours/?page=' + data.page + '&pageSize=' + data.pageSize + '&query=' + encodeURIComponent(data.query), // endpoint defined in backend.ts, appInstanceArn is dynamically passed
+  //   });
+  //   console.log('listTours restOperation', restOperation);
+  //   const { body } = await restOperation.response;
+  //   console.log('listTours body', body);
+  //   const response = await body.json();
+  //   console.log('listTours response', response);
+  //   return response.data;
+  // } catch (error) {
+  //   console.log('GET call listTours failed: ', JSON.parse(error.response.body));
+  //   //console.log('GET call listTours failed: ', JSON.parse(error.response.body));
+  // }
+
+  return apiWrapper(getWithAuth({
+    apiName: 'TourVTGRestApi',
+    path: 'tours/?page=' + data.page + '&pageSize=' + data.pageSize + '&query=' + encodeURIComponent(data.query), // endpoint defined in backend.ts, appInstanceArn is dynamically passed
+  }));
+
 }
 
 /**
@@ -287,7 +271,7 @@ export async function updateAdmin(data) {
  */
 export async function deleteAdmin(userId) {
   try {
-    const restOperation = await putWithAuth ({
+    const restOperation = await putWithAuth({
       apiName: 'UserVTGRestApi', // The name of the API defined in backend.ts
       path: 'users/' + userId + "/delete", // endpoint defined in backend.ts 
     });
@@ -308,37 +292,11 @@ export async function deleteAdmin(userId) {
  * @throws {Error} Logs the error details if the POST call fails.
  */
 export async function loginAdmin(data) {
-  try {
-    const restOperation = post({
-      apiName: 'UserVTGRestApi', // The name of the API defined in backend.ts
-      path: 'users/login', // Endpoint defined in backend.ts
-      options: {
-        body: {
-          email: data.email,
-          password: data.password,
-        },
-      },
-    });
-
-    const { statusCode, body } = await restOperation.response;
-    const response = await body.json();
-
-    return {
-      statusCode,
-      data: response.data,
-    };
-  } catch (error) {
-    const errorMessage = error.response?.body
-      ? JSON.parse(error.response.body)?.error || 'An unexpected error occurred'
-      : error.message;
-
-    console.error('POST call login failed:', errorMessage);
-
-    return {
-      statusCode: error.response?.statusCode || 500,
-      error: errorMessage,
-    };
-  }
+  return apiWrapper(post({
+    apiName: 'UserVTGRestApi',
+    path: 'users/login',
+    options: { body: data }
+  }));
 }
 
 /**
@@ -348,28 +306,38 @@ export async function loginAdmin(data) {
  * @throws {Error} Logs the error details if the POST call fails.
  */
 export async function checkAuth() {
-  try {
-    const restOperation = get({
-      apiName: 'UserVTGRestApi', // The name of the API defined in backend.ts
-      path: 'users/auth', // endpoint defined in backend.ts 
-      options: {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${Cookies.get("accessToken")}` // Include the access token in the headers
-        },
-      }
-    });
+  // try {
+  //   const restOperation = get({
+  //     apiName: 'UserVTGRestApi', // The name of the API defined in backend.ts
+  //     path: 'users/auth', // endpoint defined in backend.ts 
+  //     options: {
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         Authorization: `Bearer ${Cookies.get("accessToken")}` // Include the access token in the headers
+  //       },
+  //     }
+  //   });
 
-    const { statusCode, body } = await restOperation.response;
-    const response = await body.json();
-    return {
-      statusCode,
-      data: response.data,
-    };
-  } catch (error) {
-    console.log('post call check Auth failed: ', JSON.parse(error.response.body));
-    return JSON.parse(error.response.body);
-  }
+  //   const { statusCode, body } = await restOperation.response;
+  //   const response = await body.json();
+  //   return {
+  //     statusCode,
+  //     data: response.data,
+  //   };
+  // } catch (error) {
+  //   console.log('post call check Auth failed: ', JSON.parse(error.response.body));
+  //   return JSON.parse(error.response.body);
+  // }
+  return apiWrapper(get({
+    apiName: 'UserVTGRestApi',
+    path: 'users/auth',
+    options: {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${Cookies.get("accessToken")}` // Include the access token in the headers
+      },
+    }
+  }));
 
 }
 
@@ -380,28 +348,39 @@ export async function checkAuth() {
  * @throws {Error} Logs the error details if the POST call fails.
  */
 export async function refreshToken() {
-  try {
-    const restOperation = get({
-      apiName: 'UserVTGRestApi', // The name of the API defined in backend.ts
-      path: 'users/refreshToken', // endpoint defined in backend.ts 
-      options: {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${Cookies.get("refreshToken")}` // Include the refresh token in the headers
-        },
-      }
-    });
+  // try {
+  //   const restOperation = get({
+  //     apiName: 'UserVTGRestApi', // The name of the API defined in backend.ts
+  //     path: 'users/refreshToken', // endpoint defined in backend.ts 
+  //     options: {
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         Authorization: `Bearer ${Cookies.get("refreshToken")}` // Include the refresh token in the headers
+  //       },
+  //     }
+  //   });
 
-    const { statusCode, body } = await restOperation.response;
-    const response = await body.json();
-    return {
-      statusCode,
-      data: response.data,
-    };
-  } catch (error) {
-    console.log('post call refresh Token failed: ', JSON.parse(error.response.body));
-    return JSON.parse(error.response.body);
-  }
+  //   const { statusCode, body } = await restOperation.response;
+  //   const response = await body.json();
+  //   return {
+  //     statusCode,
+  //     data: response.data,
+  //   };
+  // } catch (error) {
+  //   console.log('post call refresh Token failed: ', JSON.parse(error.response.body));
+  //   return JSON.parse(error.response.body);
+  // }
+
+  return apiWrapper(get({
+    apiName: 'UserVTGRestApi',
+    path: 'users/refreshToken',
+    options: {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${Cookies.get("refreshToken")}` // Include the refresh token in the headers
+      },
+    }
+  }));
 
 }
 

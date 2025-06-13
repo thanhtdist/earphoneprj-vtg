@@ -6,8 +6,11 @@ import { Stack } from "aws-cdk-lib";
 import {
   Cors,
   LambdaIntegration,
-  RestApi,
+  RestApi
 } from "aws-cdk-lib/aws-apigateway";
+import { WebSocketApi, WebSocketStage } from 'aws-cdk-lib/aws-apigatewayv2';
+import { WebSocketLambdaIntegration } from 'aws-cdk-lib/aws-apigatewayv2-integrations';
+
 import { createMeeting } from './functions/meetings/create-meeting/resource';
 import { getMeeting } from './functions/meetings/get-meeting/resource';
 import { createAttendee } from './functions/meetings/create-attendee/resource';
@@ -39,6 +42,9 @@ import { refreshToken } from './functions/users/refresh-token/resource';
 import { getMeetingByTourId } from './functions/tours/get-meeting-by-tourid/resource';
 import { getTourByNumberAndDate } from './functions/tours/get-tour-by-number-and-date/resource';
 import { updateMeetingByTourId } from './functions/tours/update-meeting-by-tourid/resource'
+import { connect } from './functions/translates/translate-text-speech-socket/connect/resource';
+import { disconnect } from './functions/translates/translate-text-speech-socket/disconnect/resource';
+import { sendMessage } from './functions/translates/translate-text-speech-socket/sendMessage/resource';
 
 /**
  * Define the backend resources 
@@ -75,7 +81,10 @@ const backend = defineBackend({
   refreshToken, // refresh token by the admin
   getMeetingByTourId, // get meeting by tourID
   updateMeetingByTourId,
-  getTourByNumberAndDate
+  getTourByNumberAndDate,
+  connect, // translate text to speech by socket
+  disconnect, // disconnect socket
+  sendMessage, // send message by socket
 });
 
 /**
@@ -128,8 +137,6 @@ attendeesPath.addMethod("GET", new LambdaIntegration(
 meetingIdPath.addResource("transcription").addMethod("POST", new LambdaIntegration(
   backend.startMeetingTranscription.resources.lambda
 ));
-
-
 
 // =============2. API Getway, Lambda function for CHAT ===============
 // 2.1. Add app instance user API
@@ -395,6 +402,38 @@ const adminActivePath = userPath.addResource("active");
 adminActivePath.addMethod("PUT", new LambdaIntegration(
   backend.activeAdmin.resources.lambda
 ));
+
+// =============4. API Getway, Lambda function for Tour ===============
+// Create WebSocket API
+const webSocketApiProps = {
+  apiName: "TranslateVTGWebSocketApi",
+  routeSelectionExpression: "$request.body.action", // Define how to select the route based on the request body
+  connectRouteOptions: {
+    integration: new WebSocketLambdaIntegration(
+      "ConnectIntegration",
+      backend.connect.resources.lambda
+    ),
+  },
+  disconnectRouteOptions: {
+    integration: new WebSocketLambdaIntegration(
+      "DisconnectIntegration",
+      backend.disconnect.resources.lambda
+    ),
+  },
+}
+const translateWebSocketApi = new WebSocketApi(apiStack, "TranslateVTGWebSocketApi", webSocketApiProps);
+
+// Create a stage for the WebSocket API
+const translateWebSocketStage = new WebSocketStage(apiStack, "TranslateWebSocketStage", {
+  webSocketApi: translateWebSocketApi,
+  stageName: "prod",
+  autoDeploy: true, // Automatically deploy the stage
+});
+
+translateWebSocketApi.addRoute('sendMessage', {
+  integration: new WebSocketLambdaIntegration('SendMessageIntegration', backend.sendMessage.resources.lambda),
+});
+
 // add outputs to the configuration file for calling APIs metadata in the frontend
 backend.addOutput({
   custom: {
@@ -434,6 +473,11 @@ backend.addOutput({
         region: Stack.of(userRestApi).region,
         apiName: userRestApi.restApiName,
       },
+      [webSocketApiProps.apiName]: {
+        endpoint: `${translateWebSocketApi.apiEndpoint}/${translateWebSocketStage.stageName}/`,
+        region: Stack.of(translateWebSocketApi).region,
+        apiName: webSocketApiProps.apiName,
+      }
     },
   },
 });

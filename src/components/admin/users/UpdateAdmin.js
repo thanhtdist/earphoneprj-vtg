@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import Sidebar from '../commons/Sidebar';
+import Sidebar from '../common/Sidebar';
 import { getDetailAdmin, updateAdmin } from '../../../apis/admin';
 import { useParams } from "react-router-dom";
 import { useForm } from 'react-hook-form';

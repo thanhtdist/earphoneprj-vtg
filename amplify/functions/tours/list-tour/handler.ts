@@ -43,9 +43,9 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     let params: AWS.DynamoDB.DocumentClient.QueryInput = {
       TableName: Config.dbTables.TOURS,
       FilterExpression: "deleteFlag = :deleteFlag",
-      KeyConditionExpression:"#tourType = :tourType",
-      ExpressionAttributeValues: {":deleteFlag": 0, ":tourType": "tour"},
-      IndexName: 'tourType-createdAt-index',          
+      KeyConditionExpression: "#tourType = :tourType",
+      ExpressionAttributeValues: { ":deleteFlag": 0, ":tourType": "tour" },
+      IndexName: 'tourType-createdAt-index',
       ScanIndexForward: false,
       ProjectionExpression: "tourId, tourNumber, processingNumber, tourName, acceptanceDate,planningOfficeName, planningSalesOfficeName, planningSalesOfficeTeamName, contactPersonName, contactPersonEmail, numberOfDevices, numberOfTransmitters, departureDate, returnDate, qrCodeDestination,emailCustomer,phoneNumberCustomer,otherRemarks",
       ExpressionAttributeNames: {
@@ -71,10 +71,10 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       return {
         statusCode: 200,
         body: JSON.stringify({
+          message: "No tours found.",
           data: {
-            message: "No tours found.",
-            data: [],
-            count: 0,
+            items: [],
+            count: 0
           }
         }),
         headers: Config.headers,
@@ -92,9 +92,9 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     return {
       statusCode: 200,
       body: JSON.stringify({
+        message: "Tours retrieved successfully",
         data: {
-          message: "Tours retrieved successfully",
-          data: pageItems,
+          items: pageItems,
           count: allItems.length
         }
       }),

@@ -33,3 +33,5 @@ export const STABILITY = [
     { key: "medium", label: "Medium" },
     { key: "high", label: "High" },
 ]
+
+export const EMAIL_FORMAT =/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i

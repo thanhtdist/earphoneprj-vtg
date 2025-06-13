@@ -77,8 +77,8 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     return {
       statusCode: 200,
       body: JSON.stringify({
+        message: "Token refreshed successfully",
         data: {
-          message: "Token refreshed successfully",
           accessToken: newAccessToken,
           refreshToken: newRefreshToken,
         },

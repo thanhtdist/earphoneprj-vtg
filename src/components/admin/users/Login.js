@@ -6,7 +6,7 @@ import {
 } from '../../../apis/admin';
 import Loading from '../../Loading';
 import { messages } from '../../../messages';
-import { useAuth } from "../../admin/commons/AuthContext";
+import { useAuth } from "../../admin/common/AuthContext";
 import Config from '../../../utils/config'; // Importing the configuration file
 import './../../../styles/Admin.css';
 
@@ -39,14 +39,14 @@ const Login = () => {
                 // Remove cookies if they exist
                 logout();
                 // Set new cookies with the new tokens
-                login(loginAdminResponse.data.accessToken, loginAdminResponse.data.refreshToken);
+                await login(loginAdminResponse.data.accessToken, loginAdminResponse.data.refreshToken);
                 // Redirect to the tour page
                 navigate(Config.pathNames.tour);
-            } else {
-                setError(messages.login.incorrectEmailPassword);
             }
         } catch (error) {
-            console.error(error);
+            console.error("loginAdminError message:", error.message);
+            console.error("loginAdminError status:", error.statusCode);
+            setError(messages.login.incorrectEmailPassword);
         } finally {
             setIsLoading(false);
         }
@@ -61,14 +61,14 @@ const Login = () => {
                     <div className="mb-3">
                         <label htmlFor="Email" className="form-label">メールアドレス</label>
                         <input type="email" className="form-control" id="Email" placeholder="メールアドレスを入力"
-                            {...register("email", { required: "メールアドレスを選択してください。" })}
+                            {...register("email", { required: messages.login.emailRequired })}
                         ></input>
                         {errors.email && <p style={{ color: "red" }}>{errors.email.message}</p>}
                     </div>
                     <div className="mb-3">
                         <label htmlFor="InputPassword" className="form-label">パスワード</label>
                         <input type="password" className="form-control" id="InputPassword" placeholder="パスワードを入力"
-                            {...register("password", { required: "パスワードを選択してください。" })}
+                            {...register("password", { required: messages.login.passwordRequired })}
                         ></input>
                         {errors.password && <p style={{ color: "red" }}>{errors.password.message}</p>}
                     </div>

@@ -48,6 +48,11 @@ const Config = {
     cloudWatchLogRestApiVTGRestApi: 'https://4ipuok618b.execute-api.us-east-1.amazonaws.com/prod/',
     // Number of days before cookies expire
     cookiesExpirationDays: 1,
+
+    // Token expiration time in seconds
+    tokenExpirationTime: 60 * 60 * 24, // 1 day in seconds
+    // Refresh token expiration time in seconds
+    refreshTokenExpirationTime: 60 * 60 * 24 * 7, // 7 days in seconds
     
     /**
      * Helper methods to construct application URLs

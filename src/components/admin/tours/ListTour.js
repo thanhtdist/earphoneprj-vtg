@@ -6,7 +6,7 @@ import {
     deleteTour
 } from '../../../apis/admin';
 import { useEffect } from 'react';
-import Sidebar from '../commons/Sidebar';
+import Sidebar from '../common/Sidebar';
 import { Link } from 'react-router-dom';
 import Papa from 'papaparse';
 //import { createMeetingAndChannel } from '../../utils/MeetingUtils';
@@ -40,8 +40,8 @@ const ListTour = () => {
             query: data,
         });
         console.log("listoursResponse xxx", listoursResponse);
-        setTours(listoursResponse.data);
-        setTotalTours(listoursResponse.count);
+        setTours(listoursResponse.data.items);
+        setTotalTours(listoursResponse.data.count);
         setIsLoading(false);
     }, []);
 
@@ -117,7 +117,6 @@ const ListTour = () => {
     const confirmUploadCSV = (e) => {
         // const file = e.target.files[0];
         // if (!file) return;
-        setIsLoading(true);
         Papa.parse(selectedFile, {
             complete: async (results) => {
                 console.log("Parsed CSV:", results.data);
@@ -157,8 +156,6 @@ const ListTour = () => {
                     callCreateBatchTour(parsedData);
                 } catch (error) {
                     console.log("Error uploading CSV:", error);
-                } finally {
-                    setIsLoading(false);
                 }
             },
         });
@@ -202,16 +199,21 @@ const ListTour = () => {
     // Call create batch tour API
     const callCreateBatchTour = async (tours) => {
         try {
+            setIsLoading(true);
             console.log("createBatchTour", tours);
             const createBatchTourResponse = await createBatchTour(tours);
-            console.log(createBatchTourResponse);
+            console.log("createBatchTourResponse", createBatchTourResponse);
+            // Show success message
             toast.success(`File ${selectedFile?.name} was uploaded successfully.`, {
                 onClose: () => {
                     navigate(0); // Reload the page to see the new tours    
                 },
             });
         } catch (error) {
-            console.log("Error creating batch tour:", error); // Log error
+            console.log("Error creating batch tour:", error.message); // Log error
+            console.log("Error creating batch tour:", error.statusCode); // Log error
+        } finally {
+            setIsLoading(false);
         }
 
     };

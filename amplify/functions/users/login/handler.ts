@@ -32,10 +32,11 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       TableName: Config.dbTables.USERS,
       IndexName: "email-index",  // Using GSI to query by email
       KeyConditionExpression: "email = :email",
-      FilterExpression: "deleteFlag = :deleteFlag",
+      FilterExpression: "deleteFlag = :deleteFlag AND active = :active",
       ExpressionAttributeValues: {
         ":email": email,
         ":deleteFlag": 0,
+        ":active": 0,
       },
     }).promise();
 

@@ -4,7 +4,7 @@ import {
     createTour,
 } from '../../../apis/admin';
 // import './../../../styles/Admin.css';
-import Sidebar from '../commons/Sidebar';
+import Sidebar from '../common/Sidebar';
 import { Controller, useForm } from "react-hook-form";
 import { Link } from 'react-router-dom';
 import { toast } from "react-toastify";
@@ -36,18 +36,15 @@ const RegisterTour = () => {
             // Create the tour with meetingId and channelId
             const createTourResponse = await createTour(data);
             console.log('Tour created:', createTourResponse);
-            // Redirect to the tour list page
-            if (createTourResponse && createTourResponse.error) {
-                toast.error(`Error creating tour ${data.tourNumber}: ${createTourResponse.error}`);
-            } else {
-                toast.success(`Tour ${data.tourNumber} was created successfully.`, {
-                    onClose: () => {
-                        navigate(Config.pathNames.tour);
-                    },
-                });
-            }
+            // Show success message
+            toast.success(`Tour ${data.tourNumber} was created successfully.`, {
+                onClose: () => {
+                    navigate(Config.pathNames.tour);
+                },
+            });
         } catch (error) {
-            console.error('Error creating meeting, channel, or tour:', error);
+            console.error('Error creating tour:', error.message);
+            console.error('Error creating tour:', error.statusCode);
         } finally {
             setIsLoading(false);
         }

@@ -75,15 +75,12 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     return {
       statusCode: 200,
       body: JSON.stringify({
+        message: "Check auth retrieved successfully",
         data: {
-          message: "Check auth retrieved successfully",
-          data: {
-            userId: result.Items[0].userId,
-            userName: result.Items[0].userName,
-            email: result.Items[0].email,
-          }
+          userId: result.Items[0].userId,
+          userName: result.Items[0].userName,
+          email: result.Items[0].email,
         }
-
       }),
       headers: Config.headers,
     };
