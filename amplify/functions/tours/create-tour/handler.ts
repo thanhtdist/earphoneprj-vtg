@@ -21,33 +21,46 @@ export const handler: APIGatewayProxyHandler = async (event) => {
 
     // Parse body from API Gateway event
     const {
+      // tourNumber,
+      // tourName,
+      // departureDate,
+      // returnDate,
+      // processingNumber,
+      // acceptanceDate,
+      // planningOfficeName,
+      // planningSalesOfficeName,
+      // planningSalesOfficeTeamName,
+      // contactPersonName,
+      // contactPersonEmail,
+      // numberOfDevices,
+      // numberOfTransmitters,
+      // qrCodeDestination,
+      // emailCustomer,
+      // phoneNumberCustomer,
+      // otherRemarks,
+      // // meetingId,
+      // // channelId,
+      chatRestriction,
       tourNumber,
-      tourName,
+      courseName,
+      planningAndSalesSignature,
+      planningSalesOfficeTeamName,
       departureDate,
       returnDate,
-      processingNumber,
-      acceptanceDate,
-      planningOfficeName,
-      planningSalesOfficeName,
-      planningSalesOfficeTeamName,
-      contactPersonName,
-      contactPersonEmail,
-      numberOfDevices,
-      numberOfTransmitters,
-      qrCodeDestination,
-      emailCustomer,
-      phoneNumberCustomer,
-      otherRemarks,
-      // meetingId,
-      // channelId,
-      chatRestriction
+      nameOfCoursePersonInCharge,
+      tourConductorName,
+      numberOfReceiversInUse,
+      numberOfSendingDevices,
+      subGuideFunctionAvailable,
+      useTheTranslationFunction,
+      coSponsoredCourseNumber
     } = JSON.parse(event.body || '{}');
 
-    console.log('Creating tour with tourNumber: ', tourNumber, 'tourName: ', tourName);
+    console.log('Creating tour with tourNumber: ', tourNumber, 'courseName: ', courseName);
 
     // Input validation
-    if (!tourNumber || !tourName || !departureDate || !returnDate) {
-      console.error('Invalid input: Missing required fields.', { tourNumber, tourName, departureDate, returnDate });
+    if (!tourNumber || !courseName || !departureDate || !returnDate) {
+      console.error('Invalid input: Missing required fields.', { tourNumber, courseName, departureDate, returnDate });
       return {
         statusCode: 400,
         body: JSON.stringify({ error: 'Invalid input: tourNumber, tourName, departureDate, returnDate are required.' }),
@@ -59,22 +72,18 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     const tourItem = {
       tourId: uuid(), // Generate a unique tour ID
       tourNumber,
-      tourName,
+      courseName,
+      planningAndSalesSignature,
+      planningSalesOfficeTeamName,
       departureDate,
       returnDate,
-      processingNumber,
-      acceptanceDate,
-      planningOfficeName,
-      planningSalesOfficeName,
-      planningSalesOfficeTeamName,
-      contactPersonName,
-      contactPersonEmail,
-      numberOfDevices,
-      numberOfTransmitters,
-      qrCodeDestination,
-      emailCustomer,
-      phoneNumberCustomer,
-      otherRemarks,
+      nameOfCoursePersonInCharge,
+      tourConductorName,
+      numberOfReceiversInUse,
+      numberOfSendingDevices,
+      subGuideFunctionAvailable,
+      useTheTranslationFunction,
+      coSponsoredCourseNumber,
       meetingId: '', // put empty when creating a new tour
       channelId: '', // put empty when creating a new tour
       chatRestriction: chatRestriction,
