@@ -15,7 +15,7 @@ import { toast } from "react-toastify";
 import Loading from '../../Loading';
 import ReactPaginate from 'react-paginate';
 import Config from '../../../utils/config'; // Importing the configuration file
-
+import { FaCheck } from "react-icons/fa6";
 const ListTour = () => {
     const navigate = useNavigate();
     const fileInputRef = useRef(null);
@@ -125,22 +125,18 @@ const ListTour = () => {
                     const parsedData = results.data.slice(1).map((cols) => {
                         return {
                             tourNumber: cols[0] || "",
-                            processingNumber: cols[1] || "",
-                            tourName: cols[2] || "",
-                            acceptanceDate: cols[3] || "",
-                            planningOfficeName: cols[4] || "",
-                            planningSalesOfficeName: cols[5] || "",
-                            planningSalesOfficeTeamName: cols[6] || "",
-                            contactPersonName: cols[7] || "",
-                            contactPersonEmail: cols[8] || "",
-                            numberOfDevices: cols[9] || "",
-                            numberOfTransmitters: cols[10] || "",
-                            departureDate: cols[11] || "",
-                            returnDate: cols[12] || "",
-                            qrCodeDestination: cols[13] || "",
-                            emailCustomer: cols[14] || "",
-                            phoneNumberCustomer: cols[15] || "",
-                            otherRemarks: cols[16] || "",
+                            courseName: cols[1] || "",
+                            planningAndSalesSignature: cols[2] || "",
+                            planningSalesOfficeTeamName: cols[3] || "",
+                            departureDate: cols[4] || "",
+                            returnDate: cols[5] || "",
+                            nameOfCoursePersonInCharge: cols[6] || "",
+                            tourConductorName: cols[7] || "",
+                            numberOfReceiversInUse: cols[8] || "",
+                            numberOfSendingDevices: cols[9] || "",
+                            subGuideFunctionAvailable: cols[10] || "",
+                            useTheTranslationFunction: cols[11] || "",
+                            coSponsoredCourseNumber: cols[12] || "",
                             chatRestriction: cols[17] || "allChat",
                         };
                     });
@@ -296,22 +292,19 @@ const ListTour = () => {
                                     <th scope="col" className="sticky"></th>
                                     <th scope="col" className="sticky2"></th>
                                     <th scope="col">ツアー番号</th>
-                                    <th scope="col">処理番号</th>
-                                    <th scope="col">ツアー名</th>
-                                    <th scope="col">申込受付日時</th>
-                                    <th scope="col">企画営業所</th>
-                                    <th scope="col">企画営業所<br />(その他を選択された方)</th>
-                                    <th scope="col">企画営業所<br />チーム名</th>
-                                    <th scope="col">ご担当者様<br />お名前</th>
-                                    <th scope="col">ご担当者様<br />メールアドレス</th>
-                                    <th scope="col">利用端末数</th>
-                                    <th scope="col">送信機<br />必要端末数</th>
+                                    <th scope="col">コース名</th>
+                                    <th scope="col">企画営業署名</th>
+                                    <th scope="col">企画営業所チーム名</th>
                                     <th scope="col">出発日</th>
                                     <th scope="col">帰着日</th>
-                                    <th scope="col">QRコード<br />送付先</th>
-                                    <th scope="col">メールアドレス</th>
-                                    <th scope="col">電話番号</th>
-                                    <th scope="col">その他備考欄</th>
+                                    <th scope="col">コースご担当者様氏名</th>
+                                    <th scope="col">添乗員様氏名</th>
+                                    <th scope="col">受信機側利用台数</th>
+                                    <th scope="col">送信側利用台数</th>
+                                    <th scope="col">サブガイド機能利用(有・無）</th>
+                                    <th scope="col">翻訳機能利用</th>
+                                    <th scope="col">共催コース番号</th>
+
                                 </tr>
                             </thead>
                             <tbody>
@@ -336,22 +329,18 @@ const ListTour = () => {
                                             </button>
                                         </th>
                                         <td><Link to={`${Config.pathNames.tour}/${tour.tourId}`}>{tour.tourNumber}</Link></td>
-                                        <td>{tour.processingNumber}</td>
-                                        <td>{tour.tourName}</td>
-                                        <td>{tour.acceptanceDate}</td>
-                                        <td>{tour.planningOfficeName}</td>
-                                        <td>{tour.planningSalesOfficeName}</td>
+                                        <td>{tour.courseName}</td>
+                                        <td>{tour.planningAndSalesSignature}</td>
                                         <td>{tour.planningSalesOfficeTeamName}</td>
-                                        <td>{tour.contactPersonName}</td>
-                                        <td>{tour.contactPersonEmail}</td>
-                                        <td>{tour.numberOfDevices}</td>
-                                        <td>{tour.numberOfTransmitters}</td>
                                         <td>{tour.departureDate}</td>
                                         <td>{tour.returnDate}</td>
-                                        <td>{tour.qrCodeDestination}</td>
-                                        <td>{tour.emailCustomer}</td>
-                                        <td>{tour.phoneNumberCustomer}</td>
-                                        <td>{tour.otherRemarks}</td>
+                                        <td>{tour.nameOfCoursePersonInCharge}</td>
+                                        <td>{tour.tourConductorName}</td>
+                                        <td>{tour.numberOfReceiversInUse}</td>
+                                        <td>{tour.numberOfSendingDevices}</td>
+                                        <td>{tour.subGuideFunctionAvailable && <FaCheck />}</td>
+                                        <td>{tour.useTheTranslationFunction && <FaCheck />}</td>
+                                        <td>{tour.coSponsoredCourseNumber}</td>
                                     </tr>
                                 ))}
                                 {/* {tours.length === 0 && (

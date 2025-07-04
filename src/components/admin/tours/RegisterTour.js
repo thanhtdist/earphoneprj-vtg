@@ -97,112 +97,32 @@ const RegisterTour = () => {
                             </div>
                         </div>
                         <div className="form-group row mb-3">
-                            <label htmlFor="processingNumber" className="col-sm-3 col-form-label">処理番号</label>
+                            <label htmlFor="courseName" className="col-sm-3 col-form-label">コース名</label>
                             <div className="col-sm-9">
-                                <input type="text" className="form-control" id="processingNumber" placeholder="例）W0001"
-                                    {...register("processingNumber", { required: "" })}
+                                <input type="text" className="form-control" id="courseName" placeholder="例）W0001"
+                                    {...register("courseName", { required: "" })}
                                 />
                             </div>
                         </div>
                         <div className="form-group row mb-3">
-                            <label htmlFor="tourName" className="col-sm-3 col-form-label">ツアー名</label>
+                            <label htmlFor="lanningAndSalesSignature" className="col-sm-3 col-form-label">企画営業署名</label>
                             <div className="col-sm-9">
-                                <input type="text" className="form-control" id="tourName" placeholder="例）浅草寺ツアー"
-                                    {...register("tourName", { required: "ツアー名を入力してください。" })}
-                                />
-                                {errors.tourName && <p style={{ color: "red" }}>{errors.tourName.message}</p>}
-                            </div>
-                        </div>
-                        <div className="form-group row mb-3">
-                            <label htmlFor="acceptanceDate" className="col-sm-3 col-form-label">申込受付日時</label>
-                            <div className="col-sm-9">
-                                {/* <input type="datetime-local" className="form-control" id="acceptanceDate" placeholder="例）2025/1/1/15:42"
-                                    {...register("acceptanceDate")}
-                                /> */}
-                                <div className="form-control">
-                                    <Controller
-                                        name="acceptanceDate"
-                                        control={control}
-                                        defaultValue={null}
-                                        render={({ field }) => (
-                                            <DatePicker
-                                                {...field}
-                                                selected={field.value}
-                                                onChange={(date) => field.onChange(format(date, 'yyyy-MM-dd HH:mm'))}
-                                                dateFormat="YYYY-MM-dd hh:mm a"
-                                                required
-                                                showTimeInput
-                                                customInput={<CustomInput lable={"acceptanceDate"} />}
-                                            />
-                                        )}
-                                    />
-                                </div>
-                            </div>
-
-                        </div>
-                        <div className="form-group row mb-3">
-                            <label htmlFor="planningOfficeName" className="col-sm-3 col-form-label">企画営業所名</label>
-                            <div className="col-sm-9">
-                                <input type="text" className="form-control" id="planningOfficeName" placeholder="例）スポーツ旅行センター"
-                                    {...register("planningOfficeName")}
+                                <input type="text" className="form-control" id="lanningAndSalesSignature" placeholder="例）浅草寺ツアー"
+                                    {...register("lanningAndSalesSignature")}
                                 />
                             </div>
                         </div>
                         <div className="form-group row mb-3">
-                            <label htmlFor="planningSalesOfficeName" className="col-sm-3 col-form-label">企画営業所<br />（その他を選択された方）</label>
+                            <label htmlFor="planningSalesOfficeTeamName" className="col-sm-3 col-form-label">企画営業所チーム名</label>
                             <div className="col-sm-9">
-                                <input type="text" className="form-control" id="planningSalesOfficeName" placeholder=""
-                                    {...register("planningSalesOfficeName")}
-                                />
-                            </div>
-                        </div>
-                        <div className="form-group row mb-3">
-                            <label htmlFor="planningSalesOfficeTeamName" className="col-sm-3 col-form-label">企画営業所 <br />チーム名</label>
-                            <div className="col-sm-9">
-                                <input type="text" className="form-control" id="planningSalesOfficeTeamName" placeholder="例）スポーツ"
+                                <input type="text" className="form-control" id="planningSalesOfficeTeamName" placeholder="例）浅草寺ツアー"
                                     {...register("planningSalesOfficeTeamName")}
-                                />
-                            </div>
-                        </div>
-                        <div className="form-group row mb-3">
-                            <label htmlFor="contactPersonName" className="col-sm-3 col-form-label">ご担当者様<br />お名前</label>
-                            <div className="col-sm-9">
-                                <input type="text" className="form-control" id="contactPersonName" placeholder="例）山田花子"
-                                    {...register("contactPersonName")}
-                                />
-                            </div>
-                        </div>
-                        <div className="form-group row mb-3">
-                            <label htmlFor="contactPersonEmail" className="col-sm-3 col-form-label">ご担当者様<br />メールアドレス</label>
-                            <div className="col-sm-9">
-                                <input type="email" className="form-control" id="contactPersonEmail" placeholder="例）kinoshita@ken-net.net"
-                                    {...register("contactPersonEmail")}
-                                />
-                            </div>
-                        </div>
-                        <div className="form-group row mb-3">
-                            <label htmlFor="numberOfDevices" className="col-sm-3 col-form-label">利用端末数</label>
-                            <div className="col-sm-9">
-                                <input type="number" className="form-control" id="numberOfDevices" placeholder="例）30"
-                                    {...register("numberOfDevices")}
-                                />
-                            </div>
-                        </div>
-                        <div className="form-group row mb-3">
-                            <label htmlFor="numberOfTransmitters" className="col-sm-3 col-form-label">送信機必要端末数</label>
-                            <div className="col-sm-9">
-                                <input type="number" className="form-control" id="numberOfTransmitters" placeholder="例）2"
-                                    {...register("numberOfTransmitters")}
                                 />
                             </div>
                         </div>
                         <div className="form-group row mb-3">
                             <label htmlFor="departureDate" className="col-sm-3 col-form-label">出発日</label>
                             <div className="col-sm-9">
-                                {/* <input type="date" className="form-control" id="departureDate" placeholder="例）2025年4月4日"
-                                    {...register("departureDate", { required: "出発日を入力してください。" })}
-                                />
-                                {errors.departureDate && <p style={{ color: "red" }}>{errors.departureDate.message}</p>} */}
                                 <div className='form-control'>
                                     <Controller
                                         name="departureDate"
@@ -218,8 +138,6 @@ const RegisterTour = () => {
                                                 onChange={(date) => field.onChange(format(date, 'yyyy-MM-dd'))}
                                                 dateFormat="YYYY-MM-dd"
                                                 required
-                                                // placeholderText="YYYY-MM-DD HH:MM"
-                                                // showTimeInput
                                                 customInput={<CustomInput label={"departureDate"} />}
                                             />
                                         )}
@@ -231,10 +149,6 @@ const RegisterTour = () => {
                         <div className="form-group row mb-3">
                             <label htmlFor="returnDate" className="col-sm-3 col-form-label">帰着日</label>
                             <div className="col-sm-9">
-                                {/* <input type="date" className="form-control" id="returnDate" placeholder="例）2025年4月4日"
-                                    {...register("returnDate", { required: "帰着日を入力してください。" })}
-                                />
-                                {errors.returnDate && <p style={{ color: "red" }}>{errors.returnDate.message}</p>} */}
                                 <div className='form-control'>
                                     <Controller
                                         name="returnDate"
@@ -250,8 +164,6 @@ const RegisterTour = () => {
                                                 onChange={(date) => field.onChange(format(date, 'yyyy-MM-dd'))}
                                                 dateFormat="YYYY-MM-dd"
                                                 required
-                                                // placeholderText="YYYY-MM-DD HH:MM"
-                                                // showTimeInput
                                                 customInput={<CustomInput label={"returnDate"} />}
                                             />
                                         )}
@@ -263,35 +175,64 @@ const RegisterTour = () => {
                             </div>
                         </div>
                         <div className="form-group row mb-3">
-                            <label htmlFor="qrCodeDestination" className="col-sm-3 col-form-label">QRコード送付先</label>
+                            <label htmlFor="nameOfCoursePersonInCharge" className="col-sm-3 col-form-label">コースご担当者様氏名</label>
                             <div className="col-sm-9">
-                                <input type="text" className="form-control" id="qrCodeDestination" placeholder="例）ご担当者様のメールアドレス"
-                                    {...register("qrCodeDestination")}
+                                <input type="text" className="form-control" id="nameOfCoursePersonInCharge" placeholder="例）浅草寺ツアー"
+                                    {...register("nameOfCoursePersonInCharge")}
+                                />
+
+                            </div>
+                        </div>
+                        <div className="form-group row mb-3">
+                            <label htmlFor="tourConductorName" className="col-sm-3 col-form-label">添乗員様氏名</label>
+                            <div className="col-sm-9">
+                                <input type="text" className="form-control" id="tourConductorName" placeholder="例）浅草寺ツアー"
+                                    {...register("tourConductorName")}
+                                />
+
+                            </div>
+                        </div>
+                        <div className="form-group row mb-3">
+                            <label htmlFor="numberOfReceiversInUse" className="col-sm-3 col-form-label">受信機側利用台数</label>
+                            <div className="col-sm-9">
+                                <input type="text" className="form-control" id="numberOfReceiversInUse" placeholder="例）浅草寺ツアー"
+                                    {...register("numberOfReceiversInUse")}
+                                />
+
+                            </div>
+                        </div>
+                        <div className="form-group row mb-3">
+                            <label htmlFor="numberOfSendingDevices" className="col-sm-3 col-form-label">送信側利用台数</label>
+                            <div className="col-sm-9">
+                                <input type="text" className="form-control" id="numberOfSendingDevices" placeholder="例）浅草寺ツアー"
+                                    {...register("numberOfSendingDevices")}
+                                />
+
+                            </div>
+                        </div>
+                        <div className="form-group row mb-3">
+                            <label htmlFor="subGuideFunctionAvailable" className="col-sm-3 col-form-label">サブガイド機能利用</label>
+                            <div className="col-sm-9">
+                                <input type="checkbox" id="subGuideFunctionAvailable"
+                                    {...register("subGuideFunctionAvailable",)}
                                 />
                             </div>
                         </div>
                         <div className="form-group row mb-3">
-                            <label htmlFor="emailCustomer" className="col-sm-3 col-form-label">メールアドレス</label>
+                            <label htmlFor="useTheTranslationFunction" className="col-sm-3 col-form-label">翻訳機能利用</label>
                             <div className="col-sm-9">
-                                <input type="email" className="form-control" id="emailCustomer" placeholder=""
-                                    {...register("emailCustomer")}
+                                <input type="checkbox" id="useTheTranslationFunction" placeholder="例）浅草寺ツアー"
+                                    {...register("useTheTranslationFunction",)}
                                 />
                             </div>
                         </div>
                         <div className="form-group row mb-3">
-                            <label htmlFor="phoneNumberCustomer" className="col-sm-3 col-form-label">電話番号</label>
+                            <label htmlFor="coSponsoredCourseNumber" className="col-sm-3 col-form-label">共催コース番号</label>
                             <div className="col-sm-9">
-                                <input type="tel" className="form-control" id="phoneNumberCustomer" placeholder=""
-                                    {...register("phoneNumberCustomer")}
+                                <input type="text" className="form-control" id="coSponsoredCourseNumber" placeholder="例）浅草寺ツアー"
+                                    {...register("coSponsoredCourseNumber",)}
                                 />
-                            </div>
-                        </div>
-                        <div className="form-group row mb-3">
-                            <label htmlFor="otherRemarks" className="col-sm-3 col-form-label">その他備考欄</label>
-                            <div className="col-sm-9">
-                                <textarea className="form-control" id="otherRemarks"
-                                    {...register("otherRemarks")}
-                                ></textarea>
+
                             </div>
                         </div>
                         <div className="text-center mt-5">
