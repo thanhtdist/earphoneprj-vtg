@@ -47,7 +47,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       ExpressionAttributeValues: { ":deleteFlag": 0, ":tourType": "tour" },
       IndexName: 'tourType-createdAt-index',
       ScanIndexForward: false,
-      ProjectionExpression: "tourId, tourNumber, processingNumber, tourName, acceptanceDate,planningOfficeName, planningSalesOfficeName, planningSalesOfficeTeamName, contactPersonName, contactPersonEmail, numberOfDevices, numberOfTransmitters, departureDate, returnDate, qrCodeDestination,emailCustomer,phoneNumberCustomer,otherRemarks",
+      ProjectionExpression: "tourId,chatRestriction,tourNumber,courseName,planningAndSalesSignature,planningSalesOfficeTeamName,departureDate,returnDate,nameOfCoursePersonInCharge,tourConductorName,numberOfReceiversInUse,numberOfSendingDevices,subGuideFunctionAvailable,useTheTranslationFunction,coSponsoredCourseNumber",
       ExpressionAttributeNames: {
         "#tourType": "tourType",
       },
