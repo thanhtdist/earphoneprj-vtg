@@ -22,30 +22,27 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     // Parse body from API Gateway event
     const {
       tourId,
+      chatRestriction,
       tourNumber,
-      tourName,
+      courseName,
+      planningAndSalesSignature,
+      planningSalesOfficeTeamName,
       departureDate,
       returnDate,
-      processingNumber,
-      acceptanceDate,
-      planningOfficeName,
-      planningSalesOfficeName,
-      planningSalesOfficeTeamName,
-      contactPersonName,
-      contactPersonEmail,
-      numberOfDevices,
-      numberOfTransmitters,
-      qrCodeDestination,
-      emailCustomer,
-      phoneNumberCustomer,
-      otherRemarks
+      nameOfCoursePersonInCharge,
+      tourConductorName,
+      numberOfReceiversInUse,
+      numberOfSendingDevices,
+      subGuideFunctionAvailable,
+      useTheTranslationFunction,
+      coSponsoredCourseNumber
     } = JSON.parse(event.body || '{}');
 
-    console.log('Updating tour with tourId: ', tourId, 'tourNumber: ', tourNumber, 'tourName: ', tourName);
+    console.log('Updating tour with tourId: ', tourId, 'tourNumber: ', tourNumber, 'courseName: ', courseName, 'departureDate', departureDate, 'returnDate', returnDate);
 
     // Input validation
-    if (!tourId || !tourNumber || !tourName || !departureDate || !returnDate) {
-      console.error('Invalid input: Missing required fields.', { tourId, tourNumber, tourName, departureDate, returnDate });
+    if (!tourId || !tourNumber || !courseName || !departureDate || !returnDate) {
+      console.error('Invalid input: Missing required fields.', { tourId, tourNumber, courseName, departureDate, returnDate });
       return {
         statusCode: 400,
         body: JSON.stringify({ error: 'Invalid input: tourId, tourNumber, tourName, departureDate, returnDate are required.' }),
@@ -56,44 +53,38 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     // Update the tour item in DynamoDB
     const updateExpression = `
       set tourNumber = :tourNumber,
-          tourName = :tourName,
-          departureDate = :departureDate,
-          returnDate = :returnDate,
-          processingNumber = :processingNumber,
-          acceptanceDate = :acceptanceDate,
-          planningOfficeName = :planningOfficeName,
-          planningSalesOfficeName = :planningSalesOfficeName,
-          planningSalesOfficeTeamName = :planningSalesOfficeTeamName,
-          contactPersonName = :contactPersonName,
-          contactPersonEmail = :contactPersonEmail,
-          numberOfDevices = :numberOfDevices,
-          numberOfTransmitters = :numberOfTransmitters,
-          qrCodeDestination = :qrCodeDestination,
-          emailCustomer = :emailCustomer,
-          phoneNumberCustomer = :phoneNumberCustomer,
-          otherRemarks = :otherRemarks,
-          updatedBy = :updatedBy,
-          updatedAt = :updatedAt
+      courseName =:courseName,
+      planningAndSalesSignature=:planningAndSalesSignature,
+      planningSalesOfficeTeamName=:planningSalesOfficeTeamName,
+      departureDate=:departureDate,
+      returnDate=:returnDate,
+      nameOfCoursePersonInCharge=:nameOfCoursePersonInCharge,
+      tourConductorName=:tourConductorName,
+      numberOfReceiversInUse=:numberOfReceiversInUse,
+      numberOfSendingDevices=:numberOfSendingDevices,
+      subGuideFunctionAvailable=:subGuideFunctionAvailable,
+      useTheTranslationFunction=:useTheTranslationFunction,
+      coSponsoredCourseNumber=:coSponsoredCourseNumber,
+      chatRestriction=:chatRestriction,
+      updatedBy = :updatedBy,
+      updatedAt = :updatedAt
     `;
 
     const expressionAttributeValues = {
       ':tourNumber': tourNumber,
-      ':tourName': tourName,
-      ':departureDate': departureDate,
-      ':returnDate': returnDate,
-      ':processingNumber': processingNumber,
-      ':acceptanceDate': acceptanceDate,
-      ':planningOfficeName': planningOfficeName,
-      ':planningSalesOfficeName': planningSalesOfficeName,
-      ':planningSalesOfficeTeamName': planningSalesOfficeTeamName,
-      ':contactPersonName': contactPersonName,
-      ':contactPersonEmail': contactPersonEmail,
-      ':numberOfDevices': numberOfDevices,
-      ':numberOfTransmitters': numberOfTransmitters,
-      ':qrCodeDestination': qrCodeDestination,
-      ':emailCustomer': emailCustomer,
-      ':phoneNumberCustomer': phoneNumberCustomer,
-      ':otherRemarks': otherRemarks,
+      ':courseName':courseName,
+      ':planningAndSalesSignature':planningAndSalesSignature,
+      ':planningSalesOfficeTeamName':planningSalesOfficeTeamName,
+      ':departureDate':departureDate,
+      ':returnDate':returnDate,
+      ':nameOfCoursePersonInCharge':nameOfCoursePersonInCharge,
+      ':tourConductorName':tourConductorName,
+      ':numberOfReceiversInUse':numberOfReceiversInUse,
+      ':numberOfSendingDevices':numberOfSendingDevices,
+      ':subGuideFunctionAvailable':subGuideFunctionAvailable,
+      ':useTheTranslationFunction':useTheTranslationFunction,
+      ':coSponsoredCourseNumber':coSponsoredCourseNumber,
+      ':chatRestriction':chatRestriction,
       ':updatedBy': user.userId, // Replace with actual user who is updating
       ':updatedAt': new Date().toISOString()
     };
