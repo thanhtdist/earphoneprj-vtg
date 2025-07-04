@@ -21,7 +21,9 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     console.log('Authenticated User:', user);
 
     // Parse body from API Gateway event
+    console.log('Before Tours to create:', event.body);
     const tours = JSON.parse(event.body || '[]');
+    console.log('After Tours to create:', tours);
 
     if (!Array.isArray(tours) || tours.length === 0) {
       console.error('Invalid input: Body should be a non-empty array of tours.');
@@ -35,52 +37,46 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     const putRequests = tours.map(tour => {
       const {
         tourNumber,
-        tourName,
+        courseName,
+        planningAndSalesSignature,
+        planningSalesOfficeTeamName,
         departureDate,
         returnDate,
-        processingNumber,
-        acceptanceDate,
-        planningOfficeName,
-        planningSalesOfficeName,
-        planningSalesOfficeTeamName,
-        contactPersonName,
-        contactPersonEmail,
-        numberOfDevices,
-        numberOfTransmitters,
-        qrCodeDestination,
-        emailCustomer,
-        phoneNumberCustomer,
-        otherRemarks,
+        nameOfCoursePersonInCharge,
+        tourConductorName,
+        numberOfReceiversInUse,
+        numberOfSendingDevices,
+        subGuideFunctionAvailable,
+        useTheTranslationFunction,
+        coSponsoredCourseNumber,
         chatRestriction
       } = tour;
 
       // Input validation
-      if (!tourNumber || !tourName || !departureDate || !returnDate) {
-        throw new Error(`Invalid input: tourNumber, tourName, departureDate, returnDate are required for tour ${tourNumber}.`);
+      if (!tourNumber || !courseName || !departureDate || !returnDate) {
+        console.log('values input', 'tourNumber',tourNumber,'courseName',courseName,'departureDate',departureDate,'returnDate',returnDate )
+        throw new Error(`Invalid input: tourNumber, courseName, departureDate, returnDate are required for tour ${tourNumber}.`);
       }
-
+      console.log(123456789);
+      
       // Create a new tour item for DynamoDB
       return {
         PutRequest: {
           Item: {
             tourId: uuid(), // Generate a unique tour ID
             tourNumber,
-            tourName,
+            courseName,
+            planningAndSalesSignature,
+            planningSalesOfficeTeamName,
             departureDate,
             returnDate,
-            processingNumber,
-            acceptanceDate,
-            planningOfficeName,
-            planningSalesOfficeName,
-            planningSalesOfficeTeamName,
-            contactPersonName,
-            contactPersonEmail,
-            numberOfDevices,
-            numberOfTransmitters,
-            qrCodeDestination,
-            emailCustomer,
-            phoneNumberCustomer,
-            otherRemarks,
+            nameOfCoursePersonInCharge,
+            tourConductorName,
+            numberOfReceiversInUse,
+            numberOfSendingDevices,
+            subGuideFunctionAvailable,
+            useTheTranslationFunction,
+            coSponsoredCourseNumber,
             meetingId: '',
             channelId: '',
             chatRestriction,
@@ -99,10 +95,11 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     // Batch write to DynamoDB
     const params = {
       RequestItems: {
-        "tours": putRequests
+        "tours_test": putRequests // Replace with your actual DynamoDB table name
       }
     };
-
+    console.log('params',params);
+    
     await dynamoDB.batchWrite(params).promise();
 
     console.log('Tours successfully created: ', putRequests);

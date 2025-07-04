@@ -76,19 +76,37 @@ const ListTour = () => {
 
             const csvRows = [];
             const headers = [
-                "Tour number", "Processing number", "Tour name", "Application acceptance date and time",
-                "Planning office name", "Planning Sales Office", "Planning office team name",
-                "Name of person in charge", "Email address of person in charge",
-                "Number of terminal devices used", "Number of transmission devices required", "Departure date", "Return date",
-                "QR code delivery destination", "Email address", "Phone number", "Other notes"];
+                "Tour Number",
+                "Course Name",
+                "Planning and sales signature",
+                "Planning Sales Office Team Name",
+                "Departure Date",
+                "Return date",
+                "Name of course person in charge",
+                "Tour conductor's name",
+                "Number of receivers in use",
+                "Number of sending devices",
+                "Sub-guide function available (yes/no)",
+                "Use the translation function",
+                "Co-sponsored course number",
+            ];
             csvRows.push(headers.join(",")); // Add headers
 
             tours.forEach((tour) => {
-                const values = [tour.tourNumber, tour.processingNumber, tour.tourName, tour.acceptanceDate,
-                tour.planningOfficeName, tour.planningSalesOfficeName, tour.planningSalesOfficeTeamName,
-                tour.contactPersonName, tour.contactPersonEmail,
-                tour.numberOfDevices, tour.numberOfTransmitters, tour.departureDate, tour.returnDate,
-                tour.qrCodeDestination, tour.emailCustomer, tour.phoneNumberCustomer, tour.otherRemarks
+                const values = [
+                    tour.tourNumber,
+                    tour.courseName,
+                    tour.planningAndSalesSignature,
+                    tour.planningSalesOfficeTeamName,
+                    tour.departureDate,
+                    tour.returnDate,
+                    tour.nameOfCoursePersonInCharge,
+                    tour.tourConductorName,
+                    tour.numberOfReceiversInUse,
+                    tour.numberOfSendingDevices,
+                    tour.subGuideFunctionAvailable,
+                    tour.useTheTranslationFunction,
+                    tour.coSponsoredCourseNumber,
                 ];
                 csvRows.push(values.join(","));
             });
@@ -137,7 +155,7 @@ const ListTour = () => {
                             subGuideFunctionAvailable: cols[10] || "",
                             useTheTranslationFunction: cols[11] || "",
                             coSponsoredCourseNumber: cols[12] || "",
-                            chatRestriction: cols[17] || "allChat",
+                            chatRestriction: cols[13] || "allChat",
                         };
                     });
                     // For each parsed tour, get a unique meeting and channel
@@ -293,7 +311,7 @@ const ListTour = () => {
                                     <th scope="col" className="sticky2"></th>
                                     <th scope="col">ツアー番号</th>
                                     <th scope="col">コース名</th>
-                                    <th scope="col">企画営業署名</th>
+                                    <th scope="col">ツアー名</th>
                                     <th scope="col">企画営業所チーム名</th>
                                     <th scope="col">出発日</th>
                                     <th scope="col">帰着日</th>
@@ -301,7 +319,7 @@ const ListTour = () => {
                                     <th scope="col">添乗員様氏名</th>
                                     <th scope="col">受信機側利用台数</th>
                                     <th scope="col">送信側利用台数</th>
-                                    <th scope="col">サブガイド機能利用(有・無）</th>
+                                    <th scope="col">サブガイド機能利用</th>
                                     <th scope="col">翻訳機能利用</th>
                                     <th scope="col">共催コース番号</th>
 
