@@ -58,7 +58,7 @@ const RegisterTour = () => {
             value={value}
             readOnly
             ref={ref}
-            placeholder={lable === "acceptanceDate" ? '例）2025-1-1 15:42' : '例）2025-1-1'}
+            placeholder={lable === "acceptanceDate" ? '' : ''}
         />
     ));
     return (
@@ -90,7 +90,7 @@ const RegisterTour = () => {
                         <div className="form-group row mb-3">
                             <label htmlFor="tourNumber" className="col-sm-3 col-form-label">ツアー番号</label>
                             <div className="col-sm-9">
-                                <input type="text" className="form-control" id="tourNumber" placeholder="例）X9411111"
+                                <input type="text" className="form-control" id="tourNumber" placeholder=""
                                     {...register("tourNumber", { required: "ツアー番号を入力してください。" })}
                                 />
                                 {errors.tourNumber && <p style={{ color: "red" }}>{errors.tourNumber.message}</p>}
@@ -99,7 +99,7 @@ const RegisterTour = () => {
                         <div className="form-group row mb-3">
                             <label htmlFor="courseName" className="col-sm-3 col-form-label">コース名</label>
                             <div className="col-sm-9">
-                                <input type="text" className="form-control" id="courseName" placeholder="例）W0001"
+                                <input type="text" className="form-control" id="courseName" placeholder=""
                                     {...register("courseName", { required: "" })}
                                 />
                             </div>
@@ -107,7 +107,7 @@ const RegisterTour = () => {
                         <div className="form-group row mb-3">
                             <label htmlFor="lanningAndSalesSignature" className="col-sm-3 col-form-label">企画営業署名</label>
                             <div className="col-sm-9">
-                                <input type="text" className="form-control" id="lanningAndSalesSignature" placeholder="例）浅草寺ツアー"
+                                <input type="text" className="form-control" id="lanningAndSalesSignature" placeholder=""
                                     {...register("lanningAndSalesSignature")}
                                 />
                             </div>
@@ -115,7 +115,7 @@ const RegisterTour = () => {
                         <div className="form-group row mb-3">
                             <label htmlFor="planningSalesOfficeTeamName" className="col-sm-3 col-form-label">企画営業所チーム名</label>
                             <div className="col-sm-9">
-                                <input type="text" className="form-control" id="planningSalesOfficeTeamName" placeholder="例）浅草寺ツアー"
+                                <input type="text" className="form-control" id="planningSalesOfficeTeamName" placeholder=""
                                     {...register("planningSalesOfficeTeamName")}
                                 />
                             </div>
@@ -177,7 +177,7 @@ const RegisterTour = () => {
                         <div className="form-group row mb-3">
                             <label htmlFor="nameOfCoursePersonInCharge" className="col-sm-3 col-form-label">コースご担当者様氏名</label>
                             <div className="col-sm-9">
-                                <input type="text" className="form-control" id="nameOfCoursePersonInCharge" placeholder="例）浅草寺ツアー"
+                                <input type="text" className="form-control" id="nameOfCoursePersonInCharge" placeholder=""
                                     {...register("nameOfCoursePersonInCharge")}
                                 />
 
@@ -186,7 +186,7 @@ const RegisterTour = () => {
                         <div className="form-group row mb-3">
                             <label htmlFor="tourConductorName" className="col-sm-3 col-form-label">添乗員様氏名</label>
                             <div className="col-sm-9">
-                                <input type="text" className="form-control" id="tourConductorName" placeholder="例）浅草寺ツアー"
+                                <input type="text" className="form-control" id="tourConductorName" placeholder=""
                                     {...register("tourConductorName")}
                                 />
 
@@ -195,7 +195,7 @@ const RegisterTour = () => {
                         <div className="form-group row mb-3">
                             <label htmlFor="numberOfReceiversInUse" className="col-sm-3 col-form-label">受信機側利用台数</label>
                             <div className="col-sm-9">
-                                <input type="text" className="form-control" id="numberOfReceiversInUse" placeholder="例）浅草寺ツアー"
+                                <input type="text" className="form-control" id="numberOfReceiversInUse" placeholder=""
                                     {...register("numberOfReceiversInUse")}
                                 />
 
@@ -204,7 +204,7 @@ const RegisterTour = () => {
                         <div className="form-group row mb-3">
                             <label htmlFor="numberOfSendingDevices" className="col-sm-3 col-form-label">送信側利用台数</label>
                             <div className="col-sm-9">
-                                <input type="text" className="form-control" id="numberOfSendingDevices" placeholder="例）浅草寺ツアー"
+                                <input type="text" className="form-control" id="numberOfSendingDevices" placeholder=""
                                     {...register("numberOfSendingDevices")}
                                 />
 
@@ -221,7 +221,7 @@ const RegisterTour = () => {
                         <div className="form-group row mb-3">
                             <label htmlFor="useTheTranslationFunction" className="col-sm-3 col-form-label">翻訳機能利用</label>
                             <div className="col-sm-9">
-                                <input type="checkbox" id="useTheTranslationFunction" placeholder="例）浅草寺ツアー"
+                                <input type="checkbox" id="useTheTranslationFunction" placeholder=""
                                     {...register("useTheTranslationFunction",)}
                                 />
                             </div>
@@ -229,7 +229,7 @@ const RegisterTour = () => {
                         <div className="form-group row mb-3">
                             <label htmlFor="coSponsoredCourseNumber" className="col-sm-3 col-form-label">共催コース番号</label>
                             <div className="col-sm-9">
-                                <input type="text" className="form-control" id="coSponsoredCourseNumber" placeholder="例）浅草寺ツアー"
+                                <input type="text" className="form-control" id="coSponsoredCourseNumber" placeholder=""
                                     {...register("coSponsoredCourseNumber",)}
                                 />
 
