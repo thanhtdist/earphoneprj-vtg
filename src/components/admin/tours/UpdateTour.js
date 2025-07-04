@@ -6,6 +6,7 @@ import {
 } from '../../../apis/admin';
 // import './../../../styles/Admin.css';
 import Sidebar from '../common/Sidebar';
+import GenerateQRCode from './GenerateQRCode';
 import { Controller, useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import { Link } from 'react-router-dom';
@@ -271,6 +272,8 @@ const UpdateTour = () => {
 
                     </div>
                 </div>
+                <div className="form-group row mb-3"></div>
+                <GenerateQRCode tourId={tour.tourId} />
                 <div className="text-center mt-5">
                     <Link to={`${Config.pathNames.tour}`} type="submit" className="btn btn-outline-danger" style={{ "marginRight": "50px" }}>戻る</Link>
                     <button type="submit" className="btn btn-danger">更新</button>
