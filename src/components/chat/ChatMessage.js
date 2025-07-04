@@ -17,6 +17,8 @@ import Config from '../../utils/config';
 import ChatAttachment from './ChatAttachment';
 import { useTranslation } from 'react-i18next';
 import { MdAttachFile } from "react-icons/md";
+import { loginCognito } from "../../utils/cognitoAuth";
+import { fromCognitoIdentityPool } from "@aws-sdk/credential-providers";
 /**
  * Component to display chat messages and send messages to a channel
  * @param {string} userArn - The ARN of the user
@@ -59,12 +61,23 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null, userT
   // Function to initialize the messaging session
   const initializeMessagingSession = useCallback(async () => {
     const logger = new ConsoleLogger('SDK', LogLevel.INFO);
+    let idToken = localStorage.getItem('cognito_id_token');
+    if (!idToken) {
+    idToken = await loginCognito('thanhtd@i-stech.net', '123456789@Xx');
+    localStorage.setItem('cognito_id_token', idToken);
+    }
+    localStorage.setItem('cognito_id_token', idToken);
+    const credentials = fromCognitoIdentityPool({
+      clientConfig: { region: Config.region },
+      identityPoolId: Config.identityPoolId,
+      logins: {
+        [`cognito-idp.${Config.region}.amazonaws.com/${Config.userPoolId}`]: idToken,
+      },
+    });
+    console.log("Credentials:", credentials);
     const chime = new ChimeSDKMessagingClient({
       region: Config.region,
-      credentials: {
-        accessKeyId: Config.accessKeyId,
-        secretAccessKey: Config.secretAccessKey,
-      },
+      credentials
     });
     // Create a new messaging session configuration
     const configuration = new MessagingSessionConfiguration(userArn, sessionId, undefined, chime);
