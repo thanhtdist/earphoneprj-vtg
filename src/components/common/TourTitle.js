@@ -8,7 +8,7 @@ function TourTitle({tour}) {
                 <span>{tour?.departureDate}</span>
             </div>
             <div className='nameTour'>
-                <span>{tour?.tourName}</span>
+                <span>{tour?.courseName}</span>
             </div>
         </div>
     );
