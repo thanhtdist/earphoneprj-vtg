@@ -5,6 +5,6 @@ export const DEFAULT_HEADERS = {
 };
 
 export const DB_TABLES = {
-  USERS: 'users',
-  TOURS: 'tours_test',
+  USERS: 'users_clubtourism',
+  TOURS: 'tours_clubtourism',
 };
