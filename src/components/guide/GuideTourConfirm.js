@@ -34,8 +34,8 @@ const GuideTourConfirm = ({ tour }) => {
           )}
 
           <div className="mb-3">
-            <h5 className="fw-bold">{t('startGuidePage.tourName')}</h5>
-            <div className="border-bottom pb-2">{tour?.tourName}</div>
+            <h5 className="fw-bold">{t('startGuidePage.courseName')}</h5>
+            <div className="border-bottom pb-2">{tour?.courseName}</div>
           </div>
 
           <div className="mb-3">
