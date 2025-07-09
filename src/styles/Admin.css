@@ -167,6 +167,7 @@ button.remove{
     background: none;
     border-left: none;
     border-right: none;
+    width: var(--sticky-width);
   }
   .sticky::before {
     content: "";
@@ -183,7 +184,7 @@ button.remove{
 .sticky2{
     position: sticky;
     top: 0;
-    left: 90px;
+    left: var(--sticky-width);
     background:#fff;
     border-right: none;
     border-left: none;
