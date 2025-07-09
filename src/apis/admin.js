@@ -69,7 +69,7 @@ export async function updateTour(data) {
           tourId: data.tourId,
           tourNumber: data.tourNumber,
           courseName :  data.courseName,
-          planningAndSalesSignature:  data.lanningAndSalesSignature,
+          planningAndSalesSignature:  data.planningAndSalesSignature,
           planningSalesOfficeTeamName:  data.planningSalesOfficeTeamName,
           departureDate:  data.departureDate,
           returnDate:  data.returnDate,
