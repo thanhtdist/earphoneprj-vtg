@@ -24,7 +24,7 @@ const Config = {
      * Application URLs and Paths
      */
     // Base URL for API endpoints
-    baseURL: 'https://earphoneguide.com',
+    baseURL: 'https://clubtourism.earphoneguide.com',
     // Base path for the application
     subPath: '',
     // Path names for different user roles
