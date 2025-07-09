@@ -248,7 +248,7 @@ const UpdateTour = () => {
                     </div>
                 </div>
                 <div className="form-group row mb-3">
-                    <label htmlFor="subGuideFunctionAvailable" className="col-sm-3 col-form-label">サブガイド機能利用</label>
+                    <label htmlFor="subGuideFunctionAvailable" className="col-sm-3 col-form-label">サブガイド機能利用(有・無）</label>
                     <div className="col-sm-9">
                         <input type="checkbox" id="subGuideFunctionAvailable"
                             {...register("subGuideFunctionAvailable",)}
