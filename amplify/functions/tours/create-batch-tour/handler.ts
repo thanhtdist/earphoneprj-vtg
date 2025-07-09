@@ -95,7 +95,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     // Batch write to DynamoDB
     const params = {
       RequestItems: {
-        "tours_clubtourism": putRequests // Replace with your actual DynamoDB table name
+        "tours_kennet": putRequests // Replace with your actual DynamoDB table name
       }
     };
     console.log('params',params);
