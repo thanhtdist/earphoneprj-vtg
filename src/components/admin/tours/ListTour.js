@@ -311,7 +311,7 @@ const ListTour = () => {
                                     <th scope="col" className="sticky2"></th>
                                     <th scope="col">ツアー番号</th>
                                     <th scope="col">コース名</th>
-                                    <th scope="col">ツアー名</th>
+                                    <th scope="col">企画営業署名</th>
                                     <th scope="col">企画営業所チーム名</th>
                                     <th scope="col">出発日</th>
                                     <th scope="col">帰着日</th>
@@ -319,7 +319,7 @@ const ListTour = () => {
                                     <th scope="col">添乗員様氏名</th>
                                     <th scope="col">受信機側利用台数</th>
                                     <th scope="col">送信側利用台数</th>
-                                    <th scope="col">サブガイド機能利用</th>
+                                    <th scope="col">サブガイド機能利用(有・無）</th>
                                     <th scope="col">翻訳機能利用</th>
                                     <th scope="col">共催コース番号</th>
 
