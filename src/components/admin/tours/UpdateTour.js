@@ -142,10 +142,10 @@ const UpdateTour = () => {
                     </div>
                 </div>
                 <div className="form-group row mb-3">
-                    <label htmlFor="lanningAndSalesSignature" className="col-sm-3 col-form-label">企画営業署名</label>
+                    <label htmlFor="planningAndSalesSignature" className="col-sm-3 col-form-label">企画営業署名</label>
                     <div className="col-sm-9">
-                        <input type="text" className="form-control" id="lanningAndSalesSignature" placeholder=""
-                            {...register("lanningAndSalesSignature")}
+                        <input type="text" className="form-control" id="planningAndSalesSignature" placeholder=""
+                            {...register("planningAndSalesSignature")}
                         />
                     </div>
                 </div>
