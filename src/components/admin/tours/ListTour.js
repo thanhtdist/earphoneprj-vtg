@@ -16,6 +16,8 @@ import Loading from '../../Loading';
 import ReactPaginate from 'react-paginate';
 import Config from '../../../utils/config'; // Importing the configuration file
 import { FaCheck } from "react-icons/fa6";
+import Encoding from 'encoding-japanese';
+
 const ListTour = () => {
     const navigate = useNavigate();
     const fileInputRef = useRef(null);
@@ -131,17 +133,39 @@ const ListTour = () => {
         if (!file) return;
         setSelectedFile(file);
         setShowUploadConfirm(true);
+        fileInputRef.current.value = null;
     };
+
     const confirmUploadCSV = (e) => {
-        // const file = e.target.files[0];
-        // if (!file) return;
-        Papa.parse(selectedFile, {
-            complete: async (results) => {
-                console.log("Parsed CSV:", results.data);
-                // Transform rows as needed
-                try {
-                    const parsedData = results.data.slice(1).map((cols) => {
-                        return {
+        const reader = new FileReader();
+
+        reader.onload = async (event) => {
+            // Step 1: convert file to byte array
+            const arrayBuffer = event.target.result;
+            const uint8Array = new Uint8Array(arrayBuffer);
+
+            // Step 2: Detect encoding
+            const encoding = Encoding.detect(uint8Array); // Usually Shift_JIS or CP932
+
+            // Step 3: Convert to Unicode string (UTF-8)
+            const utf8String = Encoding.convert(uint8Array, {
+                to: 'UNICODE',
+                from: encoding,
+                type: 'string',
+            });
+
+            // Step 4: Parse CSV content with PapaParse
+            Papa.parse(utf8String, {
+                skipEmptyLines: true,
+                complete: async (results) => {
+                    console.log("Parsed CSV:", results.data);
+
+                    try {
+                        const cleanedRows = results.data.filter(
+                            (row) => row.some(cell => String(cell).trim() !== "")
+                        );
+
+                        const parsedData = cleanedRows.slice(1).map((cols) => ({
                             tourNumber: cols[0] || "",
                             courseName: cols[1] || "",
                             planningAndSalesSignature: cols[2] || "",
@@ -156,25 +180,22 @@ const ListTour = () => {
                             useTheTranslationFunction: cols[11] || "",
                             coSponsoredCourseNumber: cols[12] || "",
                             chatRestriction: cols[13] || "allChat",
-                        };
-                    });
-                    // For each parsed tour, get a unique meeting and channel
-                    // for (const tour of parsedData) {
-                    //     const response = await createMeetingAndChannel();
-                    //     tour.meetingId = response.meetingId || "";
-                    //     tour.channelId = response.channelId || "";
-                    // }
-                    // console.log("Parsed data:", parsedData);
+                        }));
 
-                    // Call create batch tour API
-                    callCreateBatchTour(parsedData);
-                } catch (error) {
-                    console.log("Error uploading CSV:", error);
-                }
-            },
-        });
-        setShowUploadConfirm(false);
+                        callCreateBatchTour(parsedData);
+                    } catch (error) {
+                        console.log("Error uploading CSV:", error);
+                    }
+                },
+            });
+
+            setShowUploadConfirm(false);
+        };
+
+        // ✅ Read file as ArrayBuffer (for encoding detection)
+        reader.readAsArrayBuffer(selectedFile);
     };
+
 
     // Handle CSV button click
     const handleCSVButtonClick = () => {
