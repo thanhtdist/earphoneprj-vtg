@@ -7,7 +7,7 @@ import Config from '../../../utils/config';
 import DatePicker from 'react-datepicker';
 import { format } from 'date-fns';
 
-const TourForm = ({ onSubmit, defaultValuesTour }) => {
+const TourForm = ({ onSubmit, defaultValues }) => {
     // const bookTourFunc = false;
     // const updateTourFunc = false;
     const {
@@ -16,12 +16,14 @@ const TourForm = ({ onSubmit, defaultValuesTour }) => {
         formState: { errors },
         control,
         reset
-    } = useForm({ defaultValuesTour });
+    } = useForm({ defaultValues });
     useEffect(() => {
-        if (defaultValuesTour) {
-            reset(defaultValuesTour);
+        console.log('defaultValuesTour',defaultValues);
+        
+        if (defaultValues) {
+            reset(defaultValues);
         }
-    }, [defaultValuesTour, reset]);
+    }, [defaultValues, reset]);
     // const onSubmit = (data) => {
     //     console.log('data',data);
 
@@ -60,7 +62,7 @@ const TourForm = ({ onSubmit, defaultValuesTour }) => {
     ));
 
     return (
-        <div className="container-fluid">
+
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="form-group row mb-3">
                     <label htmlFor="chatRestriction" className="col-sm-3 col-form-label">チャットの制限</label>
@@ -97,10 +99,10 @@ const TourForm = ({ onSubmit, defaultValuesTour }) => {
                     </div>
                 </div>
                 <div className="form-group row mb-3">
-                    <label htmlFor="lanningAndSalesSignature" className="col-sm-3 col-form-label">企画営業署名</label>
+                    <label htmlFor="planningAndSalesSignature" className="col-sm-3 col-form-label">企画営業署名</label>
                     <div className="col-sm-9">
-                        <input type="text" className="form-control" id="lanningAndSalesSignature" placeholder="例）浅草寺ツアー"
-                            {...register("lanningAndSalesSignature")}
+                        <input type="text" className="form-control" id="planningAndSalesSignature" placeholder="例）浅草寺ツアー"
+                            {...register("planningAndSalesSignature")}
                         />
                     </div>
                 </div>
@@ -203,7 +205,7 @@ const TourForm = ({ onSubmit, defaultValuesTour }) => {
                     </div>
                 </div>
                 <div className="form-group row mb-3">
-                    <label htmlFor="subGuideFunctionAvailable" className="col-sm-3 col-form-label">サブガイド機能利用</label>
+                    <label htmlFor="subGuideFunctionAvailable" className="col-sm-3 col-form-label">サブガイド機能利用(有・無）</label>
                     <div className="col-sm-9">
                         <input type="checkbox" id="subGuideFunctionAvailable"
                             {...register("subGuideFunctionAvailable",)}
@@ -232,7 +234,6 @@ const TourForm = ({ onSubmit, defaultValuesTour }) => {
                     <button type="submit" className="btn btn-danger">登録</button>
                 </div>
             </form>
-        </div>
     );
 };
 
