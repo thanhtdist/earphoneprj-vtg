@@ -63,7 +63,7 @@
     "startDate": "Start Date",
     "endDate": "End Date",
     "nextBtn": "Next ",
-    "tourName": "Tour Name",
+    "courseName": "Course Name",
     "tourConfirm" : {
       "isTourSetting": "1.Is the tour setting right ?",
       "customerScanQRCode": "2.Please make Customer scan the QR code on the next page",

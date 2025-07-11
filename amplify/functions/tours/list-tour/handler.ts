@@ -57,7 +57,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     // Append search query filters if needed
     if (query) {
       params.FilterExpression +=
-        " AND (contains(tourNumber, :query) OR contains(processingNumber, :query) OR contains(tourName, :query))";
+        " AND (contains(tourNumber, :query) OR contains(courseName, :query))";
       params.ExpressionAttributeValues![":query"] = query;
     }
 

@@ -63,7 +63,7 @@
     "startDate": "出発日",
     "endDate": "帰着日",
     "nextBtn": "表示 ",
-    "tourName": "ツアー名",
+    "courseName": "コース名",
     "tourConfirm" : {
       "isTourSetting": "1.上記内容で間違いありませんか?",
       "customerScanQRCode": "2.ガイド画面に入ったらお客様にQRコードを読ませてください。",

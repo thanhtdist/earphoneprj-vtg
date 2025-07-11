@@ -18,14 +18,14 @@ import { AuthProvider } from './components/admin/common/AuthContext';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Config from './utils/config'; // Importing the configuration file
-import NotFound from './components/NotFound'; // Importing the NotFound component
+//import NotFound from './components/NotFound'; // Importing the NotFound component
 
 function App() {
   // Check if we're at the bare root URL
-  const isRootUrl = window.location.pathname === '/';
-  console.log("pathname: ", window.location.pathname);
-  console.log("isRootUrl: ", isRootUrl);
-  if (isRootUrl) return <NotFound />;
+  // const isRootUrl = window.location.pathname === '/';
+  // console.log("pathname: ", window.location.pathname);
+  // console.log("isRootUrl: ", isRootUrl);
+  // if (isRootUrl) return <NotFound />;
   return (
     <>
       <ToastContainer position="top-right" autoClose={3000} />

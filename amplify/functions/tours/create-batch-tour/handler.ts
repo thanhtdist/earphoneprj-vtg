@@ -21,7 +21,9 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     console.log('Authenticated User:', user);
 
     // Parse body from API Gateway event
+    console.log('Before Tours to create:', event.body);
     const tours = JSON.parse(event.body || '[]');
+    console.log('After Tours to create:', tours);
 
     if (!Array.isArray(tours) || tours.length === 0) {
       console.error('Invalid input: Body should be a non-empty array of tours.');
@@ -93,7 +95,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     // Batch write to DynamoDB
     const params = {
       RequestItems: {
-        "tours": putRequests
+        "tours_kennet": putRequests // Replace with your actual DynamoDB table name
       }
     };
     console.log('params',params);

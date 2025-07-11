@@ -35,7 +35,7 @@ const GenerateQRCode = ({ tourId, channelId = null, userId = null, chatRestricti
     return (
         <div className="form-group row mb-3">
             <div className="col-sm-3">
-                <div className="qrCodeContent mb-3" style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                <div className="qrCodeContent mb-3" style={{ display: "flex", justifyContent: "start", alignItems: "start" }}>
                     <QRCodeCanvas
                         ref={qrRef}
                         value={`${appGuideURL}/${tourId}`}
@@ -45,7 +45,7 @@ const GenerateQRCode = ({ tourId, channelId = null, userId = null, chatRestricti
                 </div>
                 <span
                     onClick={handleDownloadQRCode}
-                    style={{ cursor: "pointer", border: "none", background: "none", display: "flex", justifyContent: "center", alignItems: "center" }}>
+                    style={{ cursor: "pointer", border: "none", background: "none", display: "flex", justifyContent: "start", alignItems: "start" }}>
                     <PiDownloadSimpleLight size={20} color="rgb(13, 110, 253)" />
                     <span style={{ marginLeft: "5px", color: "rgb(13, 110, 253)" }}>
                         ダウンロード

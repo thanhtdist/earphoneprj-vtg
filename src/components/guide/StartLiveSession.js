@@ -39,7 +39,7 @@ import TourTitle from '../common/TourTitle';
 import AudioMicControl from '../common/AudioMicControl';
 import AudioPlayerControl from '../common/AudioPlayerControl';
 // import { uploadFileToS3 } from '../services/S3Service';
-import { playAudioFromBase64 } from '../../utils/webAudio'; // Import the utility function to play audio from base64
+//import { playAudioFromBase64 } from '../../utils/webAudio'; // Import the utility function to play audio from base64
 
 /**
  * Component to start a live audio session for the main speaker
@@ -89,7 +89,7 @@ function StartLiveSession() {
   const [isPlay, setIsPlay] = useState(false);
   const audioRef = useRef(null);
   const userType = `Guide`;
-  const audioData = useRef([]); // Ref to store audio data
+  //const audioData = useRef([]); // Ref to store audio data
 
   // Add these references and callback:
   const wakeLockRef = useRef(null);
@@ -566,44 +566,44 @@ function StartLiveSession() {
     };
     enableMeetingTranscription(meetingSession.configuration.meetingId, SPEAK_VOICE_LANGUAGES_KEY);
 
-    const socket = new WebSocket("wss://0vfx6925gk.execute-api.us-east-1.amazonaws.com/prod");
+    // const socket = new WebSocket("wss://0vfx6925gk.execute-api.us-east-1.amazonaws.com/prod");
 
-    console.log("WebSocketxxx URL:", "wss://0vfx6925gk.execute-api.us-east-1.amazonaws.com/prod");
-    console.log("WebSocketxxx socket:", socket);
+    // console.log("WebSocketxxx URL:", "wss://0vfx6925gk.execute-api.us-east-1.amazonaws.com/prod");
+    // console.log("WebSocketxxx socket:", socket);
 
-    socket.onopen = () => {
-      console.log("WebSocketxxx connected");
-      // Host can send a message
-      socket.send(JSON.stringify({
-        action: "sendMessage",
-        inputText: "メールアドレスを入力してください。",
-        //inputText: "さらに、真水が使えないという問題も、家康が井の頭池から神田上水を通して水を引くことで解決しました。1603年、家康が江戸に幕府を開くと、江戸の繁栄は確実なものとなり、1609年には15万人が住む大都市へと発展しました。小さな漁村であった江戸は、1721年には100万人の人口を抱えるまでに成長したのです。",
-        sourceLanguageCode: "ja-JP",
-        targetLanguageCode: "en-US",
-        engine: "standard",
-      }));
-    };
-    socket.onmessage = async (event) => {
-      console.log("WebSocketxxx Message from server:", event.data);
-      const data = JSON.parse(event.data);
-      if (data.type === "speechComplete") {
-        console.log("WebSocketxxx Received translatedText:", data.translatedText);
-        console.log("WebSocketxxx Received audioData:", data.audioData);
-        // You can handle the received message here, e.g., display it in the UI
-        // Call it
-        //await playAudioFromBase64(data.audioData);
-        audioData.current.push(data.audioData); // Store audio data in the ref
-      } else {
-        console.warn("WebSocketxxx Unknown action:", data.action);
-      }
-    };
-    socket.onerror = (err) => {
-      console.error("WebSocketxxx error:", err);
-    };
+    // socket.onopen = () => {
+    //   console.log("WebSocketxxx connected");
+    //   // Host can send a message
+    //   socket.send(JSON.stringify({
+    //     action: "sendMessage",
+    //     inputText: "メールアドレスを入力してください。",
+    //     //inputText: "さらに、真水が使えないという問題も、家康が井の頭池から神田上水を通して水を引くことで解決しました。1603年、家康が江戸に幕府を開くと、江戸の繁栄は確実なものとなり、1609年には15万人が住む大都市へと発展しました。小さな漁村であった江戸は、1721年には100万人の人口を抱えるまでに成長したのです。",
+    //     sourceLanguageCode: "ja-JP",
+    //     targetLanguageCode: "en-US",
+    //     engine: "standard",
+    //   }));
+    // };
+    // socket.onmessage = async (event) => {
+    //   console.log("WebSocketxxx Message from server:", event.data);
+    //   const data = JSON.parse(event.data);
+    //   if (data.type === "speechComplete") {
+    //     console.log("WebSocketxxx Received translatedText:", data.translatedText);
+    //     console.log("WebSocketxxx Received audioData:", data.audioData);
+    //     // You can handle the received message here, e.g., display it in the UI
+    //     // Call it
+    //     //await playAudioFromBase64(data.audioData);
+    //     audioData.current.push(data.audioData); // Store audio data in the ref
+    //   } else {
+    //     console.warn("WebSocketxxx Unknown action:", data.action);
+    //   }
+    // };
+    // socket.onerror = (err) => {
+    //   console.error("WebSocketxxx error:", err);
+    // };
 
-    socket.onclose = (event) => {
-      console.warn("WebSocketxxx closed:", event);
-    };
+    // socket.onclose = (event) => {
+    //   console.warn("WebSocketxxx closed:", event);
+    // };
   }, [meetingSession]);
 
 
@@ -693,12 +693,12 @@ function StartLiveSession() {
     <>
       <Header tourId={tourId} count={participantsCount} userType={userType} />
       <div className="container">
-        {audioData.current.length > 0 &&
+        {/* {audioData.current.length > 0 &&
           (<><button onClick={async () => {
             await playAudioFromBase64(audioData.current[0]);
           }}>
             Play Audio
-          </button></>)}
+          </button></>)} */}
         <p className='titleLiveSession'>
           {t('pageTitles.guide')}
         </p>
