@@ -55,6 +55,19 @@ const Config = {
     refreshTokenExpirationTime: 60 * 60 * 24 * 7, // 7 days in seconds
     
     /**
+     * AWS Cognito Configuration
+     */
+    // User Pool ID
+    userPoolId: process.env.REACT_APP_AWS_USER_POOL_ID,
+    // User Pool Client ID
+    userPoolClientId: process.env.REACT_APP_AWS_USER_POOL_CLIENT_ID,
+    // Identity Pool ID
+    identityPoolId: process.env.REACT_APP_AWS_IDENTITY_POOL_ID,
+
+    cognitoEmail: process.env.REACT_APP_COGNITO_EMAIL,
+    cognitoPassword: process.env.REACT_APP_COGNITO_PASSWORD,
+    
+    /**
      * Helper methods to construct application URLs
      */
     // Returns the full URL for the guide interface

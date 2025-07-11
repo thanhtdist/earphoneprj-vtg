@@ -17,6 +17,8 @@ import Config from '../../utils/config';
 import ChatAttachment from './ChatAttachment';
 import { useTranslation } from 'react-i18next';
 import { MdAttachFile } from "react-icons/md";
+import { loginCognito } from "../../utils/cognitoAuth";
+import { fromCognitoIdentityPool } from "@aws-sdk/credential-providers";
 /**
  * Component to display chat messages and send messages to a channel
  * @param {string} userArn - The ARN of the user
@@ -59,71 +61,82 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null, userT
   // Function to initialize the messaging session
   const initializeMessagingSession = useCallback(async () => {
     const logger = new ConsoleLogger('SDK', LogLevel.INFO);
-    const chime = new ChimeSDKMessagingClient({
-      region: Config.region,
-      credentials: {
-        accessKeyId: Config.accessKeyId,
-        secretAccessKey: Config.secretAccessKey,
-      },
-    });
-    // Create a new messaging session configuration
-    const configuration = new MessagingSessionConfiguration(userArn, sessionId, undefined, chime);
-    configuration.prefetchOn = PrefetchOn.Connect;
-    configuration.prefetchSortBy = PrefetchSortBy.Unread;
-
-    // Create a new messaging session
-    const messagingSession = new DefaultMessagingSession(configuration, logger);
-    setMessageSession(messagingSession);
-    messagingSessionRef.current = messagingSession;
-
-    // Observer to handle messaging session events
-    const observer = {
-      messagingSessionDidStart: () => console.log('Messaging session started'),
-      messagingSessionDidStartConnecting: (reconnecting) =>
-        console.log(reconnecting ? 'Reconnecting...' : 'Connecting...'),
-      messagingSessionDidStop: (event) => {
-        console.log(`Session stopped event: ${event}`);
-        console.log(`Session stopped event code, reason: ${event.code} ${event.reason}`);
-        console.log('User left the chat', userArn);
-      },
-      // Handle incoming messages
-      messagingSessionDidReceiveMessage: (message) => {
-        console.log('Received message:', message);
-        if (!message.payload) return;
-        const messageData = JSON.parse(message.payload);
-        console.log('Received messageData:', messageData);
-
-        // when participants join the channel and show the message history
-        if (messageData.ChannelMessages?.length) {
-          const newMessages = messageData.ChannelMessages.reverse().map((msg) => ({
-            type: msg.Type,
-            content: msg.Content,
-            senderArn: msg?.Sender?.Arn,
-            senderName: msg?.Sender?.Name,
-            timestamp: msg.CreatedTimestamp,
-            attachments: msg?.Metadata ? JSON.parse(msg.Metadata).attachments : null
-          }));
-          setMessages((prevMessages) => [...prevMessages, ...newMessages]);
-        }
-
-        // when participants start the input message
-        if (messageData.Content) {
-          const newMessage = {
-            type: message.type,
-            content: messageData.Content,
-            senderArn: messageData?.Sender?.Arn,
-            senderName: messageData?.Sender?.Name,
-            timestamp: new Date().toISOString(),
-            attachments: messageData?.Metadata ? JSON.parse(messageData.Metadata).attachments : null
-          };
-          setMessages((prevMessages) => [...prevMessages, newMessage]);
-        }
-      },
-    };
-
-    messagingSession.addObserver(observer);
-
     try {
+      //let idToken = localStorage.getItem('cognito_id_token');
+      let idToken = null;
+      if (!idToken) {
+        idToken = await loginCognito(Config.cognitoEmail, Config.cognitoPassword);
+        //localStorage.setItem('cognito_id_token', idToken);
+      }
+      //localStorage.setItem('cognito_id_token', idToken);
+      const credentials = fromCognitoIdentityPool({
+        clientConfig: { region: Config.region },
+        identityPoolId: Config.identityPoolId,
+        logins: {
+          [`cognito-idp.${Config.region}.amazonaws.com/${Config.userPoolId}`]: idToken,
+        },
+      });
+      console.log("Credentials:", credentials);
+      const chime = new ChimeSDKMessagingClient({
+        region: Config.region,
+        credentials
+      });
+      // Create a new messaging session configuration
+      const configuration = new MessagingSessionConfiguration(userArn, sessionId, undefined, chime);
+      configuration.prefetchOn = PrefetchOn.Connect;
+      configuration.prefetchSortBy = PrefetchSortBy.Unread;
+
+      // Create a new messaging session
+      const messagingSession = new DefaultMessagingSession(configuration, logger);
+      setMessageSession(messagingSession);
+      messagingSessionRef.current = messagingSession;
+
+      // Observer to handle messaging session events
+      const observer = {
+        messagingSessionDidStart: () => console.log('Messaging session started'),
+        messagingSessionDidStartConnecting: (reconnecting) =>
+          console.log(reconnecting ? 'Reconnecting...' : 'Connecting...'),
+        messagingSessionDidStop: (event) => {
+          console.log(`Session stopped event: ${event}`);
+          console.log(`Session stopped event code, reason: ${event.code} ${event.reason}`);
+          console.log('User left the chat', userArn);
+        },
+        // Handle incoming messages
+        messagingSessionDidReceiveMessage: (message) => {
+          console.log('Received message:', message);
+          if (!message.payload) return;
+          const messageData = JSON.parse(message.payload);
+          console.log('Received messageData:', messageData);
+
+          // when participants join the channel and show the message history
+          if (messageData.ChannelMessages?.length) {
+            const newMessages = messageData.ChannelMessages.reverse().map((msg) => ({
+              type: msg.Type,
+              content: msg.Content,
+              senderArn: msg?.Sender?.Arn,
+              senderName: msg?.Sender?.Name,
+              timestamp: msg.CreatedTimestamp,
+              attachments: msg?.Metadata ? JSON.parse(msg.Metadata).attachments : null
+            }));
+            setMessages((prevMessages) => [...prevMessages, ...newMessages]);
+          }
+
+          // when participants start the input message
+          if (messageData.Content) {
+            const newMessage = {
+              type: message.type,
+              content: messageData.Content,
+              senderArn: messageData?.Sender?.Arn,
+              senderName: messageData?.Sender?.Name,
+              timestamp: new Date().toISOString(),
+              attachments: messageData?.Metadata ? JSON.parse(messageData.Metadata).attachments : null
+            };
+            setMessages((prevMessages) => [...prevMessages, newMessage]);
+          }
+        },
+      };
+
+      messagingSession.addObserver(observer);
       // Start the messaging session
       await messagingSession.start();
     } catch (error) {
@@ -253,13 +266,13 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null, userT
   }, [initializeMessagingSession, channelArn, userArn, sessionId]);
   const styleButton = () => {
     if (userType === "Guide") {
-      return  '#C60226'     
+      return '#C60226'
     }
     else if (userType === "User") {
-      return  '#16A085'
+      return '#16A085'
     }
     else if (userType === "Sub-Guide") {
-      return  '#E57A00'
+      return '#E57A00'
     }
   }
   return (
@@ -339,7 +352,7 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null, userT
         </div>
       )}
       {/* Render chat input based on chatSetting */}
-      {(chatSetting === 'allChat' || (chatSetting==="guideOnly" && userType==="Guide") ) && (
+      {(chatSetting === 'allChat' || (chatSetting === "guideOnly" && userType === "Guide")) && (
         <div className="chat-input">
           <div className='attachment-container'>
 
@@ -377,7 +390,7 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null, userT
               disabled={sending || (!inputMessage && !selectedFile)}
               style={{
                 // backgroundColor: (sending || (!inputMessage && !selectedFile)) ? '#d3d3d3' : '#4CAF50', // Adjust colors as needed
-                color:styleButton(),
+                color: styleButton(),
                 // color: (sending || (!inputMessage && !selectedFile)) ? 'black' : "red",
                 cursor: (sending || (!inputMessage && !selectedFile)) ? 'not-allowed' : 'pointer',
                 opacity: (sending || (!inputMessage && !selectedFile)) ? 0.6 : 1,

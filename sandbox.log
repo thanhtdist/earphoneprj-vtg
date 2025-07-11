@@ -17802,3 +17802,1001 @@
 }
 [send-message] 2:28:14 PM END RequestId: f676bbfe-8520-4089-85bc-65d822e7116a
 [send-message] 2:28:14 PM REPORT RequestId: f676bbfe-8520-4089-85bc-65d822e7116a	Duration: 1634.35 ms	Billed Duration: 1635 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[create-admin] 4:39:11 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[create-admin] 4:39:12 PM 2025-07-11T09:39:12.783Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[create-admin] 4:39:12 PM 2025-07-11T09:39:12.785Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[create-admin] 4:39:12 PM START RequestId: 1fabccf7-8e69-40d8-b239-4727038984f1 Version: $LATEST
+[create-admin] 4:39:12 PM 2025-07-11T09:39:12.801Z	1fabccf7-8e69-40d8-b239-4727038984f1	INFO	Creating user with userName:  dev-admin password:  123456789
+[create-admin] 4:39:13 PM 2025-07-11T09:39:13.826Z	1fabccf7-8e69-40d8-b239-4727038984f1	INFO	User successfully created:  {
+  userId: 'a389ffb8-2313-4d6a-bb7d-aaa609dcef13',
+  userName: 'dev-admin',
+  password: '$2b$10$CHwkLXL9L6eCPMccaiTUM.Wrzhor9JIxkkkAfEYd3oPW9jLL.e8dq',
+  email: 'dev-admin@gmail.com',
+  createdAt: '2025-07-11T09:39:13.240Z',
+  createdBy: 'a389ffb8-2313-4d6a-bb7d-aaa609dcef13',
+  updatedAt: '',
+  updatedBy: '',
+  deleteFlag: 0,
+  role: 0,
+  active: 0,
+  userType: 'user'
+}
+[create-admin] 4:39:13 PM END RequestId: 1fabccf7-8e69-40d8-b239-4727038984f1
+[create-admin] 4:39:13 PM REPORT RequestId: 1fabccf7-8e69-40d8-b239-4727038984f1	Duration: 1049.87 ms	Billed Duration: 1050 ms	Memory Size: 512 MB	Max Memory Used: 322 MB	Init Duration: 944.42 ms
+[create-admin] 4:39:35 PM START RequestId: aae424d3-d56c-4081-8a9d-a91e8b328553 Version: $LATEST
+[create-admin] 4:39:35 PM 2025-07-11T09:39:35.949Z	aae424d3-d56c-4081-8a9d-a91e8b328553	INFO	Creating user with userName:  dev-admin password:  123456789
+[create-admin] 4:39:36 PM 2025-07-11T09:39:36.839Z	aae424d3-d56c-4081-8a9d-a91e8b328553	INFO	User successfully created:  {
+  userId: 'a90dec4d-042f-4db3-8c8e-dd183c86923b',
+  userName: 'dev-admin',
+  password: '$2b$10$3ml8LpyNqjYYem4PTtcWIu86VCTAKRg8U9RkP3GuCaQvD/eFpYeHC',
+  email: 'dev-admin@gmail.com',
+  createdAt: '2025-07-11T09:39:36.363Z',
+  createdBy: 'a90dec4d-042f-4db3-8c8e-dd183c86923b',
+  updatedAt: '',
+  updatedBy: '',
+  deleteFlag: 0,
+  role: 0,
+  active: 0,
+  userType: 'user'
+}
+[create-admin] 4:39:36 PM END RequestId: aae424d3-d56c-4081-8a9d-a91e8b328553
+[create-admin] 4:39:36 PM REPORT RequestId: aae424d3-d56c-4081-8a9d-a91e8b328553	Duration: 892.51 ms	Billed Duration: 893 ms	Memory Size: 512 MB	Max Memory Used: 322 MB
+[login] 4:41:06 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[login] 4:41:07 PM 2025-07-11T09:41:07.084Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[login] 4:41:07 PM 2025-07-11T09:41:07.086Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[login] 4:41:07 PM START RequestId: 456c0da3-5538-4df0-a8ee-8379b5b795a9 Version: $LATEST
+[login] 4:41:07 PM 2025-07-11T09:41:07.118Z	456c0da3-5538-4df0-a8ee-8379b5b795a9	INFO	Retrieving user with email:  dev-admin@gmail.com
+[login] 4:41:07 PM 2025-07-11T09:41:07.709Z	456c0da3-5538-4df0-a8ee-8379b5b795a9	ERROR	Failed to Login:  {
+  error: ValidationException: The table does not have the specified index: email-index
+      at constructor.RY (file:///var/task/index.mjs:2:5258)
+      at constructor.callListeners (file:///var/task/index.mjs:2:48860)
+      at constructor.emit (file:///var/task/index.mjs:2:48568)
+      at constructor.emitEvent (file:///var/task/index.mjs:3:28487)
+      at constructor.t (file:///var/task/index.mjs:3:24043)
+      at Ql.runTo (file:///var/task/index.mjs:3:1217)
+      at file:///var/task/index.mjs:3:1429
+      at constructor.<anonymous> (file:///var/task/index.mjs:3:24258)
+      at constructor.<anonymous> (file:///var/task/index.mjs:3:28542)
+      at constructor.callListeners (file:///var/task/index.mjs:2:48965) {
+    code: 'ValidationException',
+    '[__type]': 'See error.__type for details.',
+    time: 2025-07-11T09:41:07.707Z,
+    requestId: 'R5A68LSTST6CFGI6SGFDCF8EE7VV4KQNSO5AEMVJF66Q9ASUAAJG',
+    statusCode: 400,
+    retryable: false,
+    retryDelay: 32.48897652130003
+  },
+  event: {
+    resource: '/users/login',
+    path: '/users/login',
+    httpMethod: 'POST',
+    headers: {
+      Accept: '*/*',
+      'Accept-Encoding': 'gzip, deflate, br, zstd',
+      'Accept-Language': 'en,ja;q=0.9,vi;q=0.8,en-US;q=0.7',
+      'cache-control': 'no-cache',
+      'CloudFront-Forwarded-Proto': 'https',
+      'CloudFront-Is-Desktop-Viewer': 'true',
+      'CloudFront-Is-Mobile-Viewer': 'false',
+      'CloudFront-Is-SmartTV-Viewer': 'false',
+      'CloudFront-Is-Tablet-Viewer': 'false',
+      'CloudFront-Viewer-ASN': '45899',
+      'CloudFront-Viewer-Country': 'VN',
+      'content-type': 'application/json; charset=UTF-8',
+      Host: 'qq8uest6ph.execute-api.us-east-1.amazonaws.com',
+      origin: 'http://localhost:3000',
+      pragma: 'no-cache',
+      priority: 'u=1, i',
+      Referer: 'http://localhost:3000/',
+      'sec-ch-ua': '"Google Chrome";v="137", "Chromium";v="137", "Not/A)Brand";v="24"',
+      'sec-ch-ua-mobile': '?0',
+      'sec-ch-ua-platform': '"Windows"',
+      'sec-fetch-dest': 'empty',
+      'sec-fetch-mode': 'cors',
+      'sec-fetch-site': 'cross-site',
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36',
+      Via: '2.0 c24bbe334efb322adbb0494d8789e626.cloudfront.net (CloudFront)',
+      'X-Amz-Cf-Id': 'Z6nVMkyW4up8HBJ__oGGUOyuqW2MyPSCVFqO5y7La-mCtn1Rc6XWhA==',
+      'X-Amzn-Trace-Id': 'Root=1-6870dc31-0525046450e7af1e7191388f',
+      'X-Forwarded-For': '14.161.12.17, 15.158.13.10',
+      'X-Forwarded-Port': '443',
+      'X-Forwarded-Proto': 'https'
+    },
+    multiValueHeaders: {
+      Accept: [Array],
+      'Accept-Encoding': [Array],
+      'Accept-Language': [Array],
+      'cache-control': [Array],
+      'CloudFront-Forwarded-Proto': [Array],
+      'CloudFront-Is-Desktop-Viewer': [Array],
+      'CloudFront-Is-Mobile-Viewer': [Array],
+      'CloudFront-Is-SmartTV-Viewer': [Array],
+      'CloudFront-Is-Tablet-Viewer': [Array],
+      'CloudFront-Viewer-ASN': [Array],
+      'CloudFront-Viewer-Country': [Array],
+      'content-type': [Array],
+      Host: [Array],
+      origin: [Array],
+      pragma: [Array],
+      priority: [Array],
+      Referer: [Array],
+      'sec-ch-ua': [Array],
+      'sec-ch-ua-mobile': [Array],
+      'sec-ch-ua-platform': [Array],
+      'sec-fetch-dest': [Array],
+      'sec-fetch-mode': [Array],
+      'sec-fetch-site': [Array],
+      'User-Agent': [Array],
+      Via: [Array],
+      'X-Amz-Cf-Id': [Array],
+      'X-Amzn-Trace-Id': [Array],
+      'X-Forwarded-For': [Array],
+      'X-Forwarded-Port': [Array],
+      'X-Forwarded-Proto': [Array]
+    },
+    queryStringParameters: null,
+    multiValueQueryStringParameters: null,
+    pathParameters: null,
+    stageVariables: null,
+    requestContext: {
+      resourceId: '3q8g5f',
+      resourcePath: '/users/login',
+      httpMethod: 'POST',
+      extendedRequestId: 'NidX2HFrIAMEj7g=',
+      requestTime: '11/Jul/2025:09:41:05 +0000',
+      path: '/prod/users/login',
+      accountId: '647755634525',
+      protocol: 'HTTP/1.1',
+      stage: 'prod',
+      domainPrefix: 'qq8uest6ph',
+      requestTimeEpoch: 1752226865890,
+      requestId: 'ea73ca95-45a9-4680-951e-13fb64d13900',
+      identity: [Object],
+      domainName: 'qq8uest6ph.execute-api.us-east-1.amazonaws.com',
+      deploymentId: '5e5ylc',
+      apiId: 'qq8uest6ph'
+    },
+    body: '{"email":"dev-admin@gmail.com","password":"123456789"}',
+    isBase64Encoded: false
+  }
+}
+[login] 4:41:07 PM END RequestId: 456c0da3-5538-4df0-a8ee-8379b5b795a9
+[login] 4:41:07 PM REPORT RequestId: 456c0da3-5538-4df0-a8ee-8379b5b795a9	Duration: 608.47 ms	Billed Duration: 609 ms	Memory Size: 512 MB	Max Memory Used: 318 MB	Init Duration: 982.50 ms
+[login] 4:41:09 PM START RequestId: f928f127-b761-4e26-b52f-29e9993d9dbb Version: $LATEST
+[login] 4:41:09 PM 2025-07-11T09:41:09.007Z	f928f127-b761-4e26-b52f-29e9993d9dbb	INFO	Retrieving user with email:  dev-admin@gmail.com
+[login] 4:41:09 PM 2025-07-11T09:41:09.466Z	f928f127-b761-4e26-b52f-29e9993d9dbb	ERROR	Failed to Login:  {
+  error: ValidationException: The table does not have the specified index: email-index
+      at constructor.RY (file:///var/task/index.mjs:2:5258)
+      at constructor.callListeners (file:///var/task/index.mjs:2:48860)
+      at constructor.emit (file:///var/task/index.mjs:2:48568)
+      at constructor.emitEvent (file:///var/task/index.mjs:3:28487)
+      at constructor.t (file:///var/task/index.mjs:3:24043)
+      at Ql.runTo (file:///var/task/index.mjs:3:1217)
+      at file:///var/task/index.mjs:3:1429
+      at constructor.<anonymous> (file:///var/task/index.mjs:3:24258)
+      at constructor.<anonymous> (file:///var/task/index.mjs:3:28542)
+      at constructor.callListeners (file:///var/task/index.mjs:2:48965) {
+    code: 'ValidationException',
+    '[__type]': 'See error.__type for details.',
+    time: 2025-07-11T09:41:09.466Z,
+    requestId: '645P3N7LGKOD9FQ3J7MDPOHNJJVV4KQNSO5AEMVJF66Q9ASUAAJG',
+    statusCode: 400,
+    retryable: false,
+    retryDelay: 12.02277665881326
+  },
+  event: {
+    resource: '/users/login',
+    path: '/users/login',
+    httpMethod: 'POST',
+    headers: {
+      Accept: '*/*',
+      'Accept-Encoding': 'gzip, deflate, br, zstd',
+      'Accept-Language': 'en,ja;q=0.9,vi;q=0.8,en-US;q=0.7',
+      'cache-control': 'no-cache',
+      'CloudFront-Forwarded-Proto': 'https',
+      'CloudFront-Is-Desktop-Viewer': 'true',
+      'CloudFront-Is-Mobile-Viewer': 'false',
+      'CloudFront-Is-SmartTV-Viewer': 'false',
+      'CloudFront-Is-Tablet-Viewer': 'false',
+      'CloudFront-Viewer-ASN': '45899',
+      'CloudFront-Viewer-Country': 'VN',
+      'content-type': 'application/json; charset=UTF-8',
+      Host: 'qq8uest6ph.execute-api.us-east-1.amazonaws.com',
+      origin: 'http://localhost:3000',
+      pragma: 'no-cache',
+      priority: 'u=1, i',
+      Referer: 'http://localhost:3000/',
+      'sec-ch-ua': '"Google Chrome";v="137", "Chromium";v="137", "Not/A)Brand";v="24"',
+      'sec-ch-ua-mobile': '?0',
+      'sec-ch-ua-platform': '"Windows"',
+      'sec-fetch-dest': 'empty',
+      'sec-fetch-mode': 'cors',
+      'sec-fetch-site': 'cross-site',
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36',
+      Via: '2.0 c24bbe334efb322adbb0494d8789e626.cloudfront.net (CloudFront)',
+      'X-Amz-Cf-Id': 'O7aDmWMlG86RV5kdAvZphrpXrWzmqyNypaK-3wnubPK_AnDJHgSMNg==',
+      'X-Amzn-Trace-Id': 'Root=1-6870dc34-61a90dec37ca86871afbc38e',
+      'X-Forwarded-For': '14.161.12.17, 15.158.13.10',
+      'X-Forwarded-Port': '443',
+      'X-Forwarded-Proto': 'https'
+    },
+    multiValueHeaders: {
+      Accept: [Array],
+      'Accept-Encoding': [Array],
+      'Accept-Language': [Array],
+      'cache-control': [Array],
+      'CloudFront-Forwarded-Proto': [Array],
+      'CloudFront-Is-Desktop-Viewer': [Array],
+      'CloudFront-Is-Mobile-Viewer': [Array],
+      'CloudFront-Is-SmartTV-Viewer': [Array],
+      'CloudFront-Is-Tablet-Viewer': [Array],
+      'CloudFront-Viewer-ASN': [Array],
+      'CloudFront-Viewer-Country': [Array],
+      'content-type': [Array],
+      Host: [Array],
+      origin: [Array],
+      pragma: [Array],
+      priority: [Array],
+      Referer: [Array],
+      'sec-ch-ua': [Array],
+      'sec-ch-ua-mobile': [Array],
+      'sec-ch-ua-platform': [Array],
+      'sec-fetch-dest': [Array],
+      'sec-fetch-mode': [Array],
+      'sec-fetch-site': [Array],
+      'User-Agent': [Array],
+      Via: [Array],
+      'X-Amz-Cf-Id': [Array],
+      'X-Amzn-Trace-Id': [Array],
+      'X-Forwarded-For': [Array],
+      'X-Forwarded-Port': [Array],
+      'X-Forwarded-Proto': [Array]
+    },
+    queryStringParameters: null,
+    multiValueQueryStringParameters: null,
+    pathParameters: null,
+    stageVariables: null,
+    requestContext: {
+      resourceId: '3q8g5f',
+      resourcePath: '/users/login',
+      httpMethod: 'POST',
+      extendedRequestId: 'NidYVGepoAMEifA=',
+      requestTime: '11/Jul/2025:09:41:08 +0000',
+      path: '/prod/users/login',
+      accountId: '647755634525',
+      protocol: 'HTTP/1.1',
+      stage: 'prod',
+      domainPrefix: 'qq8uest6ph',
+      requestTimeEpoch: 1752226868959,
+      requestId: '075588dc-f470-46c2-b355-00ed2001f673',
+      identity: [Object],
+      domainName: 'qq8uest6ph.execute-api.us-east-1.amazonaws.com',
+      deploymentId: '5e5ylc',
+      apiId: 'qq8uest6ph'
+    },
+    body: '{"email":"dev-admin@gmail.com","password":"123456789"}',
+    isBase64Encoded: false
+  }
+}
+[login] 4:41:09 PM END RequestId: f928f127-b761-4e26-b52f-29e9993d9dbb
+[login] 4:41:09 PM REPORT RequestId: f928f127-b761-4e26-b52f-29e9993d9dbb	Duration: 462.76 ms	Billed Duration: 463 ms	Memory Size: 512 MB	Max Memory Used: 318 MB
+[login] 4:41:10 PM START RequestId: 048a3dbf-2926-403e-89dc-e2061785e605 Version: $LATEST
+[login] 4:41:10 PM 2025-07-11T09:41:10.502Z	048a3dbf-2926-403e-89dc-e2061785e605	INFO	Retrieving user with email:  dev-admin@gmail.com
+[login] 4:41:10 PM 2025-07-11T09:41:10.968Z	048a3dbf-2926-403e-89dc-e2061785e605	ERROR	Failed to Login:  {
+  error: ValidationException: The table does not have the specified index: email-index
+      at constructor.RY (file:///var/task/index.mjs:2:5258)
+      at constructor.callListeners (file:///var/task/index.mjs:2:48860)
+      at constructor.emit (file:///var/task/index.mjs:2:48568)
+      at constructor.emitEvent (file:///var/task/index.mjs:3:28487)
+      at constructor.t (file:///var/task/index.mjs:3:24043)
+      at Ql.runTo (file:///var/task/index.mjs:3:1217)
+      at file:///var/task/index.mjs:3:1429
+      at constructor.<anonymous> (file:///var/task/index.mjs:3:24258)
+      at constructor.<anonymous> (file:///var/task/index.mjs:3:28542)
+      at constructor.callListeners (file:///var/task/index.mjs:2:48965) {
+    code: 'ValidationException',
+    '[__type]': 'See error.__type for details.',
+    time: 2025-07-11T09:41:10.967Z,
+    requestId: 'LRSL8EROOQ9KH578PRFOG4MFLJVV4KQNSO5AEMVJF66Q9ASUAAJG',
+    statusCode: 400,
+    retryable: false,
+    retryDelay: 48.52019780570514
+  },
+  event: {
+    resource: '/users/login',
+    path: '/users/login',
+    httpMethod: 'POST',
+    headers: {
+      Accept: '*/*',
+      'Accept-Encoding': 'gzip, deflate, br, zstd',
+      'Accept-Language': 'en,ja;q=0.9,vi;q=0.8,en-US;q=0.7',
+      'cache-control': 'no-cache',
+      'CloudFront-Forwarded-Proto': 'https',
+      'CloudFront-Is-Desktop-Viewer': 'true',
+      'CloudFront-Is-Mobile-Viewer': 'false',
+      'CloudFront-Is-SmartTV-Viewer': 'false',
+      'CloudFront-Is-Tablet-Viewer': 'false',
+      'CloudFront-Viewer-ASN': '45899',
+      'CloudFront-Viewer-Country': 'VN',
+      'content-type': 'application/json; charset=UTF-8',
+      Host: 'qq8uest6ph.execute-api.us-east-1.amazonaws.com',
+      origin: 'http://localhost:3000',
+      pragma: 'no-cache',
+      priority: 'u=1, i',
+      Referer: 'http://localhost:3000/',
+      'sec-ch-ua': '"Google Chrome";v="137", "Chromium";v="137", "Not/A)Brand";v="24"',
+      'sec-ch-ua-mobile': '?0',
+      'sec-ch-ua-platform': '"Windows"',
+      'sec-fetch-dest': 'empty',
+      'sec-fetch-mode': 'cors',
+      'sec-fetch-site': 'cross-site',
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36',
+      Via: '2.0 c24bbe334efb322adbb0494d8789e626.cloudfront.net (CloudFront)',
+      'X-Amz-Cf-Id': 'xzg5huCR9qCJY9SUGZRLT2ymSlllk2xdMq3d0f6m6J9jYM7JjlRSOA==',
+      'X-Amzn-Trace-Id': 'Root=1-6870dc36-31f0478369353ede511a6d97',
+      'X-Forwarded-For': '14.161.12.17, 15.158.13.16',
+      'X-Forwarded-Port': '443',
+      'X-Forwarded-Proto': 'https'
+    },
+    multiValueHeaders: {
+      Accept: [Array],
+      'Accept-Encoding': [Array],
+      'Accept-Language': [Array],
+      'cache-control': [Array],
+      'CloudFront-Forwarded-Proto': [Array],
+      'CloudFront-Is-Desktop-Viewer': [Array],
+      'CloudFront-Is-Mobile-Viewer': [Array],
+      'CloudFront-Is-SmartTV-Viewer': [Array],
+      'CloudFront-Is-Tablet-Viewer': [Array],
+      'CloudFront-Viewer-ASN': [Array],
+      'CloudFront-Viewer-Country': [Array],
+      'content-type': [Array],
+      Host: [Array],
+      origin: [Array],
+      pragma: [Array],
+      priority: [Array],
+      Referer: [Array],
+      'sec-ch-ua': [Array],
+      'sec-ch-ua-mobile': [Array],
+      'sec-ch-ua-platform': [Array],
+      'sec-fetch-dest': [Array],
+      'sec-fetch-mode': [Array],
+      'sec-fetch-site': [Array],
+      'User-Agent': [Array],
+      Via: [Array],
+      'X-Amz-Cf-Id': [Array],
+      'X-Amzn-Trace-Id': [Array],
+      'X-Forwarded-For': [Array],
+      'X-Forwarded-Port': [Array],
+      'X-Forwarded-Proto': [Array]
+    },
+    queryStringParameters: null,
+    multiValueQueryStringParameters: null,
+    pathParameters: null,
+    stageVariables: null,
+    requestContext: {
+      resourceId: '3q8g5f',
+      resourcePath: '/users/login',
+      httpMethod: 'POST',
+      extendedRequestId: 'NidYkFaoIAMEbzA=',
+      requestTime: '11/Jul/2025:09:41:10 +0000',
+      path: '/prod/users/login',
+      accountId: '647755634525',
+      protocol: 'HTTP/1.1',
+      stage: 'prod',
+      domainPrefix: 'qq8uest6ph',
+      requestTimeEpoch: 1752226870479,
+      requestId: '19475deb-ea60-4b29-89a6-b70b2f08e50c',
+      identity: [Object],
+      domainName: 'qq8uest6ph.execute-api.us-east-1.amazonaws.com',
+      deploymentId: '5e5ylc',
+      apiId: 'qq8uest6ph'
+    },
+    body: '{"email":"dev-admin@gmail.com","password":"123456789"}',
+    isBase64Encoded: false
+  }
+}
+[login] 4:41:10 PM END RequestId: 048a3dbf-2926-403e-89dc-e2061785e605
+[login] 4:41:10 PM REPORT RequestId: 048a3dbf-2926-403e-89dc-e2061785e605	Duration: 468.11 ms	Billed Duration: 469 ms	Memory Size: 512 MB	Max Memory Used: 318 MB
+[list-tour] 4:48:54 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[list-tour] 4:48:54 PM 2025-07-11T09:48:54.999Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[list-tour] 4:48:55 PM 2025-07-11T09:48:55.002Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[list-tour] 4:48:55 PM START RequestId: 1175708d-968f-4be3-a87c-d6f259f875d7 Version: $LATEST
+[list-tour] 4:48:55 PM 2025-07-11T09:48:55.051Z	1175708d-968f-4be3-a87c-d6f259f875d7	INFO	Query: undefined
+[list-tour] 4:48:55 PM 2025-07-11T09:48:55.051Z	1175708d-968f-4be3-a87c-d6f259f875d7	INFO	Retrieving list of tours
+[list-tour] 4:48:55 PM 2025-07-11T09:48:55.051Z	1175708d-968f-4be3-a87c-d6f259f875d7	INFO	Auth Header:  Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJhOTBkZWM0ZC0wNDJmLTRkYjMtOGM4ZS1kZDE4M2M4NjkyM2IiLCJpYXQiOjE3NTIyMjczMjksImV4cCI6MTc1MjIyODIyOX0.hewkH5rdOf9wV5eRDnZwvvBLT37057ZEqrTAuOnt7Y0
+[list-tour] 4:48:55 PM 2025-07-11T09:48:55.647Z	1175708d-968f-4be3-a87c-d6f259f875d7	INFO	Authenticated User: {
+  password: '$2b$10$3ml8LpyNqjYYem4PTtcWIu86VCTAKRg8U9RkP3GuCaQvD/eFpYeHC',
+  active: 0,
+  deleteFlag: 0,
+  role: 0,
+  userType: 'user',
+  userId: 'a90dec4d-042f-4db3-8c8e-dd183c86923b',
+  updatedAt: '',
+  userName: 'dev-admin',
+  createdAt: '2025-07-11T09:39:36.363Z',
+  updatedBy: '',
+  email: 'dev-admin@gmail.com',
+  createdBy: 'a90dec4d-042f-4db3-8c8e-dd183c86923b'
+}
+[list-tour] 4:48:55 PM 2025-07-11T09:48:55.647Z	1175708d-968f-4be3-a87c-d6f259f875d7	INFO	Scan Parameters:  {
+  TableName: 'tours_dev',
+  FilterExpression: 'deleteFlag = :deleteFlag',
+  KeyConditionExpression: '#tourType = :tourType',
+  ExpressionAttributeValues: { ':deleteFlag': 0, ':tourType': 'tour' },
+  IndexName: 'tourType-createdAt-index',
+  ScanIndexForward: false,
+  ProjectionExpression: 'tourId,chatRestriction,tourNumber,courseName,planningAndSalesSignature,planningSalesOfficeTeamName,departureDate,returnDate,nameOfCoursePersonInCharge,tourConductorName,numberOfReceiversInUse,numberOfSendingDevices,subGuideFunctionAvailable,useTheTranslationFunction,coSponsoredCourseNumber',
+  ExpressionAttributeNames: { '#tourType': 'tourType' }
+}
+[list-tour] 4:48:55 PM 2025-07-11T09:48:55.648Z	1175708d-968f-4be3-a87c-d6f259f875d7	INFO	Updated Scan Parameters: (if any) {
+  TableName: 'tours_dev',
+  FilterExpression: 'deleteFlag = :deleteFlag',
+  KeyConditionExpression: '#tourType = :tourType',
+  ExpressionAttributeValues: { ':deleteFlag': 0, ':tourType': 'tour' },
+  IndexName: 'tourType-createdAt-index',
+  ScanIndexForward: false,
+  ProjectionExpression: 'tourId,chatRestriction,tourNumber,courseName,planningAndSalesSignature,planningSalesOfficeTeamName,departureDate,returnDate,nameOfCoursePersonInCharge,tourConductorName,numberOfReceiversInUse,numberOfSendingDevices,subGuideFunctionAvailable,useTheTranslationFunction,coSponsoredCourseNumber',
+  ExpressionAttributeNames: { '#tourType': 'tourType' }
+}
+[list-tour] 4:48:56 PM 2025-07-11T09:48:56.117Z	1175708d-968f-4be3-a87c-d6f259f875d7	ERROR	Failed to retrieve tours:  {
+  error: ValidationException: The table does not have the specified index: tourType-createdAt-index
+      at constructor.nY (file:///var/task/index.mjs:2:5258)
+      at constructor.callListeners (file:///var/task/index.mjs:2:48818)
+      at constructor.emit (file:///var/task/index.mjs:2:48526)
+      at constructor.emitEvent (file:///var/task/index.mjs:3:28487)
+      at constructor.t (file:///var/task/index.mjs:3:24043)
+      at jl.runTo (file:///var/task/index.mjs:3:1217)
+      at file:///var/task/index.mjs:3:1429
+      at constructor.<anonymous> (file:///var/task/index.mjs:3:24258)
+      at constructor.<anonymous> (file:///var/task/index.mjs:3:28542)
+      at constructor.callListeners (file:///var/task/index.mjs:2:48923) {
+    code: 'ValidationException',
+    '[__type]': 'See error.__type for details.',
+    time: 2025-07-11T09:48:56.116Z,
+    requestId: 'P8F0U3C8V7DPPH18G5DEK6NS2FVV4KQNSO5AEMVJF66Q9ASUAAJG',
+    statusCode: 400,
+    retryable: false,
+    retryDelay: 23.525766167921745
+  },
+  event: {
+    resource: '/tours',
+    path: '/tours/',
+    httpMethod: 'GET',
+    headers: {
+      Accept: '*/*',
+      'Accept-Encoding': 'gzip, deflate, br, zstd',
+      'Accept-Language': 'en,ja;q=0.9,vi;q=0.8,en-US;q=0.7',
+      Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJhOTBkZWM0ZC0wNDJmLTRkYjMtOGM4ZS1kZDE4M2M4NjkyM2IiLCJpYXQiOjE3NTIyMjczMjksImV4cCI6MTc1MjIyODIyOX0.hewkH5rdOf9wV5eRDnZwvvBLT37057ZEqrTAuOnt7Y0',
+      'cache-control': 'no-cache',
+      'CloudFront-Forwarded-Proto': 'https',
+      'CloudFront-Is-Desktop-Viewer': 'true',
+      'CloudFront-Is-Mobile-Viewer': 'false',
+      'CloudFront-Is-SmartTV-Viewer': 'false',
+      'CloudFront-Is-Tablet-Viewer': 'false',
+      'CloudFront-Viewer-ASN': '45899',
+      'CloudFront-Viewer-Country': 'VN',
+      Host: 'ylz95j2zkj.execute-api.us-east-1.amazonaws.com',
+      origin: 'http://localhost:3000',
+      pragma: 'no-cache',
+      priority: 'u=1, i',
+      Referer: 'http://localhost:3000/',
+      'sec-ch-ua': '"Google Chrome";v="137", "Chromium";v="137", "Not/A)Brand";v="24"',
+      'sec-ch-ua-mobile': '?0',
+      'sec-ch-ua-platform': '"Windows"',
+      'sec-fetch-dest': 'empty',
+      'sec-fetch-mode': 'cors',
+      'sec-fetch-site': 'cross-site',
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36',
+      Via: '2.0 cd9ae558ecbf36fa8966ccaa63a4ab5c.cloudfront.net (CloudFront)',
+      'X-Amz-Cf-Id': 'y9oOu37lBtpafcYROo1axaOEFsuu932P5xVagKs9-ghXEDbH7_L7Iw==',
+      'X-Amzn-Trace-Id': 'Root=1-6870de05-203bc8070491ac81739ad7ea',
+      'X-Forwarded-For': '14.161.12.17, 15.158.13.118',
+      'X-Forwarded-Port': '443',
+      'X-Forwarded-Proto': 'https'
+    },
+    multiValueHeaders: {
+      Accept: [Array],
+      'Accept-Encoding': [Array],
+      'Accept-Language': [Array],
+      Authorization: [Array],
+      'cache-control': [Array],
+      'CloudFront-Forwarded-Proto': [Array],
+      'CloudFront-Is-Desktop-Viewer': [Array],
+      'CloudFront-Is-Mobile-Viewer': [Array],
+      'CloudFront-Is-SmartTV-Viewer': [Array],
+      'CloudFront-Is-Tablet-Viewer': [Array],
+      'CloudFront-Viewer-ASN': [Array],
+      'CloudFront-Viewer-Country': [Array],
+      Host: [Array],
+      origin: [Array],
+      pragma: [Array],
+      priority: [Array],
+      Referer: [Array],
+      'sec-ch-ua': [Array],
+      'sec-ch-ua-mobile': [Array],
+      'sec-ch-ua-platform': [Array],
+      'sec-fetch-dest': [Array],
+      'sec-fetch-mode': [Array],
+      'sec-fetch-site': [Array],
+      'User-Agent': [Array],
+      Via: [Array],
+      'X-Amz-Cf-Id': [Array],
+      'X-Amzn-Trace-Id': [Array],
+      'X-Forwarded-For': [Array],
+      'X-Forwarded-Port': [Array],
+      'X-Forwarded-Proto': [Array]
+    },
+    queryStringParameters: { page: '1', pageSize: '10', query: '' },
+    multiValueQueryStringParameters: { page: [Array], pageSize: [Array], query: [Array] },
+    pathParameters: null,
+    stageVariables: null,
+    requestContext: {
+      resourceId: '542q9u',
+      resourcePath: '/tours',
+      httpMethod: 'GET',
+      extendedRequestId: 'Nieg-H2pIAMEh_w=',
+      requestTime: '11/Jul/2025:09:48:53 +0000',
+      path: '/prod/tours/',
+      accountId: '647755634525',
+      protocol: 'HTTP/1.1',
+      stage: 'prod',
+      domainPrefix: 'ylz95j2zkj',
+      requestTimeEpoch: 1752227333819,
+      requestId: 'ecbae9cb-8dc2-4b40-aeea-f6877eda41cf',
+      identity: [Object],
+      domainName: 'ylz95j2zkj.execute-api.us-east-1.amazonaws.com',
+      deploymentId: '12v66s',
+      apiId: 'ylz95j2zkj'
+    },
+    body: null,
+    isBase64Encoded: false
+  }
+}
+[list-tour] 4:48:56 PM END RequestId: 1175708d-968f-4be3-a87c-d6f259f875d7
+[list-tour] 4:48:56 PM REPORT RequestId: 1175708d-968f-4be3-a87c-d6f259f875d7	Duration: 1095.95 ms	Billed Duration: 1096 ms	Memory Size: 512 MB	Max Memory Used: 318 MB	Init Duration: 951.78 ms
+[login] 4:48:47 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[login] 4:48:48 PM 2025-07-11T09:48:48.579Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[login] 4:48:48 PM 2025-07-11T09:48:48.582Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[login] 4:48:48 PM START RequestId: ddea0087-07c6-45b0-9330-3d310b0c1e49 Version: $LATEST
+[login] 4:48:48 PM 2025-07-11T09:48:48.621Z	ddea0087-07c6-45b0-9330-3d310b0c1e49	INFO	Retrieving user with email:  dev-admin@gmail.com
+[login] 4:48:49 PM 2025-07-11T09:48:49.235Z	ddea0087-07c6-45b0-9330-3d310b0c1e49	INFO	User successfully retrieved:  {
+  password: '$2b$10$3ml8LpyNqjYYem4PTtcWIu86VCTAKRg8U9RkP3GuCaQvD/eFpYeHC',
+  active: 0,
+  deleteFlag: 0,
+  role: 0,
+  userType: 'user',
+  updatedAt: '',
+  userId: 'a90dec4d-042f-4db3-8c8e-dd183c86923b',
+  userName: 'dev-admin',
+  createdAt: '2025-07-11T09:39:36.363Z',
+  updatedBy: '',
+  email: 'dev-admin@gmail.com',
+  createdBy: 'a90dec4d-042f-4db3-8c8e-dd183c86923b'
+}
+[check-auth] 4:48:50 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[check-auth] 4:48:51 PM 2025-07-11T09:48:51.411Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[check-auth] 4:48:51 PM 2025-07-11T09:48:51.413Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[check-auth] 4:48:51 PM START RequestId: 7e756d91-9486-42bc-9da5-45be83d25435 Version: $LATEST
+[check-auth] 4:48:51 PM 2025-07-11T09:48:51.449Z	7e756d91-9486-42bc-9da5-45be83d25435	INFO	Token (cleaned):  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJhOTBkZWM0ZC0wNDJmLTRkYjMtOGM4ZS1kZDE4M2M4NjkyM2IiLCJpYXQiOjE3NTIyMjczMjksImV4cCI6MTc1MjIyODIyOX0.hewkH5rdOf9wV5eRDnZwvvBLT37057ZEqrTAuOnt7Y0
+[check-auth] 4:48:51 PM 2025-07-11T09:48:51.449Z	7e756d91-9486-42bc-9da5-45be83d25435	INFO	Verifying token... a5e3696b23ce9b6e96af822f26b757d52c64b9a8e29351b9fee039dfb2d35600
+[check-auth] 4:48:51 PM 2025-07-11T09:48:51.468Z	7e756d91-9486-42bc-9da5-45be83d25435	INFO	userId:  a90dec4d-042f-4db3-8c8e-dd183c86923b
+[check-auth] 4:48:52 PM 2025-07-11T09:48:52.042Z	7e756d91-9486-42bc-9da5-45be83d25435	INFO	DynamoDB result:  {
+  Items: [
+    {
+      password: '$2b$10$3ml8LpyNqjYYem4PTtcWIu86VCTAKRg8U9RkP3GuCaQvD/eFpYeHC',
+      active: 0,
+      deleteFlag: 0,
+      role: 0,
+      userType: 'user',
+      userId: 'a90dec4d-042f-4db3-8c8e-dd183c86923b',
+      updatedAt: '',
+      userName: 'dev-admin',
+      createdAt: '2025-07-11T09:39:36.363Z',
+      updatedBy: '',
+      email: 'dev-admin@gmail.com',
+      createdBy: 'a90dec4d-042f-4db3-8c8e-dd183c86923b'
+    }
+  ],
+  Count: 1,
+  ScannedCount: 1
+}
+[check-auth] 4:48:52 PM END RequestId: 7e756d91-9486-42bc-9da5-45be83d25435
+[check-auth] 4:48:52 PM REPORT RequestId: 7e756d91-9486-42bc-9da5-45be83d25435	Duration: 617.42 ms	Billed Duration: 618 ms	Memory Size: 512 MB	Max Memory Used: 318 MB	Init Duration: 1004.53 ms
+[check-auth] 4:48:52 PM START RequestId: 79ff61d2-e387-418e-99e3-67c7d3491c38 Version: $LATEST
+[check-auth] 4:48:52 PM 2025-07-11T09:48:52.663Z	79ff61d2-e387-418e-99e3-67c7d3491c38	INFO	Token (cleaned):  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJhOTBkZWM0ZC0wNDJmLTRkYjMtOGM4ZS1kZDE4M2M4NjkyM2IiLCJpYXQiOjE3NTIyMjczMjksImV4cCI6MTc1MjIyODIyOX0.hewkH5rdOf9wV5eRDnZwvvBLT37057ZEqrTAuOnt7Y0
+[check-auth] 4:48:52 PM 2025-07-11T09:48:52.663Z	79ff61d2-e387-418e-99e3-67c7d3491c38	INFO	Verifying token... a5e3696b23ce9b6e96af822f26b757d52c64b9a8e29351b9fee039dfb2d35600
+[check-auth] 4:48:52 PM 2025-07-11T09:48:52.664Z	79ff61d2-e387-418e-99e3-67c7d3491c38	INFO	userId:  a90dec4d-042f-4db3-8c8e-dd183c86923b
+[check-auth] 4:48:53 PM 2025-07-11T09:48:53.136Z	79ff61d2-e387-418e-99e3-67c7d3491c38	INFO	DynamoDB result:  {
+  Items: [
+    {
+      password: '$2b$10$3ml8LpyNqjYYem4PTtcWIu86VCTAKRg8U9RkP3GuCaQvD/eFpYeHC',
+      active: 0,
+      deleteFlag: 0,
+      role: 0,
+      userType: 'user',
+      userId: 'a90dec4d-042f-4db3-8c8e-dd183c86923b',
+      updatedAt: '',
+      userName: 'dev-admin',
+      createdAt: '2025-07-11T09:39:36.363Z',
+      updatedBy: '',
+      email: 'dev-admin@gmail.com',
+      createdBy: 'a90dec4d-042f-4db3-8c8e-dd183c86923b'
+    }
+  ],
+  Count: 1,
+  ScannedCount: 1
+}
+[check-auth] 4:48:53 PM END RequestId: 79ff61d2-e387-418e-99e3-67c7d3491c38
+[check-auth] 4:48:53 PM REPORT RequestId: 79ff61d2-e387-418e-99e3-67c7d3491c38	Duration: 475.87 ms	Billed Duration: 476 ms	Memory Size: 512 MB	Max Memory Used: 318 MB
+[login] 4:48:49 PM END RequestId: ddea0087-07c6-45b0-9330-3d310b0c1e49
+[login] 4:48:49 PM REPORT RequestId: ddea0087-07c6-45b0-9330-3d310b0c1e49	Duration: 1102.11 ms	Billed Duration: 1103 ms	Memory Size: 512 MB	Max Memory Used: 324 MB	Init Duration: 959.90 ms
+[check-auth] 4:58:31 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[check-auth] 4:58:32 PM 2025-07-11T09:58:32.199Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[check-auth] 4:58:32 PM 2025-07-11T09:58:32.201Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[check-auth] 4:58:32 PM START RequestId: 6d631145-2166-4889-ab78-c975fd11ef66 Version: $LATEST
+[check-auth] 4:58:32 PM 2025-07-11T09:58:32.233Z	6d631145-2166-4889-ab78-c975fd11ef66	INFO	Token (cleaned):  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJhOTBkZWM0ZC0wNDJmLTRkYjMtOGM4ZS1kZDE4M2M4NjkyM2IiLCJpYXQiOjE3NTIyMjc5MTAsImV4cCI6MTc1MjIyODgxMH0.f4trKlmLuwjvH3waPK5IsxJLIcHLuKMjxKGfEaHjC4c
+[check-auth] 4:58:32 PM 2025-07-11T09:58:32.233Z	6d631145-2166-4889-ab78-c975fd11ef66	INFO	Verifying token... a5e3696b23ce9b6e96af822f26b757d52c64b9a8e29351b9fee039dfb2d35600
+[check-auth] 4:58:32 PM 2025-07-11T09:58:32.249Z	6d631145-2166-4889-ab78-c975fd11ef66	INFO	userId:  a90dec4d-042f-4db3-8c8e-dd183c86923b
+[refresh-token] 4:58:28 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[refresh-token] 4:58:29 PM 2025-07-11T09:58:29.819Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[refresh-token] 4:58:29 PM 2025-07-11T09:58:29.821Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[refresh-token] 4:58:29 PM START RequestId: cf55d178-a5f0-4c1f-a68e-986976181f11 Version: $LATEST
+[refresh-token] 4:58:29 PM 2025-07-11T09:58:29.851Z	cf55d178-a5f0-4c1f-a68e-986976181f11	INFO	Refresh Token (cleaned):  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJhOTBkZWM0ZC0wNDJmLTRkYjMtOGM4ZS1kZDE4M2M4NjkyM2IiLCJpYXQiOjE3NTIyMjczMjksImV4cCI6MTc1MjgzMjEyOX0.-1AOaP7lZdXkqJzDJU8GLos--46lQreB82coiXZHclI
+[refresh-token] 4:58:29 PM 2025-07-11T09:58:29.854Z	cf55d178-a5f0-4c1f-a68e-986976181f11	INFO	Decoded refresh token:  {
+  userId: 'a90dec4d-042f-4db3-8c8e-dd183c86923b',
+  iat: 1752227329,
+  exp: 1752832129
+}
+[refresh-token] 4:58:29 PM 2025-07-11T09:58:29.854Z	cf55d178-a5f0-4c1f-a68e-986976181f11	INFO	Extracted userId:  a90dec4d-042f-4db3-8c8e-dd183c86923b
+[refresh-token] 4:58:30 PM 2025-07-11T09:58:30.422Z	cf55d178-a5f0-4c1f-a68e-986976181f11	INFO	DynamoDB query result:  {
+  Items: [
+    {
+      password: '$2b$10$3ml8LpyNqjYYem4PTtcWIu86VCTAKRg8U9RkP3GuCaQvD/eFpYeHC',
+      active: 0,
+      deleteFlag: 0,
+      role: 0,
+      userType: 'user',
+      userId: 'a90dec4d-042f-4db3-8c8e-dd183c86923b',
+      updatedAt: '',
+      userName: 'dev-admin',
+      createdAt: '2025-07-11T09:39:36.363Z',
+      updatedBy: '',
+      email: 'dev-admin@gmail.com',
+      createdBy: 'a90dec4d-042f-4db3-8c8e-dd183c86923b'
+    }
+  ],
+  Count: 1,
+  ScannedCount: 1
+}
+[refresh-token] 4:58:30 PM END RequestId: cf55d178-a5f0-4c1f-a68e-986976181f11
+[refresh-token] 4:58:30 PM REPORT RequestId: cf55d178-a5f0-4c1f-a68e-986976181f11	Duration: 594.84 ms	Billed Duration: 595 ms	Memory Size: 512 MB	Max Memory Used: 318 MB	Init Duration: 883.77 ms
+[list-tour] 4:58:34 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[list-tour] 4:58:35 PM 2025-07-11T09:58:35.631Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[list-tour] 4:58:35 PM 2025-07-11T09:58:35.633Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[list-tour] 4:58:35 PM START RequestId: 50851be1-1094-4ac6-b0dc-61a87759f321 Version: $LATEST
+[list-tour] 4:58:35 PM 2025-07-11T09:58:35.691Z	50851be1-1094-4ac6-b0dc-61a87759f321	INFO	Query: undefined
+[list-tour] 4:58:35 PM 2025-07-11T09:58:35.692Z	50851be1-1094-4ac6-b0dc-61a87759f321	INFO	Retrieving list of tours
+[list-tour] 4:58:35 PM 2025-07-11T09:58:35.692Z	50851be1-1094-4ac6-b0dc-61a87759f321	INFO	Auth Header:  Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJhOTBkZWM0ZC0wNDJmLTRkYjMtOGM4ZS1kZDE4M2M4NjkyM2IiLCJpYXQiOjE3NTIyMjc5MTAsImV4cCI6MTc1MjIyODgxMH0.f4trKlmLuwjvH3waPK5IsxJLIcHLuKMjxKGfEaHjC4c
+[list-tour] 4:58:36 PM 2025-07-11T09:58:36.284Z	50851be1-1094-4ac6-b0dc-61a87759f321	INFO	Authenticated User: {
+  password: '$2b$10$3ml8LpyNqjYYem4PTtcWIu86VCTAKRg8U9RkP3GuCaQvD/eFpYeHC',
+  active: 0,
+  deleteFlag: 0,
+  role: 0,
+  userType: 'user',
+  userId: 'a90dec4d-042f-4db3-8c8e-dd183c86923b',
+  updatedAt: '',
+  userName: 'dev-admin',
+  createdAt: '2025-07-11T09:39:36.363Z',
+  updatedBy: '',
+  email: 'dev-admin@gmail.com',
+  createdBy: 'a90dec4d-042f-4db3-8c8e-dd183c86923b'
+}
+[list-tour] 4:58:36 PM 2025-07-11T09:58:36.285Z	50851be1-1094-4ac6-b0dc-61a87759f321	INFO	Scan Parameters:  {
+  TableName: 'tours_dev',
+  FilterExpression: 'deleteFlag = :deleteFlag',
+  KeyConditionExpression: '#tourType = :tourType',
+  ExpressionAttributeValues: { ':deleteFlag': 0, ':tourType': 'tour' },
+  IndexName: 'tourType-createdAt-index',
+  ScanIndexForward: false,
+  ProjectionExpression: 'tourId,chatRestriction,tourNumber,courseName,planningAndSalesSignature,planningSalesOfficeTeamName,departureDate,returnDate,nameOfCoursePersonInCharge,tourConductorName,numberOfReceiversInUse,numberOfSendingDevices,subGuideFunctionAvailable,useTheTranslationFunction,coSponsoredCourseNumber',
+  ExpressionAttributeNames: { '#tourType': 'tourType' }
+}
+[list-tour] 4:58:36 PM 2025-07-11T09:58:36.285Z	50851be1-1094-4ac6-b0dc-61a87759f321	INFO	Updated Scan Parameters: (if any) {
+  TableName: 'tours_dev',
+  FilterExpression: 'deleteFlag = :deleteFlag',
+  KeyConditionExpression: '#tourType = :tourType',
+  ExpressionAttributeValues: { ':deleteFlag': 0, ':tourType': 'tour' },
+  IndexName: 'tourType-createdAt-index',
+  ScanIndexForward: false,
+  ProjectionExpression: 'tourId,chatRestriction,tourNumber,courseName,planningAndSalesSignature,planningSalesOfficeTeamName,departureDate,returnDate,nameOfCoursePersonInCharge,tourConductorName,numberOfReceiversInUse,numberOfSendingDevices,subGuideFunctionAvailable,useTheTranslationFunction,coSponsoredCourseNumber',
+  ExpressionAttributeNames: { '#tourType': 'tourType' }
+}
+[list-tour] 4:58:36 PM 2025-07-11T09:58:36.774Z	50851be1-1094-4ac6-b0dc-61a87759f321	ERROR	Failed to retrieve tours:  {
+  error: ValidationException: The table does not have the specified index: tourType-createdAt-index
+      at constructor.nY (file:///var/task/index.mjs:2:5258)
+      at constructor.callListeners (file:///var/task/index.mjs:2:48818)
+      at constructor.emit (file:///var/task/index.mjs:2:48526)
+      at constructor.emitEvent (file:///var/task/index.mjs:3:28487)
+      at constructor.t (file:///var/task/index.mjs:3:24043)
+      at jl.runTo (file:///var/task/index.mjs:3:1217)
+      at file:///var/task/index.mjs:3:1429
+      at constructor.<anonymous> (file:///var/task/index.mjs:3:24258)
+      at constructor.<anonymous> (file:///var/task/index.mjs:3:28542)
+      at constructor.callListeners (file:///var/task/index.mjs:2:48923) {
+    code: 'ValidationException',
+    '[__type]': 'See error.__type for details.',
+    time: 2025-07-11T09:58:36.773Z,
+    requestId: '7M76S1SFMVLOA5CL76Q5L4KMKBVV4KQNSO5AEMVJF66Q9ASUAAJG',
+    statusCode: 400,
+    retryable: false,
+    retryDelay: 5.171534131235012
+  },
+  event: {
+    resource: '/tours',
+    path: '/tours/',
+    httpMethod: 'GET',
+    headers: {
+      Accept: '*/*',
+      'Accept-Encoding': 'gzip, deflate, br, zstd',
+      'Accept-Language': 'en,ja;q=0.9,vi;q=0.8,en-US;q=0.7',
+      Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJhOTBkZWM0ZC0wNDJmLTRkYjMtOGM4ZS1kZDE4M2M4NjkyM2IiLCJpYXQiOjE3NTIyMjc5MTAsImV4cCI6MTc1MjIyODgxMH0.f4trKlmLuwjvH3waPK5IsxJLIcHLuKMjxKGfEaHjC4c',
+      'cache-control': 'no-cache',
+      'CloudFront-Forwarded-Proto': 'https',
+      'CloudFront-Is-Desktop-Viewer': 'true',
+      'CloudFront-Is-Mobile-Viewer': 'false',
+      'CloudFront-Is-SmartTV-Viewer': 'false',
+      'CloudFront-Is-Tablet-Viewer': 'false',
+      'CloudFront-Viewer-ASN': '45899',
+      'CloudFront-Viewer-Country': 'VN',
+      Host: 'ylz95j2zkj.execute-api.us-east-1.amazonaws.com',
+      origin: 'http://localhost:3000',
+      pragma: 'no-cache',
+      priority: 'u=1, i',
+      Referer: 'http://localhost:3000/',
+      'sec-ch-ua': '"Google Chrome";v="137", "Chromium";v="137", "Not/A)Brand";v="24"',
+      'sec-ch-ua-mobile': '?0',
+      'sec-ch-ua-platform': '"Windows"',
+      'sec-fetch-dest': 'empty',
+      'sec-fetch-mode': 'cors',
+      'sec-fetch-site': 'cross-site',
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36',
+      Via: '2.0 002de56e7b3062c0f06a60060d0548f6.cloudfront.net (CloudFront)',
+      'X-Amz-Cf-Id': '_bTbimPJQ6S2DLG0ZS22k1kvRb2K9pDY8CrliJYiRAFZ8wj2eO9uzQ==',
+      'X-Amzn-Trace-Id': 'Root=1-6870e04a-523cce4d6abe593a36a0c9ff',
+      'X-Forwarded-For': '14.161.12.17, 15.158.13.100',
+      'X-Forwarded-Port': '443',
+      'X-Forwarded-Proto': 'https'
+    },
+    multiValueHeaders: {
+      Accept: [Array],
+      'Accept-Encoding': [Array],
+      'Accept-Language': [Array],
+      Authorization: [Array],
+      'cache-control': [Array],
+      'CloudFront-Forwarded-Proto': [Array],
+      'CloudFront-Is-Desktop-Viewer': [Array],
+      'CloudFront-Is-Mobile-Viewer': [Array],
+      'CloudFront-Is-SmartTV-Viewer': [Array],
+      'CloudFront-Is-Tablet-Viewer': [Array],
+      'CloudFront-Viewer-ASN': [Array],
+      'CloudFront-Viewer-Country': [Array],
+      Host: [Array],
+      origin: [Array],
+      pragma: [Array],
+      priority: [Array],
+      Referer: [Array],
+      'sec-ch-ua': [Array],
+      'sec-ch-ua-mobile': [Array],
+      'sec-ch-ua-platform': [Array],
+      'sec-fetch-dest': [Array],
+      'sec-fetch-mode': [Array],
+      'sec-fetch-site': [Array],
+      'User-Agent': [Array],
+      Via: [Array],
+      'X-Amz-Cf-Id': [Array],
+      'X-Amzn-Trace-Id': [Array],
+      'X-Forwarded-For': [Array],
+      'X-Forwarded-Port': [Array],
+      'X-Forwarded-Proto': [Array]
+    },
+    queryStringParameters: { page: '1', pageSize: '10', query: '' },
+    multiValueQueryStringParameters: { page: [Array], pageSize: [Array], query: [Array] },
+    pathParameters: null,
+    stageVariables: null,
+    requestContext: {
+      resourceId: '542q9u',
+      resourcePath: '/tours',
+      httpMethod: 'GET',
+      extendedRequestId: 'Nif7sEr-IAMEu9Q=',
+      requestTime: '11/Jul/2025:09:58:34 +0000',
+      path: '/prod/tours/',
+      accountId: '647755634525',
+      protocol: 'HTTP/1.1',
+      stage: 'prod',
+      domainPrefix: 'ylz95j2zkj',
+      requestTimeEpoch: 1752227914443,
+      requestId: 'c4f608bf-d5b0-419a-9715-5ea3809aea02',
+      identity: [Object],
+      domainName: 'ylz95j2zkj.execute-api.us-east-1.amazonaws.com',
+      deploymentId: '12v66s',
+      apiId: 'ylz95j2zkj'
+    },
+    body: null,
+    isBase64Encoded: false
+  }
+}
+[list-tour] 4:58:36 PM END RequestId: 50851be1-1094-4ac6-b0dc-61a87759f321
+[list-tour] 4:58:36 PM REPORT RequestId: 50851be1-1094-4ac6-b0dc-61a87759f321	Duration: 1126.36 ms	Billed Duration: 1127 ms	Memory Size: 512 MB	Max Memory Used: 318 MB	Init Duration: 945.96 ms
+[check-auth] 4:58:32 PM 2025-07-11T09:58:32.852Z	6d631145-2166-4889-ab78-c975fd11ef66	INFO	DynamoDB result:  {
+  Items: [
+    {
+      password: '$2b$10$3ml8LpyNqjYYem4PTtcWIu86VCTAKRg8U9RkP3GuCaQvD/eFpYeHC',
+      active: 0,
+      deleteFlag: 0,
+      role: 0,
+      userType: 'user',
+      userId: 'a90dec4d-042f-4db3-8c8e-dd183c86923b',
+      updatedAt: '',
+      userName: 'dev-admin',
+      createdAt: '2025-07-11T09:39:36.363Z',
+      updatedBy: '',
+      email: 'dev-admin@gmail.com',
+      createdBy: 'a90dec4d-042f-4db3-8c8e-dd183c86923b'
+    }
+  ],
+  Count: 1,
+  ScannedCount: 1
+}
+[check-auth] 4:58:32 PM END RequestId: 6d631145-2166-4889-ab78-c975fd11ef66
+[check-auth] 4:58:32 PM REPORT RequestId: 6d631145-2166-4889-ab78-c975fd11ef66	Duration: 652.10 ms	Billed Duration: 653 ms	Memory Size: 512 MB	Max Memory Used: 318 MB	Init Duration: 1032.48 ms
+[refresh-token] 5:12:21 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[refresh-token] 5:12:22 PM 2025-07-11T10:12:22.220Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[refresh-token] 5:12:22 PM 2025-07-11T10:12:22.223Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[refresh-token] 5:12:22 PM START RequestId: 93e4e8c8-fc28-45ba-ae16-550d825d951f Version: $LATEST
+[refresh-token] 5:12:22 PM 2025-07-11T10:12:22.270Z	93e4e8c8-fc28-45ba-ae16-550d825d951f	INFO	Refresh Token (cleaned):  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJhOTBkZWM0ZC0wNDJmLTRkYjMtOGM4ZS1kZDE4M2M4NjkyM2IiLCJpYXQiOjE3NTIyMjc5MTAsImV4cCI6MTc1MjgzMjcxMH0.2wOx0rTSSn5P4Qo-6ldfQ9djddmwWOjziSJjeGXBXYQ
+[refresh-token] 5:12:22 PM 2025-07-11T10:12:22.287Z	93e4e8c8-fc28-45ba-ae16-550d825d951f	INFO	Decoded refresh token:  {
+  userId: 'a90dec4d-042f-4db3-8c8e-dd183c86923b',
+  iat: 1752227910,
+  exp: 1752832710
+}
+[refresh-token] 5:12:22 PM 2025-07-11T10:12:22.288Z	93e4e8c8-fc28-45ba-ae16-550d825d951f	INFO	Extracted userId:  a90dec4d-042f-4db3-8c8e-dd183c86923b
+[refresh-token] 5:12:22 PM 2025-07-11T10:12:22.850Z	93e4e8c8-fc28-45ba-ae16-550d825d951f	INFO	DynamoDB query result:  {
+  Items: [
+    {
+      password: '$2b$10$3ml8LpyNqjYYem4PTtcWIu86VCTAKRg8U9RkP3GuCaQvD/eFpYeHC',
+      active: 0,
+      deleteFlag: 0,
+      role: 0,
+      userType: 'user',
+      userId: 'a90dec4d-042f-4db3-8c8e-dd183c86923b',
+      updatedAt: '',
+      userName: 'dev-admin',
+      createdAt: '2025-07-11T09:39:36.363Z',
+      updatedBy: '',
+      email: 'dev-admin@gmail.com',
+      createdBy: 'a90dec4d-042f-4db3-8c8e-dd183c86923b'
+    }
+  ],
+  Count: 1,
+  ScannedCount: 1
+}
+[refresh-token] 5:12:22 PM END RequestId: 93e4e8c8-fc28-45ba-ae16-550d825d951f
+[refresh-token] 5:12:22 PM REPORT RequestId: 93e4e8c8-fc28-45ba-ae16-550d825d951f	Duration: 627.33 ms	Billed Duration: 628 ms	Memory Size: 512 MB	Max Memory Used: 318 MB	Init Duration: 965.67 ms
+[check-auth] 5:12:23 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[check-auth] 5:12:24 PM 2025-07-11T10:12:24.557Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[check-auth] 5:12:24 PM 2025-07-11T10:12:24.560Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[check-auth] 5:12:24 PM START RequestId: 608ecb09-003a-42c3-a287-dd2319f3412a Version: $LATEST
+[check-auth] 5:12:24 PM 2025-07-11T10:12:24.606Z	608ecb09-003a-42c3-a287-dd2319f3412a	INFO	Token (cleaned):  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJhOTBkZWM0ZC0wNDJmLTRkYjMtOGM4ZS1kZDE4M2M4NjkyM2IiLCJpYXQiOjE3NTIyMjg3NDIsImV4cCI6MTc1MjIyOTY0Mn0.2rAh6-UCF_aAzZMbjMO2qXQPzetfBr3tA4OZBKHsHS8
+[check-auth] 5:12:24 PM 2025-07-11T10:12:24.606Z	608ecb09-003a-42c3-a287-dd2319f3412a	INFO	Verifying token... a5e3696b23ce9b6e96af822f26b757d52c64b9a8e29351b9fee039dfb2d35600
+[check-auth] 5:12:24 PM 2025-07-11T10:12:24.626Z	608ecb09-003a-42c3-a287-dd2319f3412a	INFO	userId:  a90dec4d-042f-4db3-8c8e-dd183c86923b
+[check-auth] 5:12:25 PM 2025-07-11T10:12:25.200Z	608ecb09-003a-42c3-a287-dd2319f3412a	INFO	DynamoDB result:  {
+  Items: [
+    {
+      password: '$2b$10$3ml8LpyNqjYYem4PTtcWIu86VCTAKRg8U9RkP3GuCaQvD/eFpYeHC',
+      active: 0,
+      deleteFlag: 0,
+      role: 0,
+      userType: 'user',
+      userId: 'a90dec4d-042f-4db3-8c8e-dd183c86923b',
+      updatedAt: '',
+      userName: 'dev-admin',
+      createdAt: '2025-07-11T09:39:36.363Z',
+      updatedBy: '',
+      email: 'dev-admin@gmail.com',
+      createdBy: 'a90dec4d-042f-4db3-8c8e-dd183c86923b'
+    }
+  ],
+  Count: 1,
+  ScannedCount: 1
+}
+[check-auth] 5:12:25 PM END RequestId: 608ecb09-003a-42c3-a287-dd2319f3412a
+[check-auth] 5:12:25 PM REPORT RequestId: 608ecb09-003a-42c3-a287-dd2319f3412a	Duration: 626.29 ms	Billed Duration: 627 ms	Memory Size: 512 MB	Max Memory Used: 318 MB	Init Duration: 961.20 ms
+[list-tour] 5:12:26 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[list-tour] 5:12:27 PM 2025-07-11T10:12:27.486Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[list-tour] 5:12:27 PM 2025-07-11T10:12:27.493Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[list-tour] 5:12:27 PM START RequestId: a4ba18eb-4ce7-4061-81de-23ca3733ffe1 Version: $LATEST
+[list-tour] 5:12:27 PM 2025-07-11T10:12:27.535Z	a4ba18eb-4ce7-4061-81de-23ca3733ffe1	INFO	Query: undefined
+[list-tour] 5:12:27 PM 2025-07-11T10:12:27.535Z	a4ba18eb-4ce7-4061-81de-23ca3733ffe1	INFO	Retrieving list of tours
+[list-tour] 5:12:27 PM 2025-07-11T10:12:27.535Z	a4ba18eb-4ce7-4061-81de-23ca3733ffe1	INFO	Auth Header:  Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJhOTBkZWM0ZC0wNDJmLTRkYjMtOGM4ZS1kZDE4M2M4NjkyM2IiLCJpYXQiOjE3NTIyMjg3NDIsImV4cCI6MTc1MjIyOTY0Mn0.2rAh6-UCF_aAzZMbjMO2qXQPzetfBr3tA4OZBKHsHS8
+[list-tour] 5:12:28 PM 2025-07-11T10:12:28.155Z	a4ba18eb-4ce7-4061-81de-23ca3733ffe1	INFO	Authenticated User: {
+  password: '$2b$10$3ml8LpyNqjYYem4PTtcWIu86VCTAKRg8U9RkP3GuCaQvD/eFpYeHC',
+  active: 0,
+  deleteFlag: 0,
+  role: 0,
+  userType: 'user',
+  userId: 'a90dec4d-042f-4db3-8c8e-dd183c86923b',
+  updatedAt: '',
+  userName: 'dev-admin',
+  createdAt: '2025-07-11T09:39:36.363Z',
+  updatedBy: '',
+  email: 'dev-admin@gmail.com',
+  createdBy: 'a90dec4d-042f-4db3-8c8e-dd183c86923b'
+}
+[list-tour] 5:12:28 PM 2025-07-11T10:12:28.155Z	a4ba18eb-4ce7-4061-81de-23ca3733ffe1	INFO	Scan Parameters:  {
+  TableName: 'tours_dev',
+  FilterExpression: 'deleteFlag = :deleteFlag',
+  KeyConditionExpression: '#tourType = :tourType',
+  ExpressionAttributeValues: { ':deleteFlag': 0, ':tourType': 'tour' },
+  IndexName: 'tourType-createdAt-index',
+  ScanIndexForward: false,
+  ProjectionExpression: 'tourId,chatRestriction,tourNumber,courseName,planningAndSalesSignature,planningSalesOfficeTeamName,departureDate,returnDate,nameOfCoursePersonInCharge,tourConductorName,numberOfReceiversInUse,numberOfSendingDevices,subGuideFunctionAvailable,useTheTranslationFunction,coSponsoredCourseNumber',
+  ExpressionAttributeNames: { '#tourType': 'tourType' }
+}
+[list-tour] 5:12:28 PM 2025-07-11T10:12:28.156Z	a4ba18eb-4ce7-4061-81de-23ca3733ffe1	INFO	Updated Scan Parameters: (if any) {
+  TableName: 'tours_dev',
+  FilterExpression: 'deleteFlag = :deleteFlag',
+  KeyConditionExpression: '#tourType = :tourType',
+  ExpressionAttributeValues: { ':deleteFlag': 0, ':tourType': 'tour' },
+  IndexName: 'tourType-createdAt-index',
+  ScanIndexForward: false,
+  ProjectionExpression: 'tourId,chatRestriction,tourNumber,courseName,planningAndSalesSignature,planningSalesOfficeTeamName,departureDate,returnDate,nameOfCoursePersonInCharge,tourConductorName,numberOfReceiversInUse,numberOfSendingDevices,subGuideFunctionAvailable,useTheTranslationFunction,coSponsoredCourseNumber',
+  ExpressionAttributeNames: { '#tourType': 'tourType' }
+}
+[list-tour] 5:12:28 PM 2025-07-11T10:12:28.631Z	a4ba18eb-4ce7-4061-81de-23ca3733ffe1	ERROR	No tours found
+[list-tour] 5:12:28 PM END RequestId: a4ba18eb-4ce7-4061-81de-23ca3733ffe1
+[list-tour] 5:12:28 PM REPORT RequestId: a4ba18eb-4ce7-4061-81de-23ca3733ffe1	Duration: 1120.47 ms	Billed Duration: 1121 ms	Memory Size: 512 MB	Max Memory Used: 318 MB	Init Duration: 961.60 ms

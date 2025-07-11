@@ -22,5 +22,6 @@ export const Config = {
     jwtExpiration: "15m", // Token expiration time
     refreshSecret: '5d37f522ddc137330c5f081a3dc9cd5f10263ece17915b1b0ebdde5c7ff7b5d977114edd1bb1e94b32d620c5552857937605c7ef6d01c1ad9a5e5b15679b253f', // Secret key for refresh token signing and verification
     refreshExpiration: '7d', // Refresh token expiration time
+    attachmentBucketName: 'vtg-chat-attachments', // S3 bucket name for attachments
     dbTables: DB_TABLES
 };
