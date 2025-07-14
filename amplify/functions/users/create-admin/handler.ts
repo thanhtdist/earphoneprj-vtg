@@ -42,10 +42,10 @@ export const handler: APIGatewayProxyHandler = async (event) => {
 
     const params = {
       TableName: Config.dbTables.USERS,
-      FilterExpression: '#email = :emailVal AND #delete_flag = :deleteFlagVal',
+      FilterExpression: '#email = :emailVal AND #deleteFlag = :deleteFlagVal',
       ExpressionAttributeNames: {
         '#email': 'email',
-        '#delete_flag': 'delete_flag'
+        '#deleteFlag': 'deleteFlag'
       },
       ExpressionAttributeValues: {
         ':emailVal': email,
