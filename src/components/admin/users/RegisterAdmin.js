@@ -32,7 +32,7 @@ const RegisterAdmin = () => {
             setIsLoading(true);
             const registerResponse = await createUser(data);
             console.log("result registerResponse", registerResponse);
-            setIsLoading(false);
+
             toast.success(`Admin was created successfully.`, {
                 onClose: () => {
                     navigate(Config.pathNames.user); // Redirect to admin list page after registration
@@ -40,6 +40,8 @@ const RegisterAdmin = () => {
             });
 
         } catch (error) {
+            setIsLoading(false);
+            toast.error(error.message || JSON.stringify(error));
             console.log("error Register response ", error);
         }
 
@@ -63,7 +65,7 @@ const RegisterAdmin = () => {
                                     className="form-control"
                                     id="userName"
                                     placeholder="名前を入力"
-                                    {...register("userName", { required:messages.admin.user.requiredName })} // Using centralized messages
+                                    {...register("userName", { required: messages.admin.user.requiredName })} // Using centralized messages
                                 ></input>
                                 {errors.userName && <p style={{ color: "red" }}>{errors.userName.message}</p>}
                             </div>
