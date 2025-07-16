@@ -440,6 +440,20 @@ export async function loginAndGetCredentials() {
   }));
 }
 
+export async function getPresignedUrl(data) {
+  return apiWrapper(post({
+    apiName: 'UploadS3VTGRestApi',
+    path: 'uploads/presigned-url',
+    options: {
+      body: {
+        fileName: data.name, // Replace with the actual file name
+        fileType: data.type // Replace with the actual file type
+      }
+    }
+  }));
+}
+
+
 
 // export async function loginAdmin(data) {
 //   return apiWrapper(post({

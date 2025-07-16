@@ -163,8 +163,8 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null, userT
         options = JSON.stringify({
           attachments: [
             {
-              fileKey: uploadFileToS3Response.Key,
-              url: uploadFileToS3Response.Location,
+              fileKey: uploadFileToS3Response.key,
+              url: uploadFileToS3Response.fileUrl,
               name: selectedFile.name,
               size: selectedFile.size,
               type: selectedFile.type,

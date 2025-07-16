@@ -24944,3 +24944,2196 @@
 [login-and-get-credentials] 11:44:22 AM REPORT RequestId: 841f8fab-d80a-4fbc-b3a3-85a991f6233d	Duration: 759.22 ms	Billed Duration: 760 ms	Memory Size: 512 MB	Max Memory Used: 88 MB
 [login-and-get-credentials] 11:44:23 AM END RequestId: 5eb07507-f75c-4bce-89d5-e8b772464ae2
 [login-and-get-credentials] 11:44:23 AM REPORT RequestId: 5eb07507-f75c-4bce-89d5-e8b772464ae2	Duration: 743.65 ms	Billed Duration: 744 ms	Memory Size: 512 MB	Max Memory Used: 89 MB	Init Duration: 408.50 ms
+[get-presigned-s3-upload] 11:51:57 AM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[get-presigned-s3-upload] 11:51:58 AM 2025-07-16T04:51:58.339Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[get-presigned-s3-upload] 11:51:58 AM 2025-07-16T04:51:58.342Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[get-presigned-s3-upload] 11:51:58 AM START RequestId: b30dc93f-05a9-4e82-a949-0775db954dda Version: $LATEST
+[get-presigned-s3-upload] 11:51:58 AM END RequestId: b30dc93f-05a9-4e82-a949-0775db954dda
+[get-presigned-s3-upload] 11:51:58 AM REPORT RequestId: b30dc93f-05a9-4e82-a949-0775db954dda	Duration: 106.05 ms	Billed Duration: 107 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 952.74 ms
+[get-presigned-s3-upload] 11:53:17 AM START RequestId: 3d9062d8-548e-45cc-a5f2-79e34f5167b4 Version: $LATEST
+[get-presigned-s3-upload] 11:53:17 AM END RequestId: 3d9062d8-548e-45cc-a5f2-79e34f5167b4
+[get-presigned-s3-upload] 11:53:17 AM REPORT RequestId: 3d9062d8-548e-45cc-a5f2-79e34f5167b4	Duration: 105.32 ms	Billed Duration: 106 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[get-meeting] 11:54:33 AM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[start-meeting-transcription] 11:54:31 AM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[start-meeting-transcription] 11:54:32 AM 2025-07-16T04:54:32.783Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[start-meeting-transcription] 11:54:32 AM 2025-07-16T04:54:32.789Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[start-meeting-transcription] 11:54:32 AM START RequestId: aae37083-f75e-43bc-8fe7-f762935555ff Version: $LATEST
+[start-meeting-transcription] 11:54:32 AM 2025-07-16T04:54:32.800Z	aae37083-f75e-43bc-8fe7-f762935555ff	INFO	Start MeetingTranscription with meetingId:  71addfff-c383-4b66-908a-72602b264804 languageCode:  ja-JP
+[start-meeting-transcription] 11:54:33 AM 2025-07-16T04:54:33.551Z	aae37083-f75e-43bc-8fe7-f762935555ff	INFO	Started Meeting Transcription Response:  {}
+[start-meeting-transcription] 11:54:33 AM END RequestId: aae37083-f75e-43bc-8fe7-f762935555ff
+[start-meeting-transcription] 11:54:33 AM REPORT RequestId: aae37083-f75e-43bc-8fe7-f762935555ff	Duration: 758.00 ms	Billed Duration: 759 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 938.40 ms
+[get-meeting-by-tourid] 11:54:31 AM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[get-meeting-by-tourid] 11:54:31 AM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[get-meeting-by-tourid] 11:54:32 AM 2025-07-16T04:54:32.080Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[get-meeting-by-tourid] 11:54:32 AM 2025-07-16T04:54:32.082Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[get-meeting-by-tourid] 11:54:32 AM START RequestId: 0d55c9d2-126e-49be-bf5b-08026c20191a Version: $LATEST
+[get-meeting-by-tourid] 11:54:32 AM 2025-07-16T04:54:32.099Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[get-meeting-by-tourid] 11:54:32 AM 2025-07-16T04:54:32.101Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[get-meeting-by-tourid] 11:54:32 AM START RequestId: 61fccd9f-17ca-4605-8e44-bffb0a404153 Version: $LATEST
+[get-meeting-by-tourid] 11:54:32 AM 2025-07-16T04:54:32.113Z	0d55c9d2-126e-49be-bf5b-08026c20191a	INFO	Retrieving tour with tourId:  4099cef9-5350-4846-ad65-cbe7d1c8a6ab
+[get-meeting-by-tourid] 11:54:32 AM 2025-07-16T04:54:32.135Z	61fccd9f-17ca-4605-8e44-bffb0a404153	INFO	Retrieving tour with tourId:  4099cef9-5350-4846-ad65-cbe7d1c8a6ab
+[get-meeting-by-tourid] 11:54:32 AM 2025-07-16T04:54:32.682Z	0d55c9d2-126e-49be-bf5b-08026c20191a	INFO	Tour successfully retrieved:  {
+  nameOfCoursePersonInCharge: 'Tour001',
+  numberOfReceiversInUse: 'Tour001',
+  tourTestStatus: 'test',
+  tourType: 'tour',
+  tourConductorName: 'Tour001',
+  tourNumber: 'Tour001',
+  useTheTranslationFunction: true,
+  createdAt: '2025-07-16T03:27:43.728Z',
+  updatedBy: '',
+  createdBy: 'a90dec4d-042f-4db3-8c8e-dd183c86923b',
+  numberOfSendingDevices: 'Tour001',
+  returnDate: '2025-07-24',
+  coSponsoredCourseNumber: 'Tour001',
+  planningSalesOfficeTeamName: 'Tour001',
+  deleteFlag: 0,
+  meetingId: 'e5c47a7f-ecf7-406f-aa76-3f051b334804',
+  channelId: '2d1875b6-0263-4ee3-b798-1860a207deb8',
+  chatRestriction: 'allChat',
+  departureDate: '2025-07-16',
+  updatedAt: '',
+  planningAndSalesSignature: 'Tour001',
+  subGuideFunctionAvailable: true,
+  courseName: 'Tour001',
+  tourId: '4099cef9-5350-4846-ad65-cbe7d1c8a6ab'
+}
+[get-meeting-by-tourid] 11:54:32 AM END RequestId: 0d55c9d2-126e-49be-bf5b-08026c20191a
+[get-meeting-by-tourid] 11:54:32 AM REPORT RequestId: 0d55c9d2-126e-49be-bf5b-08026c20191a	Duration: 605.15 ms	Billed Duration: 606 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 913.40 ms
+[get-meeting-by-tourid] 11:54:32 AM 2025-07-16T04:54:32.713Z	61fccd9f-17ca-4605-8e44-bffb0a404153	INFO	Tour successfully retrieved:  {
+  nameOfCoursePersonInCharge: 'Tour001',
+  numberOfReceiversInUse: 'Tour001',
+  tourTestStatus: 'test',
+  tourType: 'tour',
+  tourConductorName: 'Tour001',
+  tourNumber: 'Tour001',
+  useTheTranslationFunction: true,
+  createdAt: '2025-07-16T03:27:43.728Z',
+  updatedBy: '',
+  createdBy: 'a90dec4d-042f-4db3-8c8e-dd183c86923b',
+  numberOfSendingDevices: 'Tour001',
+  returnDate: '2025-07-24',
+  coSponsoredCourseNumber: 'Tour001',
+  planningSalesOfficeTeamName: 'Tour001',
+  deleteFlag: 0,
+  meetingId: 'e5c47a7f-ecf7-406f-aa76-3f051b334804',
+  channelId: '2d1875b6-0263-4ee3-b798-1860a207deb8',
+  chatRestriction: 'allChat',
+  departureDate: '2025-07-16',
+  updatedAt: '',
+  planningAndSalesSignature: 'Tour001',
+  subGuideFunctionAvailable: true,
+  courseName: 'Tour001',
+  tourId: '4099cef9-5350-4846-ad65-cbe7d1c8a6ab'
+}
+[get-meeting-by-tourid] 11:54:32 AM END RequestId: 61fccd9f-17ca-4605-8e44-bffb0a404153
+[get-meeting-by-tourid] 11:54:32 AM REPORT RequestId: 61fccd9f-17ca-4605-8e44-bffb0a404153	Duration: 625.82 ms	Billed Duration: 626 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 941.92 ms
+[login-and-get-credentials] 11:54:31 AM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[login-and-get-credentials] 11:54:31 AM 2025-07-16T04:54:31.653Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[login-and-get-credentials] 11:54:31 AM 2025-07-16T04:54:31.655Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[login-and-get-credentials] 11:54:31 AM START RequestId: c4340bd7-29d1-4eb1-beb6-ee9efff5659d Version: $LATEST
+[login-and-get-credentials] 11:54:32 AM END RequestId: c4340bd7-29d1-4eb1-beb6-ee9efff5659d
+[login-and-get-credentials] 11:54:32 AM REPORT RequestId: c4340bd7-29d1-4eb1-beb6-ee9efff5659d	Duration: 682.62 ms	Billed Duration: 683 ms	Memory Size: 512 MB	Max Memory Used: 88 MB	Init Duration: 408.29 ms
+[get-meeting] 11:54:33 AM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[get-meeting] 11:54:34 AM 2025-07-16T04:54:34.650Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[get-meeting] 11:54:34 AM 2025-07-16T04:54:34.652Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[get-meeting] 11:54:34 AM START RequestId: 4e01c07c-d45c-4424-9162-5e33d2c01724 Version: $LATEST
+[get-meeting] 11:54:34 AM 2025-07-16T04:54:34.664Z	4e01c07c-d45c-4424-9162-5e33d2c01724	INFO	Getting meeting with meetingId:  e5c47a7f-ecf7-406f-aa76-3f051b334804
+[get-meeting] 11:54:35 AM 2025-07-16T04:54:35.378Z	4e01c07c-d45c-4424-9162-5e33d2c01724	INFO	Get Meeting Response:  e5c47a7f-ecf7-406f-aa76-3f051b334804
+[get-meeting] 11:54:35 AM END RequestId: 4e01c07c-d45c-4424-9162-5e33d2c01724
+[get-meeting] 11:54:35 AM REPORT RequestId: 4e01c07c-d45c-4424-9162-5e33d2c01724	Duration: 721.51 ms	Billed Duration: 722 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 947.66 ms
+[get-meeting] 11:54:35 AM 2025-07-16T04:54:35.399Z	fe543100-89e2-4341-bb8a-a228a99256f5	INFO	Get Meeting Response:  e5c47a7f-ecf7-406f-aa76-3f051b334804
+[get-meeting] 11:54:35 AM END RequestId: fe543100-89e2-4341-bb8a-a228a99256f5
+[get-meeting] 11:54:35 AM REPORT RequestId: fe543100-89e2-4341-bb8a-a228a99256f5	Duration: 756.89 ms	Billed Duration: 757 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 949.10 ms
+[start-meeting-transcription] 11:54:39 AM START RequestId: a96e3154-99a7-4023-b2a1-9a47567a9615 Version: $LATEST
+[start-meeting-transcription] 11:54:39 AM 2025-07-16T04:54:39.193Z	a96e3154-99a7-4023-b2a1-9a47567a9615	INFO	Start MeetingTranscription with meetingId:  71addfff-c383-4b66-908a-72602b264804 languageCode:  ja-JP
+[start-meeting-transcription] 11:54:39 AM START RequestId: fe312317-fc36-4d19-b3f9-3cbdb5975409 Version: $LATEST
+[start-meeting-transcription] 11:54:39 AM 2025-07-16T04:54:39.221Z	fe312317-fc36-4d19-b3f9-3cbdb5975409	INFO	Start MeetingTranscription with meetingId:  e5c47a7f-ecf7-406f-aa76-3f051b334804 languageCode:  ja-JP
+[start-meeting-transcription] 11:54:39 AM 2025-07-16T04:54:39.827Z	fe312317-fc36-4d19-b3f9-3cbdb5975409	INFO	Started Meeting Transcription Response:  {}
+[start-meeting-transcription] 11:54:39 AM END RequestId: fe312317-fc36-4d19-b3f9-3cbdb5975409
+[start-meeting-transcription] 11:54:39 AM REPORT RequestId: fe312317-fc36-4d19-b3f9-3cbdb5975409	Duration: 608.48 ms	Billed Duration: 609 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[start-meeting-transcription] 11:54:39 AM 2025-07-16T04:54:39.832Z	a96e3154-99a7-4023-b2a1-9a47567a9615	INFO	Started Meeting Transcription Response:  {}
+[start-meeting-transcription] 11:54:39 AM END RequestId: a96e3154-99a7-4023-b2a1-9a47567a9615
+[start-meeting-transcription] 11:54:39 AM REPORT RequestId: a96e3154-99a7-4023-b2a1-9a47567a9615	Duration: 642.20 ms	Billed Duration: 643 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[get-meeting] 11:54:50 AM START RequestId: d97100da-92ba-4935-8464-ddcfc2a682d1 Version: $LATEST
+[get-meeting] 11:54:50 AM 2025-07-16T04:54:50.940Z	d97100da-92ba-4935-8464-ddcfc2a682d1	INFO	Getting meeting with meetingId:  e5c47a7f-ecf7-406f-aa76-3f051b334804
+[get-meeting] 11:54:51 AM START RequestId: 4cd57dad-a800-4ac0-b5c9-7379f4c8bc63 Version: $LATEST
+[get-meeting] 11:54:51 AM 2025-07-16T04:54:51.419Z	4cd57dad-a800-4ac0-b5c9-7379f4c8bc63	INFO	Getting meeting with meetingId:  e5c47a7f-ecf7-406f-aa76-3f051b334804
+[get-meeting] 11:54:51 AM 2025-07-16T04:54:51.575Z	d97100da-92ba-4935-8464-ddcfc2a682d1	INFO	Get Meeting Response:  e5c47a7f-ecf7-406f-aa76-3f051b334804
+[get-meeting] 11:54:51 AM END RequestId: d97100da-92ba-4935-8464-ddcfc2a682d1
+[get-meeting] 11:54:51 AM REPORT RequestId: d97100da-92ba-4935-8464-ddcfc2a682d1	Duration: 676.20 ms	Billed Duration: 677 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[get-meeting] 11:54:52 AM 2025-07-16T04:54:52.180Z	4cd57dad-a800-4ac0-b5c9-7379f4c8bc63	INFO	Get Meeting Response:  e5c47a7f-ecf7-406f-aa76-3f051b334804
+[get-meeting] 11:54:52 AM END RequestId: 4cd57dad-a800-4ac0-b5c9-7379f4c8bc63
+[get-meeting] 11:54:52 AM REPORT RequestId: 4cd57dad-a800-4ac0-b5c9-7379f4c8bc63	Duration: 801.00 ms	Billed Duration: 801 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[start-meeting-transcription] 11:54:50 AM START RequestId: fad75517-b24a-4dad-8c02-dd1776ed79ab Version: $LATEST
+[start-meeting-transcription] 11:54:50 AM 2025-07-16T04:54:50.331Z	fad75517-b24a-4dad-8c02-dd1776ed79ab	INFO	Start MeetingTranscription with meetingId:  71addfff-c383-4b66-908a-72602b264804 languageCode:  ja-JP
+[start-meeting-transcription] 11:54:50 AM START RequestId: 6ff0a90f-e099-47f0-a380-b7067915a246 Version: $LATEST
+[start-meeting-transcription] 11:54:50 AM 2025-07-16T04:54:50.815Z	6ff0a90f-e099-47f0-a380-b7067915a246	INFO	Start MeetingTranscription with meetingId:  e5c47a7f-ecf7-406f-aa76-3f051b334804 languageCode:  ja-JP
+[start-meeting-transcription] 11:54:51 AM 2025-07-16T04:54:51.069Z	fad75517-b24a-4dad-8c02-dd1776ed79ab	INFO	Started Meeting Transcription Response:  {}
+[start-meeting-transcription] 11:54:51 AM END RequestId: fad75517-b24a-4dad-8c02-dd1776ed79ab
+[start-meeting-transcription] 11:54:51 AM REPORT RequestId: fad75517-b24a-4dad-8c02-dd1776ed79ab	Duration: 770.47 ms	Billed Duration: 771 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[start-meeting-transcription] 11:54:51 AM 2025-07-16T04:54:51.473Z	6ff0a90f-e099-47f0-a380-b7067915a246	INFO	Started Meeting Transcription Response:  {}
+[start-meeting-transcription] 11:54:51 AM END RequestId: 6ff0a90f-e099-47f0-a380-b7067915a246
+[start-meeting-transcription] 11:54:51 AM REPORT RequestId: 6ff0a90f-e099-47f0-a380-b7067915a246	Duration: 699.73 ms	Billed Duration: 700 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[start-meeting-transcription] 11:54:54 AM START RequestId: f938bee2-8b18-46ea-8cb8-65d518429a97 Version: $LATEST
+[start-meeting-transcription] 11:54:54 AM 2025-07-16T04:54:54.969Z	f938bee2-8b18-46ea-8cb8-65d518429a97	INFO	Start MeetingTranscription with meetingId:  71addfff-c383-4b66-908a-72602b264804 languageCode:  ja-JP
+[start-meeting-transcription] 11:54:54 AM START RequestId: 1b98124c-440c-4edb-95f7-42db7a026872 Version: $LATEST
+[start-meeting-transcription] 11:54:54 AM 2025-07-16T04:54:54.992Z	1b98124c-440c-4edb-95f7-42db7a026872	INFO	Start MeetingTranscription with meetingId:  e5c47a7f-ecf7-406f-aa76-3f051b334804 languageCode:  ja-JP
+[start-meeting-transcription] 11:54:55 AM 2025-07-16T04:54:55.587Z	f938bee2-8b18-46ea-8cb8-65d518429a97	INFO	Started Meeting Transcription Response:  {}
+[start-meeting-transcription] 11:54:55 AM END RequestId: f938bee2-8b18-46ea-8cb8-65d518429a97
+[start-meeting-transcription] 11:54:55 AM REPORT RequestId: f938bee2-8b18-46ea-8cb8-65d518429a97	Duration: 620.41 ms	Billed Duration: 621 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[start-meeting-transcription] 11:54:55 AM 2025-07-16T04:54:55.666Z	1b98124c-440c-4edb-95f7-42db7a026872	INFO	Started Meeting Transcription Response:  {}
+[start-meeting-transcription] 11:54:55 AM END RequestId: 1b98124c-440c-4edb-95f7-42db7a026872
+[start-meeting-transcription] 11:54:55 AM REPORT RequestId: 1b98124c-440c-4edb-95f7-42db7a026872	Duration: 676.91 ms	Billed Duration: 677 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[get-meeting-by-tourid] 11:54:49 AM START RequestId: 66a81a0a-3f8f-4670-b4c3-f676d18f7054 Version: $LATEST
+[get-meeting-by-tourid] 11:54:49 AM 2025-07-16T04:54:49.615Z	66a81a0a-3f8f-4670-b4c3-f676d18f7054	INFO	Retrieving tour with tourId:  4099cef9-5350-4846-ad65-cbe7d1c8a6ab
+[get-meeting-by-tourid] 11:54:50 AM START RequestId: 830091d8-13a9-4efe-8a41-efc31320f97b Version: $LATEST
+[get-meeting-by-tourid] 11:54:50 AM 2025-07-16T04:54:50.093Z	830091d8-13a9-4efe-8a41-efc31320f97b	INFO	Retrieving tour with tourId:  4099cef9-5350-4846-ad65-cbe7d1c8a6ab
+[get-meeting-by-tourid] 11:54:50 AM 2025-07-16T04:54:50.158Z	66a81a0a-3f8f-4670-b4c3-f676d18f7054	INFO	Tour successfully retrieved:  {
+  nameOfCoursePersonInCharge: 'Tour001',
+  numberOfReceiversInUse: 'Tour001',
+  tourTestStatus: 'test',
+  tourType: 'tour',
+  tourConductorName: 'Tour001',
+  tourNumber: 'Tour001',
+  useTheTranslationFunction: true,
+  createdAt: '2025-07-16T03:27:43.728Z',
+  updatedBy: '',
+  createdBy: 'a90dec4d-042f-4db3-8c8e-dd183c86923b',
+  numberOfSendingDevices: 'Tour001',
+  returnDate: '2025-07-24',
+  coSponsoredCourseNumber: 'Tour001',
+  planningSalesOfficeTeamName: 'Tour001',
+  deleteFlag: 0,
+  meetingId: 'e5c47a7f-ecf7-406f-aa76-3f051b334804',
+  channelId: '2d1875b6-0263-4ee3-b798-1860a207deb8',
+  chatRestriction: 'allChat',
+  departureDate: '2025-07-16',
+  updatedAt: '',
+  planningAndSalesSignature: 'Tour001',
+  subGuideFunctionAvailable: true,
+  courseName: 'Tour001',
+  tourId: '4099cef9-5350-4846-ad65-cbe7d1c8a6ab'
+}
+[get-meeting-by-tourid] 11:54:50 AM END RequestId: 66a81a0a-3f8f-4670-b4c3-f676d18f7054
+[get-meeting-by-tourid] 11:54:50 AM REPORT RequestId: 66a81a0a-3f8f-4670-b4c3-f676d18f7054	Duration: 581.39 ms	Billed Duration: 582 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[get-meeting-by-tourid] 11:54:50 AM 2025-07-16T04:54:50.630Z	830091d8-13a9-4efe-8a41-efc31320f97b	INFO	Tour successfully retrieved:  {
+  nameOfCoursePersonInCharge: 'Tour001',
+  numberOfReceiversInUse: 'Tour001',
+  tourTestStatus: 'test',
+  tourType: 'tour',
+  tourConductorName: 'Tour001',
+  tourNumber: 'Tour001',
+  useTheTranslationFunction: true,
+  createdAt: '2025-07-16T03:27:43.728Z',
+  updatedBy: '',
+  createdBy: 'a90dec4d-042f-4db3-8c8e-dd183c86923b',
+  numberOfSendingDevices: 'Tour001',
+  returnDate: '2025-07-24',
+  coSponsoredCourseNumber: 'Tour001',
+  planningSalesOfficeTeamName: 'Tour001',
+  deleteFlag: 0,
+  meetingId: 'e5c47a7f-ecf7-406f-aa76-3f051b334804',
+  channelId: '2d1875b6-0263-4ee3-b798-1860a207deb8',
+  chatRestriction: 'allChat',
+  departureDate: '2025-07-16',
+  updatedAt: '',
+  planningAndSalesSignature: 'Tour001',
+  subGuideFunctionAvailable: true,
+  courseName: 'Tour001',
+  tourId: '4099cef9-5350-4846-ad65-cbe7d1c8a6ab'
+}
+[get-meeting-by-tourid] 11:54:50 AM END RequestId: 830091d8-13a9-4efe-8a41-efc31320f97b
+[get-meeting-by-tourid] 11:54:50 AM REPORT RequestId: 830091d8-13a9-4efe-8a41-efc31320f97b	Duration: 568.68 ms	Billed Duration: 569 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[login-and-get-credentials] 11:54:50 AM START RequestId: 62500e02-7d16-411a-9f1f-1934e8745082 Version: $LATEST
+[login-and-get-credentials] 11:54:50 AM START RequestId: d8628a26-9f98-4cdf-bda0-f4e8dec333f6 Version: $LATEST
+[login-and-get-credentials] 11:54:50 AM END RequestId: d8628a26-9f98-4cdf-bda0-f4e8dec333f6
+[login-and-get-credentials] 11:54:50 AM REPORT RequestId: d8628a26-9f98-4cdf-bda0-f4e8dec333f6	Duration: 556.86 ms	Billed Duration: 557 ms	Memory Size: 512 MB	Max Memory Used: 89 MB
+[login-and-get-credentials] 11:54:50 AM END RequestId: 62500e02-7d16-411a-9f1f-1934e8745082
+[login-and-get-credentials] 11:54:50 AM REPORT RequestId: 62500e02-7d16-411a-9f1f-1934e8745082	Duration: 646.86 ms	Billed Duration: 647 ms	Memory Size: 512 MB	Max Memory Used: 88 MB
+[get-meeting] 11:55:04 AM START RequestId: 0b558acc-f3b3-4fca-9716-9bd6c5821f2f Version: $LATEST
+[get-meeting] 11:55:04 AM 2025-07-16T04:55:04.406Z	0b558acc-f3b3-4fca-9716-9bd6c5821f2f	INFO	Getting meeting with meetingId:  e5c47a7f-ecf7-406f-aa76-3f051b334804
+[get-meeting] 11:55:04 AM START RequestId: 857adad6-b525-4e1d-a828-20babed8d9e1 Version: $LATEST
+[get-meeting] 11:55:04 AM 2025-07-16T04:55:04.459Z	857adad6-b525-4e1d-a828-20babed8d9e1	INFO	Getting meeting with meetingId:  e5c47a7f-ecf7-406f-aa76-3f051b334804
+[get-meeting] 11:55:05 AM 2025-07-16T04:55:05.076Z	0b558acc-f3b3-4fca-9716-9bd6c5821f2f	INFO	Get Meeting Response:  e5c47a7f-ecf7-406f-aa76-3f051b334804
+[get-meeting] 11:55:05 AM END RequestId: 0b558acc-f3b3-4fca-9716-9bd6c5821f2f
+[get-meeting] 11:55:05 AM REPORT RequestId: 0b558acc-f3b3-4fca-9716-9bd6c5821f2f	Duration: 677.13 ms	Billed Duration: 678 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[get-meeting] 11:55:05 AM 2025-07-16T04:55:05.113Z	857adad6-b525-4e1d-a828-20babed8d9e1	INFO	Get Meeting Response:  e5c47a7f-ecf7-406f-aa76-3f051b334804
+[get-meeting] 11:55:05 AM END RequestId: 857adad6-b525-4e1d-a828-20babed8d9e1
+[get-meeting] 11:55:05 AM REPORT RequestId: 857adad6-b525-4e1d-a828-20babed8d9e1	Duration: 689.30 ms	Billed Duration: 690 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[start-meeting-transcription] 11:55:03 AM START RequestId: 47e2604d-a849-4b3b-a935-d53c110ae250 Version: $LATEST
+[start-meeting-transcription] 11:55:03 AM 2025-07-16T04:55:03.774Z	47e2604d-a849-4b3b-a935-d53c110ae250	INFO	Start MeetingTranscription with meetingId:  71addfff-c383-4b66-908a-72602b264804 languageCode:  ja-JP
+[start-meeting-transcription] 11:55:03 AM START RequestId: 222aa400-7722-420d-ae61-f9f77787c621 Version: $LATEST
+[start-meeting-transcription] 11:55:03 AM 2025-07-16T04:55:03.813Z	222aa400-7722-420d-ae61-f9f77787c621	INFO	Start MeetingTranscription with meetingId:  e5c47a7f-ecf7-406f-aa76-3f051b334804 languageCode:  ja-JP
+[start-meeting-transcription] 11:55:04 AM 2025-07-16T04:55:04.409Z	47e2604d-a849-4b3b-a935-d53c110ae250	INFO	Started Meeting Transcription Response:  {}
+[start-meeting-transcription] 11:55:04 AM END RequestId: 47e2604d-a849-4b3b-a935-d53c110ae250
+[start-meeting-transcription] 11:55:04 AM REPORT RequestId: 47e2604d-a849-4b3b-a935-d53c110ae250	Duration: 636.55 ms	Billed Duration: 637 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[start-meeting-transcription] 11:55:04 AM 2025-07-16T04:55:04.482Z	222aa400-7722-420d-ae61-f9f77787c621	INFO	Started Meeting Transcription Response:  {}
+[start-meeting-transcription] 11:55:04 AM END RequestId: 222aa400-7722-420d-ae61-f9f77787c621
+[start-meeting-transcription] 11:55:04 AM REPORT RequestId: 222aa400-7722-420d-ae61-f9f77787c621	Duration: 671.48 ms	Billed Duration: 672 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[start-meeting-transcription] 11:55:08 AM START RequestId: 36ca6dab-2f3c-455c-87b1-8fec6120b685 Version: $LATEST
+[start-meeting-transcription] 11:55:08 AM 2025-07-16T04:55:08.431Z	36ca6dab-2f3c-455c-87b1-8fec6120b685	INFO	Start MeetingTranscription with meetingId:  e5c47a7f-ecf7-406f-aa76-3f051b334804 languageCode:  ja-JP
+[start-meeting-transcription] 11:55:08 AM 2025-07-16T04:55:08.471Z	6ece0e45-c1db-45ee-8952-9ce4a7060754	INFO	Start MeetingTranscription with meetingId:  71addfff-c383-4b66-908a-72602b264804 languageCode:  ja-JP
+[start-meeting-transcription] 11:55:08 AM START RequestId: 6ece0e45-c1db-45ee-8952-9ce4a7060754 Version: $LATEST
+[start-meeting-transcription] 11:55:09 AM 2025-07-16T04:55:09.056Z	36ca6dab-2f3c-455c-87b1-8fec6120b685	INFO	Started Meeting Transcription Response:  {}
+[start-meeting-transcription] 11:55:09 AM END RequestId: 36ca6dab-2f3c-455c-87b1-8fec6120b685
+[start-meeting-transcription] 11:55:09 AM REPORT RequestId: 36ca6dab-2f3c-455c-87b1-8fec6120b685	Duration: 627.34 ms	Billed Duration: 628 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[start-meeting-transcription] 11:55:09 AM 2025-07-16T04:55:09.114Z	6ece0e45-c1db-45ee-8952-9ce4a7060754	INFO	Started Meeting Transcription Response:  {}
+[start-meeting-transcription] 11:55:09 AM END RequestId: 6ece0e45-c1db-45ee-8952-9ce4a7060754
+[start-meeting-transcription] 11:55:09 AM REPORT RequestId: 6ece0e45-c1db-45ee-8952-9ce4a7060754	Duration: 644.42 ms	Billed Duration: 645 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[get-meeting-by-tourid] 11:55:03 AM START RequestId: 48e246e3-4d03-4b2d-a7b7-6957e3f5101c Version: $LATEST
+[get-meeting-by-tourid] 11:55:03 AM 2025-07-16T04:55:03.072Z	48e246e3-4d03-4b2d-a7b7-6957e3f5101c	INFO	Retrieving tour with tourId:  4099cef9-5350-4846-ad65-cbe7d1c8a6ab
+[get-meeting-by-tourid] 11:55:03 AM START RequestId: 9e267c3b-1fe1-4f44-bd4d-052061918ea1 Version: $LATEST
+[get-meeting-by-tourid] 11:55:03 AM 2025-07-16T04:55:03.134Z	9e267c3b-1fe1-4f44-bd4d-052061918ea1	INFO	Retrieving tour with tourId:  4099cef9-5350-4846-ad65-cbe7d1c8a6ab
+[get-meeting-by-tourid] 11:55:03 AM 2025-07-16T04:55:03.637Z	9e267c3b-1fe1-4f44-bd4d-052061918ea1	INFO	Tour successfully retrieved:  {
+  nameOfCoursePersonInCharge: 'Tour001',
+  numberOfReceiversInUse: 'Tour001',
+  tourTestStatus: 'test',
+  tourType: 'tour',
+  tourConductorName: 'Tour001',
+  tourNumber: 'Tour001',
+  useTheTranslationFunction: true,
+  createdAt: '2025-07-16T03:27:43.728Z',
+  updatedBy: '',
+  createdBy: 'a90dec4d-042f-4db3-8c8e-dd183c86923b',
+  numberOfSendingDevices: 'Tour001',
+  returnDate: '2025-07-24',
+  coSponsoredCourseNumber: 'Tour001',
+  planningSalesOfficeTeamName: 'Tour001',
+  deleteFlag: 0,
+  meetingId: 'e5c47a7f-ecf7-406f-aa76-3f051b334804',
+  channelId: '2d1875b6-0263-4ee3-b798-1860a207deb8',
+  chatRestriction: 'allChat',
+  departureDate: '2025-07-16',
+  updatedAt: '',
+  planningAndSalesSignature: 'Tour001',
+  subGuideFunctionAvailable: true,
+  courseName: 'Tour001',
+  tourId: '4099cef9-5350-4846-ad65-cbe7d1c8a6ab'
+}
+[get-meeting-by-tourid] 11:55:03 AM END RequestId: 9e267c3b-1fe1-4f44-bd4d-052061918ea1
+[get-meeting-by-tourid] 11:55:03 AM REPORT RequestId: 9e267c3b-1fe1-4f44-bd4d-052061918ea1	Duration: 559.60 ms	Billed Duration: 560 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[get-meeting-by-tourid] 11:55:03 AM 2025-07-16T04:55:03.661Z	48e246e3-4d03-4b2d-a7b7-6957e3f5101c	INFO	Tour successfully retrieved:  {
+  nameOfCoursePersonInCharge: 'Tour001',
+  numberOfReceiversInUse: 'Tour001',
+  tourTestStatus: 'test',
+  tourType: 'tour',
+  tourConductorName: 'Tour001',
+  tourNumber: 'Tour001',
+  useTheTranslationFunction: true,
+  createdAt: '2025-07-16T03:27:43.728Z',
+  updatedBy: '',
+  createdBy: 'a90dec4d-042f-4db3-8c8e-dd183c86923b',
+  numberOfSendingDevices: 'Tour001',
+  returnDate: '2025-07-24',
+  coSponsoredCourseNumber: 'Tour001',
+  planningSalesOfficeTeamName: 'Tour001',
+  deleteFlag: 0,
+  meetingId: 'e5c47a7f-ecf7-406f-aa76-3f051b334804',
+  channelId: '2d1875b6-0263-4ee3-b798-1860a207deb8',
+  chatRestriction: 'allChat',
+  departureDate: '2025-07-16',
+  updatedAt: '',
+  planningAndSalesSignature: 'Tour001',
+  subGuideFunctionAvailable: true,
+  courseName: 'Tour001',
+  tourId: '4099cef9-5350-4846-ad65-cbe7d1c8a6ab'
+}
+[get-meeting-by-tourid] 11:55:03 AM END RequestId: 48e246e3-4d03-4b2d-a7b7-6957e3f5101c
+[get-meeting-by-tourid] 11:55:03 AM REPORT RequestId: 48e246e3-4d03-4b2d-a7b7-6957e3f5101c	Duration: 597.32 ms	Billed Duration: 598 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[login-and-get-credentials] 11:55:03 AM START RequestId: 9ffb1a14-df1f-4e9e-84f8-0be39e209ec2 Version: $LATEST
+[login-and-get-credentials] 11:55:03 AM START RequestId: 15afee28-dcaf-466f-8db2-dea4d7f2f1f4 Version: $LATEST
+[login-and-get-credentials] 11:55:03 AM END RequestId: 15afee28-dcaf-466f-8db2-dea4d7f2f1f4
+[login-and-get-credentials] 11:55:03 AM REPORT RequestId: 15afee28-dcaf-466f-8db2-dea4d7f2f1f4	Duration: 515.86 ms	Billed Duration: 516 ms	Memory Size: 512 MB	Max Memory Used: 89 MB
+[login-and-get-credentials] 11:55:03 AM END RequestId: 9ffb1a14-df1f-4e9e-84f8-0be39e209ec2
+[login-and-get-credentials] 11:55:03 AM REPORT RequestId: 9ffb1a14-df1f-4e9e-84f8-0be39e209ec2	Duration: 534.43 ms	Billed Duration: 535 ms	Memory Size: 512 MB	Max Memory Used: 88 MB
+[get-meeting] 11:56:13 AM START RequestId: 01fdac94-1c8e-49c2-a63c-00a466012000 Version: $LATEST
+[get-meeting] 11:56:13 AM START RequestId: 782c56e1-9e50-42f9-8801-4541514e8223 Version: $LATEST
+[get-meeting] 11:56:13 AM 2025-07-16T04:56:13.421Z	782c56e1-9e50-42f9-8801-4541514e8223	INFO	Getting meeting with meetingId:  e5c47a7f-ecf7-406f-aa76-3f051b334804
+[get-meeting] 11:56:13 AM 2025-07-16T04:56:13.440Z	01fdac94-1c8e-49c2-a63c-00a466012000	INFO	Getting meeting with meetingId:  e5c47a7f-ecf7-406f-aa76-3f051b334804
+[get-meeting] 11:56:14 AM 2025-07-16T04:56:14.044Z	782c56e1-9e50-42f9-8801-4541514e8223	INFO	Get Meeting Response:  e5c47a7f-ecf7-406f-aa76-3f051b334804
+[get-meeting] 11:56:14 AM END RequestId: 782c56e1-9e50-42f9-8801-4541514e8223
+[get-meeting] 11:56:14 AM REPORT RequestId: 782c56e1-9e50-42f9-8801-4541514e8223	Duration: 626.30 ms	Billed Duration: 627 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[get-meeting] 11:56:14 AM 2025-07-16T04:56:14.123Z	01fdac94-1c8e-49c2-a63c-00a466012000	INFO	Get Meeting Response:  e5c47a7f-ecf7-406f-aa76-3f051b334804
+[get-meeting] 11:56:14 AM END RequestId: 01fdac94-1c8e-49c2-a63c-00a466012000
+[get-meeting] 11:56:14 AM REPORT RequestId: 01fdac94-1c8e-49c2-a63c-00a466012000	Duration: 741.49 ms	Billed Duration: 742 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[get-meeting] 11:56:14 AM START RequestId: 4fc6f55e-15d6-4a2f-bf9d-0918a5a43243 Version: $LATEST
+[get-meeting] 11:56:14 AM 2025-07-16T04:56:14.791Z	4fc6f55e-15d6-4a2f-bf9d-0918a5a43243	INFO	Getting meeting with meetingId:  e5c47a7f-ecf7-406f-aa76-3f051b334804
+[get-meeting] 11:56:15 AM START RequestId: d38107cb-ce08-4724-80da-7b1c4badb449 Version: $LATEST
+[get-meeting] 11:56:15 AM 2025-07-16T04:56:15.261Z	d38107cb-ce08-4724-80da-7b1c4badb449	INFO	Getting meeting with meetingId:  e5c47a7f-ecf7-406f-aa76-3f051b334804
+[get-meeting] 11:56:15 AM 2025-07-16T04:56:15.423Z	4fc6f55e-15d6-4a2f-bf9d-0918a5a43243	INFO	Get Meeting Response:  e5c47a7f-ecf7-406f-aa76-3f051b334804
+[get-meeting] 11:56:15 AM END RequestId: 4fc6f55e-15d6-4a2f-bf9d-0918a5a43243
+[get-meeting] 11:56:15 AM REPORT RequestId: 4fc6f55e-15d6-4a2f-bf9d-0918a5a43243	Duration: 634.09 ms	Billed Duration: 635 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[get-meeting] 11:56:15 AM 2025-07-16T04:56:15.865Z	d38107cb-ce08-4724-80da-7b1c4badb449	INFO	Get Meeting Response:  e5c47a7f-ecf7-406f-aa76-3f051b334804
+[get-meeting] 11:56:15 AM END RequestId: d38107cb-ce08-4724-80da-7b1c4badb449
+[get-meeting] 11:56:15 AM REPORT RequestId: d38107cb-ce08-4724-80da-7b1c4badb449	Duration: 605.98 ms	Billed Duration: 606 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[start-meeting-transcription] 11:56:12 AM START RequestId: 534c8ecf-af06-479e-8e6e-28b12407034c Version: $LATEST
+[start-meeting-transcription] 11:56:12 AM START RequestId: 61b2e68d-38c5-458d-884e-4ca329b3a7a7 Version: $LATEST
+[start-meeting-transcription] 11:56:12 AM 2025-07-16T04:56:12.790Z	61b2e68d-38c5-458d-884e-4ca329b3a7a7	INFO	Start MeetingTranscription with meetingId:  e5c47a7f-ecf7-406f-aa76-3f051b334804 languageCode:  ja-JP
+[start-meeting-transcription] 11:56:12 AM 2025-07-16T04:56:12.793Z	534c8ecf-af06-479e-8e6e-28b12407034c	INFO	Start MeetingTranscription with meetingId:  71addfff-c383-4b66-908a-72602b264804 languageCode:  ja-JP
+[start-meeting-transcription] 11:56:13 AM 2025-07-16T04:56:13.426Z	61b2e68d-38c5-458d-884e-4ca329b3a7a7	INFO	Started Meeting Transcription Response:  {}
+[start-meeting-transcription] 11:56:13 AM END RequestId: 61b2e68d-38c5-458d-884e-4ca329b3a7a7
+[start-meeting-transcription] 11:56:13 AM REPORT RequestId: 61b2e68d-38c5-458d-884e-4ca329b3a7a7	Duration: 637.75 ms	Billed Duration: 638 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[start-meeting-transcription] 11:56:13 AM 2025-07-16T04:56:13.441Z	534c8ecf-af06-479e-8e6e-28b12407034c	INFO	Started Meeting Transcription Response:  {}
+[start-meeting-transcription] 11:56:13 AM END RequestId: 534c8ecf-af06-479e-8e6e-28b12407034c
+[start-meeting-transcription] 11:56:13 AM REPORT RequestId: 534c8ecf-af06-479e-8e6e-28b12407034c	Duration: 661.06 ms	Billed Duration: 662 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[start-meeting-transcription] 11:56:14 AM 2025-07-16T04:56:14.772Z	f99ebaa0-3afe-4f23-b94a-2ad46146beae	INFO	Start MeetingTranscription with meetingId:  71addfff-c383-4b66-908a-72602b264804 languageCode:  ja-JP
+[start-meeting-transcription] 11:56:14 AM START RequestId: f99ebaa0-3afe-4f23-b94a-2ad46146beae Version: $LATEST
+[start-meeting-transcription] 11:56:14 AM START RequestId: 625a32ee-b94a-4487-87a6-d0ed811bd449 Version: $LATEST
+[start-meeting-transcription] 11:56:14 AM 2025-07-16T04:56:14.803Z	625a32ee-b94a-4487-87a6-d0ed811bd449	INFO	Start MeetingTranscription with meetingId:  e5c47a7f-ecf7-406f-aa76-3f051b334804 languageCode:  ja-JP
+[start-meeting-transcription] 11:56:15 AM 2025-07-16T04:56:15.380Z	f99ebaa0-3afe-4f23-b94a-2ad46146beae	INFO	Started Meeting Transcription Response:  {}
+[start-meeting-transcription] 11:56:15 AM END RequestId: f99ebaa0-3afe-4f23-b94a-2ad46146beae
+[start-meeting-transcription] 11:56:15 AM REPORT RequestId: f99ebaa0-3afe-4f23-b94a-2ad46146beae	Duration: 610.04 ms	Billed Duration: 611 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[start-meeting-transcription] 11:56:15 AM 2025-07-16T04:56:15.431Z	625a32ee-b94a-4487-87a6-d0ed811bd449	INFO	Started Meeting Transcription Response:  {}
+[start-meeting-transcription] 11:56:15 AM END RequestId: 625a32ee-b94a-4487-87a6-d0ed811bd449
+[start-meeting-transcription] 11:56:15 AM REPORT RequestId: 625a32ee-b94a-4487-87a6-d0ed811bd449	Duration: 630.67 ms	Billed Duration: 631 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[start-meeting-transcription] 11:56:16 AM START RequestId: 0a7ec3a7-eb80-44f8-b337-28f685e66059 Version: $LATEST
+[start-meeting-transcription] 11:56:16 AM 2025-07-16T04:56:16.941Z	0a7ec3a7-eb80-44f8-b337-28f685e66059	INFO	Start MeetingTranscription with meetingId:  e5c47a7f-ecf7-406f-aa76-3f051b334804 languageCode:  ja-JP
+[start-meeting-transcription] 11:56:17 AM START RequestId: a7a5474c-1100-4328-bf7a-a084dcb29b17 Version: $LATEST
+[start-meeting-transcription] 11:56:17 AM 2025-07-16T04:56:17.468Z	a7a5474c-1100-4328-bf7a-a084dcb29b17	INFO	Start MeetingTranscription with meetingId:  71addfff-c383-4b66-908a-72602b264804 languageCode:  ja-JP
+[start-meeting-transcription] 11:56:17 AM 2025-07-16T04:56:17.579Z	0a7ec3a7-eb80-44f8-b337-28f685e66059	INFO	Started Meeting Transcription Response:  {}
+[start-meeting-transcription] 11:56:17 AM END RequestId: 0a7ec3a7-eb80-44f8-b337-28f685e66059
+[start-meeting-transcription] 11:56:17 AM REPORT RequestId: 0a7ec3a7-eb80-44f8-b337-28f685e66059	Duration: 640.34 ms	Billed Duration: 641 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[start-meeting-transcription] 11:56:18 AM 2025-07-16T04:56:18.106Z	a7a5474c-1100-4328-bf7a-a084dcb29b17	INFO	Started Meeting Transcription Response:  {}
+[start-meeting-transcription] 11:56:18 AM END RequestId: a7a5474c-1100-4328-bf7a-a084dcb29b17
+[start-meeting-transcription] 11:56:18 AM REPORT RequestId: a7a5474c-1100-4328-bf7a-a084dcb29b17	Duration: 640.66 ms	Billed Duration: 641 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[start-meeting-transcription] 11:56:18 AM START RequestId: 1af86fb0-e75f-4de2-af35-7b386795dc54 Version: $LATEST
+[start-meeting-transcription] 11:56:18 AM 2025-07-16T04:56:18.914Z	1af86fb0-e75f-4de2-af35-7b386795dc54	INFO	Start MeetingTranscription with meetingId:  71addfff-c383-4b66-908a-72602b264804 languageCode:  ja-JP
+[start-meeting-transcription] 11:56:19 AM START RequestId: 2bd66429-e266-4aa2-914d-1a87530839c5 Version: $LATEST
+[start-meeting-transcription] 11:56:19 AM 2025-07-16T04:56:19.168Z	2bd66429-e266-4aa2-914d-1a87530839c5	INFO	Start MeetingTranscription with meetingId:  e5c47a7f-ecf7-406f-aa76-3f051b334804 languageCode:  ja-JP
+[start-meeting-transcription] 11:56:19 AM 2025-07-16T04:56:19.547Z	1af86fb0-e75f-4de2-af35-7b386795dc54	INFO	Started Meeting Transcription Response:  {}
+[start-meeting-transcription] 11:56:19 AM END RequestId: 1af86fb0-e75f-4de2-af35-7b386795dc54
+[start-meeting-transcription] 11:56:19 AM REPORT RequestId: 1af86fb0-e75f-4de2-af35-7b386795dc54	Duration: 635.59 ms	Billed Duration: 636 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[start-meeting-transcription] 11:56:19 AM 2025-07-16T04:56:19.786Z	2bd66429-e266-4aa2-914d-1a87530839c5	INFO	Started Meeting Transcription Response:  {}
+[start-meeting-transcription] 11:56:19 AM END RequestId: 2bd66429-e266-4aa2-914d-1a87530839c5
+[start-meeting-transcription] 11:56:19 AM REPORT RequestId: 2bd66429-e266-4aa2-914d-1a87530839c5	Duration: 620.30 ms	Billed Duration: 621 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[get-meeting-by-tourid] 11:56:12 AM START RequestId: 31a2e2b3-87d6-4429-ac32-2a2b7dd9cecb Version: $LATEST
+[get-meeting-by-tourid] 11:56:12 AM START RequestId: b922cb94-00e9-492a-9c79-4af796bba622 Version: $LATEST
+[get-meeting-by-tourid] 11:56:12 AM 2025-07-16T04:56:12.063Z	b922cb94-00e9-492a-9c79-4af796bba622	INFO	Retrieving tour with tourId:  4099cef9-5350-4846-ad65-cbe7d1c8a6ab
+[get-meeting-by-tourid] 11:56:12 AM 2025-07-16T04:56:12.092Z	31a2e2b3-87d6-4429-ac32-2a2b7dd9cecb	INFO	Retrieving tour with tourId:  4099cef9-5350-4846-ad65-cbe7d1c8a6ab
+[get-meeting-by-tourid] 11:56:12 AM 2025-07-16T04:56:12.616Z	31a2e2b3-87d6-4429-ac32-2a2b7dd9cecb	INFO	Tour successfully retrieved:  {
+  nameOfCoursePersonInCharge: 'Tour001',
+  numberOfReceiversInUse: 'Tour001',
+  tourTestStatus: 'test',
+  tourType: 'tour',
+  tourConductorName: 'Tour001',
+  tourNumber: 'Tour001',
+  useTheTranslationFunction: true,
+  createdAt: '2025-07-16T03:27:43.728Z',
+  updatedBy: '',
+  createdBy: 'a90dec4d-042f-4db3-8c8e-dd183c86923b',
+  numberOfSendingDevices: 'Tour001',
+  returnDate: '2025-07-24',
+  coSponsoredCourseNumber: 'Tour001',
+  planningSalesOfficeTeamName: 'Tour001',
+  deleteFlag: 0,
+  meetingId: 'e5c47a7f-ecf7-406f-aa76-3f051b334804',
+  channelId: '2d1875b6-0263-4ee3-b798-1860a207deb8',
+  chatRestriction: 'allChat',
+  departureDate: '2025-07-16',
+  updatedAt: '',
+  planningAndSalesSignature: 'Tour001',
+  subGuideFunctionAvailable: true,
+  courseName: 'Tour001',
+  tourId: '4099cef9-5350-4846-ad65-cbe7d1c8a6ab'
+}
+[get-meeting-by-tourid] 11:56:12 AM END RequestId: 31a2e2b3-87d6-4429-ac32-2a2b7dd9cecb
+[get-meeting-by-tourid] 11:56:12 AM REPORT RequestId: 31a2e2b3-87d6-4429-ac32-2a2b7dd9cecb	Duration: 564.86 ms	Billed Duration: 565 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[get-meeting-by-tourid] 11:56:12 AM 2025-07-16T04:56:12.642Z	b922cb94-00e9-492a-9c79-4af796bba622	INFO	Tour successfully retrieved:  {
+  nameOfCoursePersonInCharge: 'Tour001',
+  numberOfReceiversInUse: 'Tour001',
+  tourTestStatus: 'test',
+  tourType: 'tour',
+  tourConductorName: 'Tour001',
+  tourNumber: 'Tour001',
+  useTheTranslationFunction: true,
+  createdAt: '2025-07-16T03:27:43.728Z',
+  updatedBy: '',
+  createdBy: 'a90dec4d-042f-4db3-8c8e-dd183c86923b',
+  numberOfSendingDevices: 'Tour001',
+  returnDate: '2025-07-24',
+  coSponsoredCourseNumber: 'Tour001',
+  planningSalesOfficeTeamName: 'Tour001',
+  deleteFlag: 0,
+  meetingId: 'e5c47a7f-ecf7-406f-aa76-3f051b334804',
+  channelId: '2d1875b6-0263-4ee3-b798-1860a207deb8',
+  chatRestriction: 'allChat',
+  departureDate: '2025-07-16',
+  updatedAt: '',
+  planningAndSalesSignature: 'Tour001',
+  subGuideFunctionAvailable: true,
+  courseName: 'Tour001',
+  tourId: '4099cef9-5350-4846-ad65-cbe7d1c8a6ab'
+}
+[get-meeting-by-tourid] 11:56:12 AM END RequestId: b922cb94-00e9-492a-9c79-4af796bba622
+[get-meeting-by-tourid] 11:56:12 AM REPORT RequestId: b922cb94-00e9-492a-9c79-4af796bba622	Duration: 589.17 ms	Billed Duration: 590 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[get-meeting-by-tourid] 11:56:13 AM START RequestId: a622df88-dc34-4c0d-80ff-7c383d811e71 Version: $LATEST
+[get-meeting-by-tourid] 11:56:13 AM 2025-07-16T04:56:13.582Z	a622df88-dc34-4c0d-80ff-7c383d811e71	INFO	Retrieving tour with tourId:  4099cef9-5350-4846-ad65-cbe7d1c8a6ab
+[get-meeting-by-tourid] 11:56:14 AM 2025-07-16T04:56:14.038Z	a622df88-dc34-4c0d-80ff-7c383d811e71	INFO	Tour successfully retrieved:  {
+  nameOfCoursePersonInCharge: 'Tour001',
+  numberOfReceiversInUse: 'Tour001',
+  tourTestStatus: 'test',
+  tourType: 'tour',
+  tourConductorName: 'Tour001',
+  tourNumber: 'Tour001',
+  useTheTranslationFunction: true,
+  createdAt: '2025-07-16T03:27:43.728Z',
+  updatedBy: '',
+  createdBy: 'a90dec4d-042f-4db3-8c8e-dd183c86923b',
+  numberOfSendingDevices: 'Tour001',
+  returnDate: '2025-07-24',
+  coSponsoredCourseNumber: 'Tour001',
+  planningSalesOfficeTeamName: 'Tour001',
+  deleteFlag: 0,
+  meetingId: 'e5c47a7f-ecf7-406f-aa76-3f051b334804',
+  channelId: '2d1875b6-0263-4ee3-b798-1860a207deb8',
+  chatRestriction: 'allChat',
+  departureDate: '2025-07-16',
+  updatedAt: '',
+  planningAndSalesSignature: 'Tour001',
+  subGuideFunctionAvailable: true,
+  courseName: 'Tour001',
+  tourId: '4099cef9-5350-4846-ad65-cbe7d1c8a6ab'
+}
+[get-meeting-by-tourid] 11:56:14 AM END RequestId: a622df88-dc34-4c0d-80ff-7c383d811e71
+[get-meeting-by-tourid] 11:56:14 AM REPORT RequestId: a622df88-dc34-4c0d-80ff-7c383d811e71	Duration: 458.54 ms	Billed Duration: 459 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[get-meeting-by-tourid] 11:56:14 AM 2025-07-16T04:56:14.051Z	c10fe96a-9dcc-4b12-be74-af13b8799085	INFO	Retrieving tour with tourId:  4099cef9-5350-4846-ad65-cbe7d1c8a6ab
+[get-meeting-by-tourid] 11:56:14 AM START RequestId: c10fe96a-9dcc-4b12-be74-af13b8799085 Version: $LATEST
+[get-meeting-by-tourid] 11:56:14 AM 2025-07-16T04:56:14.525Z	c10fe96a-9dcc-4b12-be74-af13b8799085	INFO	Tour successfully retrieved:  {
+  nameOfCoursePersonInCharge: 'Tour001',
+  numberOfReceiversInUse: 'Tour001',
+  tourTestStatus: 'test',
+  tourType: 'tour',
+  tourConductorName: 'Tour001',
+  tourNumber: 'Tour001',
+  useTheTranslationFunction: true,
+  createdAt: '2025-07-16T03:27:43.728Z',
+  updatedBy: '',
+  createdBy: 'a90dec4d-042f-4db3-8c8e-dd183c86923b',
+  numberOfSendingDevices: 'Tour001',
+  returnDate: '2025-07-24',
+  coSponsoredCourseNumber: 'Tour001',
+  planningSalesOfficeTeamName: 'Tour001',
+  deleteFlag: 0,
+  meetingId: 'e5c47a7f-ecf7-406f-aa76-3f051b334804',
+  channelId: '2d1875b6-0263-4ee3-b798-1860a207deb8',
+  chatRestriction: 'allChat',
+  departureDate: '2025-07-16',
+  updatedAt: '',
+  planningAndSalesSignature: 'Tour001',
+  subGuideFunctionAvailable: true,
+  courseName: 'Tour001',
+  tourId: '4099cef9-5350-4846-ad65-cbe7d1c8a6ab'
+}
+[get-meeting-by-tourid] 11:56:14 AM END RequestId: c10fe96a-9dcc-4b12-be74-af13b8799085
+[get-meeting-by-tourid] 11:56:14 AM REPORT RequestId: c10fe96a-9dcc-4b12-be74-af13b8799085	Duration: 476.11 ms	Billed Duration: 477 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[login-and-get-credentials] 11:56:12 AM START RequestId: 9186fba5-6b0d-4519-8d9e-47f338d2c157 Version: $LATEST
+[login-and-get-credentials] 11:56:12 AM START RequestId: 8edfaef0-8849-447c-ace1-fcecd40b9bd6 Version: $LATEST
+[login-and-get-credentials] 11:56:12 AM END RequestId: 9186fba5-6b0d-4519-8d9e-47f338d2c157
+[login-and-get-credentials] 11:56:12 AM REPORT RequestId: 9186fba5-6b0d-4519-8d9e-47f338d2c157	Duration: 522.73 ms	Billed Duration: 523 ms	Memory Size: 512 MB	Max Memory Used: 88 MB
+[login-and-get-credentials] 11:56:12 AM END RequestId: 8edfaef0-8849-447c-ace1-fcecd40b9bd6
+[login-and-get-credentials] 11:56:12 AM REPORT RequestId: 8edfaef0-8849-447c-ace1-fcecd40b9bd6	Duration: 582.02 ms	Billed Duration: 583 ms	Memory Size: 512 MB	Max Memory Used: 89 MB
+[login-and-get-credentials] 11:56:13 AM START RequestId: 7499700d-d5cc-4a26-b2c7-b65b67ea895b Version: $LATEST
+[login-and-get-credentials] 11:56:14 AM START RequestId: 2b272696-473b-4116-b9c1-27414044caef Version: $LATEST
+[login-and-get-credentials] 11:56:14 AM END RequestId: 7499700d-d5cc-4a26-b2c7-b65b67ea895b
+[login-and-get-credentials] 11:56:14 AM REPORT RequestId: 7499700d-d5cc-4a26-b2c7-b65b67ea895b	Duration: 519.54 ms	Billed Duration: 520 ms	Memory Size: 512 MB	Max Memory Used: 89 MB
+[login-and-get-credentials] 11:56:14 AM END RequestId: 2b272696-473b-4116-b9c1-27414044caef
+[login-and-get-credentials] 11:56:14 AM REPORT RequestId: 2b272696-473b-4116-b9c1-27414044caef	Duration: 533.37 ms	Billed Duration: 534 ms	Memory Size: 512 MB	Max Memory Used: 88 MB
+[get-meeting] 11:56:38 AM START RequestId: 117957b6-971b-4e5c-ab4c-d5a1c3d6ac21 Version: $LATEST
+[get-meeting] 11:56:38 AM 2025-07-16T04:56:38.277Z	117957b6-971b-4e5c-ab4c-d5a1c3d6ac21	INFO	Getting meeting with meetingId:  e5c47a7f-ecf7-406f-aa76-3f051b334804
+[get-meeting] 11:56:38 AM 2025-07-16T04:56:38.893Z	117957b6-971b-4e5c-ab4c-d5a1c3d6ac21	INFO	Get Meeting Response:  e5c47a7f-ecf7-406f-aa76-3f051b334804
+[get-meeting] 11:56:38 AM END RequestId: 117957b6-971b-4e5c-ab4c-d5a1c3d6ac21
+[get-meeting] 11:56:38 AM REPORT RequestId: 117957b6-971b-4e5c-ab4c-d5a1c3d6ac21	Duration: 621.13 ms	Billed Duration: 622 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[get-meeting] 11:56:39 AM START RequestId: 799d49b9-4b8a-43dc-b2d4-8179f0d10863 Version: $LATEST
+[get-meeting] 11:56:39 AM 2025-07-16T04:56:39.269Z	799d49b9-4b8a-43dc-b2d4-8179f0d10863	INFO	Getting meeting with meetingId:  e5c47a7f-ecf7-406f-aa76-3f051b334804
+[get-meeting] 11:56:39 AM 2025-07-16T04:56:39.878Z	799d49b9-4b8a-43dc-b2d4-8179f0d10863	INFO	Get Meeting Response:  e5c47a7f-ecf7-406f-aa76-3f051b334804
+[get-meeting] 11:56:39 AM END RequestId: 799d49b9-4b8a-43dc-b2d4-8179f0d10863
+[get-meeting] 11:56:39 AM REPORT RequestId: 799d49b9-4b8a-43dc-b2d4-8179f0d10863	Duration: 611.26 ms	Billed Duration: 612 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[start-meeting-transcription] 11:56:37 AM START RequestId: f900cfd7-fe31-4827-a780-d3d31cc72748 Version: $LATEST
+[start-meeting-transcription] 11:56:37 AM 2025-07-16T04:56:37.347Z	f900cfd7-fe31-4827-a780-d3d31cc72748	INFO	Start MeetingTranscription with meetingId:  e5c47a7f-ecf7-406f-aa76-3f051b334804 languageCode:  ja-JP
+[start-meeting-transcription] 11:56:37 AM 2025-07-16T04:56:37.962Z	f900cfd7-fe31-4827-a780-d3d31cc72748	INFO	Started Meeting Transcription Response:  {}
+[start-meeting-transcription] 11:56:37 AM END RequestId: f900cfd7-fe31-4827-a780-d3d31cc72748
+[start-meeting-transcription] 11:56:37 AM REPORT RequestId: f900cfd7-fe31-4827-a780-d3d31cc72748	Duration: 617.22 ms	Billed Duration: 618 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[start-meeting-transcription] 11:56:38 AM 2025-07-16T04:56:38.812Z	806009aa-b255-41f9-a0a8-fc2b66ca9a6e	INFO	Start MeetingTranscription with meetingId:  71addfff-c383-4b66-908a-72602b264804 languageCode:  ja-JP
+[start-meeting-transcription] 11:56:38 AM START RequestId: 806009aa-b255-41f9-a0a8-fc2b66ca9a6e Version: $LATEST
+[start-meeting-transcription] 11:56:39 AM 2025-07-16T04:56:39.425Z	806009aa-b255-41f9-a0a8-fc2b66ca9a6e	INFO	Started Meeting Transcription Response:  {}
+[start-meeting-transcription] 11:56:39 AM END RequestId: 806009aa-b255-41f9-a0a8-fc2b66ca9a6e
+[start-meeting-transcription] 11:56:39 AM REPORT RequestId: 806009aa-b255-41f9-a0a8-fc2b66ca9a6e	Duration: 614.32 ms	Billed Duration: 615 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[start-meeting-transcription] 11:56:42 AM START RequestId: 6ac717a2-e33d-4ad3-a2a3-2c5c190461da Version: $LATEST
+[start-meeting-transcription] 11:56:42 AM 2025-07-16T04:56:42.213Z	6ac717a2-e33d-4ad3-a2a3-2c5c190461da	INFO	Start MeetingTranscription with meetingId:  e5c47a7f-ecf7-406f-aa76-3f051b334804 languageCode:  ja-JP
+[start-meeting-transcription] 11:56:42 AM START RequestId: 55637ee9-e410-444c-b1fa-3ae3d82ea21e Version: $LATEST
+[start-meeting-transcription] 11:56:42 AM 2025-07-16T04:56:42.797Z	55637ee9-e410-444c-b1fa-3ae3d82ea21e	INFO	Start MeetingTranscription with meetingId:  71addfff-c383-4b66-908a-72602b264804 languageCode:  ja-JP
+[start-meeting-transcription] 11:56:42 AM 2025-07-16T04:56:42.835Z	6ac717a2-e33d-4ad3-a2a3-2c5c190461da	INFO	Started Meeting Transcription Response:  {}
+[start-meeting-transcription] 11:56:42 AM END RequestId: 6ac717a2-e33d-4ad3-a2a3-2c5c190461da
+[start-meeting-transcription] 11:56:42 AM REPORT RequestId: 6ac717a2-e33d-4ad3-a2a3-2c5c190461da	Duration: 624.46 ms	Billed Duration: 625 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[start-meeting-transcription] 11:56:43 AM 2025-07-16T04:56:43.394Z	55637ee9-e410-444c-b1fa-3ae3d82ea21e	INFO	Started Meeting Transcription Response:  {}
+[start-meeting-transcription] 11:56:43 AM END RequestId: 55637ee9-e410-444c-b1fa-3ae3d82ea21e
+[start-meeting-transcription] 11:56:43 AM REPORT RequestId: 55637ee9-e410-444c-b1fa-3ae3d82ea21e	Duration: 599.44 ms	Billed Duration: 600 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[get-meeting-by-tourid] 11:56:37 AM START RequestId: 22f72d2c-90b0-4908-9de7-ddd182ed0817 Version: $LATEST
+[get-meeting-by-tourid] 11:56:37 AM 2025-07-16T04:56:37.067Z	22f72d2c-90b0-4908-9de7-ddd182ed0817	INFO	Retrieving tour with tourId:  4099cef9-5350-4846-ad65-cbe7d1c8a6ab
+[get-meeting-by-tourid] 11:56:37 AM 2025-07-16T04:56:37.543Z	22f72d2c-90b0-4908-9de7-ddd182ed0817	INFO	Tour successfully retrieved:  {
+  nameOfCoursePersonInCharge: 'Tour001',
+  numberOfReceiversInUse: 'Tour001',
+  tourTestStatus: 'test',
+  tourType: 'tour',
+  tourConductorName: 'Tour001',
+  tourNumber: 'Tour001',
+  useTheTranslationFunction: true,
+  createdAt: '2025-07-16T03:27:43.728Z',
+  updatedBy: '',
+  createdBy: 'a90dec4d-042f-4db3-8c8e-dd183c86923b',
+  numberOfSendingDevices: 'Tour001',
+  returnDate: '2025-07-24',
+  coSponsoredCourseNumber: 'Tour001',
+  planningSalesOfficeTeamName: 'Tour001',
+  deleteFlag: 0,
+  meetingId: 'e5c47a7f-ecf7-406f-aa76-3f051b334804',
+  channelId: '2d1875b6-0263-4ee3-b798-1860a207deb8',
+  chatRestriction: 'allChat',
+  departureDate: '2025-07-16',
+  updatedAt: '',
+  planningAndSalesSignature: 'Tour001',
+  subGuideFunctionAvailable: true,
+  courseName: 'Tour001',
+  tourId: '4099cef9-5350-4846-ad65-cbe7d1c8a6ab'
+}
+[get-meeting-by-tourid] 11:56:37 AM END RequestId: 22f72d2c-90b0-4908-9de7-ddd182ed0817
+[get-meeting-by-tourid] 11:56:37 AM REPORT RequestId: 22f72d2c-90b0-4908-9de7-ddd182ed0817	Duration: 477.90 ms	Billed Duration: 478 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[get-meeting-by-tourid] 11:56:38 AM 2025-07-16T04:56:38.055Z	a80016d3-8544-456d-b934-104f1b2ef6d6	INFO	Retrieving tour with tourId:  4099cef9-5350-4846-ad65-cbe7d1c8a6ab
+[get-meeting-by-tourid] 11:56:38 AM START RequestId: a80016d3-8544-456d-b934-104f1b2ef6d6 Version: $LATEST
+[get-meeting-by-tourid] 11:56:38 AM 2025-07-16T04:56:38.523Z	a80016d3-8544-456d-b934-104f1b2ef6d6	INFO	Tour successfully retrieved:  {
+  nameOfCoursePersonInCharge: 'Tour001',
+  numberOfReceiversInUse: 'Tour001',
+  tourTestStatus: 'test',
+  tourType: 'tour',
+  tourConductorName: 'Tour001',
+  tourNumber: 'Tour001',
+  useTheTranslationFunction: true,
+  createdAt: '2025-07-16T03:27:43.728Z',
+  updatedBy: '',
+  createdBy: 'a90dec4d-042f-4db3-8c8e-dd183c86923b',
+  numberOfSendingDevices: 'Tour001',
+  returnDate: '2025-07-24',
+  coSponsoredCourseNumber: 'Tour001',
+  planningSalesOfficeTeamName: 'Tour001',
+  deleteFlag: 0,
+  meetingId: 'e5c47a7f-ecf7-406f-aa76-3f051b334804',
+  channelId: '2d1875b6-0263-4ee3-b798-1860a207deb8',
+  chatRestriction: 'allChat',
+  departureDate: '2025-07-16',
+  updatedAt: '',
+  planningAndSalesSignature: 'Tour001',
+  subGuideFunctionAvailable: true,
+  courseName: 'Tour001',
+  tourId: '4099cef9-5350-4846-ad65-cbe7d1c8a6ab'
+}
+[get-meeting-by-tourid] 11:56:38 AM END RequestId: a80016d3-8544-456d-b934-104f1b2ef6d6
+[get-meeting-by-tourid] 11:56:38 AM REPORT RequestId: a80016d3-8544-456d-b934-104f1b2ef6d6	Duration: 470.30 ms	Billed Duration: 471 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[login-and-get-credentials] 11:56:37 AM START RequestId: b72557a7-5d82-4d8a-9aad-592fe42e5fec Version: $LATEST
+[login-and-get-credentials] 11:56:37 AM END RequestId: b72557a7-5d82-4d8a-9aad-592fe42e5fec
+[login-and-get-credentials] 11:56:37 AM REPORT RequestId: b72557a7-5d82-4d8a-9aad-592fe42e5fec	Duration: 508.58 ms	Billed Duration: 509 ms	Memory Size: 512 MB	Max Memory Used: 88 MB
+[login-and-get-credentials] 11:56:38 AM START RequestId: 993efbd3-d72a-4726-ad8a-04f3e93375a6 Version: $LATEST
+[login-and-get-credentials] 11:56:38 AM END RequestId: 993efbd3-d72a-4726-ad8a-04f3e93375a6
+[login-and-get-credentials] 11:56:38 AM REPORT RequestId: 993efbd3-d72a-4726-ad8a-04f3e93375a6	Duration: 499.61 ms	Billed Duration: 500 ms	Memory Size: 512 MB	Max Memory Used: 88 MB
+[login-and-get-credentials] 11:56:53 AM START RequestId: ba741e40-3f52-45c7-9f59-f3fe0084eb12 Version: $LATEST
+[login-and-get-credentials] 11:56:53 AM START RequestId: f3e8a6fb-ee93-426e-99d0-10c549a3a8d3 Version: $LATEST
+[login-and-get-credentials] 11:56:53 AM END RequestId: f3e8a6fb-ee93-426e-99d0-10c549a3a8d3
+[login-and-get-credentials] 11:56:53 AM REPORT RequestId: f3e8a6fb-ee93-426e-99d0-10c549a3a8d3	Duration: 517.31 ms	Billed Duration: 518 ms	Memory Size: 512 MB	Max Memory Used: 89 MB
+[login-and-get-credentials] 11:56:53 AM END RequestId: ba741e40-3f52-45c7-9f59-f3fe0084eb12
+[login-and-get-credentials] 11:56:53 AM REPORT RequestId: ba741e40-3f52-45c7-9f59-f3fe0084eb12	Duration: 570.62 ms	Billed Duration: 571 ms	Memory Size: 512 MB	Max Memory Used: 88 MB
+[get-meeting] 11:56:53 AM START RequestId: d499fd5e-3a39-4437-81de-ee9e27039c05 Version: $LATEST
+[get-meeting] 11:56:53 AM 2025-07-16T04:56:53.815Z	d499fd5e-3a39-4437-81de-ee9e27039c05	INFO	Getting meeting with meetingId:  e5c47a7f-ecf7-406f-aa76-3f051b334804
+[get-meeting] 11:56:54 AM START RequestId: cca13fa0-fce2-42d3-a888-8fd7ad944a48 Version: $LATEST
+[get-meeting] 11:56:54 AM 2025-07-16T04:56:54.293Z	cca13fa0-fce2-42d3-a888-8fd7ad944a48	INFO	Getting meeting with meetingId:  e5c47a7f-ecf7-406f-aa76-3f051b334804
+[get-meeting] 11:56:54 AM 2025-07-16T04:56:54.437Z	d499fd5e-3a39-4437-81de-ee9e27039c05	INFO	Get Meeting Response:  e5c47a7f-ecf7-406f-aa76-3f051b334804
+[get-meeting] 11:56:54 AM END RequestId: d499fd5e-3a39-4437-81de-ee9e27039c05
+[get-meeting] 11:56:54 AM REPORT RequestId: d499fd5e-3a39-4437-81de-ee9e27039c05	Duration: 623.91 ms	Billed Duration: 624 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[get-meeting] 11:56:54 AM 2025-07-16T04:56:54.892Z	cca13fa0-fce2-42d3-a888-8fd7ad944a48	INFO	Get Meeting Response:  e5c47a7f-ecf7-406f-aa76-3f051b334804
+[get-meeting] 11:56:54 AM END RequestId: cca13fa0-fce2-42d3-a888-8fd7ad944a48
+[get-meeting] 11:56:54 AM REPORT RequestId: cca13fa0-fce2-42d3-a888-8fd7ad944a48	Duration: 601.14 ms	Billed Duration: 602 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[start-meeting-transcription] 11:56:53 AM START RequestId: 77091c24-05b2-43cf-b8ef-3866991d674d Version: $LATEST
+[start-meeting-transcription] 11:56:53 AM 2025-07-16T04:56:53.313Z	77091c24-05b2-43cf-b8ef-3866991d674d	INFO	Start MeetingTranscription with meetingId:  71addfff-c383-4b66-908a-72602b264804 languageCode:  ja-JP
+[start-meeting-transcription] 11:56:53 AM START RequestId: 65e73d45-463f-4b22-affe-5ebb98748851 Version: $LATEST
+[start-meeting-transcription] 11:56:53 AM 2025-07-16T04:56:53.800Z	65e73d45-463f-4b22-affe-5ebb98748851	INFO	Start MeetingTranscription with meetingId:  e5c47a7f-ecf7-406f-aa76-3f051b334804 languageCode:  ja-JP
+[start-meeting-transcription] 11:56:53 AM 2025-07-16T04:56:53.957Z	77091c24-05b2-43cf-b8ef-3866991d674d	INFO	Started Meeting Transcription Response:  {}
+[start-meeting-transcription] 11:56:53 AM END RequestId: 77091c24-05b2-43cf-b8ef-3866991d674d
+[start-meeting-transcription] 11:56:53 AM REPORT RequestId: 77091c24-05b2-43cf-b8ef-3866991d674d	Duration: 645.83 ms	Billed Duration: 646 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[start-meeting-transcription] 11:56:54 AM 2025-07-16T04:56:54.438Z	65e73d45-463f-4b22-affe-5ebb98748851	INFO	Started Meeting Transcription Response:  {}
+[start-meeting-transcription] 11:56:54 AM END RequestId: 65e73d45-463f-4b22-affe-5ebb98748851
+[start-meeting-transcription] 11:56:54 AM REPORT RequestId: 65e73d45-463f-4b22-affe-5ebb98748851	Duration: 641.26 ms	Billed Duration: 642 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[start-meeting-transcription] 11:56:57 AM START RequestId: e91198b1-09c2-4778-9f0b-6a44f355cd5c Version: $LATEST
+[start-meeting-transcription] 11:56:57 AM 2025-07-16T04:56:57.388Z	e91198b1-09c2-4778-9f0b-6a44f355cd5c	INFO	Start MeetingTranscription with meetingId:  71addfff-c383-4b66-908a-72602b264804 languageCode:  ja-JP
+[start-meeting-transcription] 11:56:57 AM START RequestId: 30685411-f766-4092-a1ac-a25d428d3235 Version: $LATEST
+[start-meeting-transcription] 11:56:57 AM 2025-07-16T04:56:57.699Z	30685411-f766-4092-a1ac-a25d428d3235	INFO	Start MeetingTranscription with meetingId:  e5c47a7f-ecf7-406f-aa76-3f051b334804 languageCode:  ja-JP
+[start-meeting-transcription] 11:56:58 AM 2025-07-16T04:56:58.019Z	e91198b1-09c2-4778-9f0b-6a44f355cd5c	INFO	Started Meeting Transcription Response:  {}
+[start-meeting-transcription] 11:56:58 AM END RequestId: e91198b1-09c2-4778-9f0b-6a44f355cd5c
+[start-meeting-transcription] 11:56:58 AM REPORT RequestId: e91198b1-09c2-4778-9f0b-6a44f355cd5c	Duration: 632.88 ms	Billed Duration: 633 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[start-meeting-transcription] 11:56:58 AM 2025-07-16T04:56:58.322Z	30685411-f766-4092-a1ac-a25d428d3235	INFO	Started Meeting Transcription Response:  {}
+[start-meeting-transcription] 11:56:58 AM END RequestId: 30685411-f766-4092-a1ac-a25d428d3235
+[start-meeting-transcription] 11:56:58 AM REPORT RequestId: 30685411-f766-4092-a1ac-a25d428d3235	Duration: 624.92 ms	Billed Duration: 625 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[get-meeting-by-tourid] 11:56:53 AM START RequestId: 19748322-4019-4f0a-bd5b-60ffb5c54fbe Version: $LATEST
+[get-meeting-by-tourid] 11:56:53 AM 2025-07-16T04:56:53.060Z	19748322-4019-4f0a-bd5b-60ffb5c54fbe	INFO	Retrieving tour with tourId:  4099cef9-5350-4846-ad65-cbe7d1c8a6ab
+[get-meeting-by-tourid] 11:56:53 AM START RequestId: bc140e81-4731-48ea-a9b9-1be140d6a8a4 Version: $LATEST
+[get-meeting-by-tourid] 11:56:53 AM 2025-07-16T04:56:53.071Z	bc140e81-4731-48ea-a9b9-1be140d6a8a4	INFO	Retrieving tour with tourId:  4099cef9-5350-4846-ad65-cbe7d1c8a6ab
+[get-meeting-by-tourid] 11:56:53 AM 2025-07-16T04:56:53.537Z	bc140e81-4731-48ea-a9b9-1be140d6a8a4	INFO	Tour successfully retrieved:  {
+  nameOfCoursePersonInCharge: 'Tour001',
+  numberOfReceiversInUse: 'Tour001',
+  tourTestStatus: 'test',
+  tourType: 'tour',
+  tourConductorName: 'Tour001',
+  tourNumber: 'Tour001',
+  useTheTranslationFunction: true,
+  createdAt: '2025-07-16T03:27:43.728Z',
+  updatedBy: '',
+  createdBy: 'a90dec4d-042f-4db3-8c8e-dd183c86923b',
+  numberOfSendingDevices: 'Tour001',
+  returnDate: '2025-07-24',
+  coSponsoredCourseNumber: 'Tour001',
+  planningSalesOfficeTeamName: 'Tour001',
+  deleteFlag: 0,
+  meetingId: 'e5c47a7f-ecf7-406f-aa76-3f051b334804',
+  channelId: '2d1875b6-0263-4ee3-b798-1860a207deb8',
+  chatRestriction: 'allChat',
+  departureDate: '2025-07-16',
+  updatedAt: '',
+  planningAndSalesSignature: 'Tour001',
+  subGuideFunctionAvailable: true,
+  courseName: 'Tour001',
+  tourId: '4099cef9-5350-4846-ad65-cbe7d1c8a6ab'
+}
+[get-meeting-by-tourid] 11:56:53 AM END RequestId: bc140e81-4731-48ea-a9b9-1be140d6a8a4
+[get-meeting-by-tourid] 11:56:53 AM REPORT RequestId: bc140e81-4731-48ea-a9b9-1be140d6a8a4	Duration: 468.93 ms	Billed Duration: 469 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[get-meeting-by-tourid] 11:56:53 AM 2025-07-16T04:56:53.548Z	19748322-4019-4f0a-bd5b-60ffb5c54fbe	INFO	Tour successfully retrieved:  {
+  nameOfCoursePersonInCharge: 'Tour001',
+  numberOfReceiversInUse: 'Tour001',
+  tourTestStatus: 'test',
+  tourType: 'tour',
+  tourConductorName: 'Tour001',
+  tourNumber: 'Tour001',
+  useTheTranslationFunction: true,
+  createdAt: '2025-07-16T03:27:43.728Z',
+  updatedBy: '',
+  createdBy: 'a90dec4d-042f-4db3-8c8e-dd183c86923b',
+  numberOfSendingDevices: 'Tour001',
+  returnDate: '2025-07-24',
+  coSponsoredCourseNumber: 'Tour001',
+  planningSalesOfficeTeamName: 'Tour001',
+  deleteFlag: 0,
+  meetingId: 'e5c47a7f-ecf7-406f-aa76-3f051b334804',
+  channelId: '2d1875b6-0263-4ee3-b798-1860a207deb8',
+  chatRestriction: 'allChat',
+  departureDate: '2025-07-16',
+  updatedAt: '',
+  planningAndSalesSignature: 'Tour001',
+  subGuideFunctionAvailable: true,
+  courseName: 'Tour001',
+  tourId: '4099cef9-5350-4846-ad65-cbe7d1c8a6ab'
+}
+[get-meeting-by-tourid] 11:56:53 AM END RequestId: 19748322-4019-4f0a-bd5b-60ffb5c54fbe
+[get-meeting-by-tourid] 11:56:53 AM REPORT RequestId: 19748322-4019-4f0a-bd5b-60ffb5c54fbe	Duration: 491.41 ms	Billed Duration: 492 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[login-and-get-credentials] 11:57:20 AM START RequestId: 3e60db77-dc12-4344-b4b9-4d20245410c3 Version: $LATEST
+[login-and-get-credentials] 11:57:21 AM START RequestId: c9e4f04a-a2bd-4e9c-8b91-e8e8630e8921 Version: $LATEST
+[login-and-get-credentials] 11:57:21 AM END RequestId: 3e60db77-dc12-4344-b4b9-4d20245410c3
+[login-and-get-credentials] 11:57:21 AM REPORT RequestId: 3e60db77-dc12-4344-b4b9-4d20245410c3	Duration: 598.26 ms	Billed Duration: 599 ms	Memory Size: 512 MB	Max Memory Used: 88 MB
+[login-and-get-credentials] 11:57:21 AM END RequestId: c9e4f04a-a2bd-4e9c-8b91-e8e8630e8921
+[login-and-get-credentials] 11:57:21 AM REPORT RequestId: c9e4f04a-a2bd-4e9c-8b91-e8e8630e8921	Duration: 526.85 ms	Billed Duration: 527 ms	Memory Size: 512 MB	Max Memory Used: 89 MB
+[get-meeting] 11:58:44 AM START RequestId: e95b1d0e-d634-4e0c-a17a-f07ce65333cf Version: $LATEST
+[get-meeting] 11:58:44 AM 2025-07-16T04:58:44.300Z	e95b1d0e-d634-4e0c-a17a-f07ce65333cf	INFO	Getting meeting with meetingId:  e5c47a7f-ecf7-406f-aa76-3f051b334804
+[get-meeting] 11:58:44 AM START RequestId: 73bb0f0f-dc51-45e1-a770-bf0e4475f28c Version: $LATEST
+[get-meeting] 11:58:44 AM 2025-07-16T04:58:44.301Z	73bb0f0f-dc51-45e1-a770-bf0e4475f28c	INFO	Getting meeting with meetingId:  e5c47a7f-ecf7-406f-aa76-3f051b334804
+[get-meeting] 11:58:44 AM 2025-07-16T04:58:44.932Z	e95b1d0e-d634-4e0c-a17a-f07ce65333cf	INFO	Get Meeting Response:  e5c47a7f-ecf7-406f-aa76-3f051b334804
+[get-meeting] 11:58:44 AM END RequestId: e95b1d0e-d634-4e0c-a17a-f07ce65333cf
+[get-meeting] 11:58:44 AM REPORT RequestId: e95b1d0e-d634-4e0c-a17a-f07ce65333cf	Duration: 634.22 ms	Billed Duration: 635 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[get-meeting] 11:58:44 AM 2025-07-16T04:58:44.944Z	73bb0f0f-dc51-45e1-a770-bf0e4475f28c	INFO	Get Meeting Response:  e5c47a7f-ecf7-406f-aa76-3f051b334804
+[get-meeting] 11:58:44 AM END RequestId: 73bb0f0f-dc51-45e1-a770-bf0e4475f28c
+[get-meeting] 11:58:44 AM REPORT RequestId: 73bb0f0f-dc51-45e1-a770-bf0e4475f28c	Duration: 645.04 ms	Billed Duration: 646 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[start-meeting-transcription] 11:58:43 AM START RequestId: d34c4ef5-94c7-4f44-b0d0-f443dcdee2e6 Version: $LATEST
+[start-meeting-transcription] 11:58:43 AM 2025-07-16T04:58:43.363Z	d34c4ef5-94c7-4f44-b0d0-f443dcdee2e6	INFO	Start MeetingTranscription with meetingId:  71addfff-c383-4b66-908a-72602b264804 languageCode:  ja-JP
+[start-meeting-transcription] 11:58:43 AM START RequestId: 4c7d45f7-5fcb-4c09-9c62-a09b5dd50e6f Version: $LATEST
+[start-meeting-transcription] 11:58:43 AM 2025-07-16T04:58:43.803Z	4c7d45f7-5fcb-4c09-9c62-a09b5dd50e6f	INFO	Start MeetingTranscription with meetingId:  e5c47a7f-ecf7-406f-aa76-3f051b334804 languageCode:  ja-JP
+[start-meeting-transcription] 11:58:44 AM 2025-07-16T04:58:44.012Z	d34c4ef5-94c7-4f44-b0d0-f443dcdee2e6	INFO	Started Meeting Transcription Response:  {}
+[start-meeting-transcription] 11:58:44 AM END RequestId: d34c4ef5-94c7-4f44-b0d0-f443dcdee2e6
+[start-meeting-transcription] 11:58:44 AM REPORT RequestId: d34c4ef5-94c7-4f44-b0d0-f443dcdee2e6	Duration: 652.02 ms	Billed Duration: 653 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[start-meeting-transcription] 11:58:44 AM 2025-07-16T04:58:44.477Z	4c7d45f7-5fcb-4c09-9c62-a09b5dd50e6f	INFO	Started Meeting Transcription Response:  {}
+[start-meeting-transcription] 11:58:44 AM END RequestId: 4c7d45f7-5fcb-4c09-9c62-a09b5dd50e6f
+[start-meeting-transcription] 11:58:44 AM REPORT RequestId: 4c7d45f7-5fcb-4c09-9c62-a09b5dd50e6f	Duration: 678.15 ms	Billed Duration: 679 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[start-meeting-transcription] 11:58:48 AM 2025-07-16T04:58:48.172Z	3a337142-d858-4bbb-a1e0-4224e1d16051	INFO	Start MeetingTranscription with meetingId:  e5c47a7f-ecf7-406f-aa76-3f051b334804 languageCode:  ja-JP
+[start-meeting-transcription] 11:58:48 AM START RequestId: 3a337142-d858-4bbb-a1e0-4224e1d16051 Version: $LATEST
+[start-meeting-transcription] 11:58:48 AM START RequestId: 5f5c200c-c375-48a3-85ff-43f15d24effc Version: $LATEST
+[start-meeting-transcription] 11:58:48 AM 2025-07-16T04:58:48.418Z	5f5c200c-c375-48a3-85ff-43f15d24effc	INFO	Start MeetingTranscription with meetingId:  71addfff-c383-4b66-908a-72602b264804 languageCode:  ja-JP
+[start-meeting-transcription] 11:58:48 AM 2025-07-16T04:58:48.817Z	3a337142-d858-4bbb-a1e0-4224e1d16051	INFO	Started Meeting Transcription Response:  {}
+[start-meeting-transcription] 11:58:48 AM END RequestId: 3a337142-d858-4bbb-a1e0-4224e1d16051
+[start-meeting-transcription] 11:58:48 AM REPORT RequestId: 3a337142-d858-4bbb-a1e0-4224e1d16051	Duration: 646.59 ms	Billed Duration: 647 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[start-meeting-transcription] 11:58:49 AM 2025-07-16T04:58:49.068Z	5f5c200c-c375-48a3-85ff-43f15d24effc	INFO	Started Meeting Transcription Response:  {}
+[start-meeting-transcription] 11:58:49 AM END RequestId: 5f5c200c-c375-48a3-85ff-43f15d24effc
+[start-meeting-transcription] 11:58:49 AM REPORT RequestId: 5f5c200c-c375-48a3-85ff-43f15d24effc	Duration: 652.40 ms	Billed Duration: 653 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[get-meeting-by-tourid] 11:58:43 AM START RequestId: 94fb51e6-f661-4267-9638-6151cfde5a87 Version: $LATEST
+[get-meeting-by-tourid] 11:58:43 AM 2025-07-16T04:58:43.066Z	94fb51e6-f661-4267-9638-6151cfde5a87	INFO	Retrieving tour with tourId:  4099cef9-5350-4846-ad65-cbe7d1c8a6ab
+[get-meeting-by-tourid] 11:58:43 AM START RequestId: e2b35c46-271d-4d54-9a5e-e15dfe48a0fe Version: $LATEST
+[get-meeting-by-tourid] 11:58:43 AM 2025-07-16T04:58:43.091Z	e2b35c46-271d-4d54-9a5e-e15dfe48a0fe	INFO	Retrieving tour with tourId:  4099cef9-5350-4846-ad65-cbe7d1c8a6ab
+[get-meeting-by-tourid] 11:58:43 AM 2025-07-16T04:58:43.548Z	94fb51e6-f661-4267-9638-6151cfde5a87	INFO	Tour successfully retrieved:  {
+  nameOfCoursePersonInCharge: 'Tour001',
+  numberOfReceiversInUse: 'Tour001',
+  tourTestStatus: 'test',
+  tourType: 'tour',
+  tourConductorName: 'Tour001',
+  tourNumber: 'Tour001',
+  useTheTranslationFunction: true,
+  createdAt: '2025-07-16T03:27:43.728Z',
+  updatedBy: '',
+  createdBy: 'a90dec4d-042f-4db3-8c8e-dd183c86923b',
+  numberOfSendingDevices: 'Tour001',
+  returnDate: '2025-07-24',
+  coSponsoredCourseNumber: 'Tour001',
+  planningSalesOfficeTeamName: 'Tour001',
+  deleteFlag: 0,
+  meetingId: 'e5c47a7f-ecf7-406f-aa76-3f051b334804',
+  channelId: '2d1875b6-0263-4ee3-b798-1860a207deb8',
+  chatRestriction: 'allChat',
+  departureDate: '2025-07-16',
+  updatedAt: '',
+  planningAndSalesSignature: 'Tour001',
+  subGuideFunctionAvailable: true,
+  courseName: 'Tour001',
+  tourId: '4099cef9-5350-4846-ad65-cbe7d1c8a6ab'
+}
+[get-meeting-by-tourid] 11:58:43 AM END RequestId: 94fb51e6-f661-4267-9638-6151cfde5a87
+[get-meeting-by-tourid] 11:58:43 AM REPORT RequestId: 94fb51e6-f661-4267-9638-6151cfde5a87	Duration: 485.22 ms	Billed Duration: 486 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[get-meeting-by-tourid] 11:58:43 AM 2025-07-16T04:58:43.552Z	e2b35c46-271d-4d54-9a5e-e15dfe48a0fe	INFO	Tour successfully retrieved:  {
+  nameOfCoursePersonInCharge: 'Tour001',
+  numberOfReceiversInUse: 'Tour001',
+  tourTestStatus: 'test',
+  tourType: 'tour',
+  tourConductorName: 'Tour001',
+  tourNumber: 'Tour001',
+  useTheTranslationFunction: true,
+  createdAt: '2025-07-16T03:27:43.728Z',
+  updatedBy: '',
+  createdBy: 'a90dec4d-042f-4db3-8c8e-dd183c86923b',
+  numberOfSendingDevices: 'Tour001',
+  returnDate: '2025-07-24',
+  coSponsoredCourseNumber: 'Tour001',
+  planningSalesOfficeTeamName: 'Tour001',
+  deleteFlag: 0,
+  meetingId: 'e5c47a7f-ecf7-406f-aa76-3f051b334804',
+  channelId: '2d1875b6-0263-4ee3-b798-1860a207deb8',
+  chatRestriction: 'allChat',
+  departureDate: '2025-07-16',
+  updatedAt: '',
+  planningAndSalesSignature: 'Tour001',
+  subGuideFunctionAvailable: true,
+  courseName: 'Tour001',
+  tourId: '4099cef9-5350-4846-ad65-cbe7d1c8a6ab'
+}
+[get-meeting-by-tourid] 11:58:43 AM END RequestId: e2b35c46-271d-4d54-9a5e-e15dfe48a0fe
+[get-meeting-by-tourid] 11:58:43 AM REPORT RequestId: e2b35c46-271d-4d54-9a5e-e15dfe48a0fe	Duration: 462.94 ms	Billed Duration: 463 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[login-and-get-credentials] 11:58:42 AM START RequestId: 62fe4163-b572-45f7-8586-88188d1900ab Version: $LATEST
+[login-and-get-credentials] 11:58:43 AM START RequestId: e7a7ec7c-5667-491b-9053-84ed79ed16eb Version: $LATEST
+[login-and-get-credentials] 11:58:43 AM END RequestId: 62fe4163-b572-45f7-8586-88188d1900ab
+[login-and-get-credentials] 11:58:43 AM REPORT RequestId: 62fe4163-b572-45f7-8586-88188d1900ab	Duration: 584.62 ms	Billed Duration: 585 ms	Memory Size: 512 MB	Max Memory Used: 89 MB
+[login-and-get-credentials] 11:58:43 AM END RequestId: e7a7ec7c-5667-491b-9053-84ed79ed16eb
+[login-and-get-credentials] 11:58:43 AM REPORT RequestId: e7a7ec7c-5667-491b-9053-84ed79ed16eb	Duration: 532.67 ms	Billed Duration: 533 ms	Memory Size: 512 MB	Max Memory Used: 88 MB
+[get-presigned-s3-upload] 11:59:20 AM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[get-meeting] 11:59:36 AM START RequestId: bc78ec1a-b111-44cd-8aea-4bb5b25258a8 Version: $LATEST
+[get-meeting] 11:59:36 AM 2025-07-16T04:59:36.913Z	bc78ec1a-b111-44cd-8aea-4bb5b25258a8	INFO	Getting meeting with meetingId:  e5c47a7f-ecf7-406f-aa76-3f051b334804
+[get-meeting] 11:59:37 AM START RequestId: c2e84da4-c9eb-43e1-bec3-4da943f38b3f Version: $LATEST
+[get-meeting] 11:59:37 AM 2025-07-16T04:59:37.115Z	c2e84da4-c9eb-43e1-bec3-4da943f38b3f	INFO	Getting meeting with meetingId:  e5c47a7f-ecf7-406f-aa76-3f051b334804
+[get-meeting] 11:59:37 AM 2025-07-16T04:59:37.561Z	bc78ec1a-b111-44cd-8aea-4bb5b25258a8	INFO	Get Meeting Response:  e5c47a7f-ecf7-406f-aa76-3f051b334804
+[get-meeting] 11:59:37 AM END RequestId: bc78ec1a-b111-44cd-8aea-4bb5b25258a8
+[get-meeting] 11:59:37 AM REPORT RequestId: bc78ec1a-b111-44cd-8aea-4bb5b25258a8	Duration: 651.01 ms	Billed Duration: 652 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[get-meeting] 11:59:37 AM 2025-07-16T04:59:37.743Z	c2e84da4-c9eb-43e1-bec3-4da943f38b3f	INFO	Get Meeting Response:  e5c47a7f-ecf7-406f-aa76-3f051b334804
+[get-meeting] 11:59:37 AM END RequestId: c2e84da4-c9eb-43e1-bec3-4da943f38b3f
+[get-meeting] 11:59:37 AM REPORT RequestId: c2e84da4-c9eb-43e1-bec3-4da943f38b3f	Duration: 631.34 ms	Billed Duration: 632 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[start-meeting-transcription] 11:59:36 AM START RequestId: e9c94f40-9e60-4a4b-b595-cdc763835700 Version: $LATEST
+[start-meeting-transcription] 11:59:36 AM 2025-07-16T04:59:36.436Z	e9c94f40-9e60-4a4b-b595-cdc763835700	INFO	Start MeetingTranscription with meetingId:  e5c47a7f-ecf7-406f-aa76-3f051b334804 languageCode:  ja-JP
+[start-meeting-transcription] 11:59:36 AM START RequestId: b013040d-992a-4cff-b269-c32f4da3b380 Version: $LATEST
+[start-meeting-transcription] 11:59:36 AM 2025-07-16T04:59:36.864Z	b013040d-992a-4cff-b269-c32f4da3b380	INFO	Start MeetingTranscription with meetingId:  71addfff-c383-4b66-908a-72602b264804 languageCode:  ja-JP
+[start-meeting-transcription] 11:59:37 AM 2025-07-16T04:59:37.109Z	e9c94f40-9e60-4a4b-b595-cdc763835700	INFO	Started Meeting Transcription Response:  {}
+[start-meeting-transcription] 11:59:37 AM END RequestId: e9c94f40-9e60-4a4b-b595-cdc763835700
+[start-meeting-transcription] 11:59:37 AM REPORT RequestId: e9c94f40-9e60-4a4b-b595-cdc763835700	Duration: 675.89 ms	Billed Duration: 676 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[start-meeting-transcription] 11:59:37 AM 2025-07-16T04:59:37.509Z	b013040d-992a-4cff-b269-c32f4da3b380	INFO	Started Meeting Transcription Response:  {}
+[start-meeting-transcription] 11:59:37 AM END RequestId: b013040d-992a-4cff-b269-c32f4da3b380
+[start-meeting-transcription] 11:59:37 AM REPORT RequestId: b013040d-992a-4cff-b269-c32f4da3b380	Duration: 647.10 ms	Billed Duration: 648 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[start-meeting-transcription] 11:59:41 AM START RequestId: 32729b9e-fd67-4635-8759-c6591d703b98 Version: $LATEST
+[start-meeting-transcription] 11:59:41 AM 2025-07-16T04:59:41.127Z	32729b9e-fd67-4635-8759-c6591d703b98	INFO	Start MeetingTranscription with meetingId:  71addfff-c383-4b66-908a-72602b264804 languageCode:  ja-JP
+[start-meeting-transcription] 11:59:41 AM START RequestId: 15e91b47-4c83-4cfd-b2c1-374b57f457fd Version: $LATEST
+[start-meeting-transcription] 11:59:41 AM 2025-07-16T04:59:41.458Z	15e91b47-4c83-4cfd-b2c1-374b57f457fd	INFO	Start MeetingTranscription with meetingId:  e5c47a7f-ecf7-406f-aa76-3f051b334804 languageCode:  ja-JP
+[start-meeting-transcription] 11:59:41 AM 2025-07-16T04:59:41.762Z	32729b9e-fd67-4635-8759-c6591d703b98	INFO	Started Meeting Transcription Response:  {}
+[start-meeting-transcription] 11:59:41 AM END RequestId: 32729b9e-fd67-4635-8759-c6591d703b98
+[start-meeting-transcription] 11:59:41 AM REPORT RequestId: 32729b9e-fd67-4635-8759-c6591d703b98	Duration: 637.33 ms	Billed Duration: 638 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[start-meeting-transcription] 11:59:42 AM 2025-07-16T04:59:42.077Z	15e91b47-4c83-4cfd-b2c1-374b57f457fd	INFO	Started Meeting Transcription Response:  {}
+[start-meeting-transcription] 11:59:42 AM END RequestId: 15e91b47-4c83-4cfd-b2c1-374b57f457fd
+[start-meeting-transcription] 11:59:42 AM REPORT RequestId: 15e91b47-4c83-4cfd-b2c1-374b57f457fd	Duration: 621.64 ms	Billed Duration: 622 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[get-meeting-by-tourid] 11:59:35 AM START RequestId: a9caf789-ff56-40cb-8675-02ffd793adda Version: $LATEST
+[get-meeting-by-tourid] 11:59:35 AM 2025-07-16T04:59:35.803Z	a9caf789-ff56-40cb-8675-02ffd793adda	INFO	Retrieving tour with tourId:  4099cef9-5350-4846-ad65-cbe7d1c8a6ab
+[get-meeting-by-tourid] 11:59:36 AM START RequestId: f534cdfb-8c50-4f6f-b18b-91bcd012ab0c Version: $LATEST
+[get-meeting-by-tourid] 11:59:36 AM 2025-07-16T04:59:36.160Z	f534cdfb-8c50-4f6f-b18b-91bcd012ab0c	INFO	Retrieving tour with tourId:  4099cef9-5350-4846-ad65-cbe7d1c8a6ab
+[get-meeting-by-tourid] 11:59:36 AM 2025-07-16T04:59:36.283Z	a9caf789-ff56-40cb-8675-02ffd793adda	INFO	Tour successfully retrieved:  {
+  nameOfCoursePersonInCharge: 'Tour001',
+  numberOfReceiversInUse: 'Tour001',
+  tourTestStatus: 'test',
+  tourType: 'tour',
+  tourConductorName: 'Tour001',
+  tourNumber: 'Tour001',
+  useTheTranslationFunction: true,
+  createdAt: '2025-07-16T03:27:43.728Z',
+  updatedBy: '',
+  createdBy: 'a90dec4d-042f-4db3-8c8e-dd183c86923b',
+  numberOfSendingDevices: 'Tour001',
+  returnDate: '2025-07-24',
+  coSponsoredCourseNumber: 'Tour001',
+  planningSalesOfficeTeamName: 'Tour001',
+  deleteFlag: 0,
+  meetingId: 'e5c47a7f-ecf7-406f-aa76-3f051b334804',
+  channelId: '2d1875b6-0263-4ee3-b798-1860a207deb8',
+  chatRestriction: 'allChat',
+  departureDate: '2025-07-16',
+  updatedAt: '',
+  planningAndSalesSignature: 'Tour001',
+  subGuideFunctionAvailable: true,
+  courseName: 'Tour001',
+  tourId: '4099cef9-5350-4846-ad65-cbe7d1c8a6ab'
+}
+[get-meeting-by-tourid] 11:59:36 AM END RequestId: a9caf789-ff56-40cb-8675-02ffd793adda
+[get-meeting-by-tourid] 11:59:36 AM REPORT RequestId: a9caf789-ff56-40cb-8675-02ffd793adda	Duration: 482.97 ms	Billed Duration: 483 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[get-meeting-by-tourid] 11:59:36 AM 2025-07-16T04:59:36.625Z	f534cdfb-8c50-4f6f-b18b-91bcd012ab0c	INFO	Tour successfully retrieved:  {
+  nameOfCoursePersonInCharge: 'Tour001',
+  numberOfReceiversInUse: 'Tour001',
+  tourTestStatus: 'test',
+  tourType: 'tour',
+  tourConductorName: 'Tour001',
+  tourNumber: 'Tour001',
+  useTheTranslationFunction: true,
+  createdAt: '2025-07-16T03:27:43.728Z',
+  updatedBy: '',
+  createdBy: 'a90dec4d-042f-4db3-8c8e-dd183c86923b',
+  numberOfSendingDevices: 'Tour001',
+  returnDate: '2025-07-24',
+  coSponsoredCourseNumber: 'Tour001',
+  planningSalesOfficeTeamName: 'Tour001',
+  deleteFlag: 0,
+  meetingId: 'e5c47a7f-ecf7-406f-aa76-3f051b334804',
+  channelId: '2d1875b6-0263-4ee3-b798-1860a207deb8',
+  chatRestriction: 'allChat',
+  departureDate: '2025-07-16',
+  updatedAt: '',
+  planningAndSalesSignature: 'Tour001',
+  subGuideFunctionAvailable: true,
+  courseName: 'Tour001',
+  tourId: '4099cef9-5350-4846-ad65-cbe7d1c8a6ab'
+}
+[get-meeting-by-tourid] 11:59:36 AM END RequestId: f534cdfb-8c50-4f6f-b18b-91bcd012ab0c
+[get-meeting-by-tourid] 11:59:36 AM REPORT RequestId: f534cdfb-8c50-4f6f-b18b-91bcd012ab0c	Duration: 468.49 ms	Billed Duration: 469 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[get-presigned-s3-upload] 11:59:21 AM 2025-07-16T04:59:21.061Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[get-presigned-s3-upload] 11:59:21 AM 2025-07-16T04:59:21.068Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[get-presigned-s3-upload] 11:59:21 AM START RequestId: 7c2d3af2-bf8a-4ba0-ab8a-6fb511671e39 Version: $LATEST
+[get-presigned-s3-upload] 11:59:21 AM END RequestId: 7c2d3af2-bf8a-4ba0-ab8a-6fb511671e39
+[get-presigned-s3-upload] 11:59:21 AM REPORT RequestId: 7c2d3af2-bf8a-4ba0-ab8a-6fb511671e39	Duration: 38.23 ms	Billed Duration: 39 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 951.42 ms
+[login-and-get-credentials] 11:59:35 AM START RequestId: 3c9f8354-1e27-4d57-8da7-9de7d8bb421f Version: $LATEST
+[login-and-get-credentials] 11:59:35 AM END RequestId: 3c9f8354-1e27-4d57-8da7-9de7d8bb421f
+[login-and-get-credentials] 11:59:35 AM REPORT RequestId: 3c9f8354-1e27-4d57-8da7-9de7d8bb421f	Duration: 530.61 ms	Billed Duration: 531 ms	Memory Size: 512 MB	Max Memory Used: 88 MB
+[login-and-get-credentials] 11:59:36 AM START RequestId: bbd4fd1b-fc36-4aae-b2df-fd28998610b5 Version: $LATEST
+[login-and-get-credentials] 11:59:36 AM END RequestId: bbd4fd1b-fc36-4aae-b2df-fd28998610b5
+[login-and-get-credentials] 11:59:36 AM REPORT RequestId: bbd4fd1b-fc36-4aae-b2df-fd28998610b5	Duration: 545.79 ms	Billed Duration: 546 ms	Memory Size: 512 MB	Max Memory Used: 88 MB
+[login-and-get-credentials] 12:00:34 PM START RequestId: 158d7a11-7b61-4d39-a6ab-2c978d9a9036 Version: $LATEST
+[login-and-get-credentials] 12:00:35 PM START RequestId: 504302f4-f13f-43e3-92e3-c43a5cc03928 Version: $LATEST
+[login-and-get-credentials] 12:00:35 PM END RequestId: 158d7a11-7b61-4d39-a6ab-2c978d9a9036
+[login-and-get-credentials] 12:00:35 PM REPORT RequestId: 158d7a11-7b61-4d39-a6ab-2c978d9a9036	Duration: 574.74 ms	Billed Duration: 575 ms	Memory Size: 512 MB	Max Memory Used: 88 MB
+[login-and-get-credentials] 12:00:35 PM END RequestId: 504302f4-f13f-43e3-92e3-c43a5cc03928
+[login-and-get-credentials] 12:00:35 PM REPORT RequestId: 504302f4-f13f-43e3-92e3-c43a5cc03928	Duration: 566.99 ms	Billed Duration: 567 ms	Memory Size: 512 MB	Max Memory Used: 89 MB
+[get-meeting] 1:42:28 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[get-meeting] 1:42:29 PM 2025-07-16T06:42:29.651Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[get-meeting] 1:42:29 PM 2025-07-16T06:42:29.653Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[get-meeting] 1:42:29 PM START RequestId: a916be8b-e0dd-4542-926e-3a7b33962814 Version: $LATEST
+[get-meeting] 1:42:29 PM 2025-07-16T06:42:29.664Z	a916be8b-e0dd-4542-926e-3a7b33962814	INFO	Getting meeting with meetingId:  e5c47a7f-ecf7-406f-aa76-3f051b334804
+[get-meeting] 1:42:30 PM 2025-07-16T06:42:30.396Z	a916be8b-e0dd-4542-926e-3a7b33962814	INFO	Get Meeting Response:  e5c47a7f-ecf7-406f-aa76-3f051b334804
+[get-meeting] 1:42:30 PM END RequestId: a916be8b-e0dd-4542-926e-3a7b33962814
+[get-meeting] 1:42:30 PM REPORT RequestId: a916be8b-e0dd-4542-926e-3a7b33962814	Duration: 744.68 ms	Billed Duration: 745 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 924.09 ms
+[get-meeting-by-tourid] 1:42:26 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[get-meeting-by-tourid] 1:42:27 PM 2025-07-16T06:42:27.010Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[get-meeting-by-tourid] 1:42:27 PM 2025-07-16T06:42:27.012Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[get-meeting-by-tourid] 1:42:27 PM START RequestId: 3c4dc259-c716-45ad-ae08-659ae0e299e1 Version: $LATEST
+[get-meeting-by-tourid] 1:42:27 PM 2025-07-16T06:42:27.031Z	3c4dc259-c716-45ad-ae08-659ae0e299e1	INFO	Retrieving tour with tourId:  4099cef9-5350-4846-ad65-cbe7d1c8a6ab
+[get-meeting-by-tourid] 1:42:27 PM 2025-07-16T06:42:27.625Z	3c4dc259-c716-45ad-ae08-659ae0e299e1	INFO	Tour successfully retrieved:  {
+  nameOfCoursePersonInCharge: 'Tour001',
+  numberOfReceiversInUse: 'Tour001',
+  tourTestStatus: 'test',
+  tourType: 'tour',
+  tourConductorName: 'Tour001',
+  tourNumber: 'Tour001',
+  useTheTranslationFunction: true,
+  createdAt: '2025-07-16T03:27:43.728Z',
+  updatedBy: '',
+  createdBy: 'a90dec4d-042f-4db3-8c8e-dd183c86923b',
+  numberOfSendingDevices: 'Tour001',
+  returnDate: '2025-07-24',
+  coSponsoredCourseNumber: 'Tour001',
+  planningSalesOfficeTeamName: 'Tour001',
+  deleteFlag: 0,
+  meetingId: 'e5c47a7f-ecf7-406f-aa76-3f051b334804',
+  channelId: '2d1875b6-0263-4ee3-b798-1860a207deb8',
+  chatRestriction: 'allChat',
+  departureDate: '2025-07-16',
+  updatedAt: '',
+  planningAndSalesSignature: 'Tour001',
+  subGuideFunctionAvailable: true,
+  courseName: 'Tour001',
+  tourId: '4099cef9-5350-4846-ad65-cbe7d1c8a6ab'
+}
+[get-meeting-by-tourid] 1:42:27 PM END RequestId: 3c4dc259-c716-45ad-ae08-659ae0e299e1
+[get-meeting-by-tourid] 1:42:27 PM REPORT RequestId: 3c4dc259-c716-45ad-ae08-659ae0e299e1	Duration: 611.36 ms	Billed Duration: 612 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 901.91 ms
+[start-meeting-transcription] 1:42:34 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[start-meeting-transcription] 1:42:35 PM 2025-07-16T06:42:35.576Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[start-meeting-transcription] 1:42:35 PM 2025-07-16T06:42:35.578Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[start-meeting-transcription] 1:42:35 PM START RequestId: b112087e-ecfc-4bf7-8789-18572280c59f Version: $LATEST
+[start-meeting-transcription] 1:42:35 PM 2025-07-16T06:42:35.589Z	b112087e-ecfc-4bf7-8789-18572280c59f	INFO	Start MeetingTranscription with meetingId:  e5c47a7f-ecf7-406f-aa76-3f051b334804 languageCode:  ja-JP
+[start-meeting-transcription] 1:42:36 PM 2025-07-16T06:42:36.330Z	b112087e-ecfc-4bf7-8789-18572280c59f	INFO	Started Meeting Transcription Response:  {}
+[start-meeting-transcription] 1:42:36 PM END RequestId: b112087e-ecfc-4bf7-8789-18572280c59f
+[start-meeting-transcription] 1:42:36 PM REPORT RequestId: b112087e-ecfc-4bf7-8789-18572280c59f	Duration: 751.65 ms	Billed Duration: 752 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 936.49 ms
+[login-and-get-credentials] 1:42:38 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[login-and-get-credentials] 1:42:39 PM 2025-07-16T06:42:39.385Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[login-and-get-credentials] 1:42:39 PM 2025-07-16T06:42:39.387Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[login-and-get-credentials] 1:42:39 PM START RequestId: 0eab1901-ec19-4596-ba3a-d32c0be33ca8 Version: $LATEST
+[login-and-get-credentials] 1:42:40 PM END RequestId: 0eab1901-ec19-4596-ba3a-d32c0be33ca8
+[login-and-get-credentials] 1:42:40 PM REPORT RequestId: 0eab1901-ec19-4596-ba3a-d32c0be33ca8	Duration: 1004.44 ms	Billed Duration: 1005 ms	Memory Size: 512 MB	Max Memory Used: 89 MB	Init Duration: 400.16 ms
+[get-presigned-s3-upload] 1:43:06 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[get-presigned-s3-upload] 1:43:07 PM 2025-07-16T06:43:07.416Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[get-presigned-s3-upload] 1:43:07 PM 2025-07-16T06:43:07.419Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[get-presigned-s3-upload] 1:43:07 PM START RequestId: 3bca699e-f5b1-4d06-844f-2365f3a480f2 Version: $LATEST
+[get-presigned-s3-upload] 1:43:07 PM END RequestId: 3bca699e-f5b1-4d06-844f-2365f3a480f2
+[get-presigned-s3-upload] 1:43:07 PM REPORT RequestId: 3bca699e-f5b1-4d06-844f-2365f3a480f2	Duration: 31.41 ms	Billed Duration: 32 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 1000.14 ms
+[login-and-get-credentials] 1:44:31 PM START RequestId: 6ff36d7f-156b-4a98-bf5a-559f9b6e7a7d Version: $LATEST
+[login-and-get-credentials] 1:44:31 PM END RequestId: 6ff36d7f-156b-4a98-bf5a-559f9b6e7a7d
+[login-and-get-credentials] 1:44:31 PM REPORT RequestId: 6ff36d7f-156b-4a98-bf5a-559f9b6e7a7d	Duration: 674.89 ms	Billed Duration: 675 ms	Memory Size: 512 MB	Max Memory Used: 89 MB
+[login-and-get-credentials] 1:44:32 PM START RequestId: ed3a6779-1040-4cad-ac02-9780c609eec8 Version: $LATEST
+[login-and-get-credentials] 1:44:32 PM END RequestId: ed3a6779-1040-4cad-ac02-9780c609eec8
+[login-and-get-credentials] 1:44:32 PM REPORT RequestId: ed3a6779-1040-4cad-ac02-9780c609eec8	Duration: 572.56 ms	Billed Duration: 573 ms	Memory Size: 512 MB	Max Memory Used: 89 MB
+[login-and-get-credentials] 1:45:02 PM START RequestId: 084708ce-c370-43e1-ac0b-a170e0eb3672 Version: $LATEST
+[login-and-get-credentials] 1:45:03 PM END RequestId: 084708ce-c370-43e1-ac0b-a170e0eb3672
+[login-and-get-credentials] 1:45:03 PM REPORT RequestId: 084708ce-c370-43e1-ac0b-a170e0eb3672	Duration: 594.48 ms	Billed Duration: 595 ms	Memory Size: 512 MB	Max Memory Used: 89 MB
+[get-presigned-s3-upload] 1:45:14 PM START RequestId: 1de08ad4-1a4a-45c4-97d2-00d9618f9750 Version: $LATEST
+[get-presigned-s3-upload] 1:45:14 PM END RequestId: 1de08ad4-1a4a-45c4-97d2-00d9618f9750
+[get-presigned-s3-upload] 1:45:14 PM REPORT RequestId: 1de08ad4-1a4a-45c4-97d2-00d9618f9750	Duration: 68.40 ms	Billed Duration: 69 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[get-meeting-by-tourid] 1:46:35 PM START RequestId: c4ff47f2-07c7-4844-b8c9-8b230c30e734 Version: $LATEST
+[get-meeting-by-tourid] 1:46:35 PM 2025-07-16T06:46:35.691Z	c4ff47f2-07c7-4844-b8c9-8b230c30e734	INFO	Retrieving tour with tourId:  4099cef9-5350-4846-ad65-cbe7d1c8a6ab
+[get-meeting-by-tourid] 1:46:36 PM 2025-07-16T06:46:36.197Z	c4ff47f2-07c7-4844-b8c9-8b230c30e734	INFO	Tour successfully retrieved:  {
+  nameOfCoursePersonInCharge: 'Tour001',
+  numberOfReceiversInUse: 'Tour001',
+  tourTestStatus: 'test',
+  tourType: 'tour',
+  tourConductorName: 'Tour001',
+  tourNumber: 'Tour001',
+  useTheTranslationFunction: true,
+  createdAt: '2025-07-16T03:27:43.728Z',
+  updatedBy: '',
+  createdBy: 'a90dec4d-042f-4db3-8c8e-dd183c86923b',
+  numberOfSendingDevices: 'Tour001',
+  returnDate: '2025-07-24',
+  coSponsoredCourseNumber: 'Tour001',
+  planningSalesOfficeTeamName: 'Tour001',
+  deleteFlag: 0,
+  meetingId: 'e5c47a7f-ecf7-406f-aa76-3f051b334804',
+  channelId: '2d1875b6-0263-4ee3-b798-1860a207deb8',
+  chatRestriction: 'allChat',
+  departureDate: '2025-07-16',
+  updatedAt: '',
+  planningAndSalesSignature: 'Tour001',
+  subGuideFunctionAvailable: true,
+  courseName: 'Tour001',
+  tourId: '4099cef9-5350-4846-ad65-cbe7d1c8a6ab'
+}
+[get-meeting-by-tourid] 1:46:36 PM END RequestId: c4ff47f2-07c7-4844-b8c9-8b230c30e734
+[get-meeting-by-tourid] 1:46:36 PM REPORT RequestId: c4ff47f2-07c7-4844-b8c9-8b230c30e734	Duration: 568.86 ms	Billed Duration: 569 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[login-and-get-credentials] 1:46:35 PM START RequestId: 6e28f763-b772-4584-91a9-0405a49d520f Version: $LATEST
+[login-and-get-credentials] 1:46:36 PM END RequestId: 6e28f763-b772-4584-91a9-0405a49d520f
+[login-and-get-credentials] 1:46:36 PM REPORT RequestId: 6e28f763-b772-4584-91a9-0405a49d520f	Duration: 574.60 ms	Billed Duration: 575 ms	Memory Size: 512 MB	Max Memory Used: 89 MB
+[login-and-get-credentials] 1:46:36 PM START RequestId: 07b3a1e3-e2b7-4180-be48-9753b83da93e Version: $LATEST
+[login-and-get-credentials] 1:46:36 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[login-and-get-credentials] 1:46:36 PM END RequestId: 07b3a1e3-e2b7-4180-be48-9753b83da93e
+[login-and-get-credentials] 1:46:36 PM REPORT RequestId: 07b3a1e3-e2b7-4180-be48-9753b83da93e	Duration: 548.40 ms	Billed Duration: 549 ms	Memory Size: 512 MB	Max Memory Used: 89 MB
+[login-and-get-credentials] 1:46:36 PM 2025-07-16T06:46:36.787Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[login-and-get-credentials] 1:46:36 PM 2025-07-16T06:46:36.789Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[get-meeting] 1:46:36 PM START RequestId: 1dac6188-78b7-40e2-9056-4c76773bad5e Version: $LATEST
+[get-meeting] 1:46:37 PM 2025-07-16T06:46:37.026Z	1dac6188-78b7-40e2-9056-4c76773bad5e	INFO	Getting meeting with meetingId:  e5c47a7f-ecf7-406f-aa76-3f051b334804
+[get-meeting] 1:46:37 PM 2025-07-16T06:46:37.768Z	1dac6188-78b7-40e2-9056-4c76773bad5e	INFO	Get Meeting Response:  e5c47a7f-ecf7-406f-aa76-3f051b334804
+[get-meeting] 1:46:37 PM END RequestId: 1dac6188-78b7-40e2-9056-4c76773bad5e
+[get-meeting] 1:46:37 PM REPORT RequestId: 1dac6188-78b7-40e2-9056-4c76773bad5e	Duration: 798.04 ms	Billed Duration: 799 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[start-meeting-transcription] 1:46:36 PM START RequestId: e9835075-eb76-4855-81d8-b59e5438298b Version: $LATEST
+[start-meeting-transcription] 1:46:36 PM 2025-07-16T06:46:36.855Z	e9835075-eb76-4855-81d8-b59e5438298b	INFO	Start MeetingTranscription with meetingId:  e5c47a7f-ecf7-406f-aa76-3f051b334804 languageCode:  ja-JP
+[start-meeting-transcription] 1:46:37 PM 2025-07-16T06:46:37.613Z	e9835075-eb76-4855-81d8-b59e5438298b	INFO	Started Meeting Transcription Response:  {}
+[start-meeting-transcription] 1:46:37 PM END RequestId: e9835075-eb76-4855-81d8-b59e5438298b
+[start-meeting-transcription] 1:46:37 PM REPORT RequestId: e9835075-eb76-4855-81d8-b59e5438298b	Duration: 811.33 ms	Billed Duration: 812 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[start-meeting-transcription] 1:46:41 PM START RequestId: a00af95d-a8b2-4ade-b40f-60d8b4d2e28b Version: $LATEST
+[start-meeting-transcription] 1:46:41 PM 2025-07-16T06:46:41.454Z	a00af95d-a8b2-4ade-b40f-60d8b4d2e28b	INFO	Start MeetingTranscription with meetingId:  e5c47a7f-ecf7-406f-aa76-3f051b334804 languageCode:  ja-JP
+[start-meeting-transcription] 1:46:42 PM 2025-07-16T06:46:42.134Z	a00af95d-a8b2-4ade-b40f-60d8b4d2e28b	INFO	Started Meeting Transcription Response:  {}
+[start-meeting-transcription] 1:46:42 PM END RequestId: a00af95d-a8b2-4ade-b40f-60d8b4d2e28b
+[start-meeting-transcription] 1:46:42 PM REPORT RequestId: a00af95d-a8b2-4ade-b40f-60d8b4d2e28b	Duration: 682.57 ms	Billed Duration: 683 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[get-meeting] 1:46:48 PM START RequestId: 4e0ac910-1c8f-4132-a147-75f0ae73e5e5 Version: $LATEST
+[get-meeting] 1:46:48 PM 2025-07-16T06:46:48.410Z	4e0ac910-1c8f-4132-a147-75f0ae73e5e5	INFO	Getting meeting with meetingId:  e5c47a7f-ecf7-406f-aa76-3f051b334804
+[get-meeting] 1:46:49 PM 2025-07-16T06:46:49.105Z	4e0ac910-1c8f-4132-a147-75f0ae73e5e5	INFO	Get Meeting Response:  e5c47a7f-ecf7-406f-aa76-3f051b334804
+[get-meeting] 1:46:49 PM END RequestId: 4e0ac910-1c8f-4132-a147-75f0ae73e5e5
+[get-meeting] 1:46:49 PM REPORT RequestId: 4e0ac910-1c8f-4132-a147-75f0ae73e5e5	Duration: 697.33 ms	Billed Duration: 698 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[start-meeting-transcription] 1:46:47 PM 2025-07-16T06:46:47.823Z	319da804-9847-49ba-9cc9-f15f6dbcc12b	INFO	Start MeetingTranscription with meetingId:  e5c47a7f-ecf7-406f-aa76-3f051b334804 languageCode:  ja-JP
+[start-meeting-transcription] 1:46:47 PM START RequestId: 319da804-9847-49ba-9cc9-f15f6dbcc12b Version: $LATEST
+[start-meeting-transcription] 1:46:48 PM 2025-07-16T06:46:48.444Z	319da804-9847-49ba-9cc9-f15f6dbcc12b	INFO	Started Meeting Transcription Response:  {}
+[start-meeting-transcription] 1:46:48 PM END RequestId: 319da804-9847-49ba-9cc9-f15f6dbcc12b
+[start-meeting-transcription] 1:46:48 PM REPORT RequestId: 319da804-9847-49ba-9cc9-f15f6dbcc12b	Duration: 622.42 ms	Billed Duration: 623 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[start-meeting-transcription] 1:46:52 PM 2025-07-16T06:46:52.341Z	fda6da24-d974-4b5c-8ddb-98384cef1c41	INFO	Start MeetingTranscription with meetingId:  e5c47a7f-ecf7-406f-aa76-3f051b334804 languageCode:  ja-JP
+[start-meeting-transcription] 1:46:52 PM START RequestId: fda6da24-d974-4b5c-8ddb-98384cef1c41 Version: $LATEST
+[start-meeting-transcription] 1:46:52 PM 2025-07-16T06:46:52.974Z	fda6da24-d974-4b5c-8ddb-98384cef1c41	INFO	Started Meeting Transcription Response:  {}
+[start-meeting-transcription] 1:46:52 PM END RequestId: fda6da24-d974-4b5c-8ddb-98384cef1c41
+[start-meeting-transcription] 1:46:52 PM REPORT RequestId: fda6da24-d974-4b5c-8ddb-98384cef1c41	Duration: 634.50 ms	Billed Duration: 635 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[get-meeting-by-tourid] 1:46:47 PM START RequestId: 532f4a87-ae9d-4691-99aa-33a7de5d6006 Version: $LATEST
+[get-meeting-by-tourid] 1:46:47 PM 2025-07-16T06:46:47.115Z	532f4a87-ae9d-4691-99aa-33a7de5d6006	INFO	Retrieving tour with tourId:  4099cef9-5350-4846-ad65-cbe7d1c8a6ab
+[get-meeting-by-tourid] 1:46:47 PM 2025-07-16T06:46:47.639Z	532f4a87-ae9d-4691-99aa-33a7de5d6006	INFO	Tour successfully retrieved:  {
+  nameOfCoursePersonInCharge: 'Tour001',
+  numberOfReceiversInUse: 'Tour001',
+  tourTestStatus: 'test',
+  tourType: 'tour',
+  tourConductorName: 'Tour001',
+  tourNumber: 'Tour001',
+  useTheTranslationFunction: true,
+  createdAt: '2025-07-16T03:27:43.728Z',
+  updatedBy: '',
+  createdBy: 'a90dec4d-042f-4db3-8c8e-dd183c86923b',
+  numberOfSendingDevices: 'Tour001',
+  returnDate: '2025-07-24',
+  coSponsoredCourseNumber: 'Tour001',
+  planningSalesOfficeTeamName: 'Tour001',
+  deleteFlag: 0,
+  meetingId: 'e5c47a7f-ecf7-406f-aa76-3f051b334804',
+  channelId: '2d1875b6-0263-4ee3-b798-1860a207deb8',
+  chatRestriction: 'allChat',
+  departureDate: '2025-07-16',
+  updatedAt: '',
+  planningAndSalesSignature: 'Tour001',
+  subGuideFunctionAvailable: true,
+  courseName: 'Tour001',
+  tourId: '4099cef9-5350-4846-ad65-cbe7d1c8a6ab'
+}
+[get-meeting-by-tourid] 1:46:47 PM END RequestId: 532f4a87-ae9d-4691-99aa-33a7de5d6006
+[get-meeting-by-tourid] 1:46:47 PM REPORT RequestId: 532f4a87-ae9d-4691-99aa-33a7de5d6006	Duration: 526.97 ms	Billed Duration: 527 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[login-and-get-credentials] 1:46:46 PM START RequestId: 72f0e937-91a0-40a7-886f-11520564c0d5 Version: $LATEST
+[login-and-get-credentials] 1:46:47 PM END RequestId: 72f0e937-91a0-40a7-886f-11520564c0d5
+[login-and-get-credentials] 1:46:47 PM REPORT RequestId: 72f0e937-91a0-40a7-886f-11520564c0d5	Duration: 477.16 ms	Billed Duration: 478 ms	Memory Size: 512 MB	Max Memory Used: 89 MB
+[login-and-get-credentials] 1:46:47 PM START RequestId: b0ae5171-dee5-4aec-9794-ef007cf1ca37 Version: $LATEST
+[login-and-get-credentials] 1:46:47 PM END RequestId: b0ae5171-dee5-4aec-9794-ef007cf1ca37
+[login-and-get-credentials] 1:46:47 PM REPORT RequestId: b0ae5171-dee5-4aec-9794-ef007cf1ca37	Duration: 540.20 ms	Billed Duration: 541 ms	Memory Size: 512 MB	Max Memory Used: 89 MB
+[login-and-get-credentials] 1:47:03 PM START RequestId: d7261372-2c13-4869-ae7d-1af9734f75a7 Version: $LATEST
+[login-and-get-credentials] 1:47:03 PM END RequestId: d7261372-2c13-4869-ae7d-1af9734f75a7
+[login-and-get-credentials] 1:47:03 PM REPORT RequestId: d7261372-2c13-4869-ae7d-1af9734f75a7	Duration: 515.96 ms	Billed Duration: 516 ms	Memory Size: 512 MB	Max Memory Used: 89 MB
+[get-presigned-s3-upload] 1:47:10 PM START RequestId: db405a91-2d3d-4a39-b9ae-ce6694fcc6ed Version: $LATEST
+[get-presigned-s3-upload] 1:47:10 PM END RequestId: db405a91-2d3d-4a39-b9ae-ce6694fcc6ed
+[get-presigned-s3-upload] 1:47:10 PM REPORT RequestId: db405a91-2d3d-4a39-b9ae-ce6694fcc6ed	Duration: 84.19 ms	Billed Duration: 85 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[login-and-get-credentials] 1:49:44 PM START RequestId: 70ad4cd3-6e3a-4167-84eb-03596069a327 Version: $LATEST
+[login-and-get-credentials] 1:49:45 PM START RequestId: 35256d02-d913-4135-aa8b-146a6a06f62a Version: $LATEST
+[login-and-get-credentials] 1:49:45 PM END RequestId: 70ad4cd3-6e3a-4167-84eb-03596069a327
+[login-and-get-credentials] 1:49:45 PM REPORT RequestId: 70ad4cd3-6e3a-4167-84eb-03596069a327	Duration: 517.82 ms	Billed Duration: 518 ms	Memory Size: 512 MB	Max Memory Used: 89 MB
+[login-and-get-credentials] 1:49:45 PM END RequestId: 35256d02-d913-4135-aa8b-146a6a06f62a
+[login-and-get-credentials] 1:49:45 PM REPORT RequestId: 35256d02-d913-4135-aa8b-146a6a06f62a	Duration: 825.77 ms	Billed Duration: 826 ms	Memory Size: 512 MB	Max Memory Used: 89 MB	Init Duration: 425.15 ms
+[get-presigned-s3-upload] 1:49:54 PM START RequestId: a6ad6d62-e662-4344-9963-ea5aabeb1eeb Version: $LATEST
+[get-presigned-s3-upload] 1:49:54 PM END RequestId: a6ad6d62-e662-4344-9963-ea5aabeb1eeb
+[get-presigned-s3-upload] 1:49:54 PM REPORT RequestId: a6ad6d62-e662-4344-9963-ea5aabeb1eeb	Duration: 75.49 ms	Billed Duration: 76 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[get-presigned-s3-upload] 1:52:39 PM START RequestId: a69361b7-c58c-462b-a3c2-036596e84414 Version: $LATEST
+[get-presigned-s3-upload] 1:52:39 PM END RequestId: a69361b7-c58c-462b-a3c2-036596e84414
+[get-presigned-s3-upload] 1:52:39 PM REPORT RequestId: a69361b7-c58c-462b-a3c2-036596e84414	Duration: 55.22 ms	Billed Duration: 56 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[login-and-get-credentials] 1:54:17 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[login-and-get-credentials] 1:54:18 PM 2025-07-16T06:54:18.026Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[login-and-get-credentials] 1:54:18 PM 2025-07-16T06:54:18.028Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[get-presigned-s3-upload] 1:56:39 PM START RequestId: 25eb10d0-07d3-4707-86ea-2befa219603b Version: $LATEST
+[get-presigned-s3-upload] 1:56:39 PM END RequestId: 25eb10d0-07d3-4707-86ea-2befa219603b
+[get-presigned-s3-upload] 1:56:39 PM REPORT RequestId: 25eb10d0-07d3-4707-86ea-2befa219603b	Duration: 98.53 ms	Billed Duration: 99 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[get-presigned-s3-upload] 1:59:54 PM START RequestId: 844ffd9f-bcf7-47e9-b729-4599af16d357 Version: $LATEST
+[get-presigned-s3-upload] 1:59:54 PM END RequestId: 844ffd9f-bcf7-47e9-b729-4599af16d357
+[get-presigned-s3-upload] 1:59:54 PM REPORT RequestId: 844ffd9f-bcf7-47e9-b729-4599af16d357	Duration: 21.17 ms	Billed Duration: 22 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[get-meeting] 2:00:25 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[get-meeting] 2:00:26 PM 2025-07-16T07:00:26.377Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[get-meeting] 2:00:26 PM 2025-07-16T07:00:26.384Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[get-meeting] 2:00:26 PM START RequestId: 2468eac7-74b1-4a95-9d60-e8a3c49886e1 Version: $LATEST
+[get-meeting] 2:00:26 PM 2025-07-16T07:00:26.403Z	2468eac7-74b1-4a95-9d60-e8a3c49886e1	INFO	Getting meeting with meetingId:  e5c47a7f-ecf7-406f-aa76-3f051b334804
+[get-meeting] 2:00:27 PM 2025-07-16T07:00:27.142Z	2468eac7-74b1-4a95-9d60-e8a3c49886e1	INFO	Get Meeting Response:  e5c47a7f-ecf7-406f-aa76-3f051b334804
+[get-meeting] 2:00:27 PM END RequestId: 2468eac7-74b1-4a95-9d60-e8a3c49886e1
+[get-meeting] 2:00:27 PM REPORT RequestId: 2468eac7-74b1-4a95-9d60-e8a3c49886e1	Duration: 754.77 ms	Billed Duration: 755 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 953.76 ms
+[start-meeting-transcription] 2:00:30 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[start-meeting-transcription] 2:00:31 PM 2025-07-16T07:00:31.752Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[start-meeting-transcription] 2:00:31 PM 2025-07-16T07:00:31.755Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[start-meeting-transcription] 2:00:31 PM START RequestId: d91f47cc-f44d-43fc-b0f2-785eb435bdcb Version: $LATEST
+[start-meeting-transcription] 2:00:31 PM 2025-07-16T07:00:31.767Z	d91f47cc-f44d-43fc-b0f2-785eb435bdcb	INFO	Start MeetingTranscription with meetingId:  e5c47a7f-ecf7-406f-aa76-3f051b334804 languageCode:  ja-JP
+[start-meeting-transcription] 2:00:32 PM 2025-07-16T07:00:32.504Z	d91f47cc-f44d-43fc-b0f2-785eb435bdcb	INFO	Started Meeting Transcription Response:  {}
+[start-meeting-transcription] 2:00:32 PM END RequestId: d91f47cc-f44d-43fc-b0f2-785eb435bdcb
+[start-meeting-transcription] 2:00:32 PM REPORT RequestId: d91f47cc-f44d-43fc-b0f2-785eb435bdcb	Duration: 752.31 ms	Billed Duration: 753 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 943.22 ms
+[get-meeting-by-tourid] 2:00:23 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[get-meeting-by-tourid] 2:00:24 PM 2025-07-16T07:00:24.194Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[get-meeting-by-tourid] 2:00:24 PM 2025-07-16T07:00:24.197Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[get-meeting-by-tourid] 2:00:24 PM START RequestId: f8eadfa5-5f80-4307-972c-8588b16166c2 Version: $LATEST
+[get-meeting-by-tourid] 2:00:24 PM 2025-07-16T07:00:24.229Z	f8eadfa5-5f80-4307-972c-8588b16166c2	INFO	Retrieving tour with tourId:  4099cef9-5350-4846-ad65-cbe7d1c8a6ab
+[get-meeting-by-tourid] 2:00:24 PM 2025-07-16T07:00:24.830Z	f8eadfa5-5f80-4307-972c-8588b16166c2	INFO	Tour successfully retrieved:  {
+  nameOfCoursePersonInCharge: 'Tour001',
+  numberOfReceiversInUse: 'Tour001',
+  tourTestStatus: 'test',
+  tourType: 'tour',
+  tourConductorName: 'Tour001',
+  tourNumber: 'Tour001',
+  useTheTranslationFunction: true,
+  createdAt: '2025-07-16T03:27:43.728Z',
+  updatedBy: '',
+  createdBy: 'a90dec4d-042f-4db3-8c8e-dd183c86923b',
+  numberOfSendingDevices: 'Tour001',
+  returnDate: '2025-07-24',
+  coSponsoredCourseNumber: 'Tour001',
+  planningSalesOfficeTeamName: 'Tour001',
+  deleteFlag: 0,
+  meetingId: 'e5c47a7f-ecf7-406f-aa76-3f051b334804',
+  channelId: '2d1875b6-0263-4ee3-b798-1860a207deb8',
+  chatRestriction: 'allChat',
+  departureDate: '2025-07-16',
+  updatedAt: '',
+  planningAndSalesSignature: 'Tour001',
+  subGuideFunctionAvailable: true,
+  courseName: 'Tour001',
+  tourId: '4099cef9-5350-4846-ad65-cbe7d1c8a6ab'
+}
+[get-meeting-by-tourid] 2:00:24 PM END RequestId: f8eadfa5-5f80-4307-972c-8588b16166c2
+[get-meeting-by-tourid] 2:00:24 PM REPORT RequestId: f8eadfa5-5f80-4307-972c-8588b16166c2	Duration: 645.90 ms	Billed Duration: 646 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 981.01 ms
+[login-and-get-credentials] 2:00:37 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[login-and-get-credentials] 2:00:38 PM 2025-07-16T07:00:38.195Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[login-and-get-credentials] 2:00:38 PM 2025-07-16T07:00:38.197Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[login-and-get-credentials] 2:00:38 PM START RequestId: 27d03382-c572-4ae7-a5dd-cbf688fc8268 Version: $LATEST
+[login-and-get-credentials] 2:00:39 PM END RequestId: 27d03382-c572-4ae7-a5dd-cbf688fc8268
+[login-and-get-credentials] 2:00:39 PM REPORT RequestId: 27d03382-c572-4ae7-a5dd-cbf688fc8268	Duration: 970.68 ms	Billed Duration: 971 ms	Memory Size: 512 MB	Max Memory Used: 88 MB	Init Duration: 396.46 ms
+[get-presigned-s3-upload] 2:00:47 PM START RequestId: 0cd0faa0-3f04-40b2-a297-eb55a547d1bc Version: $LATEST
+[get-presigned-s3-upload] 2:00:47 PM END RequestId: 0cd0faa0-3f04-40b2-a297-eb55a547d1bc
+[get-presigned-s3-upload] 2:00:47 PM REPORT RequestId: 0cd0faa0-3f04-40b2-a297-eb55a547d1bc	Duration: 3.55 ms	Billed Duration: 4 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[get-meeting-by-tourid] 2:01:58 PM START RequestId: 4d4b93f9-331a-40b3-9c96-945d32ea93df Version: $LATEST
+[get-meeting-by-tourid] 2:01:58 PM 2025-07-16T07:01:58.429Z	4d4b93f9-331a-40b3-9c96-945d32ea93df	INFO	Retrieving tour with tourId:  4099cef9-5350-4846-ad65-cbe7d1c8a6ab
+[get-meeting-by-tourid] 2:01:58 PM 2025-07-16T07:01:58.966Z	4d4b93f9-331a-40b3-9c96-945d32ea93df	INFO	Tour successfully retrieved:  {
+  nameOfCoursePersonInCharge: 'Tour001',
+  numberOfReceiversInUse: 'Tour001',
+  tourTestStatus: 'test',
+  tourType: 'tour',
+  tourConductorName: 'Tour001',
+  tourNumber: 'Tour001',
+  useTheTranslationFunction: true,
+  createdAt: '2025-07-16T03:27:43.728Z',
+  updatedBy: '',
+  createdBy: 'a90dec4d-042f-4db3-8c8e-dd183c86923b',
+  numberOfSendingDevices: 'Tour001',
+  returnDate: '2025-07-24',
+  coSponsoredCourseNumber: 'Tour001',
+  planningSalesOfficeTeamName: 'Tour001',
+  deleteFlag: 0,
+  meetingId: 'e5c47a7f-ecf7-406f-aa76-3f051b334804',
+  channelId: '2d1875b6-0263-4ee3-b798-1860a207deb8',
+  chatRestriction: 'allChat',
+  departureDate: '2025-07-16',
+  updatedAt: '',
+  planningAndSalesSignature: 'Tour001',
+  subGuideFunctionAvailable: true,
+  courseName: 'Tour001',
+  tourId: '4099cef9-5350-4846-ad65-cbe7d1c8a6ab'
+}
+[get-meeting-by-tourid] 2:01:58 PM END RequestId: 4d4b93f9-331a-40b3-9c96-945d32ea93df
+[get-meeting-by-tourid] 2:01:58 PM REPORT RequestId: 4d4b93f9-331a-40b3-9c96-945d32ea93df	Duration: 567.42 ms	Billed Duration: 568 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[get-meeting-by-tourid] 2:02:04 PM START RequestId: 3e4d560c-f34d-4be3-b389-ad2d4cd7e90f Version: $LATEST
+[get-meeting-by-tourid] 2:02:04 PM 2025-07-16T07:02:04.256Z	3e4d560c-f34d-4be3-b389-ad2d4cd7e90f	INFO	Retrieving tour with tourId:  4099cef9-5350-4846-ad65-cbe7d1c8a6ab
+[get-meeting-by-tourid] 2:02:04 PM 2025-07-16T07:02:04.772Z	3e4d560c-f34d-4be3-b389-ad2d4cd7e90f	INFO	Tour successfully retrieved:  {
+  nameOfCoursePersonInCharge: 'Tour001',
+  numberOfReceiversInUse: 'Tour001',
+  tourTestStatus: 'test',
+  tourType: 'tour',
+  tourConductorName: 'Tour001',
+  tourNumber: 'Tour001',
+  useTheTranslationFunction: true,
+  createdAt: '2025-07-16T03:27:43.728Z',
+  updatedBy: '',
+  createdBy: 'a90dec4d-042f-4db3-8c8e-dd183c86923b',
+  numberOfSendingDevices: 'Tour001',
+  returnDate: '2025-07-24',
+  coSponsoredCourseNumber: 'Tour001',
+  planningSalesOfficeTeamName: 'Tour001',
+  deleteFlag: 0,
+  meetingId: 'e5c47a7f-ecf7-406f-aa76-3f051b334804',
+  channelId: '2d1875b6-0263-4ee3-b798-1860a207deb8',
+  chatRestriction: 'allChat',
+  departureDate: '2025-07-16',
+  updatedAt: '',
+  planningAndSalesSignature: 'Tour001',
+  subGuideFunctionAvailable: true,
+  courseName: 'Tour001',
+  tourId: '4099cef9-5350-4846-ad65-cbe7d1c8a6ab'
+}
+[get-meeting-by-tourid] 2:02:04 PM END RequestId: 3e4d560c-f34d-4be3-b389-ad2d4cd7e90f
+[get-meeting-by-tourid] 2:02:04 PM REPORT RequestId: 3e4d560c-f34d-4be3-b389-ad2d4cd7e90f	Duration: 518.93 ms	Billed Duration: 519 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[get-meeting] 2:02:05 PM START RequestId: c63d1936-7c7e-462d-b6aa-24d69ed13fd2 Version: $LATEST
+[get-meeting] 2:02:05 PM 2025-07-16T07:02:05.588Z	c63d1936-7c7e-462d-b6aa-24d69ed13fd2	INFO	Getting meeting with meetingId:  e5c47a7f-ecf7-406f-aa76-3f051b334804
+[get-meeting] 2:02:06 PM 2025-07-16T07:02:06.288Z	c63d1936-7c7e-462d-b6aa-24d69ed13fd2	INFO	Get Meeting Response:  e5c47a7f-ecf7-406f-aa76-3f051b334804
+[get-meeting] 2:02:06 PM END RequestId: c63d1936-7c7e-462d-b6aa-24d69ed13fd2
+[get-meeting] 2:02:06 PM REPORT RequestId: c63d1936-7c7e-462d-b6aa-24d69ed13fd2	Duration: 770.27 ms	Billed Duration: 771 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[start-meeting-transcription] 2:02:10 PM START RequestId: 9ebc5bec-692d-491a-99eb-c8bb5e4cc291 Version: $LATEST
+[start-meeting-transcription] 2:02:11 PM 2025-07-16T07:02:11.013Z	9ebc5bec-692d-491a-99eb-c8bb5e4cc291	INFO	Start MeetingTranscription with meetingId:  e5c47a7f-ecf7-406f-aa76-3f051b334804 languageCode:  ja-JP
+[start-meeting-transcription] 2:02:11 PM 2025-07-16T07:02:11.713Z	9ebc5bec-692d-491a-99eb-c8bb5e4cc291	INFO	Started Meeting Transcription Response:  {}
+[start-meeting-transcription] 2:02:11 PM END RequestId: 9ebc5bec-692d-491a-99eb-c8bb5e4cc291
+[start-meeting-transcription] 2:02:11 PM REPORT RequestId: 9ebc5bec-692d-491a-99eb-c8bb5e4cc291	Duration: 777.59 ms	Billed Duration: 778 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[login-and-get-credentials] 2:02:14 PM START RequestId: fafd9a1d-8d0e-442d-9506-5a1c04322737 Version: $LATEST
+[login-and-get-credentials] 2:02:15 PM END RequestId: fafd9a1d-8d0e-442d-9506-5a1c04322737
+[login-and-get-credentials] 2:02:15 PM REPORT RequestId: fafd9a1d-8d0e-442d-9506-5a1c04322737	Duration: 708.21 ms	Billed Duration: 709 ms	Memory Size: 512 MB	Max Memory Used: 88 MB
+[get-presigned-s3-upload] 2:02:25 PM START RequestId: d1b51628-fe57-441c-9f42-bf79dca133a1 Version: $LATEST
+[get-presigned-s3-upload] 2:02:25 PM END RequestId: d1b51628-fe57-441c-9f42-bf79dca133a1
+[get-presigned-s3-upload] 2:02:25 PM REPORT RequestId: d1b51628-fe57-441c-9f42-bf79dca133a1	Duration: 40.06 ms	Billed Duration: 41 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[create-meeting] 2:04:14 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[create-attendee] 2:04:17 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[create-attendee] 2:04:18 PM 2025-07-16T07:04:18.689Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[create-attendee] 2:04:18 PM 2025-07-16T07:04:18.691Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[create-attendee] 2:04:18 PM START RequestId: 062ef855-5f88-46ba-a737-b31bc48631ad Version: $LATEST
+[create-attendee] 2:04:18 PM 2025-07-16T07:04:18.704Z	062ef855-5f88-46ba-a737-b31bc48631ad	INFO	Creating attendee with meetingId:  7c985b2a-64ca-4d6f-a512-66bfb4654804 externalUserId:  Guide|1752649456029
+[create-attendee] 2:04:19 PM 2025-07-16T07:04:19.447Z	062ef855-5f88-46ba-a737-b31bc48631ad	INFO	Created Attendee Response:  a31121d5-f194-7911-e8d7-62eb76115189
+[create-attendee] 2:04:19 PM END RequestId: 062ef855-5f88-46ba-a737-b31bc48631ad
+[create-attendee] 2:04:19 PM REPORT RequestId: 062ef855-5f88-46ba-a737-b31bc48631ad	Duration: 750.81 ms	Billed Duration: 751 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 931.27 ms
+[create-meeting] 2:04:15 PM 2025-07-16T07:04:15.082Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[create-meeting] 2:04:15 PM 2025-07-16T07:04:15.084Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[create-meeting] 2:04:15 PM START RequestId: e6d2de9b-d82b-46fb-82e6-524949f6c33f Version: $LATEST
+[create-meeting] 2:04:15 PM 2025-07-16T07:04:15.096Z	e6d2de9b-d82b-46fb-82e6-524949f6c33f	INFO	Creating meeting with clientRequestToken:  9cfe27a8-3d53-49ca-8597-53d32623b487 externalMeetingId:  a968f5d4-3e83-4c33-8ee5-21a74a9d0efe
+[create-meeting] 2:04:15 PM 2025-07-16T07:04:15.934Z	e6d2de9b-d82b-46fb-82e6-524949f6c33f	INFO	Created Meeting Response:  7c985b2a-64ca-4d6f-a512-66bfb4654804
+[create-meeting] 2:04:15 PM END RequestId: e6d2de9b-d82b-46fb-82e6-524949f6c33f
+[create-meeting] 2:04:15 PM REPORT RequestId: e6d2de9b-d82b-46fb-82e6-524949f6c33f	Duration: 846.26 ms	Billed Duration: 847 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 1027.26 ms
+[get-meeting] 2:04:10 PM START RequestId: 3e39d05d-fe71-4c3a-8565-000c1ecceba8 Version: $LATEST
+[get-meeting] 2:04:10 PM 2025-07-16T07:04:10.851Z	3e39d05d-fe71-4c3a-8565-000c1ecceba8	INFO	Getting meeting with meetingId:  e5c47a7f-ecf7-406f-aa76-3f051b334804
+[get-meeting] 2:04:11 PM 2025-07-16T07:04:11.519Z	3e39d05d-fe71-4c3a-8565-000c1ecceba8	INFO	Get Meeting Response:  e5c47a7f-ecf7-406f-aa76-3f051b334804
+[get-meeting] 2:04:11 PM END RequestId: 3e39d05d-fe71-4c3a-8565-000c1ecceba8
+[get-meeting] 2:04:11 PM REPORT RequestId: 3e39d05d-fe71-4c3a-8565-000c1ecceba8	Duration: 691.34 ms	Billed Duration: 692 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[create-app-instance-user] 2:04:21 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[create-app-instance-user] 2:04:22 PM 2025-07-16T07:04:22.464Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[create-app-instance-user] 2:04:22 PM 2025-07-16T07:04:22.466Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[create-app-instance-user] 2:04:22 PM START RequestId: 97469746-8996-461e-8f75-006f69c722eb Version: $LATEST
+[create-app-instance-user] 2:04:22 PM 2025-07-16T07:04:22.478Z	97469746-8996-461e-8f75-006f69c722eb	INFO	Creating App Instance User with appInstanceArn:  arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0 appInstanceUserId:  9872a893-0fc2-4205-8692-d7c264805543 clientRequestToken:  a332568c-5887-413f-80b3-e5837d65c8da name:  Guide expirationCriterion:  CREATED_TIMESTAMP expirationDays:  1
+[create-app-instance-user] 2:04:22 PM 2025-07-16T07:04:22.663Z	97469746-8996-461e-8f75-006f69c722eb	INFO	Created App Instance User Response:  arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0/user/9872a893-0fc2-4205-8692-d7c264805543
+[create-app-instance-user] 2:04:22 PM END RequestId: 97469746-8996-461e-8f75-006f69c722eb
+[create-app-instance-user] 2:04:22 PM REPORT RequestId: 97469746-8996-461e-8f75-006f69c722eb	Duration: 204.27 ms	Billed Duration: 205 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 982.50 ms
+[create-channel] 2:04:23 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[create-channel] 2:04:24 PM 2025-07-16T07:04:24.941Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[create-channel] 2:04:24 PM 2025-07-16T07:04:24.944Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[create-channel] 2:04:24 PM START RequestId: 29a45f4c-4288-4090-97c7-7bc33183ed43 Version: $LATEST
+[create-channel] 2:04:24 PM 2025-07-16T07:04:24.971Z	29a45f4c-4288-4090-97c7-7bc33183ed43	INFO	Creating channel with appInstanceArn:  arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0 name:  LiveSession mode: UNRESTRICTED privacy:  PUBLIC clientRequestToken:  4c1fd086-5a6f-4f15-a488-c19873c4d95b chimeBearer:  arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0/user/9872a893-0fc2-4205-8692-d7c264805543 expirationCriterion:  LAST_MESSAGE_TIMESTAMP expirationDays:  1
+[create-channel] 2:04:25 PM 2025-07-16T07:04:25.190Z	29a45f4c-4288-4090-97c7-7bc33183ed43	INFO	Created Channel Response:  arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0/channel/e8c035fe-a998-41ff-ab37-7a84390873c9
+[create-channel] 2:04:25 PM END RequestId: 29a45f4c-4288-4090-97c7-7bc33183ed43
+[create-channel] 2:04:25 PM REPORT RequestId: 29a45f4c-4288-4090-97c7-7bc33183ed43	Duration: 241.23 ms	Billed Duration: 242 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 957.93 ms
+[add-channel-membership] 2:04:25 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[add-channel-membership] 2:04:26 PM 2025-07-16T07:04:26.890Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[add-channel-membership] 2:04:26 PM 2025-07-16T07:04:26.893Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[add-channel-membership] 2:04:26 PM START RequestId: 85e68d0d-67f5-45a1-a810-fdd2fa14de60 Version: $LATEST
+[add-channel-membership] 2:04:26 PM 2025-07-16T07:04:26.906Z	85e68d0d-67f5-45a1-a810-fdd2fa14de60	INFO	Creating Channel Membership with channelArn:  arn%3Aaws%3Achime%3Aus-east-1%3A647755634525%3Aapp-instance%2F1007fa5f-d281-43e6-ac7d-758a23201cc0%2Fchannel%2Fe8c035fe-a998-41ff-ab37-7a84390873c9 memberArn:  arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0/user/9872a893-0fc2-4205-8692-d7c264805543 type: DEFAULT chimeBearer:  arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0/user/9872a893-0fc2-4205-8692-d7c264805543
+[add-channel-membership] 2:04:27 PM 2025-07-16T07:04:27.077Z	85e68d0d-67f5-45a1-a810-fdd2fa14de60	INFO	Created Channel Membership Response:  {
+  ChannelArn: 'arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0/channel/e8c035fe-a998-41ff-ab37-7a84390873c9',
+  Member: {
+    Arn: 'arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0/user/9872a893-0fc2-4205-8692-d7c264805543',
+    Name: 'Guide'
+  },
+  SubChannelId: null
+}
+[add-channel-membership] 2:04:27 PM END RequestId: 85e68d0d-67f5-45a1-a810-fdd2fa14de60
+[add-channel-membership] 2:04:27 PM REPORT RequestId: 85e68d0d-67f5-45a1-a810-fdd2fa14de60	Duration: 185.94 ms	Billed Duration: 186 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 930.69 ms
+[send-channel-message] 2:04:30 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[send-channel-message] 2:04:31 PM 2025-07-16T07:04:31.236Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[send-channel-message] 2:04:31 PM 2025-07-16T07:04:31.238Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[send-channel-message] 2:04:31 PM START RequestId: 53d9fb01-f21a-4786-886b-72408f369c33 Version: $LATEST
+[send-channel-message] 2:04:31 PM 2025-07-16T07:04:31.255Z	53d9fb01-f21a-4786-886b-72408f369c33	INFO	Send Channel Message with channelArn:   type: STANDARD persistence: PERSISTENT clientRequestToken: 3ff95907-6dab-4289-a276-b7fb80ca95c7 chimeBearer:  metadata: null
+[send-channel-message] 2:04:31 PM 2025-07-16T07:04:31.256Z	53d9fb01-f21a-4786-886b-72408f369c33	ERROR	Invalid input: channelArn, persistence, and type are required. { channelArn: '', persistence: 'PERSISTENT', type: 'STANDARD' }
+[send-channel-message] 2:04:31 PM END RequestId: 53d9fb01-f21a-4786-886b-72408f369c33
+[send-channel-message] 2:04:31 PM REPORT RequestId: 53d9fb01-f21a-4786-886b-72408f369c33	Duration: 13.82 ms	Billed Duration: 14 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 920.24 ms
+[start-meeting-transcription] 2:04:23 PM START RequestId: 8a295605-b46f-47a4-9bd8-3b4238310eac Version: $LATEST
+[start-meeting-transcription] 2:04:23 PM 2025-07-16T07:04:23.335Z	8a295605-b46f-47a4-9bd8-3b4238310eac	INFO	Start MeetingTranscription with meetingId:  7c985b2a-64ca-4d6f-a512-66bfb4654804 languageCode:  ja-JP
+[start-meeting-transcription] 2:04:23 PM 2025-07-16T07:04:23.980Z	8a295605-b46f-47a4-9bd8-3b4238310eac	INFO	Started Meeting Transcription Response:  {}
+[start-meeting-transcription] 2:04:23 PM END RequestId: 8a295605-b46f-47a4-9bd8-3b4238310eac
+[start-meeting-transcription] 2:04:23 PM REPORT RequestId: 8a295605-b46f-47a4-9bd8-3b4238310eac	Duration: 688.34 ms	Billed Duration: 689 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[get-meeting-by-tourid] 2:04:09 PM START RequestId: bf50ddc2-37fe-4433-a076-2acf96cb9492 Version: $LATEST
+[get-meeting-by-tourid] 2:04:09 PM 2025-07-16T07:04:09.450Z	bf50ddc2-37fe-4433-a076-2acf96cb9492	INFO	Retrieving tour with tourId:  4099cef9-5350-4846-ad65-cbe7d1c8a6ab
+[get-meeting-by-tourid] 2:04:10 PM 2025-07-16T07:04:10.012Z	bf50ddc2-37fe-4433-a076-2acf96cb9492	INFO	Tour successfully retrieved:  {
+  nameOfCoursePersonInCharge: 'Tour001',
+  numberOfReceiversInUse: 'Tour001',
+  tourTestStatus: 'test',
+  tourType: 'tour',
+  tourConductorName: 'Tour001',
+  tourNumber: 'Tour001',
+  useTheTranslationFunction: true,
+  createdAt: '2025-07-16T03:27:43.728Z',
+  updatedBy: '',
+  createdBy: 'a90dec4d-042f-4db3-8c8e-dd183c86923b',
+  numberOfSendingDevices: 'Tour001',
+  returnDate: '2025-07-24',
+  coSponsoredCourseNumber: 'Tour001',
+  planningSalesOfficeTeamName: 'Tour001',
+  deleteFlag: 0,
+  meetingId: 'e5c47a7f-ecf7-406f-aa76-3f051b334804',
+  channelId: '2d1875b6-0263-4ee3-b798-1860a207deb8',
+  chatRestriction: 'allChat',
+  departureDate: '2025-07-16',
+  updatedAt: '',
+  planningAndSalesSignature: 'Tour001',
+  subGuideFunctionAvailable: true,
+  courseName: 'Tour001',
+  tourId: '4099cef9-5350-4846-ad65-cbe7d1c8a6ab'
+}
+[get-meeting-by-tourid] 2:04:10 PM END RequestId: bf50ddc2-37fe-4433-a076-2acf96cb9492
+[get-meeting-by-tourid] 2:04:10 PM REPORT RequestId: bf50ddc2-37fe-4433-a076-2acf96cb9492	Duration: 570.21 ms	Billed Duration: 571 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[update-meeting-by-tourid] 2:04:28 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[update-meeting-by-tourid] 2:04:29 PM 2025-07-16T07:04:29.744Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[update-meeting-by-tourid] 2:04:29 PM 2025-07-16T07:04:29.746Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[update-meeting-by-tourid] 2:04:29 PM START RequestId: 11232610-8841-4ca5-8109-8f6491da5825 Version: $LATEST
+[update-meeting-by-tourid] 2:04:29 PM 2025-07-16T07:04:29.761Z	11232610-8841-4ca5-8109-8f6491da5825	INFO	Updating tour with tourId:  4099cef9-5350-4846-ad65-cbe7d1c8a6ab meetingId:  7c985b2a-64ca-4d6f-a512-66bfb4654804 channelId:  e8c035fe-a998-41ff-ab37-7a84390873c9
+[update-meeting-by-tourid] 2:04:30 PM 2025-07-16T07:04:30.357Z	11232610-8841-4ca5-8109-8f6491da5825	INFO	Tour successfully updated:  {
+  tourId: '4099cef9-5350-4846-ad65-cbe7d1c8a6ab',
+  ':meetingId': '7c985b2a-64ca-4d6f-a512-66bfb4654804',
+  ':channelId': 'e8c035fe-a998-41ff-ab37-7a84390873c9'
+}
+[update-meeting-by-tourid] 2:04:30 PM END RequestId: 11232610-8841-4ca5-8109-8f6491da5825
+[update-meeting-by-tourid] 2:04:30 PM REPORT RequestId: 11232610-8841-4ca5-8109-8f6491da5825	Duration: 607.82 ms	Billed Duration: 608 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 887.32 ms
+[login-and-get-credentials] 2:04:25 PM START RequestId: 1c67a001-e873-4ef4-bd68-9edfa9c6da2c Version: $LATEST
+[login-and-get-credentials] 2:04:25 PM END RequestId: 1c67a001-e873-4ef4-bd68-9edfa9c6da2c
+[login-and-get-credentials] 2:04:25 PM REPORT RequestId: 1c67a001-e873-4ef4-bd68-9edfa9c6da2c	Duration: 679.47 ms	Billed Duration: 680 ms	Memory Size: 512 MB	Max Memory Used: 88 MB
+[login-and-get-credentials] 2:04:30 PM START RequestId: ab8d0e74-6952-4b95-b2e7-ba4e8817dd2d Version: $LATEST
+[login-and-get-credentials] 2:04:31 PM END RequestId: ab8d0e74-6952-4b95-b2e7-ba4e8817dd2d
+[login-and-get-credentials] 2:04:31 PM REPORT RequestId: ab8d0e74-6952-4b95-b2e7-ba4e8817dd2d	Duration: 492.11 ms	Billed Duration: 493 ms	Memory Size: 512 MB	Max Memory Used: 88 MB
+[send-channel-message] 2:04:45 PM START RequestId: fa8ac5fe-754e-4773-8708-00cfac827f21 Version: $LATEST
+[send-channel-message] 2:04:45 PM 2025-07-16T07:04:45.976Z	fa8ac5fe-754e-4773-8708-00cfac827f21	INFO	Send Channel Message with channelArn:  arn%3Aaws%3Achime%3Aus-east-1%3A647755634525%3Aapp-instance%2F1007fa5f-d281-43e6-ac7d-758a23201cc0%2Fchannel%2Fe8c035fe-a998-41ff-ab37-7a84390873c9 type: STANDARD persistence: PERSISTENT clientRequestToken: c77e8c83-b4d5-43c7-840a-10ee6d4650b2 chimeBearer: arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0/user/9872a893-0fc2-4205-8692-d7c264805543 metadata: null
+[send-channel-message] 2:04:45 PM 2025-07-16T07:04:45.976Z	fa8ac5fe-754e-4773-8708-00cfac827f21	INFO	Send Channel Message Params:  {
+  ChannelArn: 'arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0/channel/e8c035fe-a998-41ff-ab37-7a84390873c9',
+  Content: 'llll',
+  Type: 'STANDARD',
+  Persistence: 'PERSISTENT',
+  ClientRequestToken: 'c77e8c83-b4d5-43c7-840a-10ee6d4650b2',
+  ChimeBearer: 'arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0/user/9872a893-0fc2-4205-8692-d7c264805543',
+  Metadata: null
+}
+[send-channel-message] 2:04:46 PM 2025-07-16T07:04:46.208Z	fa8ac5fe-754e-4773-8708-00cfac827f21	INFO	Send Channel Message Response:  {
+  ChannelArn: 'arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0/channel/e8c035fe-a998-41ff-ab37-7a84390873c9',
+  MessageId: '2a95721910f7c77bf968c41fcf8a61e5b457b42c76caec11a234906a4a3c50f3',
+  Status: { Value: 'SENT', Detail: null },
+  SubChannelId: null
+}
+[send-channel-message] 2:04:46 PM END RequestId: fa8ac5fe-754e-4773-8708-00cfac827f21
+[send-channel-message] 2:04:46 PM REPORT RequestId: fa8ac5fe-754e-4773-8708-00cfac827f21	Duration: 277.35 ms	Billed Duration: 278 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[get-presigned-s3-upload] 2:05:05 PM START RequestId: 1b74ddf3-d07d-40de-9bc0-34b235afef77 Version: $LATEST
+[get-presigned-s3-upload] 2:05:05 PM END RequestId: 1b74ddf3-d07d-40de-9bc0-34b235afef77
+[get-presigned-s3-upload] 2:05:05 PM REPORT RequestId: 1b74ddf3-d07d-40de-9bc0-34b235afef77	Duration: 20.94 ms	Billed Duration: 21 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[login-and-get-credentials] 2:04:42 PM START RequestId: 79f407b7-aec6-4388-a299-647de44a211b Version: $LATEST
+[login-and-get-credentials] 2:04:42 PM END RequestId: 79f407b7-aec6-4388-a299-647de44a211b
+[login-and-get-credentials] 2:04:42 PM REPORT RequestId: 79f407b7-aec6-4388-a299-647de44a211b	Duration: 578.87 ms	Billed Duration: 579 ms	Memory Size: 512 MB	Max Memory Used: 88 MB
+[create-meeting] 2:11:39 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[create-meeting] 2:11:40 PM 2025-07-16T07:11:40.498Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[create-meeting] 2:11:40 PM 2025-07-16T07:11:40.501Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[create-meeting] 2:11:40 PM START RequestId: 2be51053-3919-459c-9a56-10561c19ccb8 Version: $LATEST
+[create-meeting] 2:11:40 PM 2025-07-16T07:11:40.513Z	2be51053-3919-459c-9a56-10561c19ccb8	INFO	Creating meeting with clientRequestToken:  71fdf5d0-6190-4478-8667-3f56bcc69935 externalMeetingId:  bc0969de-a361-44c9-95d2-6b464376c869
+[create-meeting] 2:11:41 PM 2025-07-16T07:11:41.364Z	2be51053-3919-459c-9a56-10561c19ccb8	INFO	Created Meeting Response:  19c6d8f7-22bb-4adc-8b88-f7b6f10c4804
+[create-meeting] 2:11:41 PM END RequestId: 2be51053-3919-459c-9a56-10561c19ccb8
+[create-meeting] 2:11:41 PM REPORT RequestId: 2be51053-3919-459c-9a56-10561c19ccb8	Duration: 858.66 ms	Billed Duration: 859 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 960.75 ms
+[get-meeting] 2:11:36 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[get-meeting] 2:11:37 PM 2025-07-16T07:11:37.087Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[get-meeting] 2:11:37 PM 2025-07-16T07:11:37.089Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[get-meeting] 2:11:37 PM START RequestId: 1f17869b-ebed-4b1d-86cf-533aeb92ea49 Version: $LATEST
+[get-meeting] 2:11:37 PM 2025-07-16T07:11:37.100Z	1f17869b-ebed-4b1d-86cf-533aeb92ea49	INFO	Getting meeting with meetingId:  7c985b2a-64ca-4d6f-a512-66bfb4654804
+[get-meeting] 2:11:37 PM 2025-07-16T07:11:37.837Z	1f17869b-ebed-4b1d-86cf-533aeb92ea49	INFO	Get Meeting Response:  7c985b2a-64ca-4d6f-a512-66bfb4654804
+[get-meeting] 2:11:37 PM END RequestId: 1f17869b-ebed-4b1d-86cf-533aeb92ea49
+[get-meeting] 2:11:37 PM REPORT RequestId: 1f17869b-ebed-4b1d-86cf-533aeb92ea49	Duration: 744.62 ms	Billed Duration: 745 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 924.54 ms
+[create-attendee] 2:11:43 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[create-attendee] 2:11:44 PM 2025-07-16T07:11:44.152Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[create-attendee] 2:11:44 PM 2025-07-16T07:11:44.159Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[create-attendee] 2:11:44 PM START RequestId: 8dbec3d1-c9c5-4c8b-93d9-315d6aa8e373 Version: $LATEST
+[create-attendee] 2:11:44 PM 2025-07-16T07:11:44.170Z	8dbec3d1-c9c5-4c8b-93d9-315d6aa8e373	INFO	Creating attendee with meetingId:  19c6d8f7-22bb-4adc-8b88-f7b6f10c4804 externalUserId:  Guide|1752649901453
+[create-attendee] 2:11:44 PM 2025-07-16T07:11:44.939Z	8dbec3d1-c9c5-4c8b-93d9-315d6aa8e373	INFO	Created Attendee Response:  75380bd9-547f-74c5-4cd4-991f2b48ce17
+[create-attendee] 2:11:44 PM END RequestId: 8dbec3d1-c9c5-4c8b-93d9-315d6aa8e373
+[create-attendee] 2:11:44 PM REPORT RequestId: 8dbec3d1-c9c5-4c8b-93d9-315d6aa8e373	Duration: 779.53 ms	Billed Duration: 780 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 939.14 ms
+[create-app-instance-user] 2:11:46 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[create-app-instance-user] 2:11:47 PM 2025-07-16T07:11:47.874Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[create-app-instance-user] 2:11:47 PM 2025-07-16T07:11:47.876Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[create-app-instance-user] 2:11:47 PM START RequestId: 3b733d2e-3ff8-40ae-9a20-0d817b5ab39d Version: $LATEST
+[create-app-instance-user] 2:11:47 PM 2025-07-16T07:11:47.902Z	3b733d2e-3ff8-40ae-9a20-0d817b5ab39d	INFO	Creating App Instance User with appInstanceArn:  arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0 appInstanceUserId:  fa336f5e-7f29-4f56-a724-a4bebab5a374 clientRequestToken:  b5f55ae5-3c53-4be4-8f75-d5e77b2af8c8 name:  Guide expirationCriterion:  CREATED_TIMESTAMP expirationDays:  1
+[create-app-instance-user] 2:11:48 PM 2025-07-16T07:11:48.070Z	3b733d2e-3ff8-40ae-9a20-0d817b5ab39d	INFO	Created App Instance User Response:  arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0/user/fa336f5e-7f29-4f56-a724-a4bebab5a374
+[create-app-instance-user] 2:11:48 PM END RequestId: 3b733d2e-3ff8-40ae-9a20-0d817b5ab39d
+[create-app-instance-user] 2:11:48 PM REPORT RequestId: 3b733d2e-3ff8-40ae-9a20-0d817b5ab39d	Duration: 195.51 ms	Billed Duration: 196 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 931.64 ms
+[create-channel] 2:11:48 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[create-channel] 2:11:49 PM 2025-07-16T07:11:49.757Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[create-channel] 2:11:49 PM 2025-07-16T07:11:49.759Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[create-channel] 2:11:49 PM START RequestId: 14598a55-f93d-4b20-b549-f72bfff4a4be Version: $LATEST
+[create-channel] 2:11:49 PM 2025-07-16T07:11:49.771Z	14598a55-f93d-4b20-b549-f72bfff4a4be	INFO	Creating channel with appInstanceArn:  arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0 name:  LiveSession mode: UNRESTRICTED privacy:  PUBLIC clientRequestToken:  624ad280-6936-4d4f-85c7-e0c9ed902db9 chimeBearer:  arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0/user/fa336f5e-7f29-4f56-a724-a4bebab5a374 expirationCriterion:  LAST_MESSAGE_TIMESTAMP expirationDays:  1
+[create-channel] 2:11:49 PM 2025-07-16T07:11:49.988Z	14598a55-f93d-4b20-b549-f72bfff4a4be	INFO	Created Channel Response:  arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0/channel/08d6c530-5403-4040-8b72-08f8202167f7
+[create-channel] 2:11:49 PM END RequestId: 14598a55-f93d-4b20-b549-f72bfff4a4be
+[create-channel] 2:11:49 PM REPORT RequestId: 14598a55-f93d-4b20-b549-f72bfff4a4be	Duration: 227.77 ms	Billed Duration: 228 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 924.07 ms
+[add-channel-membership] 2:11:50 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[add-channel-membership] 2:11:51 PM 2025-07-16T07:11:51.759Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[add-channel-membership] 2:11:51 PM 2025-07-16T07:11:51.761Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[add-channel-membership] 2:11:51 PM START RequestId: 181650b8-709a-48f2-9a5e-0c568886792f Version: $LATEST
+[add-channel-membership] 2:11:51 PM 2025-07-16T07:11:51.775Z	181650b8-709a-48f2-9a5e-0c568886792f	INFO	Creating Channel Membership with channelArn:  arn%3Aaws%3Achime%3Aus-east-1%3A647755634525%3Aapp-instance%2F1007fa5f-d281-43e6-ac7d-758a23201cc0%2Fchannel%2F08d6c530-5403-4040-8b72-08f8202167f7 memberArn:  arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0/user/fa336f5e-7f29-4f56-a724-a4bebab5a374 type: DEFAULT chimeBearer:  arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0/user/fa336f5e-7f29-4f56-a724-a4bebab5a374
+[add-channel-membership] 2:11:51 PM 2025-07-16T07:11:51.948Z	181650b8-709a-48f2-9a5e-0c568886792f	INFO	Created Channel Membership Response:  {
+  ChannelArn: 'arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0/channel/08d6c530-5403-4040-8b72-08f8202167f7',
+  Member: {
+    Arn: 'arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0/user/fa336f5e-7f29-4f56-a724-a4bebab5a374',
+    Name: 'Guide'
+  },
+  SubChannelId: null
+}
+[add-channel-membership] 2:11:51 PM END RequestId: 181650b8-709a-48f2-9a5e-0c568886792f
+[add-channel-membership] 2:11:51 PM REPORT RequestId: 181650b8-709a-48f2-9a5e-0c568886792f	Duration: 187.05 ms	Billed Duration: 188 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 932.72 ms
+[send-channel-message] 2:11:44 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[send-channel-message] 2:11:45 PM 2025-07-16T07:11:45.823Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[send-channel-message] 2:11:45 PM 2025-07-16T07:11:45.826Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[send-channel-message] 2:11:45 PM START RequestId: 23d6dcc1-147f-4cc0-ae21-c9f9d0a4419f Version: $LATEST
+[send-channel-message] 2:11:45 PM 2025-07-16T07:11:45.843Z	23d6dcc1-147f-4cc0-ae21-c9f9d0a4419f	INFO	Send Channel Message with channelArn:   type: STANDARD persistence: PERSISTENT clientRequestToken: 5b1ac057-4d0b-4983-b109-087bd454423d chimeBearer:  metadata: null
+[send-channel-message] 2:11:45 PM 2025-07-16T07:11:45.844Z	23d6dcc1-147f-4cc0-ae21-c9f9d0a4419f	ERROR	Invalid input: channelArn, persistence, and type are required. { channelArn: '', persistence: 'PERSISTENT', type: 'STANDARD' }
+[send-channel-message] 2:11:45 PM END RequestId: 23d6dcc1-147f-4cc0-ae21-c9f9d0a4419f
+[send-channel-message] 2:11:45 PM REPORT RequestId: 23d6dcc1-147f-4cc0-ae21-c9f9d0a4419f	Duration: 14.58 ms	Billed Duration: 15 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 939.87 ms
+[send-channel-message] 2:12:02 PM START RequestId: 2812ba5f-142c-40b9-a6c5-e69f757eb7ab Version: $LATEST
+[send-channel-message] 2:12:02 PM 2025-07-16T07:12:02.782Z	2812ba5f-142c-40b9-a6c5-e69f757eb7ab	INFO	Send Channel Message with channelArn:  arn%3Aaws%3Achime%3Aus-east-1%3A647755634525%3Aapp-instance%2F1007fa5f-d281-43e6-ac7d-758a23201cc0%2Fchannel%2F08d6c530-5403-4040-8b72-08f8202167f7 type: STANDARD persistence: PERSISTENT clientRequestToken: e0892ebb-55f2-4b35-8536-bb92ecf46fef chimeBearer: arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0/user/fa336f5e-7f29-4f56-a724-a4bebab5a374 metadata: null
+[send-channel-message] 2:12:02 PM 2025-07-16T07:12:02.783Z	2812ba5f-142c-40b9-a6c5-e69f757eb7ab	INFO	Send Channel Message Params:  {
+  ChannelArn: 'arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0/channel/08d6c530-5403-4040-8b72-08f8202167f7',
+  Content: 'aaaa',
+  Type: 'STANDARD',
+  Persistence: 'PERSISTENT',
+  ClientRequestToken: 'e0892ebb-55f2-4b35-8536-bb92ecf46fef',
+  ChimeBearer: 'arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0/user/fa336f5e-7f29-4f56-a724-a4bebab5a374',
+  Metadata: null
+}
+[send-channel-message] 2:12:03 PM 2025-07-16T07:12:03.017Z	2812ba5f-142c-40b9-a6c5-e69f757eb7ab	INFO	Send Channel Message Response:  {
+  ChannelArn: 'arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0/channel/08d6c530-5403-4040-8b72-08f8202167f7',
+  MessageId: 'f4c243ae81894825798c70fe2ae6fa96db89f00ebddaf3ddc6cad7a3095f3f21',
+  Status: { Value: 'SENT', Detail: null },
+  SubChannelId: null
+}
+[send-channel-message] 2:12:03 PM END RequestId: 2812ba5f-142c-40b9-a6c5-e69f757eb7ab
+[send-channel-message] 2:12:03 PM REPORT RequestId: 2812ba5f-142c-40b9-a6c5-e69f757eb7ab	Duration: 272.72 ms	Billed Duration: 273 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[start-meeting-transcription] 2:11:50 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[start-meeting-transcription] 2:11:51 PM 2025-07-16T07:11:51.095Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[start-meeting-transcription] 2:11:51 PM 2025-07-16T07:11:51.098Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[start-meeting-transcription] 2:11:51 PM START RequestId: b1bc433b-742d-42ee-a1e5-f301e1915ed3 Version: $LATEST
+[start-meeting-transcription] 2:11:51 PM 2025-07-16T07:11:51.109Z	b1bc433b-742d-42ee-a1e5-f301e1915ed3	INFO	Start MeetingTranscription with meetingId:  19c6d8f7-22bb-4adc-8b88-f7b6f10c4804 languageCode:  ja-JP
+[start-meeting-transcription] 2:11:51 PM 2025-07-16T07:11:51.865Z	b1bc433b-742d-42ee-a1e5-f301e1915ed3	INFO	Started Meeting Transcription Response:  {}
+[start-meeting-transcription] 2:11:51 PM END RequestId: b1bc433b-742d-42ee-a1e5-f301e1915ed3
+[start-meeting-transcription] 2:11:51 PM REPORT RequestId: b1bc433b-742d-42ee-a1e5-f301e1915ed3	Duration: 763.82 ms	Billed Duration: 764 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 964.92 ms
+[get-meeting-by-tourid] 2:11:33 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[get-meeting-by-tourid] 2:11:34 PM 2025-07-16T07:11:34.765Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[get-meeting-by-tourid] 2:11:34 PM 2025-07-16T07:11:34.768Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[get-meeting-by-tourid] 2:11:34 PM START RequestId: c000f198-29f4-486f-8c42-c375533690f3 Version: $LATEST
+[get-meeting-by-tourid] 2:11:34 PM 2025-07-16T07:11:34.796Z	c000f198-29f4-486f-8c42-c375533690f3	INFO	Retrieving tour with tourId:  4099cef9-5350-4846-ad65-cbe7d1c8a6ab
+[get-meeting-by-tourid] 2:11:35 PM 2025-07-16T07:11:35.389Z	c000f198-29f4-486f-8c42-c375533690f3	INFO	Tour successfully retrieved:  {
+  nameOfCoursePersonInCharge: 'Tour001',
+  numberOfReceiversInUse: 'Tour001',
+  tourTestStatus: 'test',
+  tourType: 'tour',
+  tourConductorName: 'Tour001',
+  tourNumber: 'Tour001',
+  useTheTranslationFunction: true,
+  createdAt: '2025-07-16T03:27:43.728Z',
+  updatedBy: '',
+  createdBy: 'a90dec4d-042f-4db3-8c8e-dd183c86923b',
+  numberOfSendingDevices: 'Tour001',
+  returnDate: '2025-07-24',
+  coSponsoredCourseNumber: 'Tour001',
+  planningSalesOfficeTeamName: 'Tour001',
+  deleteFlag: 0,
+  meetingId: '7c985b2a-64ca-4d6f-a512-66bfb4654804',
+  channelId: 'e8c035fe-a998-41ff-ab37-7a84390873c9',
+  chatRestriction: 'allChat',
+  departureDate: '2025-07-16',
+  updatedAt: '',
+  planningAndSalesSignature: 'Tour001',
+  subGuideFunctionAvailable: true,
+  courseName: 'Tour001',
+  tourId: '4099cef9-5350-4846-ad65-cbe7d1c8a6ab'
+}
+[get-meeting-by-tourid] 2:11:35 PM END RequestId: c000f198-29f4-486f-8c42-c375533690f3
+[get-meeting-by-tourid] 2:11:35 PM REPORT RequestId: c000f198-29f4-486f-8c42-c375533690f3	Duration: 622.92 ms	Billed Duration: 623 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 920.02 ms
+[update-meeting-by-tourid] 2:11:53 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[update-meeting-by-tourid] 2:11:54 PM 2025-07-16T07:11:54.250Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[update-meeting-by-tourid] 2:11:54 PM 2025-07-16T07:11:54.253Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[update-meeting-by-tourid] 2:11:54 PM START RequestId: 659beee5-e6c3-4811-b957-8e788a40cc5c Version: $LATEST
+[update-meeting-by-tourid] 2:11:54 PM 2025-07-16T07:11:54.290Z	659beee5-e6c3-4811-b957-8e788a40cc5c	INFO	Updating tour with tourId:  4099cef9-5350-4846-ad65-cbe7d1c8a6ab meetingId:  19c6d8f7-22bb-4adc-8b88-f7b6f10c4804 channelId:  08d6c530-5403-4040-8b72-08f8202167f7
+[update-meeting-by-tourid] 2:11:54 PM 2025-07-16T07:11:54.912Z	659beee5-e6c3-4811-b957-8e788a40cc5c	INFO	Tour successfully updated:  {
+  tourId: '4099cef9-5350-4846-ad65-cbe7d1c8a6ab',
+  ':meetingId': '19c6d8f7-22bb-4adc-8b88-f7b6f10c4804',
+  ':channelId': '08d6c530-5403-4040-8b72-08f8202167f7'
+}
+[update-meeting-by-tourid] 2:11:54 PM END RequestId: 659beee5-e6c3-4811-b957-8e788a40cc5c
+[update-meeting-by-tourid] 2:11:54 PM REPORT RequestId: 659beee5-e6c3-4811-b957-8e788a40cc5c	Duration: 669.58 ms	Billed Duration: 670 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 969.49 ms
+[get-presigned-s3-upload] 2:12:19 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[get-presigned-s3-upload] 2:12:20 PM 2025-07-16T07:12:20.618Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[get-presigned-s3-upload] 2:12:20 PM 2025-07-16T07:12:20.620Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[get-presigned-s3-upload] 2:12:20 PM START RequestId: 22866b4a-8bef-4dcf-b222-c2ca177cc980 Version: $LATEST
+[get-presigned-s3-upload] 2:12:20 PM END RequestId: 22866b4a-8bef-4dcf-b222-c2ca177cc980
+[get-presigned-s3-upload] 2:12:20 PM REPORT RequestId: 22866b4a-8bef-4dcf-b222-c2ca177cc980	Duration: 93.03 ms	Billed Duration: 94 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 943.23 ms
+[login-and-get-credentials] 2:11:41 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[login-and-get-credentials] 2:11:41 PM 2025-07-16T07:11:41.402Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[login-and-get-credentials] 2:11:41 PM 2025-07-16T07:11:41.408Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[login-and-get-credentials] 2:11:41 PM START RequestId: 008c18b5-aaf1-4f69-99dd-0692b106036b Version: $LATEST
+[login-and-get-credentials] 2:11:42 PM END RequestId: 008c18b5-aaf1-4f69-99dd-0692b106036b
+[login-and-get-credentials] 2:11:42 PM REPORT RequestId: 008c18b5-aaf1-4f69-99dd-0692b106036b	Duration: 791.96 ms	Billed Duration: 792 ms	Memory Size: 512 MB	Max Memory Used: 89 MB	Init Duration: 407.76 ms
+[login-and-get-credentials] 2:11:59 PM START RequestId: 0b0507ee-5215-4049-85f3-abe546f098b4 Version: $LATEST
+[login-and-get-credentials] 2:12:00 PM END RequestId: 0b0507ee-5215-4049-85f3-abe546f098b4
+[login-and-get-credentials] 2:12:00 PM REPORT RequestId: 0b0507ee-5215-4049-85f3-abe546f098b4	Duration: 664.57 ms	Billed Duration: 665 ms	Memory Size: 512 MB	Max Memory Used: 89 MB
+[create-channel] 2:13:35 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[create-channel] 2:13:36 PM 2025-07-16T07:13:36.776Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[create-channel] 2:13:36 PM 2025-07-16T07:13:36.778Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[get-meeting] 2:21:00 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[get-meeting] 2:21:01 PM 2025-07-16T07:21:01.359Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[get-meeting] 2:21:01 PM 2025-07-16T07:21:01.362Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[get-meeting] 2:21:01 PM START RequestId: 4d541a0c-d9b6-4f66-b24c-4e1e3a225a85 Version: $LATEST
+[get-meeting] 2:21:01 PM 2025-07-16T07:21:01.387Z	4d541a0c-d9b6-4f66-b24c-4e1e3a225a85	INFO	Getting meeting with meetingId:  19c6d8f7-22bb-4adc-8b88-f7b6f10c4804
+[get-meeting] 2:21:02 PM 2025-07-16T07:21:02.110Z	4d541a0c-d9b6-4f66-b24c-4e1e3a225a85	INFO	Get Meeting Response:  19c6d8f7-22bb-4adc-8b88-f7b6f10c4804
+[get-meeting] 2:21:02 PM END RequestId: 4d541a0c-d9b6-4f66-b24c-4e1e3a225a85
+[get-meeting] 2:21:02 PM REPORT RequestId: 4d541a0c-d9b6-4f66-b24c-4e1e3a225a85	Duration: 757.10 ms	Billed Duration: 758 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 924.51 ms
+[send-channel-message] 2:21:16 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[send-channel-message] 2:21:17 PM 2025-07-16T07:21:17.697Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[send-channel-message] 2:21:17 PM 2025-07-16T07:21:17.700Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[send-channel-message] 2:21:17 PM START RequestId: 5999ed9b-af00-4d50-b315-fe7504514abd Version: $LATEST
+[send-channel-message] 2:21:17 PM 2025-07-16T07:21:17.714Z	5999ed9b-af00-4d50-b315-fe7504514abd	INFO	Send Channel Message with channelArn:  arn%3Aaws%3Achime%3Aus-east-1%3A647755634525%3Aapp-instance%2F1007fa5f-d281-43e6-ac7d-758a23201cc0%2Fchannel%2F08d6c530-5403-4040-8b72-08f8202167f7 type: STANDARD persistence: PERSISTENT clientRequestToken: a7f969bd-c218-45b5-a4d0-ccd702e5ffdb chimeBearer: arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0/user/fa336f5e-7f29-4f56-a724-a4bebab5a374 metadata: null
+[send-channel-message] 2:21:17 PM 2025-07-16T07:21:17.714Z	5999ed9b-af00-4d50-b315-fe7504514abd	INFO	Send Channel Message Params:  {
+  ChannelArn: 'arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0/channel/08d6c530-5403-4040-8b72-08f8202167f7',
+  Content: 'ppp',
+  Type: 'STANDARD',
+  Persistence: 'PERSISTENT',
+  ClientRequestToken: 'a7f969bd-c218-45b5-a4d0-ccd702e5ffdb',
+  ChimeBearer: 'arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0/user/fa336f5e-7f29-4f56-a724-a4bebab5a374',
+  Metadata: null
+}
+[send-channel-message] 2:21:17 PM 2025-07-16T07:21:17.914Z	5999ed9b-af00-4d50-b315-fe7504514abd	INFO	Send Channel Message Response:  {
+  ChannelArn: 'arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0/channel/08d6c530-5403-4040-8b72-08f8202167f7',
+  MessageId: '830f0206ef916b112debc44daba2547bf04cca0a3d2ab397735f9a41ab33c5ea',
+  Status: { Value: 'SENT', Detail: null },
+  SubChannelId: null
+}
+[send-channel-message] 2:21:17 PM END RequestId: 5999ed9b-af00-4d50-b315-fe7504514abd
+[send-channel-message] 2:21:17 PM REPORT RequestId: 5999ed9b-af00-4d50-b315-fe7504514abd	Duration: 209.69 ms	Billed Duration: 210 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 929.74 ms
+[start-meeting-transcription] 2:21:06 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[start-meeting-transcription] 2:21:07 PM 2025-07-16T07:21:07.146Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[start-meeting-transcription] 2:21:07 PM 2025-07-16T07:21:07.148Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[start-meeting-transcription] 2:21:07 PM START RequestId: 4220d2e0-af27-4ae7-8e18-6169ea104628 Version: $LATEST
+[start-meeting-transcription] 2:21:07 PM 2025-07-16T07:21:07.159Z	4220d2e0-af27-4ae7-8e18-6169ea104628	INFO	Start MeetingTranscription with meetingId:  19c6d8f7-22bb-4adc-8b88-f7b6f10c4804 languageCode:  ja-JP
+[start-meeting-transcription] 2:21:07 PM 2025-07-16T07:21:07.898Z	4220d2e0-af27-4ae7-8e18-6169ea104628	INFO	Started Meeting Transcription Response:  {}
+[start-meeting-transcription] 2:21:07 PM END RequestId: 4220d2e0-af27-4ae7-8e18-6169ea104628
+[start-meeting-transcription] 2:21:07 PM REPORT RequestId: 4220d2e0-af27-4ae7-8e18-6169ea104628	Duration: 746.41 ms	Billed Duration: 747 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 883.88 ms
+[get-meeting-by-tourid] 2:20:58 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[get-meeting-by-tourid] 2:20:59 PM 2025-07-16T07:20:59.134Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[get-meeting-by-tourid] 2:20:59 PM 2025-07-16T07:20:59.137Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[get-meeting-by-tourid] 2:20:59 PM START RequestId: cb34c680-b616-4615-b78c-8a843efe68de Version: $LATEST
+[get-meeting-by-tourid] 2:20:59 PM 2025-07-16T07:20:59.171Z	cb34c680-b616-4615-b78c-8a843efe68de	INFO	Retrieving tour with tourId:  4099cef9-5350-4846-ad65-cbe7d1c8a6ab
+[get-meeting-by-tourid] 2:20:59 PM 2025-07-16T07:20:59.767Z	cb34c680-b616-4615-b78c-8a843efe68de	INFO	Tour successfully retrieved:  {
+  nameOfCoursePersonInCharge: 'Tour001',
+  numberOfReceiversInUse: 'Tour001',
+  tourTestStatus: 'test',
+  tourType: 'tour',
+  tourConductorName: 'Tour001',
+  tourNumber: 'Tour001',
+  useTheTranslationFunction: true,
+  createdAt: '2025-07-16T03:27:43.728Z',
+  updatedBy: '',
+  createdBy: 'a90dec4d-042f-4db3-8c8e-dd183c86923b',
+  numberOfSendingDevices: 'Tour001',
+  returnDate: '2025-07-24',
+  coSponsoredCourseNumber: 'Tour001',
+  planningSalesOfficeTeamName: 'Tour001',
+  deleteFlag: 0,
+  meetingId: '19c6d8f7-22bb-4adc-8b88-f7b6f10c4804',
+  channelId: '08d6c530-5403-4040-8b72-08f8202167f7',
+  chatRestriction: 'allChat',
+  departureDate: '2025-07-16',
+  updatedAt: '',
+  planningAndSalesSignature: 'Tour001',
+  subGuideFunctionAvailable: true,
+  courseName: 'Tour001',
+  tourId: '4099cef9-5350-4846-ad65-cbe7d1c8a6ab'
+}
+[get-meeting-by-tourid] 2:20:59 PM END RequestId: cb34c680-b616-4615-b78c-8a843efe68de
+[get-meeting-by-tourid] 2:20:59 PM REPORT RequestId: cb34c680-b616-4615-b78c-8a843efe68de	Duration: 628.15 ms	Billed Duration: 629 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 975.04 ms
+[get-presigned-s3-upload] 2:20:17 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[get-presigned-s3-upload] 2:20:18 PM 2025-07-16T07:20:18.508Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[get-presigned-s3-upload] 2:20:18 PM 2025-07-16T07:20:18.511Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[get-presigned-s3-upload] 2:20:18 PM START RequestId: 9380717c-04e7-47d5-a6af-d6f91b9dc628 Version: $LATEST
+[get-presigned-s3-upload] 2:20:18 PM END RequestId: 9380717c-04e7-47d5-a6af-d6f91b9dc628
+[get-presigned-s3-upload] 2:20:18 PM REPORT RequestId: 9380717c-04e7-47d5-a6af-d6f91b9dc628	Duration: 90.10 ms	Billed Duration: 91 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 969.12 ms
+[get-presigned-s3-upload] 2:21:34 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[get-presigned-s3-upload] 2:21:35 PM 2025-07-16T07:21:35.509Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[get-presigned-s3-upload] 2:21:35 PM 2025-07-16T07:21:35.512Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[get-presigned-s3-upload] 2:21:35 PM START RequestId: ada2e2ae-c15d-491f-a3a6-e7f8edc77b7f Version: $LATEST
+[get-presigned-s3-upload] 2:21:35 PM END RequestId: ada2e2ae-c15d-491f-a3a6-e7f8edc77b7f
+[get-presigned-s3-upload] 2:21:35 PM REPORT RequestId: ada2e2ae-c15d-491f-a3a6-e7f8edc77b7f	Duration: 96.87 ms	Billed Duration: 97 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 932.67 ms
+[login-and-get-credentials] 2:21:10 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[login-and-get-credentials] 2:21:10 PM 2025-07-16T07:21:10.603Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[login-and-get-credentials] 2:21:10 PM 2025-07-16T07:21:10.605Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[login-and-get-credentials] 2:21:10 PM START RequestId: 49d08c84-990e-4d50-a933-56d0a0b96ba7 Version: $LATEST
+[login-and-get-credentials] 2:21:11 PM END RequestId: 49d08c84-990e-4d50-a933-56d0a0b96ba7
+[login-and-get-credentials] 2:21:11 PM REPORT RequestId: 49d08c84-990e-4d50-a933-56d0a0b96ba7	Duration: 920.20 ms	Billed Duration: 921 ms	Memory Size: 512 MB	Max Memory Used: 89 MB	Init Duration: 421.23 ms
+[login-and-get-credentials] 2:29:18 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[login-and-get-credentials] 2:29:18 PM 2025-07-16T07:29:18.764Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[login-and-get-credentials] 2:29:18 PM 2025-07-16T07:29:18.766Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[login-and-get-credentials] 2:29:18 PM START RequestId: a5353184-b0e0-4d81-967a-765546605b10 Version: $LATEST
+[login-and-get-credentials] 2:29:19 PM END RequestId: a5353184-b0e0-4d81-967a-765546605b10
+[login-and-get-credentials] 2:29:19 PM REPORT RequestId: a5353184-b0e0-4d81-967a-765546605b10	Duration: 773.32 ms	Billed Duration: 774 ms	Memory Size: 512 MB	Max Memory Used: 88 MB	Init Duration: 402.50 ms
+[get-presigned-s3-upload] 2:37:08 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[get-presigned-s3-upload] 2:37:09 PM 2025-07-16T07:37:09.180Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[get-presigned-s3-upload] 2:37:09 PM 2025-07-16T07:37:09.183Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[get-presigned-s3-upload] 2:37:09 PM START RequestId: dc6ad5f1-7828-405c-8b2c-886cb85fe917 Version: $LATEST
+[get-presigned-s3-upload] 2:37:09 PM END RequestId: dc6ad5f1-7828-405c-8b2c-886cb85fe917
+[get-presigned-s3-upload] 2:37:09 PM REPORT RequestId: dc6ad5f1-7828-405c-8b2c-886cb85fe917	Duration: 105.78 ms	Billed Duration: 106 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 979.44 ms
+[get-presigned-s3-upload] 2:40:08 PM START RequestId: 572551ca-98e8-42ec-aca4-81d3ad5461fc Version: $LATEST
+[get-presigned-s3-upload] 2:40:08 PM END RequestId: 572551ca-98e8-42ec-aca4-81d3ad5461fc
+[get-presigned-s3-upload] 2:40:08 PM REPORT RequestId: 572551ca-98e8-42ec-aca4-81d3ad5461fc	Duration: 90.55 ms	Billed Duration: 91 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[get-presigned-s3-upload] 2:41:16 PM START RequestId: c6ba8dfe-1872-4cf2-bf71-a82664e74349 Version: $LATEST
+[get-presigned-s3-upload] 2:41:17 PM END RequestId: c6ba8dfe-1872-4cf2-bf71-a82664e74349
+[get-presigned-s3-upload] 2:41:17 PM REPORT RequestId: c6ba8dfe-1872-4cf2-bf71-a82664e74349	Duration: 84.28 ms	Billed Duration: 85 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[get-presigned-s3-upload] 2:45:08 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[get-presigned-s3-upload] 2:45:09 PM 2025-07-16T07:45:09.332Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[get-presigned-s3-upload] 2:45:09 PM 2025-07-16T07:45:09.334Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[get-presigned-s3-upload] 2:45:09 PM START RequestId: 4705ea65-4e84-4ca3-a1ed-16158051b2e0 Version: $LATEST
+[get-presigned-s3-upload] 2:45:09 PM END RequestId: 4705ea65-4e84-4ca3-a1ed-16158051b2e0
+[get-presigned-s3-upload] 2:45:09 PM REPORT RequestId: 4705ea65-4e84-4ca3-a1ed-16158051b2e0	Duration: 106.38 ms	Billed Duration: 107 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 945.95 ms
+[get-meeting-by-tourid] 2:49:36 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[start-meeting-transcription] 2:49:44 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[start-meeting-transcription] 2:49:45 PM 2025-07-16T07:49:45.912Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[start-meeting-transcription] 2:49:45 PM 2025-07-16T07:49:45.914Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[start-meeting-transcription] 2:49:45 PM START RequestId: ab5f3711-8dee-4438-aa5e-149e9d13b7a5 Version: $LATEST
+[start-meeting-transcription] 2:49:45 PM 2025-07-16T07:49:45.925Z	ab5f3711-8dee-4438-aa5e-149e9d13b7a5	INFO	Start MeetingTranscription with meetingId:  19c6d8f7-22bb-4adc-8b88-f7b6f10c4804 languageCode:  ja-JP
+[start-meeting-transcription] 2:49:46 PM 2025-07-16T07:49:46.655Z	ab5f3711-8dee-4438-aa5e-149e9d13b7a5	INFO	Started Meeting Transcription Response:  {}
+[start-meeting-transcription] 2:49:46 PM END RequestId: ab5f3711-8dee-4438-aa5e-149e9d13b7a5
+[start-meeting-transcription] 2:49:46 PM REPORT RequestId: ab5f3711-8dee-4438-aa5e-149e9d13b7a5	Duration: 737.28 ms	Billed Duration: 738 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 926.51 ms
+[get-meeting-by-tourid] 2:49:37 PM 2025-07-16T07:49:37.591Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[get-meeting-by-tourid] 2:49:37 PM 2025-07-16T07:49:37.594Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[get-meeting-by-tourid] 2:49:37 PM START RequestId: 3001dad8-79b3-421c-a023-68014902b07c Version: $LATEST
+[get-meeting-by-tourid] 2:49:37 PM 2025-07-16T07:49:37.613Z	3001dad8-79b3-421c-a023-68014902b07c	INFO	Retrieving tour with tourId:  4099cef9-5350-4846-ad65-cbe7d1c8a6ab
+[get-meeting-by-tourid] 2:49:38 PM 2025-07-16T07:49:38.212Z	3001dad8-79b3-421c-a023-68014902b07c	INFO	Tour successfully retrieved:  {
+  nameOfCoursePersonInCharge: 'Tour001',
+  numberOfReceiversInUse: 'Tour001',
+  tourTestStatus: 'test',
+  tourType: 'tour',
+  tourConductorName: 'Tour001',
+  tourNumber: 'Tour001',
+  useTheTranslationFunction: true,
+  createdAt: '2025-07-16T03:27:43.728Z',
+  updatedBy: '',
+  createdBy: 'a90dec4d-042f-4db3-8c8e-dd183c86923b',
+  numberOfSendingDevices: 'Tour001',
+  returnDate: '2025-07-24',
+  coSponsoredCourseNumber: 'Tour001',
+  planningSalesOfficeTeamName: 'Tour001',
+  deleteFlag: 0,
+  meetingId: '19c6d8f7-22bb-4adc-8b88-f7b6f10c4804',
+  channelId: '08d6c530-5403-4040-8b72-08f8202167f7',
+  chatRestriction: 'allChat',
+  departureDate: '2025-07-16',
+  updatedAt: '',
+  planningAndSalesSignature: 'Tour001',
+  subGuideFunctionAvailable: true,
+  courseName: 'Tour001',
+  tourId: '4099cef9-5350-4846-ad65-cbe7d1c8a6ab'
+}
+[get-meeting-by-tourid] 2:49:38 PM END RequestId: 3001dad8-79b3-421c-a023-68014902b07c
+[get-meeting-by-tourid] 2:49:38 PM REPORT RequestId: 3001dad8-79b3-421c-a023-68014902b07c	Duration: 632.34 ms	Billed Duration: 633 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 919.08 ms
+[login-and-get-credentials] 2:49:45 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[login-and-get-credentials] 2:49:45 PM 2025-07-16T07:49:45.838Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[login-and-get-credentials] 2:49:45 PM 2025-07-16T07:49:45.840Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[login-and-get-credentials] 2:49:45 PM START RequestId: d372c86d-f99f-49ba-9dbc-82e7a62eb8ac Version: $LATEST
+[get-meeting] 2:49:39 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[get-meeting] 2:49:40 PM 2025-07-16T07:49:40.456Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[get-meeting] 2:49:40 PM 2025-07-16T07:49:40.459Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[get-meeting] 2:49:40 PM START RequestId: 116139a2-92ae-47ad-b7c7-b3fcf1a8d6ec Version: $LATEST
+[get-meeting] 2:49:40 PM 2025-07-16T07:49:40.487Z	116139a2-92ae-47ad-b7c7-b3fcf1a8d6ec	INFO	Getting meeting with meetingId:  19c6d8f7-22bb-4adc-8b88-f7b6f10c4804
+[get-meeting] 2:49:41 PM 2025-07-16T07:49:41.218Z	116139a2-92ae-47ad-b7c7-b3fcf1a8d6ec	INFO	Get Meeting Response:  19c6d8f7-22bb-4adc-8b88-f7b6f10c4804
+[get-meeting] 2:49:41 PM END RequestId: 116139a2-92ae-47ad-b7c7-b3fcf1a8d6ec
+[get-meeting] 2:49:41 PM REPORT RequestId: 116139a2-92ae-47ad-b7c7-b3fcf1a8d6ec	Duration: 764.48 ms	Billed Duration: 765 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 975.96 ms
+[login-and-get-credentials] 2:49:46 PM END RequestId: d372c86d-f99f-49ba-9dbc-82e7a62eb8ac
+[login-and-get-credentials] 2:49:46 PM REPORT RequestId: d372c86d-f99f-49ba-9dbc-82e7a62eb8ac	Duration: 1004.32 ms	Billed Duration: 1005 ms	Memory Size: 512 MB	Max Memory Used: 88 MB	Init Duration: 402.26 ms
+[get-presigned-s3-upload] 2:50:21 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[get-presigned-s3-upload] 2:50:22 PM 2025-07-16T07:50:22.126Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[get-presigned-s3-upload] 2:50:22 PM 2025-07-16T07:50:22.129Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[get-presigned-s3-upload] 2:50:22 PM START RequestId: b71d230c-7fe8-41a0-aafa-2f6555605794 Version: $LATEST
+[get-presigned-s3-upload] 2:50:22 PM END RequestId: b71d230c-7fe8-41a0-aafa-2f6555605794
+[get-presigned-s3-upload] 2:50:22 PM REPORT RequestId: b71d230c-7fe8-41a0-aafa-2f6555605794	Duration: 92.09 ms	Billed Duration: 93 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 914.28 ms
+[send-channel-message] 2:50:25 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[send-channel-message] 2:50:26 PM 2025-07-16T07:50:26.692Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[send-channel-message] 2:50:26 PM 2025-07-16T07:50:26.694Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[send-channel-message] 2:50:26 PM START RequestId: 72b200d4-cb52-4e0a-9cfa-2b64dacb3993 Version: $LATEST
+[send-channel-message] 2:50:26 PM 2025-07-16T07:50:26.719Z	72b200d4-cb52-4e0a-9cfa-2b64dacb3993	INFO	Send Channel Message with channelArn:  arn%3Aaws%3Achime%3Aus-east-1%3A647755634525%3Aapp-instance%2F1007fa5f-d281-43e6-ac7d-758a23201cc0%2Fchannel%2F08d6c530-5403-4040-8b72-08f8202167f7 type: STANDARD persistence: PERSISTENT clientRequestToken: 94b3a5c9-81d7-4490-a301-99942777f429 chimeBearer: arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0/user/fa336f5e-7f29-4f56-a724-a4bebab5a374 metadata: {"attachments":[{"name":"cate1111_456.jpg","size":625825,"type":"image/jpeg"}]}
+[send-channel-message] 2:50:26 PM 2025-07-16T07:50:26.719Z	72b200d4-cb52-4e0a-9cfa-2b64dacb3993	INFO	Send Channel Message Params:  {
+  ChannelArn: 'arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0/channel/08d6c530-5403-4040-8b72-08f8202167f7',
+  Content: ' ',
+  Type: 'STANDARD',
+  Persistence: 'PERSISTENT',
+  ClientRequestToken: '94b3a5c9-81d7-4490-a301-99942777f429',
+  ChimeBearer: 'arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0/user/fa336f5e-7f29-4f56-a724-a4bebab5a374',
+  Metadata: '{"attachments":[{"name":"cate1111_456.jpg","size":625825,"type":"image/jpeg"}]}'
+}
+[send-channel-message] 2:50:26 PM 2025-07-16T07:50:26.901Z	72b200d4-cb52-4e0a-9cfa-2b64dacb3993	INFO	Send Channel Message Response:  {
+  ChannelArn: 'arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0/channel/08d6c530-5403-4040-8b72-08f8202167f7',
+  MessageId: 'e7c50d1616279b0661918ffbcb5df56cfee707fca35be34059155c145a665017',
+  Status: { Value: 'SENT', Detail: null },
+  SubChannelId: null
+}
+[send-channel-message] 2:50:26 PM END RequestId: 72b200d4-cb52-4e0a-9cfa-2b64dacb3993
+[send-channel-message] 2:50:26 PM REPORT RequestId: 72b200d4-cb52-4e0a-9cfa-2b64dacb3993	Duration: 215.91 ms	Billed Duration: 216 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 901.39 ms
+[login-and-get-credentials] 2:53:14 PM START RequestId: aa8bbbe7-3793-41d3-afab-d121ed1cff7c Version: $LATEST
+[login-and-get-credentials] 2:53:15 PM END RequestId: aa8bbbe7-3793-41d3-afab-d121ed1cff7c
+[login-and-get-credentials] 2:53:15 PM REPORT RequestId: aa8bbbe7-3793-41d3-afab-d121ed1cff7c	Duration: 886.78 ms	Billed Duration: 887 ms	Memory Size: 512 MB	Max Memory Used: 88 MB
+[get-presigned-s3-upload] 2:53:40 PM START RequestId: 2c269947-4071-4ca8-8b6a-2fc5024f2d2f Version: $LATEST
+[get-presigned-s3-upload] 2:53:40 PM END RequestId: 2c269947-4071-4ca8-8b6a-2fc5024f2d2f
+[get-presigned-s3-upload] 2:53:40 PM REPORT RequestId: 2c269947-4071-4ca8-8b6a-2fc5024f2d2f	Duration: 101.22 ms	Billed Duration: 102 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[send-channel-message] 2:53:44 PM START RequestId: 5ecf0dc0-68e2-43d7-8fb9-7d94f67cf726 Version: $LATEST
+[send-channel-message] 2:53:44 PM 2025-07-16T07:53:44.549Z	5ecf0dc0-68e2-43d7-8fb9-7d94f67cf726	INFO	Send Channel Message with channelArn:  arn%3Aaws%3Achime%3Aus-east-1%3A647755634525%3Aapp-instance%2F1007fa5f-d281-43e6-ac7d-758a23201cc0%2Fchannel%2F08d6c530-5403-4040-8b72-08f8202167f7 type: STANDARD persistence: PERSISTENT clientRequestToken: 5881ef61-3d36-4f90-a494-8cba169ced8f chimeBearer: arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0/user/fa336f5e-7f29-4f56-a724-a4bebab5a374 metadata: {"attachments":[{"fileKey":"1752652420345-cate1111_456_896.jpg","url":"https://vtg-chat-attachments.s3.ap-northeast-1.amazonaws.com/1752652420345-cate1111_456_896.jpg","name":"cate1111_456_896.jpg","size":625825,"type":"image/jpeg"}]}
+[send-channel-message] 2:53:44 PM 2025-07-16T07:53:44.549Z	5ecf0dc0-68e2-43d7-8fb9-7d94f67cf726	INFO	Send Channel Message Params:  {
+  ChannelArn: 'arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0/channel/08d6c530-5403-4040-8b72-08f8202167f7',
+  Content: ' ',
+  Type: 'STANDARD',
+  Persistence: 'PERSISTENT',
+  ClientRequestToken: '5881ef61-3d36-4f90-a494-8cba169ced8f',
+  ChimeBearer: 'arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0/user/fa336f5e-7f29-4f56-a724-a4bebab5a374',
+  Metadata: '{"attachments":[{"fileKey":"1752652420345-cate1111_456_896.jpg","url":"https://vtg-chat-attachments.s3.ap-northeast-1.amazonaws.com/1752652420345-cate1111_456_896.jpg","name":"cate1111_456_896.jpg","size":625825,"type":"image/jpeg"}]}'
+}
+[send-channel-message] 2:53:44 PM 2025-07-16T07:53:44.743Z	5ecf0dc0-68e2-43d7-8fb9-7d94f67cf726	INFO	Send Channel Message Response:  {
+  ChannelArn: 'arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0/channel/08d6c530-5403-4040-8b72-08f8202167f7',
+  MessageId: 'ed869011524a47ea94d6bd6dabb62ccab5eeb2d83746217a6297c5792e70114b',
+  Status: { Value: 'SENT', Detail: null },
+  SubChannelId: null
+}
+[send-channel-message] 2:53:44 PM END RequestId: 5ecf0dc0-68e2-43d7-8fb9-7d94f67cf726
+[send-channel-message] 2:53:44 PM REPORT RequestId: 5ecf0dc0-68e2-43d7-8fb9-7d94f67cf726	Duration: 199.26 ms	Billed Duration: 200 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[get-meeting] 3:01:39 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[get-meeting] 3:01:40 PM 2025-07-16T08:01:40.742Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[get-meeting] 3:01:40 PM 2025-07-16T08:01:40.745Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[get-meeting] 3:01:40 PM START RequestId: a1ff7375-40f8-45e2-9439-f2d8f83045a3 Version: $LATEST
+[get-meeting] 3:01:40 PM 2025-07-16T08:01:40.756Z	a1ff7375-40f8-45e2-9439-f2d8f83045a3	INFO	Getting meeting with meetingId:  19c6d8f7-22bb-4adc-8b88-f7b6f10c4804
+[get-meeting] 3:01:41 PM 2025-07-16T08:01:41.483Z	a1ff7375-40f8-45e2-9439-f2d8f83045a3	INFO	Get Meeting Response:  19c6d8f7-22bb-4adc-8b88-f7b6f10c4804
+[get-meeting] 3:01:41 PM END RequestId: a1ff7375-40f8-45e2-9439-f2d8f83045a3
+[get-meeting] 3:01:41 PM REPORT RequestId: a1ff7375-40f8-45e2-9439-f2d8f83045a3	Duration: 734.50 ms	Billed Duration: 735 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 928.49 ms
+[send-channel-message] 3:02:20 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[send-channel-message] 3:02:20 PM 2025-07-16T08:02:20.981Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[send-channel-message] 3:02:20 PM 2025-07-16T08:02:20.983Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[send-channel-message] 3:02:20 PM START RequestId: a556d6bf-ad3f-4d69-a68c-2ed7392f3111 Version: $LATEST
+[send-channel-message] 3:02:21 PM 2025-07-16T08:02:21.012Z	a556d6bf-ad3f-4d69-a68c-2ed7392f3111	INFO	Send Channel Message with channelArn:  arn%3Aaws%3Achime%3Aus-east-1%3A647755634525%3Aapp-instance%2F1007fa5f-d281-43e6-ac7d-758a23201cc0%2Fchannel%2F08d6c530-5403-4040-8b72-08f8202167f7 type: STANDARD persistence: PERSISTENT clientRequestToken: 17bcc2d2-284e-4625-a1c5-da6fd728a32a chimeBearer: arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0/user/fa336f5e-7f29-4f56-a724-a4bebab5a374 metadata: {"attachments":[{"fileKey":"1752652936448-cate999_456_896.jpg","url":"https://vtg-chat-attachments.s3.us-east-1.amazonaws.com/1752652936448-cate999_456_896.jpg","name":"cate999_456_896.jpg","size":625825,"type":"image/jpeg"}]}
+[send-channel-message] 3:02:21 PM 2025-07-16T08:02:21.012Z	a556d6bf-ad3f-4d69-a68c-2ed7392f3111	INFO	Send Channel Message Params:  {
+  ChannelArn: 'arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0/channel/08d6c530-5403-4040-8b72-08f8202167f7',
+  Content: ' ',
+  Type: 'STANDARD',
+  Persistence: 'PERSISTENT',
+  ClientRequestToken: '17bcc2d2-284e-4625-a1c5-da6fd728a32a',
+  ChimeBearer: 'arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0/user/fa336f5e-7f29-4f56-a724-a4bebab5a374',
+  Metadata: '{"attachments":[{"fileKey":"1752652936448-cate999_456_896.jpg","url":"https://vtg-chat-attachments.s3.us-east-1.amazonaws.com/1752652936448-cate999_456_896.jpg","name":"cate999_456_896.jpg","size":625825,"type":"image/jpeg"}]}'
+}
+[send-channel-message] 3:02:21 PM 2025-07-16T08:02:21.208Z	a556d6bf-ad3f-4d69-a68c-2ed7392f3111	INFO	Send Channel Message Response:  {
+  ChannelArn: 'arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0/channel/08d6c530-5403-4040-8b72-08f8202167f7',
+  MessageId: '5d2cb0a55837f100d77e4ff8dfdf301e292a931d9beb8e94e2653949e9fa840c',
+  Status: { Value: 'SENT', Detail: null },
+  SubChannelId: null
+}
+[send-channel-message] 3:02:21 PM END RequestId: a556d6bf-ad3f-4d69-a68c-2ed7392f3111
+[send-channel-message] 3:02:21 PM REPORT RequestId: a556d6bf-ad3f-4d69-a68c-2ed7392f3111	Duration: 223.56 ms	Billed Duration: 224 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 933.43 ms
+[start-meeting-transcription] 3:01:44 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[start-meeting-transcription] 3:01:45 PM 2025-07-16T08:01:45.507Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[start-meeting-transcription] 3:01:45 PM 2025-07-16T08:01:45.509Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[start-meeting-transcription] 3:01:45 PM START RequestId: c3191d8c-07a5-4351-98e9-82c000d174d0 Version: $LATEST
+[start-meeting-transcription] 3:01:45 PM 2025-07-16T08:01:45.519Z	c3191d8c-07a5-4351-98e9-82c000d174d0	INFO	Start MeetingTranscription with meetingId:  19c6d8f7-22bb-4adc-8b88-f7b6f10c4804 languageCode:  ja-JP
+[start-meeting-transcription] 3:01:46 PM 2025-07-16T08:01:46.233Z	c3191d8c-07a5-4351-98e9-82c000d174d0	INFO	Started Meeting Transcription Response:  {}
+[start-meeting-transcription] 3:01:46 PM END RequestId: c3191d8c-07a5-4351-98e9-82c000d174d0
+[start-meeting-transcription] 3:01:46 PM REPORT RequestId: c3191d8c-07a5-4351-98e9-82c000d174d0	Duration: 720.70 ms	Billed Duration: 721 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 806.17 ms
+[get-meeting-by-tourid] 3:01:36 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[get-meeting-by-tourid] 3:01:37 PM 2025-07-16T08:01:37.851Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[get-meeting-by-tourid] 3:01:37 PM 2025-07-16T08:01:37.853Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[get-meeting-by-tourid] 3:01:37 PM START RequestId: 5bf19309-402a-4d5f-b76f-294dd6a43d2b Version: $LATEST
+[get-meeting-by-tourid] 3:01:37 PM 2025-07-16T08:01:37.869Z	5bf19309-402a-4d5f-b76f-294dd6a43d2b	INFO	Retrieving tour with tourId:  4099cef9-5350-4846-ad65-cbe7d1c8a6ab
+[get-meeting-by-tourid] 3:01:38 PM 2025-07-16T08:01:38.461Z	5bf19309-402a-4d5f-b76f-294dd6a43d2b	INFO	Tour successfully retrieved:  {
+  nameOfCoursePersonInCharge: 'Tour001',
+  numberOfReceiversInUse: 'Tour001',
+  tourTestStatus: 'test',
+  tourType: 'tour',
+  tourConductorName: 'Tour001',
+  tourNumber: 'Tour001',
+  useTheTranslationFunction: true,
+  createdAt: '2025-07-16T03:27:43.728Z',
+  updatedBy: '',
+  createdBy: 'a90dec4d-042f-4db3-8c8e-dd183c86923b',
+  numberOfSendingDevices: 'Tour001',
+  returnDate: '2025-07-24',
+  coSponsoredCourseNumber: 'Tour001',
+  planningSalesOfficeTeamName: 'Tour001',
+  deleteFlag: 0,
+  meetingId: '19c6d8f7-22bb-4adc-8b88-f7b6f10c4804',
+  channelId: '08d6c530-5403-4040-8b72-08f8202167f7',
+  chatRestriction: 'allChat',
+  departureDate: '2025-07-16',
+  updatedAt: '',
+  planningAndSalesSignature: 'Tour001',
+  subGuideFunctionAvailable: true,
+  courseName: 'Tour001',
+  tourId: '4099cef9-5350-4846-ad65-cbe7d1c8a6ab'
+}
+[get-meeting-by-tourid] 3:01:38 PM END RequestId: 5bf19309-402a-4d5f-b76f-294dd6a43d2b
+[get-meeting-by-tourid] 3:01:38 PM REPORT RequestId: 5bf19309-402a-4d5f-b76f-294dd6a43d2b	Duration: 604.63 ms	Billed Duration: 605 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 929.23 ms
+[get-presigned-s3-upload] 3:02:15 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[get-presigned-s3-upload] 3:02:16 PM 2025-07-16T08:02:16.414Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[get-presigned-s3-upload] 3:02:16 PM 2025-07-16T08:02:16.416Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[get-presigned-s3-upload] 3:02:16 PM START RequestId: 1adfbb69-b38c-441f-825f-3963dfb7fa63 Version: $LATEST
+[get-presigned-s3-upload] 3:02:16 PM END RequestId: 1adfbb69-b38c-441f-825f-3963dfb7fa63
+[get-presigned-s3-upload] 3:02:16 PM REPORT RequestId: 1adfbb69-b38c-441f-825f-3963dfb7fa63	Duration: 70.93 ms	Billed Duration: 71 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 971.66 ms
+[login-and-get-credentials] 3:01:51 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[login-and-get-credentials] 3:01:51 PM 2025-07-16T08:01:51.669Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[login-and-get-credentials] 3:01:51 PM 2025-07-16T08:01:51.672Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[login-and-get-credentials] 3:01:51 PM START RequestId: 2dccb927-c038-4f63-a894-2aaca46ba600 Version: $LATEST
+[login-and-get-credentials] 3:01:52 PM END RequestId: 2dccb927-c038-4f63-a894-2aaca46ba600
+[login-and-get-credentials] 3:01:52 PM REPORT RequestId: 2dccb927-c038-4f63-a894-2aaca46ba600	Duration: 921.24 ms	Billed Duration: 922 ms	Memory Size: 512 MB	Max Memory Used: 88 MB	Init Duration: 396.35 ms
+[get-meeting] 3:21:06 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[get-meeting-by-tourid] 3:21:03 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[get-meeting-by-tourid] 3:21:04 PM 2025-07-16T08:21:04.655Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[get-meeting-by-tourid] 3:21:04 PM 2025-07-16T08:21:04.673Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[get-meeting-by-tourid] 3:21:04 PM START RequestId: ccf071ee-3ea2-4275-b690-e4a7c3aa6e95 Version: $LATEST
+[get-meeting-by-tourid] 3:21:04 PM 2025-07-16T08:21:04.708Z	ccf071ee-3ea2-4275-b690-e4a7c3aa6e95	INFO	Retrieving tour with tourId:  4099cef9-5350-4846-ad65-cbe7d1c8a6ab
+[get-meeting-by-tourid] 3:21:05 PM 2025-07-16T08:21:05.369Z	ccf071ee-3ea2-4275-b690-e4a7c3aa6e95	INFO	Tour successfully retrieved:  {
+  nameOfCoursePersonInCharge: 'Tour001',
+  numberOfReceiversInUse: 'Tour001',
+  tourTestStatus: 'test',
+  tourType: 'tour',
+  tourConductorName: 'Tour001',
+  tourNumber: 'Tour001',
+  useTheTranslationFunction: true,
+  createdAt: '2025-07-16T03:27:43.728Z',
+  updatedBy: '',
+  createdBy: 'a90dec4d-042f-4db3-8c8e-dd183c86923b',
+  numberOfSendingDevices: 'Tour001',
+  returnDate: '2025-07-24',
+  coSponsoredCourseNumber: 'Tour001',
+  planningSalesOfficeTeamName: 'Tour001',
+  deleteFlag: 0,
+  meetingId: '19c6d8f7-22bb-4adc-8b88-f7b6f10c4804',
+  channelId: '08d6c530-5403-4040-8b72-08f8202167f7',
+  chatRestriction: 'allChat',
+  departureDate: '2025-07-16',
+  updatedAt: '',
+  planningAndSalesSignature: 'Tour001',
+  subGuideFunctionAvailable: true,
+  courseName: 'Tour001',
+  tourId: '4099cef9-5350-4846-ad65-cbe7d1c8a6ab'
+}
+[get-meeting-by-tourid] 3:21:05 PM END RequestId: ccf071ee-3ea2-4275-b690-e4a7c3aa6e95
+[get-meeting-by-tourid] 3:21:05 PM REPORT RequestId: ccf071ee-3ea2-4275-b690-e4a7c3aa6e95	Duration: 707.40 ms	Billed Duration: 708 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 1115.48 ms
+[get-meeting-by-tourid] 3:21:06 PM START RequestId: ef68316c-599c-43e7-999c-8d8c92ff64c8 Version: $LATEST
+[get-meeting-by-tourid] 3:21:06 PM 2025-07-16T08:21:06.107Z	ef68316c-599c-43e7-999c-8d8c92ff64c8	INFO	Retrieving tour with tourId:  4099cef9-5350-4846-ad65-cbe7d1c8a6ab
+[get-meeting-by-tourid] 3:21:06 PM 2025-07-16T08:21:06.584Z	ef68316c-599c-43e7-999c-8d8c92ff64c8	INFO	Tour successfully retrieved:  {
+  nameOfCoursePersonInCharge: 'Tour001',
+  numberOfReceiversInUse: 'Tour001',
+  tourTestStatus: 'test',
+  tourType: 'tour',
+  tourConductorName: 'Tour001',
+  tourNumber: 'Tour001',
+  useTheTranslationFunction: true,
+  createdAt: '2025-07-16T03:27:43.728Z',
+  updatedBy: '',
+  createdBy: 'a90dec4d-042f-4db3-8c8e-dd183c86923b',
+  numberOfSendingDevices: 'Tour001',
+  returnDate: '2025-07-24',
+  coSponsoredCourseNumber: 'Tour001',
+  planningSalesOfficeTeamName: 'Tour001',
+  deleteFlag: 0,
+  meetingId: '19c6d8f7-22bb-4adc-8b88-f7b6f10c4804',
+  channelId: '08d6c530-5403-4040-8b72-08f8202167f7',
+  chatRestriction: 'allChat',
+  departureDate: '2025-07-16',
+  updatedAt: '',
+  planningAndSalesSignature: 'Tour001',
+  subGuideFunctionAvailable: true,
+  courseName: 'Tour001',
+  tourId: '4099cef9-5350-4846-ad65-cbe7d1c8a6ab'
+}
+[get-meeting-by-tourid] 3:21:06 PM END RequestId: ef68316c-599c-43e7-999c-8d8c92ff64c8
+[get-meeting-by-tourid] 3:21:06 PM REPORT RequestId: ef68316c-599c-43e7-999c-8d8c92ff64c8	Duration: 480.16 ms	Billed Duration: 481 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[get-meeting] 3:21:07 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[get-meeting] 3:21:08 PM 2025-07-16T08:21:08.437Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[get-meeting] 3:21:08 PM 2025-07-16T08:21:08.439Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[get-meeting] 3:21:08 PM START RequestId: 2f1fcf8c-6e4f-4f8a-9d00-ac2dc38cecdc Version: $LATEST
+[get-meeting] 3:21:08 PM 2025-07-16T08:21:08.453Z	2f1fcf8c-6e4f-4f8a-9d00-ac2dc38cecdc	INFO	Getting meeting with meetingId:  19c6d8f7-22bb-4adc-8b88-f7b6f10c4804
+[get-meeting] 3:21:09 PM 2025-07-16T08:21:09.186Z	2f1fcf8c-6e4f-4f8a-9d00-ac2dc38cecdc	INFO	Get Meeting Response:  19c6d8f7-22bb-4adc-8b88-f7b6f10c4804
+[get-meeting] 3:21:09 PM END RequestId: 2f1fcf8c-6e4f-4f8a-9d00-ac2dc38cecdc
+[get-meeting] 3:21:09 PM REPORT RequestId: 2f1fcf8c-6e4f-4f8a-9d00-ac2dc38cecdc	Duration: 749.31 ms	Billed Duration: 750 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 931.19 ms
+[start-meeting-transcription] 3:21:04 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[start-meeting-transcription] 3:21:05 PM 2025-07-16T08:21:05.145Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[start-meeting-transcription] 3:21:05 PM 2025-07-16T08:21:05.148Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[start-meeting-transcription] 3:21:05 PM START RequestId: ba9d618e-b865-4d2d-b021-2903068b9baa Version: $LATEST
+[start-meeting-transcription] 3:21:05 PM 2025-07-16T08:21:05.173Z	ba9d618e-b865-4d2d-b021-2903068b9baa	INFO	Start MeetingTranscription with meetingId:  19c6d8f7-22bb-4adc-8b88-f7b6f10c4804 languageCode:  ja-JP
+[start-meeting-transcription] 3:21:05 PM 2025-07-16T08:21:05.916Z	ba9d618e-b865-4d2d-b021-2903068b9baa	INFO	Started Meeting Transcription Response:  {}
+[start-meeting-transcription] 3:21:05 PM END RequestId: ba9d618e-b865-4d2d-b021-2903068b9baa
+[start-meeting-transcription] 3:21:05 PM REPORT RequestId: ba9d618e-b865-4d2d-b021-2903068b9baa	Duration: 757.51 ms	Billed Duration: 758 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 950.80 ms
+[start-meeting-transcription] 3:21:06 PM START RequestId: 50613d9c-d432-408a-abfd-0e0bc1befcc1 Version: $LATEST
+[start-meeting-transcription] 3:21:06 PM 2025-07-16T08:21:06.876Z	50613d9c-d432-408a-abfd-0e0bc1befcc1	INFO	Start MeetingTranscription with meetingId:  19c6d8f7-22bb-4adc-8b88-f7b6f10c4804 languageCode:  ja-JP
+[start-meeting-transcription] 3:21:07 PM 2025-07-16T08:21:07.526Z	50613d9c-d432-408a-abfd-0e0bc1befcc1	INFO	Started Meeting Transcription Response:  {}
+[start-meeting-transcription] 3:21:07 PM END RequestId: 50613d9c-d432-408a-abfd-0e0bc1befcc1
+[start-meeting-transcription] 3:21:07 PM REPORT RequestId: 50613d9c-d432-408a-abfd-0e0bc1befcc1	Duration: 653.04 ms	Billed Duration: 654 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[login-and-get-credentials] 3:21:03 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[login-and-get-credentials] 3:21:03 PM 2025-07-16T08:21:03.916Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[login-and-get-credentials] 3:21:03 PM 2025-07-16T08:21:03.918Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[login-and-get-credentials] 3:21:03 PM START RequestId: da7bb621-ffd0-4805-9240-0c9f3eb67685 Version: $LATEST
+[login-and-get-credentials] 3:21:04 PM END RequestId: da7bb621-ffd0-4805-9240-0c9f3eb67685
+[login-and-get-credentials] 3:21:04 PM REPORT RequestId: da7bb621-ffd0-4805-9240-0c9f3eb67685	Duration: 1009.48 ms	Billed Duration: 1010 ms	Memory Size: 512 MB	Max Memory Used: 88 MB	Init Duration: 423.34 ms
+[login-and-get-credentials] 3:21:06 PM START RequestId: ffd0e8e5-08d2-4e1b-8987-424a6e27626c Version: $LATEST
+[login-and-get-credentials] 3:21:06 PM END RequestId: ffd0e8e5-08d2-4e1b-8987-424a6e27626c
+[login-and-get-credentials] 3:21:06 PM REPORT RequestId: ffd0e8e5-08d2-4e1b-8987-424a6e27626c	Duration: 592.15 ms	Billed Duration: 593 ms	Memory Size: 512 MB	Max Memory Used: 88 MB
+[start-meeting-transcription] 3:21:12 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[start-meeting-transcription] 3:21:13 PM 2025-07-16T08:21:13.550Z	undefined	INFO	App DB_TABLES: { USERS: 'users_dev', TOURS: 'tours_dev' }
+[start-meeting-transcription] 3:21:13 PM 2025-07-16T08:21:13.553Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[start-meeting-transcription] 3:21:13 PM START RequestId: 6452ae6a-bffe-4029-8cc3-1ebca4121bb5 Version: $LATEST
+[start-meeting-transcription] 3:21:13 PM 2025-07-16T08:21:13.566Z	6452ae6a-bffe-4029-8cc3-1ebca4121bb5	INFO	Start MeetingTranscription with meetingId:  19c6d8f7-22bb-4adc-8b88-f7b6f10c4804 languageCode:  ja-JP
+[start-meeting-transcription] 3:21:14 PM 2025-07-16T08:21:14.301Z	6452ae6a-bffe-4029-8cc3-1ebca4121bb5	INFO	Started Meeting Transcription Response:  {}
+[start-meeting-transcription] 3:21:14 PM END RequestId: 6452ae6a-bffe-4029-8cc3-1ebca4121bb5
+[start-meeting-transcription] 3:21:14 PM REPORT RequestId: 6452ae6a-bffe-4029-8cc3-1ebca4121bb5	Duration: 744.89 ms	Billed Duration: 745 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 941.32 ms

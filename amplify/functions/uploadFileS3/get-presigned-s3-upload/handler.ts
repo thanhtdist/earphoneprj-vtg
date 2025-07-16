@@ -6,7 +6,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
   try {
     // Initialize S3 client inside the function
     const s3 = new AWS.S3({
-      region: Config.region,
+      region: Config.messageRegion,
       signatureVersion: 'v4',
     });
 
@@ -29,13 +29,13 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       };
     }
 
-    const key = `uploads/${Date.now()}-${fileName}`;
+    const key = `${Date.now()}-${fileName}`;
     const params = {
       Bucket: Config.attachmentBucketName,
       Key: key,
       Expires: 60 * 5,
       ContentType: fileType,
-      ACL: 'public-read',
+      // ACL: 'public-read',
     };
 
     const uploadUrl = await s3.getSignedUrlPromise('putObject', params);
@@ -43,9 +43,12 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     return {
       statusCode: 200,
       body: JSON.stringify({
-        uploadUrl,
-        key,
-        fileUrl: `https://${Config.attachmentBucketName}.s3.${Config.region}.amazonaws.com/${key}`,
+        data: {
+          uploadUrl: uploadUrl,
+          key: key,
+          fileUrl: `https://${Config.attachmentBucketName}.s3.${Config.messageRegion}.amazonaws.com/${key}`,
+        },
+        message: 'Successfully generated signed URL for S3 upload.',
       }),
       headers: Config.headers,
     };
