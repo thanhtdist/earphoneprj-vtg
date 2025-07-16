@@ -45,6 +45,8 @@ import { updateMeetingByTourId } from './functions/tours/update-meeting-by-touri
 import { connect } from './functions/translates/translate-text-speech-socket/connect/resource';
 import { disconnect } from './functions/translates/translate-text-speech-socket/disconnect/resource';
 import { sendMessage } from './functions/translates/translate-text-speech-socket/sendMessage/resource';
+import { getPresignedS3Upload } from './functions/uploadFileS3/get-presigned-s3-upload/resource';
+import { loginAndGetCredentials } from './functions/loginCognito/get-credentials/resource';
 
 /**
  * Define the backend resources 
@@ -85,6 +87,8 @@ const backend = defineBackend({
   connect, // translate text to speech by socket
   disconnect, // disconnect socket
   sendMessage, // send message by socket
+  getPresignedS3Upload, // get pre-signed S3 upload URL
+  loginAndGetCredentials // login and get AWS credentials from Cognito
 });
 
 /**
@@ -212,6 +216,53 @@ const sendMessagesPath = channelArnPath.addResource("messages");
 sendMessagesPath.addMethod("POST", new LambdaIntegration(
   backend.sendChannelMessage.resources.lambda
 ));
+
+
+// 2.1. Add app instance user API
+const uploadS3RestApi = new RestApi(apiStack, "UploadS3VTGRestApi", {
+  restApiName: "UploadS3VTGRestApi",
+  deploy: true,
+  deployOptions: {
+    stageName: "prod",
+  },
+  defaultCorsPreflightOptions: {
+    allowOrigins: Cors.ALL_ORIGINS, // Restrict this to domains you trust
+    allowMethods: Cors.ALL_METHODS, // Specify only the methods you need to allow
+    allowHeaders: Cors.DEFAULT_HEADERS, // Specify only the headers you need to allow
+  },
+});
+
+// get pre-sign URL
+const uploadS3Path = uploadS3RestApi.root.addResource("uploads");
+const uploadS3PresignURLPath = uploadS3Path.addResource("presigned-url");
+// add GET method to /channels/presign-url with sendChannelMessage Lambda integration
+uploadS3PresignURLPath.addMethod("POST", new LambdaIntegration(
+  backend.getPresignedS3Upload.resources.lambda
+));
+
+// =============3. API Getway, Lambda function for login cognito ===============
+// 2.1. Add app instance user API
+const loginCognitoRestApi = new RestApi(apiStack, "LoginCognitoVTGRestApi", {
+  restApiName: "LoginCognitoVTGRestApi",
+  deploy: true,
+  deployOptions: {
+    stageName: "prod",
+  },
+  defaultCorsPreflightOptions: {
+    allowOrigins: Cors.ALL_ORIGINS, // Restrict this to domains you trust
+    allowMethods: Cors.ALL_METHODS, // Specify only the methods you need to allow
+    allowHeaders: Cors.DEFAULT_HEADERS, // Specify only the headers you need to allow
+  },
+});
+
+// login and get credentials
+const loginCognitoPath = loginCognitoRestApi.root.addResource("cognito-login");
+const getCredentialsPath = loginCognitoPath.addResource("credentials");
+// add GET method to /credentials with sendChannelMessage Lambda integration
+getCredentialsPath.addMethod("POST", new LambdaIntegration(
+  backend.loginAndGetCredentials.resources.lambda
+));
+
 
 // 2.1. Add app instance user API
 const cloudWatchLogRestApi = new RestApi(apiStack, "CloudWatchLogRestApiVTGRestApi", {
@@ -477,7 +528,17 @@ backend.addOutput({
         endpoint: `${translateWebSocketApi.apiEndpoint}/${translateWebSocketStage.stageName}/`,
         region: Stack.of(translateWebSocketApi).region,
         apiName: webSocketApiProps.apiName,
-      }
+      },
+      [uploadS3RestApi.restApiName]: {
+        endpoint: uploadS3RestApi.url,
+        region: Stack.of(uploadS3RestApi).region,
+        apiName: uploadS3RestApi.restApiName,
+      },
+      [loginCognitoRestApi.restApiName]: {
+        endpoint: loginCognitoRestApi.url,
+        region: Stack.of(loginCognitoRestApi).region,
+        apiName: loginCognitoRestApi.restApiName,
+      },
     },
   },
 });

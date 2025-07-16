@@ -23,5 +23,10 @@ export const Config = {
     refreshSecret: '5d37f522ddc137330c5f081a3dc9cd5f10263ece17915b1b0ebdde5c7ff7b5d977114edd1bb1e94b32d620c5552857937605c7ef6d01c1ad9a5e5b15679b253f', // Secret key for refresh token signing and verification
     refreshExpiration: '7d', // Refresh token expiration time
     attachmentBucketName: 'vtg-chat-attachments', // S3 bucket name for attachments
-    dbTables: DB_TABLES
+    dbTables: DB_TABLES,
+    cognitoUserPoolId: 'us-east-1_bO6Ov9c8u', // Cognito User Pool ID
+    cognitoClientId: '66746hij9gar727r0mqrhhjbpj', // Cognito App Client ID
+    identityPoolId: 'us-east-1:82ce29b3-5ab3-439b-b857-576f3b333a9b', // Cognito Identity Pool ID
+    cognitoEmail: 'thanhtd@i-stech.net',
+    cognitoPassword: '123456789@Xx', // Fixed credentials for Cognito login
 };

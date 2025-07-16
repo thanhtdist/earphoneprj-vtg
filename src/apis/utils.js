@@ -9,6 +9,7 @@ export async function apiWrapper(apiCall) {
             statusCode: statusCode,
         };
     } catch (error) {
+        console.error("API call failed:", error);
         const { body, statusCode } = await error.response;
         const parsed = typeof body.json === 'function' ? await body.json() : JSON.parse(body);
         const err = new Error(parsed.error || 'Unexpected error');

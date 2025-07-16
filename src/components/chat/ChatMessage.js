@@ -1,7 +1,10 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { ChimeSDKMessagingClient } from '@aws-sdk/client-chime-sdk-messaging';
-import { sendMessage } from '../../apis/api';
-import { uploadFileToS3 } from '../../services/S3Service';
+import { sendMessage, loginAndGetCredentials } from '../../apis/api';
+import {
+  generatePresignedUrl,
+  //uploadFileToS3
+ } from '../../services/S3Service';
 import {
   ConsoleLogger,
   DefaultMessagingSession,
@@ -17,8 +20,8 @@ import Config from '../../utils/config';
 import ChatAttachment from './ChatAttachment';
 import { useTranslation } from 'react-i18next';
 import { MdAttachFile } from "react-icons/md";
-import { loginCognito } from "../../utils/cognitoAuth";
-import { fromCognitoIdentityPool } from "@aws-sdk/credential-providers";
+// import { loginCognito } from "../../utils/cognitoAuth";
+// import { fromCognitoIdentityPool } from "@aws-sdk/credential-providers";
 /**
  * Component to display chat messages and send messages to a channel
  * @param {string} userArn - The ARN of the user
@@ -62,24 +65,15 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null, userT
   const initializeMessagingSession = useCallback(async () => {
     const logger = new ConsoleLogger('SDK', LogLevel.INFO);
     try {
-      //let idToken = localStorage.getItem('cognito_id_token');
-      let idToken = null;
-      if (!idToken) {
-        idToken = await loginCognito(Config.cognitoEmail, Config.cognitoPassword);
-        //localStorage.setItem('cognito_id_token', idToken);
-      }
-      //localStorage.setItem('cognito_id_token', idToken);
-      const credentials = fromCognitoIdentityPool({
-        clientConfig: { region: Config.region },
-        identityPoolId: Config.identityPoolId,
-        logins: {
-          [`cognito-idp.${Config.region}.amazonaws.com/${Config.userPoolId}`]: idToken,
-        },
-      });
-      console.log("Credentials:", credentials);
+      const credentials = await loginAndGetCredentials();
+      console.log('Credentials:', credentials);
       const chime = new ChimeSDKMessagingClient({
         region: Config.region,
-        credentials
+        credentials: {
+          accessKeyId: credentials.data.accessKeyId,
+          secretAccessKey: credentials.data.secretAccessKey,
+          sessionToken: credentials.data.sessionToken,
+        },
       });
       // Create a new messaging session configuration
       const configuration = new MessagingSessionConfiguration(userArn, sessionId, undefined, chime);
@@ -160,7 +154,9 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null, userT
       if (selectedFile) {
 
         // store attachment into S3
-        const uploadFileToS3Response = await uploadFileToS3(selectedFile);
+        // const uploadFileToS3Response = await uploadFileToS3(selectedFile);
+        // console.log('File uploaded successfully:', uploadFileToS3Response);
+        const uploadFileToS3Response = await generatePresignedUrl(selectedFile);
         console.log('File uploaded successfully:', uploadFileToS3Response);
 
         // Metadata for the attachment file to be sent with the message

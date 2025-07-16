@@ -30,3 +30,26 @@ export const uploadFileToS3 = async (file) => {
   }
 };
 
+
+export const generatePresignedUrl = async (file) => {
+  const res = await fetch('https://r31n6gnl25.execute-api.us-east-1.amazonaws.com/prod/uploads/presigned-url', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      fileName: file.name,
+      fileType: file.type,
+    }),
+  });
+
+  const { uploadUrl } = await res.json();
+
+  // upload file trực tiếp lên S3
+  await fetch(uploadUrl, {
+    method: 'PUT',
+    headers: { 'Content-Type': file.type },
+    body: file,
+  });
+
+  console.log('Upload thành công!');
+};
+

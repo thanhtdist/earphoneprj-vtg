@@ -20,11 +20,11 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     // console.log('Auth Header: ', authHeader);
     // const user = await verifyAuth(authHeader);
     // console.log('Authenticated User:', user);
-    
+
     // Parse body from API Gateway event
     const { userName, email, password } = JSON.parse(event.body || '{}');
 
-    console.log('Creating user with userName: ', userName, 'password: ', password);
+    console.log('Creating user with userName: ', userName, 'email:',email, 'password: ', password);
 
     // Input validation
     if (!userName || !email || !password) {
@@ -40,41 +40,67 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     const saltRounds = 10;
     const hashPassword = await bcrypt.hash(password, saltRounds);
 
-    // Create a new user item for DynamoDB
-    let userid = uuid();
-    const userItem = {
-      userId: userid, // Generate a unique user ID
-      userName,
-      password: hashPassword,
-      email,
-      createdAt: new Date().toISOString(),
-      //createdBy: user.userId,
-      createdBy: userid,
-      updatedAt: '',
-      updatedBy: '',
-      deleteFlag: 0,
-      role: 0,
-      active: 0,
-      userType:'user'
+    const params = {
+      TableName: Config.dbTables.USERS,
+      FilterExpression: '#email = :emailVal AND #deleteFlag = :deleteFlagVal',
+      ExpressionAttributeNames: {
+        '#email': 'email',
+        '#deleteFlag': 'deleteFlag'
+      },
+      ExpressionAttributeValues: {
+        ':emailVal': email,
+        ':deleteFlagVal': 0
+      }
     };
+    const scanResult = await dynamoDB.scan(params).promise();
+    console.log("scanResult", scanResult);
 
-    // Store the user in DynamoDB
-    await dynamoDB.put({
-      TableName:  Config.dbTables.USERS,
-      Item: userItem,
-    }).promise();
+    if (scanResult.Count === 1) {
+      console.log('no user');
 
-    console.log('User successfully created: ', userItem);
+      return {
+       statusCode: 400,
+        body: JSON.stringify({ error: 'Email already exists', }),
+        headers: Config.headers,
+      };
+    }
+    else {
+      // Create a new user item for DynamoDB
+      let userid = uuid();
+      const userItem = {
+        userId: userid, // Generate a unique user ID
+        userName,
+        password: hashPassword,
+        email,
+        createdAt: new Date().toISOString(),
+        //createdBy: user.userId,
+        createdBy: userid,
+        updatedAt: '',
+        updatedBy: '',
+        deleteFlag: 0,
+        role: 0,
+        active: 0,
+        userType: 'user'
+      };
 
-    // Return success response
-    return {
-      statusCode: 200,
-      body: JSON.stringify({
-        message: "User created successfully",
-        data: userItem,
-      }),
-      headers: Config.headers,
-    };
+      // Store the user in DynamoDB
+      await dynamoDB.put({
+        TableName: Config.dbTables.USERS,
+        Item: userItem,
+      }).promise();
+
+      console.log('User successfully created: ', userItem);
+
+      // Return success response
+      return {
+        statusCode: 200,
+        body: JSON.stringify({
+          message: "User created successfully",
+          data: userItem,
+        }),
+        headers: Config.headers,
+      };
+    }
   } catch (error: any) {
     console.error('Failed to create user: ', { error, event });
 
