@@ -2,31 +2,32 @@ import type { APIGatewayProxyHandler } from 'aws-lambda';
 import AWS from 'aws-sdk';
 import { Config } from '@configs/config';
 import { v4 as uuid } from 'uuid';
-import { verifyAuth } from '../../utils/verifyAuth'; // Import auth function
+import { verifyAuth } from '../../utils/verifyAuth';
+import dayjs from 'dayjs'; // For date parsing and formatting
 
-/**
- * This function creates new tours and stores them in AWS DynamoDB.
- * @param event - Contains the request body with an array of tour details.
- * @returns Response with success message or error.
- */
+// Accepts only 'yyyy-mm-dd' or 'yyyy/mm/dd' formats
+const normalizeDate = (dateStr: string): string => {
+  if (!dateStr) return '';
+
+  const validFormatRegex = /^\d{4}[-/]\d{2}[-/]\d{2}$/;
+  if (!validFormatRegex.test(dateStr.trim())) {
+    return ''; // Invalid format
+  }
+
+  const parsed = dayjs(dateStr.replace(/\//g, '-'));
+  return parsed.isValid() ? parsed.format('YYYY-MM-DD') : '';
+};
+
 export const handler: APIGatewayProxyHandler = async (event) => {
-  // Initialize DynamoDB client
   const dynamoDB = new AWS.DynamoDB.DocumentClient({ region: Config.region });
 
   try {
-    // Authenticate the user
     const authHeader = event.headers?.Authorization || '';
-    console.log('Auth Header: ', authHeader);
     const user = await verifyAuth(authHeader);
-    console.log('Authenticated User:', user);
 
-    // Parse body from API Gateway event
-    console.log('Before Tours to create:', event.body);
     const tours = JSON.parse(event.body || '[]');
-    console.log('After Tours to create:', tours);
 
     if (!Array.isArray(tours) || tours.length === 0) {
-      console.error('Invalid input: Body should be a non-empty array of tours.');
       return {
         statusCode: 400,
         body: JSON.stringify({ error: 'Invalid input: Body should be a non-empty array of tours.' }),
@@ -34,7 +35,11 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       };
     }
 
-    const putRequests = tours.map(tour => {
+    const putRequests = [];
+    const errors: any[] = [];
+
+    for (let i = 0; i < tours.length; i++) {
+      const tour = tours[i];
       const {
         tourNumber,
         courseName,
@@ -52,24 +57,39 @@ export const handler: APIGatewayProxyHandler = async (event) => {
         chatRestriction
       } = tour;
 
-      // Input validation
+      // Validate required fields
       if (!tourNumber || !courseName || !departureDate || !returnDate) {
-        console.log('values input', 'tourNumber',tourNumber,'courseName',courseName,'departureDate',departureDate,'returnDate',returnDate )
-        throw new Error(`Invalid input: tourNumber, courseName, departureDate, returnDate are required for tour ${tourNumber}.`);
+        errors.push({
+          index: i + 1,
+          tourNumber,
+          error: 'Missing required fields: tourNumber, courseName, departureDate, returnDate are required.'
+        });
+        continue;
       }
-      console.log(123456789);
-      
-      // Create a new tour item for DynamoDB
-      return {
+
+      const normalizedDeparture = normalizeDate(departureDate);
+      const normalizedReturn = normalizeDate(returnDate);
+
+      if (!normalizedDeparture || !normalizedReturn) {
+        errors.push({
+          index: i + 1,
+          tourNumber,
+          error: "Invalid date format. Only 'yyyy-mm-dd' or 'yyyy/mm/dd' are allowed."
+        });
+        continue;
+      }
+
+      // Construct item
+      putRequests.push({
         PutRequest: {
           Item: {
-            tourId: uuid(), // Generate a unique tour ID
+            tourId: uuid(),
             tourNumber,
             courseName,
             planningAndSalesSignature,
             planningSalesOfficeTeamName,
-            departureDate,
-            returnDate,
+            departureDate: normalizedDeparture,
+            returnDate: normalizedReturn,
             nameOfCoursePersonInCharge,
             tourConductorName,
             numberOfReceiversInUse,
@@ -81,34 +101,41 @@ export const handler: APIGatewayProxyHandler = async (event) => {
             channelId: '',
             chatRestriction,
             createdAt: new Date().toISOString(),
-            createdBy: user.userId, // Replace with actual user who is creating
+            createdBy: user.userId,
             updatedAt: '',
             updatedBy: '',
             deleteFlag: 0,
-            tourTestStatus: 'test', // Test and Production
+            tourTestStatus: 'test',
             tourType: 'tour'
           }
         }
+      });
+    }
+
+    if (errors.length > 0) {
+      return {
+        statusCode: 400,
+        body: JSON.stringify({
+          error: 'Some rows contain invalid data.',
+          data: errors
+        }),
+        headers: Config.headers,
       };
-    });
+    }
 
     // Batch write to DynamoDB
     const params = {
       RequestItems: {
-        "tours_dev": putRequests // Replace with your actual DynamoDB table name
+        [Config.dbTables.TOURS]: putRequests
       }
     };
-    console.log('params',params);
-    
+
     await dynamoDB.batchWrite(params).promise();
 
-    console.log('Tours successfully created: ', putRequests);
-
-    // Return success response
     return {
       statusCode: 200,
       body: JSON.stringify({
-        message: "Tours created successfully",
+        message: 'Tours created successfully',
         data: putRequests.map(req => req.PutRequest.Item),
       }),
       headers: Config.headers,
@@ -116,7 +143,6 @@ export const handler: APIGatewayProxyHandler = async (event) => {
   } catch (error: any) {
     console.error('Failed to create tours: ', { error, event });
 
-    // Return error response
     return {
       statusCode: error?.statusCode || 500,
       body: JSON.stringify({ error: error.message || 'Internal Server Error' }),

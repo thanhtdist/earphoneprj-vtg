@@ -17,8 +17,12 @@ import ReactPaginate from 'react-paginate';
 import Config from '../../../utils/config'; // Importing the configuration file
 import { FaCheck } from "react-icons/fa6";
 import Encoding from 'encoding-japanese';
+import ErrorDetailModal from './ErrorDetailModal';
 
 const ListTour = () => {
+    // Show error detail modal when there are errors in the uploaded CSV
+    const [showErrorModal, setShowErrorModal] = useState(false);
+    const [errorRows, setErrorRows] = useState([]);
     const navigate = useNavigate();
     const fileInputRef = useRef(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -245,8 +249,10 @@ const ListTour = () => {
                 },
             });
         } catch (error) {
-            console.log("Error creating batch tour:", error.message); // Log error
-            console.log("Error creating batch tour:", error.statusCode); // Log error
+            console.error("Error creating batch tour:", error); // Log error
+            setErrorRows(error.data);
+            setShowErrorModal(true);
+
         } finally {
             setIsLoading(false);
         }
@@ -441,6 +447,13 @@ const ListTour = () => {
                     confirmName="Delete"
                     handleConfirmed={handleDeleteConfirmed}
                     handleCloseConfirm={handleCloseDeleteConfirm}
+                />
+            )}
+            {showErrorModal && (
+                <ErrorDetailModal
+                    show={showErrorModal}
+                    errors={errorRows}
+                    onClose={() => setShowErrorModal(false)}
                 />
             )}
 
