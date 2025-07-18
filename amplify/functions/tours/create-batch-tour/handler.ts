@@ -2,31 +2,96 @@ import type { APIGatewayProxyHandler } from 'aws-lambda';
 import AWS from 'aws-sdk';
 import { Config } from '@configs/config';
 import { v4 as uuid } from 'uuid';
-import { verifyAuth } from '../../utils/verifyAuth'; // Import auth function
+import { verifyAuth } from '../../utils/verifyAuth';
+import dayjs from 'dayjs';
 
-/**
- * This function creates new tours and stores them in AWS DynamoDB.
- * @param event - Contains the request body with an array of tour details.
- * @returns Response with success message or error.
- */
+const normalizeDate = (dateStr: string): string => {
+  if (!dateStr) return '';
+  const validFormatRegex = /^\d{4}[-/]\d{2}[-/]\d{2}$/;
+  if (!validFormatRegex.test(dateStr.trim())) return '';
+  const parsed = dayjs(dateStr.replace(/\//g, '-'));
+  return parsed.isValid() ? parsed.format('YYYY-MM-DD') : '';
+};
+
+const validateTours = (tours: any[]): { errors: any[], validTours: any[] } => {
+  const errors: any[] = [];
+  const validTours: any[] = [];
+
+  const seenKeys = new Set(); // for checking duplicate tourNumber + departureDate in the same batch
+
+  for (let i = 0; i < tours.length; i++) {
+    const tour = tours[i];
+    const {
+      tourNumber,
+      courseName,
+      departureDate,
+      returnDate
+    } = tour;
+
+    if (!tourNumber || !courseName || !departureDate || !returnDate) {
+      errors.push({
+        index: i + 2,
+        tourNumber,
+        error: 'Missing required fields: tourNumber, courseName, departureDate, returnDate are required.'
+      });
+      continue;
+    }
+
+    const normalizedDeparture = normalizeDate(departureDate);
+    const normalizedReturn = normalizeDate(returnDate);
+
+    if (!normalizedDeparture || !normalizedReturn) {
+      errors.push({
+        index: i + 2,
+        tourNumber,
+        error: "Invalid date format. Only 'yyyy-mm-dd' or 'yyyy/mm/dd' are allowed."
+      });
+      continue;
+    }
+
+    // Check returnDate >= departureDate
+    if (dayjs(normalizedReturn).isBefore(normalizedDeparture)) {
+      errors.push({
+        index: i + 2,
+        tourNumber,
+        error: 'ReturnDate must be equal to or after departureDate.'
+      });
+      continue;
+    }
+
+    // Check duplicate in batch
+    const key = `${tourNumber}_${normalizedDeparture}`;
+    if (seenKeys.has(key)) {
+      errors.push({
+        index: i + 2,
+        tourNumber,
+        error: 'Duplicate tourNumber and departureDate in input batch.'
+      });
+      continue;
+    }
+
+    seenKeys.add(key);
+
+    validTours.push({
+      ...tour,
+      departureDate: normalizedDeparture,
+      returnDate: normalizedReturn
+    });
+  }
+
+  return { errors, validTours };
+};
+
 export const handler: APIGatewayProxyHandler = async (event) => {
-  // Initialize DynamoDB client
   const dynamoDB = new AWS.DynamoDB.DocumentClient({ region: Config.region });
 
   try {
-    // Authenticate the user
     const authHeader = event.headers?.Authorization || '';
-    console.log('Auth Header: ', authHeader);
     const user = await verifyAuth(authHeader);
-    console.log('Authenticated User:', user);
 
-    // Parse body from API Gateway event
-    console.log('Before Tours to create:', event.body);
     const tours = JSON.parse(event.body || '[]');
-    console.log('After Tours to create:', tours);
 
     if (!Array.isArray(tours) || tours.length === 0) {
-      console.error('Invalid input: Body should be a non-empty array of tours.');
       return {
         statusCode: 400,
         body: JSON.stringify({ error: 'Invalid input: Body should be a non-empty array of tours.' }),
@@ -34,81 +99,83 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       };
     }
 
-    const putRequests = tours.map(tour => {
-      const {
-        tourNumber,
-        courseName,
-        planningAndSalesSignature,
-        planningSalesOfficeTeamName,
-        departureDate,
-        returnDate,
-        nameOfCoursePersonInCharge,
-        tourConductorName,
-        numberOfReceiversInUse,
-        numberOfSendingDevices,
-        subGuideFunctionAvailable,
-        useTheTranslationFunction,
-        coSponsoredCourseNumber,
-        chatRestriction
-      } = tour;
+    const { errors, validTours } = validateTours(tours);
 
-      // Input validation
-      if (!tourNumber || !courseName || !departureDate || !returnDate) {
-        console.log('values input', 'tourNumber',tourNumber,'courseName',courseName,'departureDate',departureDate,'returnDate',returnDate )
-        throw new Error(`Invalid input: tourNumber, courseName, departureDate, returnDate are required for tour ${tourNumber}.`);
-      }
-      console.log(123456789);
-      
-      // Create a new tour item for DynamoDB
+    if (errors.length > 0) {
       return {
-        PutRequest: {
-          Item: {
-            tourId: uuid(), // Generate a unique tour ID
-            tourNumber,
-            courseName,
-            planningAndSalesSignature,
-            planningSalesOfficeTeamName,
-            departureDate,
-            returnDate,
-            nameOfCoursePersonInCharge,
-            tourConductorName,
-            numberOfReceiversInUse,
-            numberOfSendingDevices,
-            subGuideFunctionAvailable,
-            useTheTranslationFunction,
-            coSponsoredCourseNumber,
-            meetingId: '',
-            channelId: '',
-            chatRestriction,
-            createdAt: new Date().toISOString(),
-            createdBy: user.userId, // Replace with actual user who is creating
-            updatedAt: '',
-            updatedBy: '',
-            deleteFlag: 0,
-            tourTestStatus: 'test', // Test and Production
-            tourType: 'tour'
-          }
-        }
+        statusCode: 400,
+        body: JSON.stringify({
+          error: 'Some rows contain invalid data.',
+          data: errors
+        }),
+        headers: Config.headers,
       };
-    });
+    }
 
-    // Batch write to DynamoDB
+    // Check duplicate in DB: tourNumber + departureDate
+    const existingErrors: any[] = [];
+    const checkRequests = await Promise.all(validTours.map(async (tour, index) => {
+      const result = await dynamoDB.query({
+        TableName: Config.dbTables.TOURS,
+        IndexName: 'tourNumber-departureDate-index', // make sure you create this index
+        KeyConditionExpression: 'tourNumber = :tourNum AND departureDate = :depDate',
+        ExpressionAttributeValues: {
+          ':tourNum': tour.tourNumber,
+          ':depDate': tour.departureDate
+        },
+        Limit: 1
+      }).promise();
+
+      if (result.Items && result.Items.length > 0) {
+        existingErrors.push({
+          index: index + 2,
+          tourNumber: tour.tourNumber,
+          error: 'TourNumber and departureDate already exist in database.'
+        });
+      }
+    }));
+
+    if (existingErrors.length > 0) {
+      return {
+        statusCode: 400,
+        body: JSON.stringify({
+          error: 'Some rows already exist in DB.',
+          data: existingErrors
+        }),
+        headers: Config.headers,
+      };
+    }
+
+    const putRequests = validTours.map(tour => ({
+      PutRequest: {
+        Item: {
+          tourId: uuid(),
+          ...tour,
+          meetingId: '',
+          channelId: '',
+          createdAt: new Date().toISOString(),
+          createdBy: user.userId,
+          updatedAt: '',
+          updatedBy: '',
+          deleteFlag: 0,
+          tourTestStatus: 'test',
+          tourType: 'tour'
+        }
+      }
+    }));
+
     const params = {
       RequestItems: {
-        "tours_kennet": putRequests // Replace with your actual DynamoDB table name
+        [Config.dbTables.TOURS]: putRequests
       }
     };
-    console.log('params',params);
-    
+
     await dynamoDB.batchWrite(params).promise();
 
-    console.log('Tours successfully created: ', putRequests);
-
-    // Return success response
     return {
       statusCode: 200,
       body: JSON.stringify({
-        message: "Tours created successfully",
+        message: 'Tours created successfully',
         data: putRequests.map(req => req.PutRequest.Item),
       }),
       headers: Config.headers,
@@ -116,7 +183,6 @@ export const handler: APIGatewayProxyHandler = async (event) => {
   } catch (error: any) {
     console.error('Failed to create tours: ', { error, event });
 
-    // Return error response
     return {
       statusCode: error?.statusCode || 500,
       body: JSON.stringify({ error: error.message || 'Internal Server Error' }),
