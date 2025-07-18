@@ -3,19 +3,83 @@ import AWS from 'aws-sdk';
 import { Config } from '@configs/config';
 import { v4 as uuid } from 'uuid';
 import { verifyAuth } from '../../utils/verifyAuth';
-import dayjs from 'dayjs'; // For date parsing and formatting
+import dayjs from 'dayjs';
 
-// Accepts only 'yyyy-mm-dd' or 'yyyy/mm/dd' formats
 const normalizeDate = (dateStr: string): string => {
   if (!dateStr) return '';
-
   const validFormatRegex = /^\d{4}[-/]\d{2}[-/]\d{2}$/;
-  if (!validFormatRegex.test(dateStr.trim())) {
-    return ''; // Invalid format
-  }
-
+  if (!validFormatRegex.test(dateStr.trim())) return '';
   const parsed = dayjs(dateStr.replace(/\//g, '-'));
   return parsed.isValid() ? parsed.format('YYYY-MM-DD') : '';
+};
+
+const validateTours = (tours: any[]): { errors: any[], validTours: any[] } => {
+  const errors: any[] = [];
+  const validTours: any[] = [];
+
+  const seenKeys = new Set(); // for checking duplicate tourNumber + departureDate in the same batch
+
+  for (let i = 0; i < tours.length; i++) {
+    const tour = tours[i];
+    const {
+      tourNumber,
+      courseName,
+      departureDate,
+      returnDate
+    } = tour;
+
+    if (!tourNumber || !courseName || !departureDate || !returnDate) {
+      errors.push({
+        index: i + 2,
+        tourNumber,
+        error: 'Missing required fields: tourNumber, courseName, departureDate, returnDate are required.'
+      });
+      continue;
+    }
+
+    const normalizedDeparture = normalizeDate(departureDate);
+    const normalizedReturn = normalizeDate(returnDate);
+
+    if (!normalizedDeparture || !normalizedReturn) {
+      errors.push({
+        index: i + 2,
+        tourNumber,
+        error: "Invalid date format. Only 'yyyy-mm-dd' or 'yyyy/mm/dd' are allowed."
+      });
+      continue;
+    }
+
+    // Check returnDate >= departureDate
+    if (dayjs(normalizedReturn).isBefore(normalizedDeparture)) {
+      errors.push({
+        index: i + 2,
+        tourNumber,
+        error: 'ReturnDate must be equal to or after departureDate.'
+      });
+      continue;
+    }
+
+    // Check duplicate in batch
+    const key = `${tourNumber}_${normalizedDeparture}`;
+    if (seenKeys.has(key)) {
+      errors.push({
+        index: i + 2,
+        tourNumber,
+        error: 'Duplicate tourNumber and departureDate in input batch.'
+      });
+      continue;
+    }
+
+    seenKeys.add(key);
+
+    validTours.push({
+      ...tour,
+      departureDate: normalizedDeparture,
+      returnDate: normalizedReturn
+    });
+  }
+
+  return { errors, validTours };
 };
 
 export const handler: APIGatewayProxyHandler = async (event) => {
@@ -35,82 +99,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       };
     }
 
-    const putRequests = [];
-    const errors: any[] = [];
-
-    for (let i = 0; i < tours.length; i++) {
-      const tour = tours[i];
-      const {
-        tourNumber,
-        courseName,
-        planningAndSalesSignature,
-        planningSalesOfficeTeamName,
-        departureDate,
-        returnDate,
-        nameOfCoursePersonInCharge,
-        tourConductorName,
-        numberOfReceiversInUse,
-        numberOfSendingDevices,
-        subGuideFunctionAvailable,
-        useTheTranslationFunction,
-        coSponsoredCourseNumber,
-        chatRestriction
-      } = tour;
-
-      // Validate required fields
-      if (!tourNumber || !courseName || !departureDate || !returnDate) {
-        errors.push({
-          index: i + 1,
-          tourNumber,
-          error: 'Missing required fields: tourNumber, courseName, departureDate, returnDate are required.'
-        });
-        continue;
-      }
-
-      const normalizedDeparture = normalizeDate(departureDate);
-      const normalizedReturn = normalizeDate(returnDate);
-
-      if (!normalizedDeparture || !normalizedReturn) {
-        errors.push({
-          index: i + 1,
-          tourNumber,
-          error: "Invalid date format. Only 'yyyy-mm-dd' or 'yyyy/mm/dd' are allowed."
-        });
-        continue;
-      }
-
-      // Construct item
-      putRequests.push({
-        PutRequest: {
-          Item: {
-            tourId: uuid(),
-            tourNumber,
-            courseName,
-            planningAndSalesSignature,
-            planningSalesOfficeTeamName,
-            departureDate: normalizedDeparture,
-            returnDate: normalizedReturn,
-            nameOfCoursePersonInCharge,
-            tourConductorName,
-            numberOfReceiversInUse,
-            numberOfSendingDevices,
-            subGuideFunctionAvailable,
-            useTheTranslationFunction,
-            coSponsoredCourseNumber,
-            meetingId: '',
-            channelId: '',
-            chatRestriction,
-            createdAt: new Date().toISOString(),
-            createdBy: user.userId,
-            updatedAt: '',
-            updatedBy: '',
-            deleteFlag: 0,
-            tourTestStatus: 'test',
-            tourType: 'tour'
-          }
-        }
-      });
-    }
+    const { errors, validTours } = validateTours(tours);
 
     if (errors.length > 0) {
       return {
@@ -123,7 +112,58 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       };
     }
 
-    // Batch write to DynamoDB
+    // Check duplicate in DB: tourNumber + departureDate
+    const existingErrors: any[] = [];
+    const checkRequests = await Promise.all(validTours.map(async (tour, index) => {
+      const result = await dynamoDB.query({
+        TableName: Config.dbTables.TOURS,
+        IndexName: 'tourNumber-departureDate-index', // make sure you create this index
+        KeyConditionExpression: 'tourNumber = :tourNum AND departureDate = :depDate',
+        ExpressionAttributeValues: {
+          ':tourNum': tour.tourNumber,
+          ':depDate': tour.departureDate
+        },
+        Limit: 1
+      }).promise();
+
+      if (result.Items && result.Items.length > 0) {
+        existingErrors.push({
+          index: index + 1,
+          tourNumber: tour.tourNumber,
+          error: 'TourNumber and departureDate already exist in database.'
+        });
+      }
+    }));
+
+    if (existingErrors.length > 0) {
+      return {
+        statusCode: 400,
+        body: JSON.stringify({
+          error: 'Some rows already exist in DB.',
+          data: existingErrors
+        }),
+        headers: Config.headers,
+      };
+    }
+
+    const putRequests = validTours.map(tour => ({
+      PutRequest: {
+        Item: {
+          tourId: uuid(),
+          ...tour,
+          meetingId: '',
+          channelId: '',
+          createdAt: new Date().toISOString(),
+          createdBy: user.userId,
+          updatedAt: '',
+          updatedBy: '',
+          deleteFlag: 0,
+          tourTestStatus: 'test',
+          tourType: 'tour'
+        }
+      }
+    }));
+
     const params = {
       RequestItems: {
         [Config.dbTables.TOURS]: putRequests

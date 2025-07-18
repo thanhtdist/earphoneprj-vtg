@@ -42,7 +42,7 @@ const ErrorDetailModal = ({ show, title = "Invalid Data", errors = [], onClose }
                             ) : (
                                 <ul className="list-group">
                                     {errors.map((err, idx) => (
-                                        <li key={idx} className="text-danger">
+                                        <li key={idx} className="text-danger mb-2">
                                             <strong>Row {err.index} (Tour: {err.tourNumber}):</strong> {err.error}
                                         </li>
                                     ))}
