@@ -128,7 +128,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
 
       if (result.Items && result.Items.length > 0) {
         existingErrors.push({
-          index: index + 1,
+          index: index + 2,
           tourNumber: tour.tourNumber,
           error: 'TourNumber and departureDate already exist in database.'
         });
