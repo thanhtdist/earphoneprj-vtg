@@ -1,6 +1,7 @@
 import { APIGatewayProxyHandler } from 'aws-lambda';
 import { getSignedUrl } from "@aws-sdk/cloudfront-signer";
 import { Config } from '@configs/config';
+import { secret } from '@aws-amplify/backend';
 
 const CLOUDFRONT_DOMAIN = 'https://d8d9ccu87krcw.cloudfront.net'; // replace with yours
 const KEY_PAIR_ID = 'KM5PK06K9XZUQ'; // replace with yours
@@ -15,6 +16,8 @@ export const handler: APIGatewayProxyHandler = async (event) => {
         body: JSON.stringify({ error: 'Missing "fileKey" in request body' }),
       };
     }
+    const testPrivateKey = secret('PRIVATE_KEY');
+    console.log("Test Private Key:", testPrivateKey);
     console.log("Private Key:", Config.privateKey);
 
     const url = `${CLOUDFRONT_DOMAIN}/${fileKey}`;
