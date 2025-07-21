@@ -22,13 +22,14 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     console.log("Private Key:", Config.privateKey);
 
     const url = `${CLOUDFRONT_DOMAIN}/${fileKey}`;
+    console.log("URL:", url);
     const signedUrl = getSignedUrl({
       url,
       keyPairId: KEY_PAIR_ID,
       privateKey: Config.privateKey,
       dateLessThan: new Date(Date.now() + 1000 * 60 * 5), // 5 minutes
     });
-
+    console.log("signedUrl:", signedUrl);
     return {
       statusCode: 200,
       body: JSON.stringify({
