@@ -171,7 +171,7 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null, userT
           attachments: [
             {
               fileKey: uploadFileToS3Response.key,
-              url: uploadFileToS3Response.fileUrl,
+              // url: uploadFileToS3Response.fileUrl,
               name: selectedFile.name,
               size: selectedFile.size,
               type: selectedFile.type,

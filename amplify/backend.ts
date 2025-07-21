@@ -45,7 +45,8 @@ import { updateMeetingByTourId } from './functions/tours/update-meeting-by-touri
 import { connect } from './functions/translates/translate-text-speech-socket/connect/resource';
 import { disconnect } from './functions/translates/translate-text-speech-socket/disconnect/resource';
 import { sendMessage } from './functions/translates/translate-text-speech-socket/sendMessage/resource';
-import { getPresignedS3Upload } from './functions/uploadFileS3/get-presigned-s3-upload/resource';
+import { uploadPresignedS3Upload } from './functions/uploadFileS3/upload/resource';
+import { viewPresignedS3Upload } from './functions/uploadFileS3/view/resource';
 import { loginAndGetCredentials } from './functions/loginCognito/get-credentials/resource';
 
 /**
@@ -87,7 +88,8 @@ const backend = defineBackend({
   connect, // translate text to speech by socket
   disconnect, // disconnect socket
   sendMessage, // send message by socket
-  getPresignedS3Upload, // get pre-signed S3 upload URL
+  uploadPresignedS3Upload, // get pre-signed S3 upload URL
+  viewPresignedS3Upload, // view pre-signed S3 upload URL
   loginAndGetCredentials // login and get AWS credentials from Cognito
 });
 
@@ -234,10 +236,16 @@ const uploadS3RestApi = new RestApi(apiStack, "UploadS3VTGRestApi", {
 
 // get pre-sign URL
 const uploadS3Path = uploadS3RestApi.root.addResource("uploads");
-const uploadS3PresignURLPath = uploadS3Path.addResource("presigned-url");
+const uploadS3PresignURLPath = uploadS3Path.addResource("upload-presigned-url");
 // add GET method to /channels/presign-url with sendChannelMessage Lambda integration
 uploadS3PresignURLPath.addMethod("POST", new LambdaIntegration(
-  backend.getPresignedS3Upload.resources.lambda
+  backend.uploadPresignedS3Upload.resources.lambda
+));
+
+const viewS3PresignURLPath = uploadS3Path.addResource("view-presigned-url");
+// add GET method to /channels/presign-url with sendChannelMessage Lambda integration
+viewS3PresignURLPath.addMethod("GET", new LambdaIntegration(
+  backend.viewPresignedS3Upload.resources.lambda
 ));
 
 // =============3. API Getway, Lambda function for login cognito ===============

@@ -29,4 +29,5 @@ export const Config = {
     identityPoolId: 'us-east-1:82ce29b3-5ab3-439b-b857-576f3b333a9b', // Cognito Identity Pool ID
     cognitoEmail: 'thanhtd@i-stech.net',
     cognitoPassword: '123456789@Xx', // Fixed credentials for Cognito login
+    privateKey: process.env.PRIVATE_KEY || ``,
 };

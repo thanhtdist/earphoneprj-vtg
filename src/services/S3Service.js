@@ -2,7 +2,7 @@
  * Service to interact with AWS S3 Client from the frontend
  */
 import Config from '../utils/config';
-import { getPresignedUrl } from '../apis/api'; // Assuming this is the correct path to your API function
+import { uploadPresignedUrl } from '../apis/api'; // Assuming this is the correct path to your API function
 const AWS = require('aws-sdk');
 
 AWS.config.update({
@@ -36,7 +36,7 @@ export const generatePresignedUrl = async (file) => {
   try {
     // Step 1: Request a pre-signed URL from your backend
     console.log('Generating presigned URL for file:', file);
-    const getPresignedUrlResponse = await getPresignedUrl(file);
+    const getPresignedUrlResponse = await uploadPresignedUrl(file);
     const uploadUrl = getPresignedUrlResponse?.data?.uploadUrl;
     console.log('Received presigned URL:', uploadUrl);
 
