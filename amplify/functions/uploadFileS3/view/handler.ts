@@ -14,6 +14,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       return {
         statusCode: 400,
         body: JSON.stringify({ error: 'Missing "fileKey" in request body' }),
+        headers: Config.headers,
       };
     }
     const testPrivateKey = secret('PRIVATE_KEY');
