@@ -278,6 +278,7 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null, userT
 
     // Set up a repeating interval to check if credentials are close to expiring
     refreshIntervalRef.current = setInterval(async () => {
+      console.log('Checking credentials expiration...');
       const now = Date.now();
 
       // If the credentials will expire in less than or equal to 5 minutes
