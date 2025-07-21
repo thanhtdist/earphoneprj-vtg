@@ -4,7 +4,7 @@ import { sendMessage, loginAndGetCredentials } from '../../apis/api';
 import {
   generatePresignedUrl,
   //uploadFileToS3
- } from '../../services/S3Service';
+} from '../../services/S3Service';
 import {
   ConsoleLogger,
   DefaultMessagingSession,
@@ -29,6 +29,9 @@ import { MdAttachFile } from "react-icons/md";
  * @param {string} sessionId - The session ID for the messaging session 
  */
 function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null, userType }) {
+  const [credentialsExpiration, setCredentialsExpiration] = useState(null);
+  const refreshIntervalRef = useRef(null);
+
   const subGuideCount = localStorage.getItem('subGuideJoinCount') || 0;
   console.log('subGuideJoinCount:', subGuideCount);
   // State variables to store messages and input message
@@ -67,6 +70,11 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null, userT
     try {
       const credentials = await loginAndGetCredentials();
       console.log('Credentials:', credentials);
+      if (credentials?.data?.expiration) {
+        const expirationTime = new Date(credentials.data.expiration).getTime();
+        console.log('Credentials expiration time:', expirationTime);
+        setCredentialsExpiration(expirationTime);
+      }
       const chime = new ChimeSDKMessagingClient({
         region: Config.region,
         credentials: {
@@ -260,6 +268,44 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null, userT
       }
     };
   }, [initializeMessagingSession, channelArn, userArn, sessionId]);
+
+  // Effect to handle credentials expiration and refresh
+  useEffect(() => {
+    if (!credentialsExpiration) return;
+
+    const refreshBuffer = 5 * 60 * 1000; // 5 minutes
+    const checkInterval = 1 * 60 * 1000; // Check every minute
+
+    // Set up a repeating interval to check if credentials are close to expiring
+    refreshIntervalRef.current = setInterval(async () => {
+      const now = Date.now();
+
+      // If the credentials will expire in less than or equal to 5 minutes
+      if (credentialsExpiration - now <= refreshBuffer) {
+        console.log("Refreshing credentials before expiration...");
+
+        try {
+          // Stop the current messaging session
+          if (messagingSessionRef.current) {
+            messagingSessionRef.current.stop();
+          }
+
+          // Re-initialize the messaging session with new credentials
+          await initializeMessagingSession();
+        } catch (error) {
+          console.error("Failed to refresh credentials and session:", error);
+        }
+      }
+    }, checkInterval);
+
+    // Clear the interval when the component unmounts or credentialsExpiration changes
+    return () => {
+      clearInterval(refreshIntervalRef.current);
+    };
+  }, [credentialsExpiration]);
+
+
+  // Function to set the status of the chat based on chatSetting
   const styleButton = () => {
     if (userType === "Guide") {
       return '#C60226'
