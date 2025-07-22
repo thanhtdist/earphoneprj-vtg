@@ -20,7 +20,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       };
     }
 
-    const allowedTypes = ['image/png', 'image/jpeg', 'application/pdf'];
+    const allowedTypes = Config.allowedFileTypes;
     if (!allowedTypes.includes(fileType)) {
       return {
         statusCode: 400,
@@ -33,9 +33,8 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     const params = {
       Bucket: Config.attachmentBucketName,
       Key: key,
-      Expires: 60 * 5,
+      Expires: Config.uploadPresignedS3Expiration,
       ContentType: fileType,
-      // ACL: 'public-read',
     };
 
     const uploadUrl = await s3.getSignedUrlPromise('putObject', params);
@@ -46,7 +45,6 @@ export const handler: APIGatewayProxyHandler = async (event) => {
         data: {
           uploadUrl: uploadUrl,
           key: key,
-          fileUrl: `https://${Config.attachmentBucketName}.s3.${Config.messageRegion}.amazonaws.com/${key}`,
         },
         message: 'Successfully generated signed URL for S3 upload.',
       }),

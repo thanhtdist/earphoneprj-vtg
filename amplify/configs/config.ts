@@ -2,7 +2,9 @@
  * Configuration for the AWS Lambda functions
  */
 
+import { viewPresignedS3Upload } from 'functions/uploadFileS3/view/resource';
 import { DB_TABLES, DEFAULT_HEADERS } from './constant';
+import { uploadPresignedS3Upload } from 'functions/uploadFileS3/upload/resource';
 
 console.log('App DB_TABLES:', DB_TABLES);
 console.log('App DEFAULT_HEADERS:', DEFAULT_HEADERS);
@@ -27,7 +29,16 @@ export const Config = {
     cognitoUserPoolId: 'us-east-1_bO6Ov9c8u', // Cognito User Pool ID
     cognitoClientId: '66746hij9gar727r0mqrhhjbpj', // Cognito App Client ID
     identityPoolId: 'us-east-1:82ce29b3-5ab3-439b-b857-576f3b333a9b', // Cognito Identity Pool ID
-    cognitoEmail: 'thanhtd@i-stech.net',
-    cognitoPassword: '123456789@Xx', // Fixed credentials for Cognito login
+    // Fixed credentials for Cognito login
+    //cognitoEmail: 'thanhtd@i-stech.net',
+    //cognitoPassword: '123456789@Xx', 
+    cognitoEmail: process.env.COGNITO_EMAIL || ``,
+    cognitoPassword: process.env.COGNITO_PASSWORD || ``, 
     privateKey: process.env.PRIVATE_KEY || ``,
+    cloudFrontKeyPairId: 'KM5PK06K9XZUQ', // CloudFront Key Pair ID
+    cloudFrontDomain: 'https://d8d9ccu87krcw.cloudfront.net', // CloudFront domain for signed URLs
+    viewPresignedS3UrlExpiration: 5 * 60 * 1000, // 5 minutes in milliseconds
+    uploadPresignedS3Expiration: 60 * 5, // 5 minutes in milliseconds
+    // .jpg, .jpeg, .png, .gif, .pdf
+    allowedFileTypes: ['image/jpeg', 'image/png', 'image/gif', 'application/pdf'], // Allowed file types for upload
 };

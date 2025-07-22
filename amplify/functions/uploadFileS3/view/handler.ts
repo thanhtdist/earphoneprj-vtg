@@ -2,12 +2,8 @@ import { APIGatewayProxyHandler } from 'aws-lambda';
 import { getSignedUrl } from "@aws-sdk/cloudfront-signer";
 import { Config } from '@configs/config';
 
-const CLOUDFRONT_DOMAIN = 'https://d8d9ccu87krcw.cloudfront.net'; // replace with yours
-const KEY_PAIR_ID = 'KM5PK06K9XZUQ'; // replace with yours
-
 export const handler: APIGatewayProxyHandler = async (event) => {
   try {
-    //const { key } = JSON.parse(event.body || '{}');
     const fileKey = event.queryStringParameters?.key;
     if (!fileKey) {
       return {
@@ -19,13 +15,13 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     console.log("File Key:", fileKey);
     console.log("Private Key:", Config.privateKey);
 
-    const url = `${CLOUDFRONT_DOMAIN}/${fileKey}`;
+    const url = `${Config.cloudFrontDomain}/${fileKey}`;
     console.log("URL:", url);
     const signedUrl = getSignedUrl({
       url,
-      keyPairId: KEY_PAIR_ID,
+      keyPairId: Config.cloudFrontKeyPairId,
       privateKey: Config.privateKey,
-      dateLessThan: new Date(Date.now() + 1000 * 60 * 5), // 5 minutes
+      dateLessThan: new Date(Date.now() + Config.viewPresignedS3UrlExpiration), // 5 minutes
     });
     console.log("signedUrl:", signedUrl);
     return {
@@ -39,10 +35,10 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       ),
       headers: Config.headers,
     };
-  } catch (err) {
+  } catch (error: any) {
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: 'Server error', details: (err as Error).message }),
+      body: JSON.stringify({ error: error.message || 'Internal Server Error' }),
       headers: Config.headers,
     };
   }

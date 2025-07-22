@@ -44,11 +44,6 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null, userT
   const [sending, setSending] = useState(false);
   const fileInputRef = useRef();
   const inputRef = useRef(null);
-  // useEffect(() => {
-  //   if (chatSetting !== 'guideOnly') {
-  //     inputRef.current.focus();
-  //   }
-  // }, [chatSetting]);
   const { t, i18n } = useTranslation();
   console.log('i18n', i18n);
   console.log('t', t);
@@ -171,7 +166,6 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null, userT
           attachments: [
             {
               fileKey: uploadFileToS3Response.key,
-              // url: uploadFileToS3Response.fileUrl,
               name: selectedFile.name,
               size: selectedFile.size,
               type: selectedFile.type,
@@ -201,18 +195,7 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null, userT
     setInputMessage(e.target.value);
   };
 
-  // Function to handle input key down
-  // let debounceTimeout; // Declare debounceTimeout in a higher scope for reuse
-  // const handleInputKeyDown = (e) => {
-  //   if (e.key === 'Enter') {
-  //     e.preventDefault(); // Prevent newline on Enter
-  //     clearTimeout(debounceTimeout); // Clear previous timeout if any
-  //     debounceTimeout = setTimeout(() => {
-  //       sendMessageClick();
-  //     }, 300); // Adjust delay as needed
-  //   }
-  // };
-
+  // Function to handle key down event for the input
   const handleInputKeyDown = (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
@@ -224,7 +207,6 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null, userT
       }, 300); // Adjust delay
     }
   };
-
 
   // Function to handle file upload icon click
   const handleFileUploadClick = () => {
@@ -239,6 +221,8 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null, userT
     if (file) {
       setSelectedFile(file);
     }
+    // Reset the file input value to allow re-uploading the same file
+    fileInputRef.current.value = null;
   };
 
   // Function to clear the selected file
@@ -268,41 +252,7 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null, userT
     };
   }, [initializeMessagingSession, channelArn, userArn, sessionId]);
 
-  // Effect to handle credentials expiration and refresh
-  // useEffect(() => {
-  //   if (!credentialsExpiration) return;
-
-  //   const refreshBuffer = 5 * 60 * 1000; // 5 minutes
-  //   const checkInterval = 1 * 60 * 1000; // Check every minute
-
-  //   // Set up a repeating interval to check if credentials are close to expiring
-  //   refreshIntervalRef.current = setInterval(async () => {
-  //     console.log('Checking credentials expiration...');
-  //     const now = Date.now();
-
-  //     // If the credentials will expire in less than or equal to 5 minutes
-  //     if (credentialsExpiration - now <= refreshBuffer) {
-  //       console.log("Refreshing credentials before expiration...");
-
-  //       try {
-  //         // Stop the current messaging session
-  //         if (messagingSessionRef.current) {
-  //           messagingSessionRef.current.stop();
-  //         }
-
-  //         // Re-initialize the messaging session with new credentials
-  //         await initializeMessagingSession();
-  //       } catch (error) {
-  //         console.error("Failed to refresh credentials and session:", error);
-  //       }
-  //     }
-  //   }, checkInterval);
-
-  //   // Clear the interval when the component unmounts or credentialsExpiration changes
-  //   return () => {
-  //     clearInterval(refreshIntervalRef.current);
-  //   };
-  // }, [credentialsExpiration, initializeMessagingSession]);
+  // Effect to refresh the messaging session credentials
   useAutoRefreshCredentials(credentialsExpiration, async () => {
     if (messagingSessionRef.current) {
       messagingSessionRef.current.stop();
