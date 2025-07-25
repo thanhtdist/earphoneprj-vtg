@@ -24,7 +24,7 @@ const Config = {
      * Application URLs and Paths
      */
     // Base URL for API endpoints
-    baseURL: 'https://earphoneguide-dev.d18gexuxzytkxi.amplifyapp.com',
+    baseURL: 'https://earphoneguide-dev.d18gexuxzytkxi.amplifyapp.com/',
     // Base path for the application
     subPath: '',
     // Path names for different user roles
@@ -38,6 +38,9 @@ const Config = {
         tour: '/admin/tour',
         registerTour: '/admin/tour/register',
     },
+
+    // Websocket URL for real-time translate audio
+    webSocketURL: 'wss://4cfepibmyh.execute-api.us-east-1.amazonaws.com/prod',
     
     /**
      * Storage and Logging Configuration

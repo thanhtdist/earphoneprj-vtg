@@ -4,7 +4,7 @@ import { Config } from '@configs/config';
 
 const dynamoDB = new AWS.DynamoDB.DocumentClient({ region: Config.region });
 const translate = new AWS.Translate({ region: Config.region });
-const polly = new AWS.Polly({ region: Config.region});
+const polly = new AWS.Polly({ region: Config.region });
 
 const languages = ['en-US', 'zh'];
 
@@ -35,7 +35,7 @@ export const handler: APIGatewayProxyWebsocketHandlerV2 = async (event) => {
       const translated = await translate.translateText({
         Text: inputText,
         SourceLanguageCode: sourceLanguageCode,
-        TargetLanguageCode: lang,
+        TargetLanguageCode: lang, // use zh for Chinese, en-US for English
       }).promise();
 
       console.log(`Translated text to ${lang}:`, translated.TranslatedText);
@@ -47,12 +47,14 @@ export const handler: APIGatewayProxyWebsocketHandlerV2 = async (event) => {
 
       // Synthesize speech using Polly
       let params = {
-        Text: translatedText,
-        OutputFormat: 'mp3',
-        VoiceId: voiceId,
-        Engine: 'standard', // or 'neural' based on your preference
+        Engine: 'standard',
         ...(lang === 'zh' ? { LanguageCode: 'cmn-CN' } : {}),
-      }
+        OutputFormat: 'mp3',
+        Text: translatedText,
+        //VoiceId: 'Mizuki' // Mizuki for a female voice. Takumi for a male voice.
+        VoiceId: voiceId
+      };
+      console.log(`Synthesize speech params for ${lang}:`, params);
       const speech = await polly.synthesizeSpeech(params).promise();
       console.log(`Generated speech for ${lang}:`, speech);
 
@@ -81,7 +83,11 @@ export const handler: APIGatewayProxyWebsocketHandlerV2 = async (event) => {
         // 2. Send audio stream
         await apiGateway.postToConnection({
           ConnectionId: listener.connectionId,
-          Data: speech.AudioStream,
+          Data: JSON.stringify({
+            type: 'audio',
+            language: lang,
+            audioBase64: speech.AudioStream.toString('base64'),
+          }),
         }).promise();
       }
     } catch (error) {

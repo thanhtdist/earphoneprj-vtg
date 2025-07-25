@@ -316,7 +316,7 @@ function LiveViewer() {
     }
 
     console.log('Initial to WebSocket...');
-    const ws = new WebSocket('wss://0vfx6925gk.execute-api.us-east-1.amazonaws.com/prod');
+    const ws = new WebSocket(Config.webSocketURL);
 
     ws.onopen = () => {
       connectTimestamp = Date.now();
@@ -354,34 +354,64 @@ function LiveViewer() {
   // Connect WebSocket
   useEffect(() => {
     console.log('WebSocket Tour connected:', tour);
-    if(!tour) return;
+    if (!tour) return;
     connectWebSocket();
   }, [connectWebSocket, tour]);
 
 
   useEffect(() => {
-    const ws = wsRef.current;
-    console.log('WebSocket current in useEffect:', ws);
-    if (ws) {
-      ws.onmessage = async (event) => {
-        const data = event.data;
-        console.log('📥 Received from WebSocket:', data);
+  const ws = wsRef.current;
+  console.log('WebSocket current in useEffect:', ws);
 
-        if (typeof data === 'string') {
+  if (ws) {
+    ws.onmessage = async (event) => {
+      const data = event.data;
+
+      if (typeof data === 'string') {
+        try {
           const parsed = JSON.parse(data);
+
           if (parsed.type === 'translation') {
-            setMessages((prev) => [...prev, parsed.translatedText]);
+            console.log('📝 Translation:', parsed.translatedText);
+            // TODO: xử lý hiển thị text tại đây
           }
-        } else if (data instanceof Blob) {
-          const blobUrl = URL.createObjectURL(data);
-          if (audioElementRef.current) {
-            audioElementRef.current.src = blobUrl;
-            audioElementRef.current.play();
+
+          else if (parsed.type === 'audio') {
+            console.log('🔊 Received audioBase64 for lang:', parsed.language);
+
+            // ✅ CHỈ PHÁT AUDIO KHI isPlay = true
+            if (!isPlay) {
+              console.log('⏸️ Skipped audio playback (isPlay = false)');
+              return;
+            }
+
+            const byteCharacters = atob(parsed.audioBase64);
+            const byteArray = new Uint8Array(byteCharacters.length);
+            for (let i = 0; i < byteCharacters.length; i++) {
+              byteArray[i] = byteCharacters.charCodeAt(i);
+            }
+
+            const blob = new Blob([byteArray], { type: 'audio/mpeg' });
+            const audioUrl = URL.createObjectURL(blob);
+            const audio = new Audio(audioUrl);
+
+            try {
+              await audio.play();
+              console.log('✅ Audio played');
+            } catch (err) {
+              console.error('🔈 Failed to play audio:', err);
+            }
           }
+        } catch (err) {
+          console.error('❌ Failed to parse WebSocket string data:', err, data);
         }
-      };
-    }
-  }, [wsRef]);
+      } else {
+        console.warn('❓ Received non-string data:', data);
+      }
+    };
+  }
+}, [isPlay]); // 👈 Effect re-runs if isPlay changes
+
 
   // useEffect(() => {
 
