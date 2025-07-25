@@ -4,7 +4,6 @@ import { Config } from '@configs/config';
 
 // Connection management
 const dynamoDB = new AWS.DynamoDB.DocumentClient({ region: Config.region });
-const TABLE_NAME = process.env.CONNECTIONS_TABLE_NAME || 'WebSocketConnections';
 
 /**
  * WebSocket disconnect handler - cleans up connections
@@ -14,7 +13,7 @@ export const handler: APIGatewayProxyWebsocketHandlerV2 = async (event) => {
   
   try {
     await dynamoDB.delete({
-      TableName: TABLE_NAME,
+      TableName: Config.dbTables.WEBSOCKETCONNECTIONS,
       Key: { connectionId }
     }).promise();
     

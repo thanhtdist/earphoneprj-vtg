@@ -48,6 +48,8 @@ import AudioPlayerControl from '../common/AudioPlayerControl';
  * The main speaker can also chat with the sub-speaker or listener
  */
 function StartLiveSession() {
+  // Create a WebSocket reference
+  const wsRef = useRef(null);
   // Get the params from the URL
   const { tourId } = useParams(); // Extracts 'tourId' from the URL
   // Use translation
@@ -74,11 +76,11 @@ function StartLiveSession() {
   const [noMicroMsg, setNoMicoMsg] = useState(t('noMicroMsg'));
   const [logger, setLogger] = useState(null);
   const [participantsCount, setParticipantsCount] = useState(0);
-  const [transcripts, setTranscriptions] = useState([]);
+  //const [transcripts, setTranscriptions] = useState([]);
   const [chatRestriction, setChatRestriction] = useState(null);
   const [tour, setTour] = useState(undefined);
   // Replace local variables with refs
-  const transcriptListRef = useRef([]);
+  //const transcriptListRef = useRef([]);
   //get value chatSetting from ChatSetting.js
   /// const location = useLocation();
   // const { state } = location;
@@ -512,12 +514,48 @@ function StartLiveSession() {
 
   }, [selectedAudioInput]);
 
+  const connectWebSocket = () => {
+    let connectTimestamp = null;
+    let disconnectTimestamp = null;
+
+    if (wsRef.current) return;
+    console.log('Intital WebSocket...');
+
+    const ws = new WebSocket('wss://0vfx6925gk.execute-api.us-east-1.amazonaws.com/prod');
+
+    ws.onopen = () => {
+      connectTimestamp = Date.now();
+      console.log('✅ WebSocket Connected at:', new Date(connectTimestamp).toLocaleTimeString());
+      console.log('✅ Host WebSocket connected');
+      wsRef.current = ws;
+    };
+
+    ws.onclose = () => {
+      disconnectTimestamp = Date.now();
+      const duration = (disconnectTimestamp - connectTimestamp) / 1000;
+      console.log('❌ WebSocket Disconnected at:', new Date(disconnectTimestamp).toLocaleTimeString());
+      console.log(`🔌 WebSocket Connection lasted: ${duration} seconds`);
+
+      console.log('❌ The host WebSocket disconnected');
+      console.warn('WebSocket closed');
+      console.log('✅ WebSocket closed current', wsRef.current);
+      wsRef.current = null;
+    };
+
+    ws.onerror = (err) => {
+      console.error('WebSocket error:', err);
+    };
+  };
+
 
   useEffect(() => {
 
     if (!meetingSession) {
       return;
     }
+    // // ✅ Connect WebSocket when host joins
+    // connectWebSocket();
+
     const attendeeSet = new Set(); // List of sub-guides, listeners
     const callback = (presentAttendeeId, present, externalUserId) => {
       console.log(`Attendee ID: ${presentAttendeeId} Present: ${present} externalUserId: ${externalUserId}`);
@@ -532,25 +570,40 @@ function StartLiveSession() {
     };
 
     meetingSession.audioVideo.realtimeSubscribeToAttendeeIdPresence(callback);
+
     // Subscribe to transcription events
     meetingSession.audioVideo.transcriptionController?.subscribeToTranscriptEvent(
       (transcriptEvent) => {
         console.log('Check transcriptEvent:', transcriptEvent);
-        setTranscriptions(transcriptEvent);
+        //setTranscriptions(transcriptEvent);
       }
     );
 
   }, [meetingSession]);
 
   // Add the transcript to the list
-  useEffect(() => {
-    if (transcripts?.results?.[0]?.alternatives?.[0]?.transcript &&
-      !transcripts.results[0].isPartial
-    ) {
-      const currentText = transcripts.results[0].alternatives[0].transcript;
-      transcriptListRef.current.push(currentText);
-    }
-  }, [transcripts]);
+  // useEffect(() => {
+  //   if (transcripts?.results?.[0]?.alternatives?.[0]?.transcript &&
+  //     !transcripts.results[0].isPartial
+  //   ) {
+  //     const currentText = transcripts.results[0].alternatives[0].transcript;
+  //     //transcriptListRef.current.push(currentText);
+
+  //     // ✅ Send the text to the WebSocket server
+  //     console.log('Sending text to WebSocket', wsRef.current?.readyState);
+  //     if (wsRef.current?.readyState === WebSocket.OPEN) {
+  //       const payload = {
+  //         action: 'translateAudio',
+  //         inputText: currentText,
+  //         sourceLanguageCode: 'ja',
+  //       };
+  //       // wsRef.current.send(JSON.stringify(payload));
+  //       console.log('📤 Sent to WebSocket:', payload);
+  //     } else {
+  //       console.warn('❌ WebSocket is not open');
+  //     }
+  //   }
+  // }, [transcripts, wsRef]);
 
   // Send the language code to the listener
   useEffect(() => {
@@ -586,16 +639,17 @@ function StartLiveSession() {
     // socket.onmessage = async (event) => {
     //   console.log("WebSocketxxx Message from server:", event.data);
     //   const data = JSON.parse(event.data);
-    //   if (data.type === "speechComplete") {
-    //     console.log("WebSocketxxx Received translatedText:", data.translatedText);
-    //     console.log("WebSocketxxx Received audioData:", data.audioData);
-    //     // You can handle the received message here, e.g., display it in the UI
-    //     // Call it
-    //     //await playAudioFromBase64(data.audioData);
-    //     audioData.current.push(data.audioData); // Store audio data in the ref
-    //   } else {
-    //     console.warn("WebSocketxxx Unknown action:", data.action);
-    //   }
+    //   console.log("WebSocketxxx Received data:", data);
+    //   // if (data.type === "speechComplete") {
+    //   //   console.log("WebSocketxxx Received translatedText:", data.translatedText);
+    //   //   console.log("WebSocketxxx Received audioData:", data.audioData);
+    //   //   // You can handle the received message here, e.g., display it in the UI
+    //   //   // Call it
+    //   //   //await playAudioFromBase64(data.audioData);
+    //   //   audioData.current.push(data.audioData); // Store audio data in the ref
+    //   // } else {
+    //   //   console.warn("WebSocketxxx Unknown action:", data.action);
+    //   // }
     // };
     // socket.onerror = (err) => {
     //   console.error("WebSocketxxx error:", err);
@@ -605,6 +659,47 @@ function StartLiveSession() {
     //   console.warn("WebSocketxxx closed:", event);
     // };
   }, [meetingSession]);
+
+
+  // Connect WebSocket
+  useEffect(() => {
+    console.log('WebSocket Tour connected:', tour);
+    if (!tour) return;
+    connectWebSocket();
+  }, [connectWebSocket, tour]);
+
+
+  // Handle sending text to the WebSocket server
+  const handleTranslateAudio = useCallback(() => {
+    console.log('Sending text to WebSocket', wsRef.current?.readyState);
+    if (wsRef.current?.readyState === WebSocket.OPEN) {
+      const payload = {
+        action: 'translateAudio',
+        inputText: 'おやすみなさい！またね！',
+        sourceLanguageCode: 'ja-JP',
+      };
+      wsRef.current.send(JSON.stringify(payload));
+      console.log('📤 Sent to WebSocket:', payload);
+    } else {
+      console.warn('❌ WebSocket is not open');
+    }
+  }, [wsRef]);
+
+  // Send the text to the WebSocket server
+  // useEffect(() => {
+  //   console.log('Sending text to WebSocket', wsRef.current?.readyState);
+  //   if (wsRef.current?.readyState === WebSocket.OPEN) {
+  //     const payload = {
+  //       action: 'translateAudio',
+  //       inputText: 'おやすみなさい！またね！',
+  //       sourceLanguageCode: 'ja',
+  //     };
+  //     wsRef.current.send(JSON.stringify(payload));
+  //     console.log('📤 Sent to WebSocket:', payload);
+  //   } else {
+  //     console.warn('❌ WebSocket is not open');
+  //   }
+  // }, [wsRef]);
 
 
   // Meeting exired
@@ -711,6 +806,12 @@ function StartLiveSession() {
           </div>
         </div> */}
         <TourTitle tour={tour} />
+        {meetingSession && (
+          <>
+            <button onClick={handleTranslateAudio}>Send Transcripts</button>
+            <br />
+          </>
+        )}
         <audio id='audioElementMain' ref={audioRef} >
         </audio>
         <AudioPlayerControl

@@ -44,7 +44,8 @@ import { getTourByNumberAndDate } from './functions/tours/get-tour-by-number-and
 import { updateMeetingByTourId } from './functions/tours/update-meeting-by-tourid/resource'
 import { connect } from './functions/translates/translate-text-speech-socket/connect/resource';
 import { disconnect } from './functions/translates/translate-text-speech-socket/disconnect/resource';
-import { sendMessage } from './functions/translates/translate-text-speech-socket/sendMessage/resource';
+import { selectLanguage } from './functions/translates/translate-text-speech-socket/select-language/resource';
+import { translateAudio } from './functions/translates/translate-text-speech-socket/translate-audio/resource';
 import { uploadPresignedS3Upload } from './functions/uploadFileS3/upload/resource';
 import { viewPresignedS3Upload } from './functions/uploadFileS3/view/resource';
 import { loginAndGetCredentials } from './functions/loginCognito/get-credentials/resource';
@@ -87,7 +88,8 @@ const backend = defineBackend({
   getTourByNumberAndDate,
   connect, // translate text to speech by socket
   disconnect, // disconnect socket
-  sendMessage, // send message by socket
+  selectLanguage, // select language for translation
+  translateAudio, // translate text into audio by socket
   uploadPresignedS3Upload, // get pre-signed S3 upload URL
   viewPresignedS3Upload, // view pre-signed S3 upload URL
   loginAndGetCredentials // login and get AWS credentials from Cognito
@@ -489,8 +491,14 @@ const translateWebSocketStage = new WebSocketStage(apiStack, "TranslateWebSocket
   autoDeploy: true, // Automatically deploy the stage
 });
 
-translateWebSocketApi.addRoute('sendMessage', {
-  integration: new WebSocketLambdaIntegration('SendMessageIntegration', backend.sendMessage.resources.lambda),
+// 2. Add route: selectLanguage (listener select language for translation)
+translateWebSocketApi.addRoute('selectLanguage', {
+  integration: new WebSocketLambdaIntegration('SelectLanguageIntegration', backend.selectLanguage.resources.lambda),
+});
+
+// 3. Add route: translateAudio (host send text -> translate + audio -> client)
+translateWebSocketApi.addRoute('translateAudio', {
+  integration: new WebSocketLambdaIntegration('TranslateAudioIntegration', backend.translateAudio.resources.lambda),
 });
 
 // add outputs to the configuration file for calling APIs metadata in the frontend

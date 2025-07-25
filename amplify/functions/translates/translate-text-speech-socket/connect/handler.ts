@@ -14,13 +14,13 @@ export const handler: APIGatewayProxyWebsocketHandlerV2 = async (event) => {
   console.log('WebSocket connection event:', event);
 
   try {
-    await dynamoDB.put({
-      TableName: TABLE_NAME,
-      Item: {
-        connectionId,
-        timestamp: Date.now()
-      }
-    }).promise();
+    // await dynamoDB.put({
+    //   TableName: TABLE_NAME,
+    //   Item: {
+    //     connectionId,
+    //     timestamp: Date.now()
+    //   }
+    // }).promise();
 
     return { statusCode: 200, body: 'Connected' };
   } catch (error) {

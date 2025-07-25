@@ -3,7 +3,7 @@ import { defineFunction } from "@aws-amplify/backend";
 /**
  * This function creates a meeting for starting a live audio stream by the host.
  */
-export const sendMessage = defineFunction({
-  name: "send-message", // Lamda function name is used to create in the cloud
+export const selectLanguage = defineFunction({
+  name: "select-language", // Lamda function name is used to create in the cloud
   entry: "./handler.ts" // Path to the handler file to make business logic
 });
