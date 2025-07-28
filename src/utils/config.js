@@ -24,7 +24,7 @@ const Config = {
      * Application URLs and Paths
      */
     // Base URL for API endpoints
-    baseURL: 'https://earphoneguide-dev.d18gexuxzytkxi.amplifyapp.com/',
+    baseURL: 'https://earphoneguide-dev.d18gexuxzytkxi.amplifyapp.com',
     // Base path for the application
     subPath: '',
     // Path names for different user roles
