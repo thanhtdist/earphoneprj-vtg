@@ -36,8 +36,9 @@ function LiveViewer() {
   const audioQueueRef = useRef([]);
   const isPlayingRef = useRef(false);
   // State variables
-  const [messages, setMessages] = useState([]);
-  const [originalText, setOriginText] = useState([]);
+  // const [messages, setMessages] = useState([]);
+  // const [originalText, setOriginText] = useState([]);
+  const [translatedAudioData, setTranslatedAudioData] = useState({ messages: [], originals: [] });
   const { tourId } = useParams(); // Extracts 'tourId' from the URL
   console.log('tourId:', tourId);
   const { t, i18n } = useTranslation();
@@ -398,8 +399,12 @@ function LiveViewer() {
 
             if (parsed.type === 'translationWithAudio') {
               console.log('📝 Translation:', parsed.translatedText);
-              setMessages((prevMessages) => [...prevMessages, parsed.translatedText]);
-              setOriginText((prevOriginalText) => [...prevOriginalText, parsed.originalText]);
+              // setMessages((prevMessages) => [...prevMessages, parsed.translatedText]);
+              // setOriginText((prevOriginalText) => [...prevOriginalText, parsed.originalText]);
+              setTranslatedAudioData((prevData) => ({
+                messages: [...prevData.messages, parsed.translatedText],
+                originals: [...prevData.originals, parsed.originalText],
+              }));
 
               // ✅ Broadcast audio when isPlay = true
               if (!isPlay) {
@@ -542,11 +547,11 @@ function LiveViewer() {
           style={{ display: 'none' }}
         />
 
-        <ul>
+        {/* <ul>
           {messages.map((msg, idx) => (
             <li key={idx}>{msg}</li>
           ))}
-        </ul>
+        </ul> */}
 
         {!meeting && !attendee ? (
           isLoading ? (
@@ -578,7 +583,7 @@ function LiveViewer() {
                   {t('translations')}:
                 </span>
                 <div className='trans-messages'>
-                  {messages.map((msg, idx) => (
+                  {translatedAudioData.messages.map((msg, idx) => (
                     <div key={idx} className='trans-message-item'>
                       {msg}
                     </div>
@@ -591,7 +596,7 @@ function LiveViewer() {
                   {t('transcriptions')}:
                 </span>
                 <div className='trans-messages'>
-                  {originalText.map((msg, idx) => (
+                  {translatedAudioData.originals.map((msg, idx) => (
                     <div key={idx} className='trans-message-item'>
                       {msg}
                     </div>
