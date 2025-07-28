@@ -607,7 +607,7 @@ function StartLiveSession() {
       //transcriptListRef.current.push(currentText);
 
       // ✅ Send the text to the WebSocket server
-      handleTranslateAudio();
+      handleTranslateAudio(currentText);
     }
   }, [transcripts, handleTranslateAudio]);
 
