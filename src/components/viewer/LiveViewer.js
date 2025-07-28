@@ -298,51 +298,73 @@ function LiveViewer() {
 
   // Function to connect to WebSocket
   const connectWebSocket = useCallback(() => {
-    let connectTimestamp = null;
-    let disconnectTimestamp = null;
-
-    console.log('WebSocket Selected voice language:', selectedVoiceLanguage);
-    console.log('WebSocket current:', wsRef.current);
+    // If a WebSocket connection already exists, skip creating a new one
     if (wsRef.current) {
-      console.log('WebSocket already connected, skipping initialization.');
+      console.log('🔁 WebSocket already connected.');
       return;
-    } else {
-      console.log('WebSocket not connected, initializing...');
     }
 
-    console.log('Initial to WebSocket...');
+    // Create a new WebSocket instance
     const ws = new WebSocket(Config.webSocketURL);
 
+    // Variables to track connection timestamp and ping interval
+    let connectTimestamp = null;
+    let pingInterval = null;
+
+    // When the WebSocket successfully connects
     ws.onopen = () => {
       connectTimestamp = Date.now();
       console.log('✅ WebSocket Connected at:', new Date(connectTimestamp).toLocaleTimeString());
 
-      // Send language setting to backend
+      // Send selected language to backend (required by your system)
       ws.send(JSON.stringify({
         action: 'selectLanguage',
-        languageCode: selectedVoiceLanguage,
+        languageCode: selectedVoiceLanguage, // <-- this should come from state or props
       }));
+
+      // ✅ Start pinging every 4 minutes to keep the connection alive
+      pingInterval = setInterval(() => {
+        if (ws.readyState === WebSocket.OPEN) {
+          console.log('📡 WebSocket Sending ping...');
+          ws.send(JSON.stringify({ action: 'ping' }));
+        }
+      }, 4 * 60 * 1000); // 4 minutes
     };
 
+    // When the WebSocket connection is closed
     ws.onclose = () => {
+      const disconnectTimestamp = Date.now();
+      const duration = connectTimestamp
+        ? ((disconnectTimestamp - connectTimestamp) / 1000).toFixed(1)
+        : 'unknown';
 
-      disconnectTimestamp = Date.now();
-      const duration = (disconnectTimestamp - connectTimestamp) / 1000;
       console.log('❌ WebSocket Disconnected at:', new Date(disconnectTimestamp).toLocaleTimeString());
       console.log(`🔌 WebSocket Connection lasted: ${duration} seconds`);
 
-      console.log('❌ Listener WebSocket disconnected');
+      // Stop the ping interval if it was running
+      if (pingInterval) {
+        clearInterval(pingInterval);
+      }
+
+      // Clear the reference so future reconnects are allowed
       wsRef.current = null;
     };
 
+    // Handle WebSocket error events
     ws.onerror = (error) => {
-      console.error('❌ WebSocket error:', error);
+      console.error('⚠️ WebSocket error:', error);
+
+      // Stop the ping interval on error
+      if (pingInterval) {
+        clearInterval(pingInterval);
+      }
+
+      // Clear the reference
       wsRef.current = null;
     };
 
-    console.log('✅ Set WebSocket current');
+    // Store the WebSocket instance in a ref so it's accessible globally
     wsRef.current = ws;
-    console.log('WebSocket current is set:', wsRef.current);
   }, [selectedVoiceLanguage]);
 
 
@@ -574,36 +596,40 @@ function LiveViewer() {
               userType={userType}
               t={t}
             />
-            <div className='trans-box'>
-              <div style={{ textAlign: 'center', fontWeight: '700' }}>
-                <p>{t('captureTranslations')}</p>
-              </div>
-              <div className='trans-text-box'>
-                <span className='trans-text'>
-                  {t('translations')}:
-                </span>
-                <div className='trans-messages'>
-                  {translatedAudioData.messages.map((msg, idx) => (
-                    <div key={idx} className='trans-message-item'>
-                      {msg}
+            {translatedAudioData.messages?.length > 0 && translatedAudioData.originals?.length > 0 && (
+              <>
+                <div className='trans-box'>
+                  <div style={{ textAlign: 'center', fontWeight: '700' }}>
+                    <p>{t('captureTranslations')}</p>
+                  </div>
+                  <div className='trans-text-box'>
+                    <span className='trans-text'>
+                      {t('translations')}:
+                    </span>
+                    <div className='trans-messages'>
+                      {translatedAudioData.messages.map((msg, idx) => (
+                        <div key={idx} className='trans-message-item'>
+                          {msg}
+                        </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
-              </div>
+                  </div>
 
-              <div className='trans-text-box'>
-                <span className='trans-text'>
-                  {t('transcriptions')}:
-                </span>
-                <div className='trans-messages'>
-                  {translatedAudioData.originals.map((msg, idx) => (
-                    <div key={idx} className='trans-message-item'>
-                      {msg}
+                  <div className='trans-text-box'>
+                    <span className='trans-text'>
+                      {t('transcriptions')}:
+                    </span>
+                    <div className='trans-messages'>
+                      {translatedAudioData.originals.map((msg, idx) => (
+                        <div key={idx} className='trans-message-item'>
+                          {msg}
+                        </div>
+                      ))}
                     </div>
-                  ))}
+                  </div>
                 </div>
-              </div>
-            </div>
+              </>
+            )}
             {chatRestriction !== "nochat" && (<MessageBox userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} userType={userType} statusChat={chatRestriction} />)}
           </>
         )}

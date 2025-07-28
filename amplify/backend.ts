@@ -41,7 +41,8 @@ import { activeAdmin } from './functions/users/active-admin/resource';
 import { refreshToken } from './functions/users/refresh-token/resource';
 import { getMeetingByTourId } from './functions/tours/get-meeting-by-tourid/resource';
 import { getTourByNumberAndDate } from './functions/tours/get-tour-by-number-and-date/resource';
-import { updateMeetingByTourId } from './functions/tours/update-meeting-by-tourid/resource'
+import { updateMeetingByTourId } from './functions/tours/update-meeting-by-tourid/resource';
+import { defaultWS } from './functions/translates/translate-text-speech-socket/default/resource';
 import { connect } from './functions/translates/translate-text-speech-socket/connect/resource';
 import { disconnect } from './functions/translates/translate-text-speech-socket/disconnect/resource';
 import { selectLanguage } from './functions/translates/translate-text-speech-socket/select-language/resource';
@@ -86,6 +87,7 @@ const backend = defineBackend({
   getMeetingByTourId, // get meeting by tourID
   updateMeetingByTourId,
   getTourByNumberAndDate,
+  defaultWS, // default WebSocket handler
   connect, // translate text to speech by socket
   disconnect, // disconnect socket
   selectLanguage, // select language for translation
@@ -481,6 +483,12 @@ const webSocketApiProps = {
       backend.disconnect.resources.lambda
     ),
   },
+  defaultRouteOptions: {
+    integration: new WebSocketLambdaIntegration(
+      "DefaultIntegration",
+      backend.defaultWS.resources.lambda
+    ),
+  }
 }
 const translateWebSocketApi = new WebSocketApi(apiStack, "TranslateVTGWebSocketApi", webSocketApiProps);
 
