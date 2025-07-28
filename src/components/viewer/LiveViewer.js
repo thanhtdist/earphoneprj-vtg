@@ -33,7 +33,11 @@ import AudioPlayerControl from '../common/AudioPlayerControl';
 function LiveViewer() {
   // Get the params from the URL
   const wsRef = useRef(null);
+  const audioQueueRef = useRef([]);
+  const isPlayingRef = useRef(false);
+  // State variables
   const [messages, setMessages] = useState([]);
+  const [originalText, setOriginText] = useState([]);
   const { tourId } = useParams(); // Extracts 'tourId' from the URL
   console.log('tourId:', tourId);
   const { t, i18n } = useTranslation();
@@ -45,21 +49,10 @@ function LiveViewer() {
   const [userArn, setUserArn] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [participantsCount, setParticipantsCount] = useState(0);
-  //const [transcripts, setTranscriptions] = useState([]);
-  // const [transcriptText, setTranscriptText] = useState([]);
-  // const [translatedText, setTranslatedText] = useState([]);
-  // const [sourceLanguageCode, setSourceLanguageCode] = useState(null);
   const [selectedVoiceLanguage, setSelectedVoiceLanguage] = useState(
     LISTEN_VOICE_LANGUAGES.find((lang) => lang.key.startsWith(i18n.language))?.key || 'ja-JP'
   );
   const [chatRestriction, setChatRestriction] = useState(null);
-  // Replace local variables with refs
-  const transcriptListRef = useRef([]);
-  console.log('Check transcriptListRef:', transcriptListRef);
-  //const transcriptList2Ref = useRef([]);
-  const translatedListRef = useRef([]);
-  //const audioQueueRef = useRef([]);
-  //const audioQueue2Ref = useRef([]);
   const userID = uuidv4();
   const userType = 'User';
   // Ref for the audio element  
@@ -302,6 +295,7 @@ function LiveViewer() {
   }, [meetingSession]);
 
 
+  // Function to connect to WebSocket
   const connectWebSocket = useCallback(() => {
     let connectTimestamp = null;
     let disconnectTimestamp = null;
@@ -351,6 +345,34 @@ function LiveViewer() {
   }, [selectedVoiceLanguage]);
 
 
+  // Function to play the next audio in the queue
+  const playNextAudio = useCallback(async () => {
+    if (isPlayingRef.current || audioQueueRef.current.length === 0 || !isPlay) {
+      return;
+    }
+
+    const nextAudio = audioQueueRef.current.shift();
+    if (!nextAudio) return;
+
+    const audio = new Audio(nextAudio.blobUrl);
+    isPlayingRef.current = true;
+
+    try {
+      await audio.play();
+      console.log('✅ Audio played');
+      audio.onended = () => {
+        isPlayingRef.current = false;
+        URL.revokeObjectURL(nextAudio.blobUrl); // clean up
+        playNextAudio(); // play next
+      };
+    } catch (err) {
+      console.error('🔈 Failed to play audio:', err);
+      isPlayingRef.current = false;
+      playNextAudio(); // Skip on error
+    }
+  }, [isPlay]);
+
+
   // Connect WebSocket
   useEffect(() => {
     console.log('WebSocket Tour connected:', tour);
@@ -360,173 +382,61 @@ function LiveViewer() {
 
 
   useEffect(() => {
-  const ws = wsRef.current;
-  console.log('WebSocket current in useEffect:', ws);
+    const ws = wsRef.current;
+    console.log('WebSocket current in useEffect:', ws);
 
-  if (ws) {
-    ws.onmessage = async (event) => {
-      const data = event.data;
+    if (ws) {
+      ws.onmessage = async (event) => {
+        const data = event.data;
 
-      console.log('📥 Received WebSocket message:', data);
+        console.log('📥 Received WebSocket message:', data);
 
-      if (typeof data === 'string') {
-        try {
-          const parsed = JSON.parse(data);
-          console.log('📥 Parsed WebSocket message:', parsed);
+        if (typeof data === 'string') {
+          try {
+            const parsed = JSON.parse(data);
+            console.log('📥 Parsed WebSocket message:', parsed);
 
-          if (parsed.type === 'translationWithAudio') {
-            console.log('📝 Translation:', parsed.translatedText);
-            // ✅ TODO: xử lý hiển thị text (ví dụ cập nhật state hoặc append vào chat UI)
-            // Example: setTranslatedText(parsed.translatedText); hoặc push vào chat list
-            setMessages((prevMessages) => [...prevMessages, parsed.translatedText]);
+            if (parsed.type === 'translationWithAudio') {
+              console.log('📝 Translation:', parsed.translatedText);
+              setMessages((prevMessages) => [...prevMessages, parsed.translatedText]);
+              setOriginText((prevOriginalText) => [...prevOriginalText, parsed.originalText]);
 
-            // ✅ CHỈ PHÁT AUDIO KHI isPlay = true
-            if (!isPlay) {
-              console.log('⏸️ Skipped audio playback (isPlay = false)');
-              return;
+              // ✅ Broadcast audio when isPlay = true
+              if (!isPlay) {
+                console.log('⏸️ Skipped audio playback (isPlay = false)');
+                return;
+              }
+
+              console.log('🔊 Playing audio for lang:', parsed.language);
+
+              const byteCharacters = atob(parsed.audioBase64);
+              const byteArray = new Uint8Array(byteCharacters.length);
+              for (let i = 0; i < byteCharacters.length; i++) {
+                byteArray[i] = byteCharacters.charCodeAt(i);
+              }
+
+              const blob = new Blob([byteArray], { type: 'audio/mpeg' });
+              const blobUrl = URL.createObjectURL(blob);
+              audioQueueRef.current.push({ blobUrl });
+              playNextAudio(isPlay);
+
+            } else {
+              console.warn('⚠️ Unhandled WebSocket type:', parsed.type);
             }
-
-            console.log('🔊 Playing audio for lang:', parsed.language);
-
-            const byteCharacters = atob(parsed.audioBase64);
-            const byteArray = new Uint8Array(byteCharacters.length);
-            for (let i = 0; i < byteCharacters.length; i++) {
-              byteArray[i] = byteCharacters.charCodeAt(i);
-            }
-
-            const blob = new Blob([byteArray], { type: 'audio/mpeg' });
-            const audioUrl = URL.createObjectURL(blob);
-            const audio = new Audio(audioUrl);
-
-            try {
-              await audio.play();
-              console.log('✅ Audio played');
-            } catch (err) {
-              console.error('🔈 Failed to play audio:', err);
-            }
-          } else {
-            console.warn('⚠️ Unhandled WebSocket type:', parsed.type);
+          } catch (err) {
+            console.error('❌ Failed to parse WebSocket string data:', err, data);
           }
-        } catch (err) {
-          console.error('❌ Failed to parse WebSocket string data:', err, data);
+        } else {
+          console.warn('❓ Received non-string data:', data);
         }
-      } else {
-        console.warn('❓ Received non-string data:', data);
-      }
-    };
-  }
-}, [isPlay]);
-
-  // useEffect(() => {
-
-  //   const audioElement = audioElementRef.current;
-  //   if (!audioElement || !meetingSession || !sourceLanguageCode || !selectedVoiceLanguage) return;
-  //   setTranscriptText([]);
-  //   setTranslatedText([]);
-
-  //   if (
-  //     sourceLanguageCode !== selectedVoiceLanguage &&
-  //     transcripts?.results?.[0]?.alternatives?.[0]?.transcript &&
-  //     !transcripts.results[0].isPartial
-  //   ) {
-  //     // Process audio queue
-  //     const processAudioQueue = async () => {
-  //       if (audioQueueRef.current.length === 0) return;
-
-  //       const nextAudio = audioQueueRef.current.shift();
-  //       console.log("nextAudio", nextAudio);
-  //       try {
-  //         await translateAndPlay(nextAudio);
-  //       } catch (error) {
-  //         console.error('Error processing audio queue:', error);
-  //       }
-
-  //       //setImmediate(processAudioQueue);
-  //       setTimeout(processAudioQueue, 0);
-  //     };
-
-  //     // Translate and play the audio
-  //     const translateAndPlay = async (currentText) => {
-  //       try {
-  //         let targetLanguageCode = selectedVoiceLanguage;
-  //         if (selectedVoiceLanguage === 'cmn-CN') {
-  //           targetLanguageCode = "zh";
-  //         }
-
-  //         console.log('Check sourceLanguageCode:', sourceLanguageCode);
-  //         console.log('Check targetLanguageCode:', targetLanguageCode);
-  //         const response = await translateTextSpeech(
-  //           currentText,
-  //           sourceLanguageCode,
-  //           targetLanguageCode,
-  //           "standard"
-  //         );
-
-  //         console.log('Translated response:', response);
-  //         translatedListRef.current.push(response.translatedText);
-
-  //         if (!response.speech.AudioStream?.data)
-  //           throw new Error('Invalid AudioStream data');
-
-  //         const audioBlob = new Blob(
-  //           [Uint8Array.from(response.speech.AudioStream.data)],
-  //           { type: response.speech.ContentType || 'audio/mpeg' }
-  //         );
-
-  //         const audioUrl = URL.createObjectURL(audioBlob);
-
-  //         const audioElement = audioElementRef.current;
-  //         if (audioElement) {
-  //           audioElement.src = audioUrl;
-  //           audioElement.onended = () => processAudioQueue();
-  //           // Only play automatically if “isPlay” is true
-  //           if (isPlay) {
-  //             audioElement.play();
-  //           }
-  //         }
-  //         setTranslatedText((prev) => [...prev, response.translatedText]);
-  //       } catch (error) {
-  //         console.error('Failed to translate text to speech:', error);
-  //       }
-  //     };
-  //     const currentText = transcripts.results[0].alternatives[0].transcript;
-  //     transcriptListRef.current.push(currentText);
-  //     transcriptList2Ref.current.push(currentText);
-  //     audioQueueRef.current.push(currentText);
-  //     audioQueue2Ref.current.push(currentText);
-  //     if (audioQueueRef.current.length === 1) {
-  //       processAudioQueue();  // Start processing the queue.
-  //     }
-
-  //     setTranscriptText((prev) => [...prev, currentText]);
-  //   }
-  //   // else {
-  //   //   if (sourceLanguageCode === selectedVoiceLanguage) {
-  //   //     const bindAudioElement = async () => {
-  //   //       await meetingSession.audioVideo.bindAudioElement(audioElement);
-  //   //     };
-  //   //     bindAudioElement();
-  //   //     //audioElement.play();
-  //   //   }
-  //   // }
-  // }, [
-  //   meetingSession,
-  //   transcripts,
-  //   sourceLanguageCode,
-  //   selectedVoiceLanguage,
-  //   isPlay
-  // ]);
+      };
+    }
+  }, [isPlay, playNextAudio]);
 
   const handleSelectedVoiceLanguageChange = (event) => {
     setSelectedVoiceLanguage(event.target.value);
   };
-  // console.log('Check transcriptText:', transcriptText);
-  // console.log('Check transcriptText string:', transcriptText.join(' '));
 
-  // console.log('Check translatedText:', translatedText);
-  // console.log('Check translatedText string:', translatedText.join(' '));
-
-  // const audioRef = useRef(null);
   const handleMuteUnmute = () => {
     setIsMuted(!isMuted);
     audioElementRef.current.muted = isMuted;
@@ -593,9 +503,6 @@ function LiveViewer() {
     }
   }, [meetingSession, requestWakeLock]);
 
-  // Handle long text for translations and transcriptions
-  const isLongText = translatedListRef.current.join(' ').length > 300;
-
   // Check if the tour exists, if not, show a not found page
   if (tour === null) {
     return <NotFound />;
@@ -631,10 +538,7 @@ function LiveViewer() {
         )}
         <audio
           id="audioElementListener"
-          //controls
           ref={audioElementRef}
-          //autoPlay
-          //className="audio-player"
           style={{ display: 'none' }}
         />
 
@@ -665,57 +569,36 @@ function LiveViewer() {
               userType={userType}
               t={t}
             />
-            {transcriptListRef.current.length > 0 && (
-              <div className='trans-box'>
-                <div style={{ textAlign: 'center', fontWeight: '700' }}>
-                  <p>{t('captureTranslations')}</p>
-                </div>
-                {/* <p>
-                The host is speaking in{' '}
-                {LISTEN_VOICE_LANGUAGES.find((lang) => lang.key === sourceLanguageCode)?.label}.
-              </p>
-              <p>
-                I am listening in{' '}
-                {LISTEN_VOICE_LANGUAGES.find((lang) => lang.key === selectedVoiceLanguage)?.label}.
-              </p> */}
-                {translatedListRef.current.length > 0 && (
-
-                  <div className='trans-text-box'>
-                    <div className={` ${isLongText ? 'long-text' : 'short-text'}`}></div>
-                    <span className='trans-text'>
-                      {t('translations')}: <span>{translatedListRef.current.join(' ')}</span>
-                    </span>
-                  </div>
-
-                )}
-
-                {transcriptListRef.current.length > 0 && (
-
-                  <div className='trans-text-box'>
-                    {/* <div className="blur-mask"></div> */}
-                    <div className={` ${isLongText ? 'long-text' : 'short-text'}`}></div>
-                    <span className='trans-text'>
-                      {t('transcriptions')}: <span>{transcriptListRef.current.join(' ')}</span>
-                    </span>
-                  </div>
-                )}
-
-                <br />
-
-                <br />
+            <div className='trans-box'>
+              <div style={{ textAlign: 'center', fontWeight: '700' }}>
+                <p>{t('captureTranslations')}</p>
               </div>
-            )}
+              <div className='trans-text-box'>
+                <span className='trans-text'>
+                  {t('translations')}:
+                </span>
+                <div className='trans-messages'>
+                  {messages.map((msg, idx) => (
+                    <div key={idx} className='trans-message-item'>
+                      {msg}
+                    </div>
+                  ))}
+                </div>
+              </div>
 
-            {/* <div>
-              {channelArn && (
-                <ChatMessage
-                  userArn={userArn}
-                  sessionId={Config.sessionId}
-                  channelArn={channelArn}
-                  chatSetting={chatSetting}
-                />
-              )}
-            </div> */}
+              <div className='trans-text-box'>
+                <span className='trans-text'>
+                  {t('transcriptions')}:
+                </span>
+                <div className='trans-messages'>
+                  {originalText.map((msg, idx) => (
+                    <div key={idx} className='trans-message-item'>
+                      {msg}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
             {chatRestriction !== "nochat" && (<MessageBox userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} userType={userType} statusChat={chatRestriction} />)}
           </>
         )}
