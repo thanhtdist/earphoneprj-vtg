@@ -367,23 +367,26 @@ function LiveViewer() {
     ws.onmessage = async (event) => {
       const data = event.data;
 
+      console.log('📥 Received WebSocket message:', data);
+
       if (typeof data === 'string') {
         try {
           const parsed = JSON.parse(data);
+          console.log('📥 Parsed WebSocket message:', parsed);
 
-          if (parsed.type === 'translation') {
+          if (parsed.type === 'translationWithAudio') {
             console.log('📝 Translation:', parsed.translatedText);
-            // TODO: xử lý hiển thị text tại đây
-          }
-
-          else if (parsed.type === 'audio') {
-            console.log('🔊 Received audioBase64 for lang:', parsed.language);
+            // ✅ TODO: xử lý hiển thị text (ví dụ cập nhật state hoặc append vào chat UI)
+            // Example: setTranslatedText(parsed.translatedText); hoặc push vào chat list
+            setMessages((prevMessages) => [...prevMessages, parsed.translatedText]);
 
             // ✅ CHỈ PHÁT AUDIO KHI isPlay = true
             if (!isPlay) {
               console.log('⏸️ Skipped audio playback (isPlay = false)');
               return;
             }
+
+            console.log('🔊 Playing audio for lang:', parsed.language);
 
             const byteCharacters = atob(parsed.audioBase64);
             const byteArray = new Uint8Array(byteCharacters.length);
@@ -401,6 +404,8 @@ function LiveViewer() {
             } catch (err) {
               console.error('🔈 Failed to play audio:', err);
             }
+          } else {
+            console.warn('⚠️ Unhandled WebSocket type:', parsed.type);
           }
         } catch (err) {
           console.error('❌ Failed to parse WebSocket string data:', err, data);
@@ -410,8 +415,7 @@ function LiveViewer() {
       }
     };
   }
-}, [isPlay]); // 👈 Effect re-runs if isPlay changes
-
+}, [isPlay]);
 
   // useEffect(() => {
 
