@@ -219,7 +219,7 @@ function LiveViewer() {
     ]
   );
 
-  const joinAudioSession2 = useCallback(
+  const rejoinAudioSession = useCallback(
     async (meeting, channelId) => {
       try {
         const retrievedUser = JSONCookieUtils.getJSONCookie('User' + tourId);
@@ -475,7 +475,7 @@ function LiveViewer() {
           // Join the meeting again and set the meeting session in the state
           console.log('Meeting not expired:', checkAvailableMeetingResponse);
           console.log('Check checkAvailableMeetingResponse:', checkAvailableMeetingResponse.data);
-          joinAudioSession2(checkAvailableMeetingResponse.data, getMeetingByTourIdResponse.data.channelId);
+          rejoinAudioSession(checkAvailableMeetingResponse.data, getMeetingByTourIdResponse.data.channelId);
 
         } else {
           console.log('Meeting error:', checkAvailableMeetingResponse);
@@ -489,7 +489,7 @@ function LiveViewer() {
       // toast.error('Tour not found, please check the tour ID.');
       setTour(null);
     }
-  }, [joinAudioSession2, tourId]);
+  }, [rejoinAudioSession, tourId]);
 
   // Call requestWakeLock once the meeting session is set:
   useEffect(() => {
