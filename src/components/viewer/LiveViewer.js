@@ -389,12 +389,18 @@ function LiveViewer() {
       audio.onended = () => {
         isPlayingRef.current = false;
         URL.revokeObjectURL(nextAudio.blobUrl); // clean up
-        playNextAudio(); // play next
+        // Only play next if still playing
+        if (isPlay) {
+          playNextAudio(); // play next
+        }
       };
     } catch (err) {
       console.error('🔈 Failed to play audio:', err);
       isPlayingRef.current = false;
-      playNextAudio(); // Skip on error
+      // Only skip if still playing
+      if (isPlay) {
+        playNextAudio(); // Skip on error
+      }
     }
   }, [isPlay]);
 
