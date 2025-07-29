@@ -35,6 +35,9 @@ function LiveViewer() {
   const wsRef = useRef(null);
   const audioQueueRef = useRef([]);
   const isPlayingRef = useRef(false);
+  // Refs for the translated and original text boxes
+  const translatedBoxRef = useRef(null);
+  const originalBoxRef = useRef(null);
   // State variables
   // const [messages, setMessages] = useState([]);
   // const [originalText, setOriginText] = useState([]);
@@ -460,6 +463,16 @@ function LiveViewer() {
     }
   }, [isPlay, playNextAudio]);
 
+  // Scroll to the bottom of the translated and original text boxes when new data arrives
+  useEffect(() => {
+    if (translatedBoxRef.current) {
+      translatedBoxRef.current.scrollTop = translatedBoxRef.current.scrollHeight;
+    }
+    if (originalBoxRef.current) {
+      originalBoxRef.current.scrollTop = originalBoxRef.current.scrollHeight;
+    }
+  }, [translatedAudioData]);
+
   const handleSelectedVoiceLanguageChange = (event) => {
     setSelectedVoiceLanguage(event.target.value);
   };
@@ -606,7 +619,7 @@ function LiveViewer() {
                     <span className='trans-text'>
                       {t('translations')}:
                     </span>
-                    <div className='trans-messages'>
+                    <div className='trans-messages' ref={translatedBoxRef}>
                       {translatedAudioData.messages.map((msg, idx) => (
                         <div key={idx} className='trans-message-item'>
                           {msg}
@@ -619,7 +632,7 @@ function LiveViewer() {
                     <span className='trans-text'>
                       {t('transcriptions')}:
                     </span>
-                    <div className='trans-messages'>
+                    <div className='trans-messages' ref={originalBoxRef}>
                       {translatedAudioData.originals.map((msg, idx) => (
                         <div key={idx} className='trans-message-item'>
                           {msg}
