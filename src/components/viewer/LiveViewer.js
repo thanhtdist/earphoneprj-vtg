@@ -398,6 +398,16 @@ function LiveViewer() {
     }
   }, [isPlay]);
 
+  // Scroll to the bottom of the translated and original text boxes when new data arrives
+  const scrollToBottom = () => {
+    if (translatedBoxRef.current) {
+      translatedBoxRef.current.scrollTop = translatedBoxRef.current.scrollHeight;
+    }
+    if (originalBoxRef.current) {
+      originalBoxRef.current.scrollTop = originalBoxRef.current.scrollHeight;
+    }
+  };
+
 
   // Connect WebSocket
   useEffect(() => {
@@ -426,10 +436,15 @@ function LiveViewer() {
               console.log('📝 Translation:', parsed.translatedText);
               // setMessages((prevMessages) => [...prevMessages, parsed.translatedText]);
               // setOriginText((prevOriginalText) => [...prevOriginalText, parsed.originalText]);
-              setTranslatedAudioData((prevData) => ({
-                messages: [...prevData.messages, parsed.translatedText],
-                originals: [...prevData.originals, parsed.originalText],
-              }));
+              setTranslatedAudioData((prevData) => {
+                const newState = {
+                  messages: [...prevData.messages, parsed.translatedText],
+                  originals: [...prevData.originals, parsed.originalText],
+                };
+                // Delay scroll
+                setTimeout(scrollToBottom, 0);
+                return newState;
+              });
 
               // ✅ Broadcast audio when isPlay = true
               if (!isPlay) {
@@ -462,16 +477,6 @@ function LiveViewer() {
       };
     }
   }, [isPlay, playNextAudio]);
-
-  // Scroll to the bottom of the translated and original text boxes when new data arrives
-  useEffect(() => {
-    if (translatedBoxRef.current) {
-      translatedBoxRef.current.scrollTop = translatedBoxRef.current.scrollHeight;
-    }
-    if (originalBoxRef.current) {
-      originalBoxRef.current.scrollTop = originalBoxRef.current.scrollHeight;
-    }
-  }, [translatedAudioData]);
 
   const handleSelectedVoiceLanguageChange = (event) => {
     setSelectedVoiceLanguage(event.target.value);
