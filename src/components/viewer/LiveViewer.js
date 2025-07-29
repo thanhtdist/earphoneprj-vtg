@@ -375,11 +375,15 @@ function LiveViewer() {
 
   // Function to play the next translated audio in the queue
   const playNextAudio = useCallback(async () => {
+    console.log('🔊 Playing audio in queue audioQueueRef:', audioQueueRef.current);
+    console.log('🔊 Playing audio in queue isPlayingRef:', isPlayingRef.current);
+    console.log('🔊 Playing audio in queue isPlay:', isPlay);
     if (isPlayingRef.current || audioQueueRef.current.length === 0 || !isPlay) {
       return;
     }
 
     const nextAudio = audioQueueRef.current.shift();
+    console.log('🔊 Playing audio in queue nextAudio:', nextAudio);
     if (!nextAudio) return;
 
     const audio = new Audio(nextAudio.blobUrl);
@@ -464,6 +468,7 @@ function LiveViewer() {
               }
 
               console.log('🔊 Playing audio for lang:', parsed.language);
+              console.log('🔊 Playing audio for audioQueueRef current:', audioQueueRef.current);
 
               const byteCharacters = atob(parsed.audioBase64);
               const byteArray = new Uint8Array(byteCharacters.length);
@@ -474,6 +479,7 @@ function LiveViewer() {
               const blob = new Blob([byteArray], { type: 'audio/mpeg' });
               const blobUrl = URL.createObjectURL(blob);
               audioQueueRef.current.push({ blobUrl });
+              console.log('🔊 Playing audio for audioQueueRef after:', audioQueueRef.current);
               playNextAudio(isPlay);
 
             } else {
