@@ -35,7 +35,7 @@ function LiveViewer() {
   const currentTranslatedAudioRef = useRef(null);
   const wsRef = useRef(null);
   const audioQueueRef = useRef([]);
-  const isPlayingRef = useRef(false);
+  //const isPlayingRef = useRef(false);
   // Refs for the translated and original text boxes
   const translatedBoxRef = useRef(null);
   const originalBoxRef = useRef(null);
@@ -376,9 +376,9 @@ function LiveViewer() {
   // Function to play the next translated audio in the queue
   const playNextAudio = useCallback(async () => {
     console.log('🔊 Playing audio in queue audioQueueRef:', audioQueueRef.current);
-    console.log('🔊 Playing audio in queue isPlayingRef:', isPlayingRef.current);
+    console.log('🔊 Playing audio in queue currentTranslatedAudioRef:', currentTranslatedAudioRef.current);
     console.log('🔊 Playing audio in queue isPlay:', isPlay);
-    if (isPlayingRef.current || audioQueueRef.current.length === 0 || !isPlay) {
+    if (currentTranslatedAudioRef.current || audioQueueRef.current.length === 0 || !isPlay) {
       return;
     }
 
@@ -388,13 +388,13 @@ function LiveViewer() {
 
     const audio = new Audio(nextAudio.blobUrl);
     currentTranslatedAudioRef.current = audio; // 👉 Store current translated audio
-    isPlayingRef.current = true;
+    //isPlayingRef.current = true;
 
     try {
       await audio.play();
       console.log('✅ Audio played');
       audio.onended = () => {
-        isPlayingRef.current = false;
+        //isPlayingRef.current = false;
         currentTranslatedAudioRef.current = null; // ✅ Clear ref
         URL.revokeObjectURL(nextAudio.blobUrl); // clean up
         // Only play next if still playing
@@ -404,7 +404,7 @@ function LiveViewer() {
       };
     } catch (err) {
       console.error('🔈 Failed to play audio:', err);
-      isPlayingRef.current = false;
+      //isPlayingRef.current = false;
       currentTranslatedAudioRef.current = null; // ✅ Clear ref on error
       // Only skip if still playing
       if (isPlay) {
