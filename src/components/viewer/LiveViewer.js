@@ -31,7 +31,8 @@ import TourTitle from '../common/TourTitle';
 import AudioPlayerControl from '../common/AudioPlayerControl';
 
 function LiveViewer() {
-  // Get the params from the URL
+  // 👉 Manage currently playing translated audio
+  const currentTranslatedAudioRef = useRef(null);
   const wsRef = useRef(null);
   const audioQueueRef = useRef([]);
   const isPlayingRef = useRef(false);
@@ -42,6 +43,7 @@ function LiveViewer() {
   // const [messages, setMessages] = useState([]);
   // const [originalText, setOriginText] = useState([]);
   const [translatedAudioData, setTranslatedAudioData] = useState({ messages: [], originals: [] });
+  // Get the params from the URL
   const { tourId } = useParams(); // Extracts 'tourId' from the URL
   console.log('tourId:', tourId);
   const { t, i18n } = useTranslation();
@@ -371,7 +373,7 @@ function LiveViewer() {
   }, [selectedVoiceLanguage]);
 
 
-  // Function to play the next audio in the queue
+  // Function to play the next translated audio in the queue
   const playNextAudio = useCallback(async () => {
     if (isPlayingRef.current || audioQueueRef.current.length === 0 || !isPlay) {
       return;
@@ -381,6 +383,7 @@ function LiveViewer() {
     if (!nextAudio) return;
 
     const audio = new Audio(nextAudio.blobUrl);
+    currentTranslatedAudioRef.current = audio; // 👉 Store current translated audio
     isPlayingRef.current = true;
 
     try {
@@ -388,6 +391,7 @@ function LiveViewer() {
       console.log('✅ Audio played');
       audio.onended = () => {
         isPlayingRef.current = false;
+        currentTranslatedAudioRef.current = null; // ✅ Clear ref
         URL.revokeObjectURL(nextAudio.blobUrl); // clean up
         // Only play next if still playing
         if (isPlay) {
@@ -397,6 +401,7 @@ function LiveViewer() {
     } catch (err) {
       console.error('🔈 Failed to play audio:', err);
       isPlayingRef.current = false;
+      currentTranslatedAudioRef.current = null; // ✅ Clear ref on error
       // Only skip if still playing
       if (isPlay) {
         playNextAudio(); // Skip on error
@@ -497,10 +502,21 @@ function LiveViewer() {
   const handlePlay = () => {
     if (isPlay === false) {
       setIsPlay(true)
-      audioElementRef.current.play();
+      audioElementRef.current.play(); // This is for Chime session (ja-JP only)
     } else {
       setIsPlay(false);
+      // ⛔ Immediately stop translated audio
+      if (currentTranslatedAudioRef.current) {
+        currentTranslatedAudioRef.current.pause();
+        currentTranslatedAudioRef.current.src = '';
+        currentTranslatedAudioRef.current = null;
+      }
+
+      // ⛔ Stop Chime-bound audio (if needed)
       audioElementRef.current.pause();
+
+      // 🧹 Clear translated audio queue
+      audioQueueRef.current = [];
     }
   }
 
