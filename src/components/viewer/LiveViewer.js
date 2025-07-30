@@ -103,7 +103,7 @@ function LiveViewer() {
       if (audioElement) {
         await session.audioVideo.bindAudioElement(audioElement);
         // Disable autoplay for the audio element
-        audioElement.autoplay = false;
+        // audioElement.autoplay = false;
       } else {
         console.error('Audio element not found');
       }
