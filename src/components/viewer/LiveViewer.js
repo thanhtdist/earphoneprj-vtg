@@ -102,6 +102,18 @@ function LiveViewer() {
       console.log('Check audioElement:', audioElement);
       if (audioElement) {
         await session.audioVideo.bindAudioElement(audioElement);
+        setTimeout(() => {
+          if (audioElement) {
+            console.log('🎧 Audio status after bind:');
+            console.log('  ▶️ Paused:', audioElement.paused);
+            console.log('  🔇 Muted:', audioElement.muted);
+            console.log('  🔗 currentSrc:', audioElement.currentSrc);
+            console.log('  📶 networkState:', audioElement.networkState);
+            console.log('  🎬 readyState:', audioElement.readyState);
+            console.log('  🔊 volume:', audioElement.volume);
+            console.log('  🎥 srcObject:', audioElement.srcObject);
+          }
+        }, 1000); // Delay a bit to allow stream binding
       } else {
         console.error('Audio element not found');
       }
