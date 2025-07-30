@@ -514,37 +514,69 @@ function StartLiveSession() {
 
   }, [selectedAudioInput]);
 
+  //  Function to connect to WebSocket
   const connectWebSocket = useCallback(() => {
-    let connectTimestamp = null;
-    let disconnectTimestamp = null;
+    // If a WebSocket connection already exists, skip creating a new one
+    if (wsRef.current) {
+      console.log('🔁 WebSocket already connected.');
+      return;
+    }
 
-    if (wsRef.current) return;
-    console.log('Intital WebSocket...');
-
+    // Create a new WebSocket instance
     const ws = new WebSocket(Config.webSocketURL);
 
+    // Variables to track connection timestamp and ping interval
+    let connectTimestamp = null;
+    let pingInterval = null;
+
+    // When the WebSocket successfully connects
     ws.onopen = () => {
       connectTimestamp = Date.now();
       console.log('✅ WebSocket Connected at:', new Date(connectTimestamp).toLocaleTimeString());
-      console.log('✅ Host WebSocket connected');
-      wsRef.current = ws;
+
+      // ✅ Start pinging every 4 minutes to keep the connection alive
+      pingInterval = setInterval(() => {
+        if (ws.readyState === WebSocket.OPEN) {
+          console.log('📡 WebSocket Sending ping...');
+          ws.send(JSON.stringify({ action: 'ping' }));
+        }
+      }, 4 * 60 * 1000); // 4 minutes
     };
 
+    // When the WebSocket connection is closed
     ws.onclose = () => {
-      disconnectTimestamp = Date.now();
-      const duration = (disconnectTimestamp - connectTimestamp) / 1000;
+      const disconnectTimestamp = Date.now();
+      const duration = connectTimestamp
+        ? ((disconnectTimestamp - connectTimestamp) / 1000).toFixed(1)
+        : 'unknown';
+
       console.log('❌ WebSocket Disconnected at:', new Date(disconnectTimestamp).toLocaleTimeString());
       console.log(`🔌 WebSocket Connection lasted: ${duration} seconds`);
 
-      console.log('❌ The host WebSocket disconnected');
-      console.warn('WebSocket closed');
-      console.log('✅ WebSocket closed current', wsRef.current);
+      // Stop the ping interval if it was running
+      if (pingInterval) {
+        clearInterval(pingInterval);
+      }
+
+      // Clear the reference so future reconnects are allowed
       wsRef.current = null;
     };
 
-    ws.onerror = (err) => {
-      console.error('WebSocket error:', err);
+    // Handle WebSocket error events
+    ws.onerror = (error) => {
+      console.error('⚠️ WebSocket error:', error);
+
+      // Stop the ping interval on error
+      if (pingInterval) {
+        clearInterval(pingInterval);
+      }
+
+      // Clear the reference
+      wsRef.current = null;
     };
+
+    // Store the WebSocket instance in a ref so it's accessible globally
+    wsRef.current = ws;
   }, []);
 
   // Handle sending text to the WebSocket server

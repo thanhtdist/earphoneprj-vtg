@@ -105,15 +105,17 @@ function LiveViewer() {
         setTimeout(() => {
           if (audioElement) {
             console.log('🎧 Audio status after bind:');
-            console.log('  ▶️ Paused:', audioElement.paused);
-            console.log('  🔇 Muted:', audioElement.muted);
-            console.log('  🔗 currentSrc:', audioElement.currentSrc);
-            console.log('  📶 networkState:', audioElement.networkState);
-            console.log('  🎬 readyState:', audioElement.readyState);
-            console.log('  🔊 volume:', audioElement.volume);
-            console.log('  🎥 srcObject:', audioElement.srcObject);
+            console.log('Audio  🎬 Autoplay:', audioElement.autoplay);
+            console.log('Audio  ▶️ Paused:', audioElement.paused);
+            console.log('Audio  🔇 Muted:', audioElement.muted);
+            console.log('Audio  🔗 currentSrc:', audioElement.currentSrc);
+            console.log('Audio  📶 networkState:', audioElement.networkState);
+            console.log('Audio  🎬 readyState:', audioElement.readyState);
+            console.log('Audio  🔊 volume:', audioElement.volume);
+            console.log('Audio  🎥 srcObject:', audioElement.srcObject);
           }
         }, 1000); // Delay a bit to allow stream binding
+        audioElement.autoplay = false;  // remove autoplay flag
       } else {
         console.error('Audio element not found');
       }
@@ -312,6 +314,15 @@ function LiveViewer() {
     // };
   }, [meetingSession]);
 
+  // Normalize language code for translation if needed
+  const getNormalizedLanguageCode = (lang) => {
+    switch (lang) {
+      case 'cmn-CN':
+        return 'zh'; // Simplified Chinese
+      default:
+        return lang;
+    }
+  };
 
   // Function to connect to WebSocket
   const connectWebSocket = useCallback(() => {
@@ -334,9 +345,10 @@ function LiveViewer() {
       console.log('✅ WebSocket Connected at:', new Date(connectTimestamp).toLocaleTimeString());
 
       // Send selected language to backend (required by your system)
+      const targetLanguageCode = getNormalizedLanguageCode(selectedVoiceLanguage);
       ws.send(JSON.stringify({
         action: 'selectLanguage',
-        languageCode: selectedVoiceLanguage, // <-- this should come from state or props
+        languageCode: targetLanguageCode, // <-- this should come from state or props
       }));
 
       // ✅ Start pinging every 4 minutes to keep the connection alive
