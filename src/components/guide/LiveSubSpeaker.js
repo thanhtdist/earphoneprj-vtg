@@ -143,6 +143,8 @@ function LiveSubSpeaker() {
     const audioElement = document.getElementById('audioElementSub');
     if (audioElement) {
       await meetingSession.audioVideo.bindAudioElement(audioElement);
+      // Disable autoplay for the audio element
+      audioElement.autoplay = false;
     } else {
       console.error('Audio element not found');
     }

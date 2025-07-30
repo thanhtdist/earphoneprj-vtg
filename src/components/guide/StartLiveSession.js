@@ -203,6 +203,8 @@ function StartLiveSession() {
     const audioElement = document.getElementById('audioElementMain');
     if (audioElement) {
       await meetingSession.audioVideo.bindAudioElement(audioElement);
+      // Disable autoplay for the audio element
+      audioElement.autoplay = false;
     } else {
       console.error('Audio element not found');
     }
@@ -827,12 +829,6 @@ function StartLiveSession() {
           </div>
         </div> */}
         <TourTitle tour={tour} />
-        {meetingSession && (
-          <>
-            <button onClick={() => handleTranslateAudio('おやすみなさい')}>Send Transcripts</button>
-            <br />
-          </>
-        )}
         <audio id='audioElementMain' ref={audioRef} >
         </audio>
         <AudioPlayerControl
