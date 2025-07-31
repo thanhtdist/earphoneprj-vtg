@@ -398,7 +398,10 @@ function LiveViewer() {
     console.log('🔊 Playing audio in queue nextAudio:', nextAudio);
     if (!nextAudio) return;
 
-    const audio = new Audio(nextAudio.blobUrl);
+    //const audio = new Audio(nextAudio.blobUrl);
+    // audioElementRef
+    const audio = audioElementRef.current;
+    audio.src = nextAudio.blobUrl;
     currentTranslatedAudioRef.current = audio; // 👉 Store current translated audio
     //isPlayingRef.current = true;
 
