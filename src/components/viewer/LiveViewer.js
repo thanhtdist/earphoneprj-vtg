@@ -103,7 +103,7 @@ function LiveViewer() {
       if (audioElement) {
         await session.audioVideo.bindAudioElement(audioElement);
         // Disable autoplay for the audio element
-        // audioElement.autoplay = false;
+        audioElement.autoplay = false;
       } else {
         console.error('Audio element not found');
       }
@@ -403,6 +403,10 @@ function LiveViewer() {
     //isPlayingRef.current = true;
 
     try {
+      console.log('🔊 Playing audio blob volume:', audio.volume);
+      console.log('🔊 Playing audio blob muted:', audio.muted);
+      // Load and play the audio
+      audio.load();
       await audio.play();
       console.log('✅ Audio played');
       audio.onended = () => {
