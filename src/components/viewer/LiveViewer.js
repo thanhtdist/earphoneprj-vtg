@@ -615,7 +615,8 @@ function LiveViewer() {
         currentTranslatedAudioRef.current.src = '';
         // ✅ Web Audio API stop
         // currentTranslatedAudioRef.current.stop();
-        // currentTranslatedAudioRef.current = null;
+        // ✅ Clear the reference
+        currentTranslatedAudioRef.current = null;
       }
 
       // ⛔ Stop Chime-bound audio (if needed)
