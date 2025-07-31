@@ -421,6 +421,7 @@ function LiveViewer() {
         //isPlayingRef.current = false;
         currentTranslatedAudioRef.current = null; // ✅ Clear ref
         URL.revokeObjectURL(nextAudio.blobUrl); // clean up
+        audio.src = ''; // clear src to free memory
         // Only play next if still playing
         if (isPlay) {
           playNextAudio(); // play next
