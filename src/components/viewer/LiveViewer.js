@@ -401,6 +401,11 @@ function LiveViewer() {
     //const audio = new Audio(nextAudio.blobUrl);
     // audioElementRef
     const audio = audioElementRef.current;
+    // Reset the audio element
+    audio.pause();
+    audio.currentTime = 0;
+    audio.src = '';
+    // Set the new audio source
     audio.src = nextAudio.blobUrl;
     currentTranslatedAudioRef.current = audio; // 👉 Store current translated audio
     //isPlayingRef.current = true;
