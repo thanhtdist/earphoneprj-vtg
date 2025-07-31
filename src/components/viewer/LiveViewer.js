@@ -32,6 +32,7 @@ import AudioPlayerControl from '../common/AudioPlayerControl';
 
 function LiveViewer() {
   // 👉 Manage currently playing translated audio
+  const audioContextRef = useRef(null);
   const currentTranslatedAudioRef = useRef(null);
   const wsRef = useRef(null);
   const audioQueueRef = useRef([]);
@@ -269,6 +270,20 @@ function LiveViewer() {
   );
 
   useEffect(() => {
+    if (!audioContextRef.current) {
+      audioContextRef.current = new (window.AudioContext)();
+    }
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (audioContextRef.current) {
+        audioContextRef.current.close();
+      }
+    };
+  }, []);
+
+  useEffect(() => {
     if (!meetingSession) return;
 
     const attendeeSet = new Set();
@@ -386,57 +401,111 @@ function LiveViewer() {
 
 
   // Function to play the next translated audio in the queue
+  // This uses the HTMLAudioElement for playback
+  // const playNextAudio = useCallback(async () => {
+  //   console.log('🔊 Playing audio in queue audioQueueRef:', audioQueueRef.current);
+  //   console.log('🔊 Playing audio in queue currentTranslatedAudioRef:', currentTranslatedAudioRef.current);
+  //   console.log('🔊 Playing audio in queue isPlay:', isPlay);
+  //   if (currentTranslatedAudioRef.current || audioQueueRef.current.length === 0 || !isPlay) {
+  //     return;
+  //   }
+
+  //   const nextAudio = audioQueueRef.current.shift();
+  //   console.log('🔊 Playing audio in queue nextAudio:', nextAudio);
+  //   if (!nextAudio) return;
+
+  //   //const audio = new Audio(nextAudio.blobUrl);
+  //   // audioElementRef
+  //   const audio = audioElementRef.current;
+  //   // Reset the audio element
+  //   audio.pause();
+  //   audio.currentTime = 0;
+  //   audio.src = '';
+  //   // Set the new audio source
+  //   audio.src = nextAudio.blobUrl;
+  //   currentTranslatedAudioRef.current = audio; // 👉 Store current translated audio
+  //   //isPlayingRef.current = true;
+
+  //   try {
+  //     console.log('🔊 Playing audio blob volume:', audio.volume);
+  //     console.log('🔊 Playing audio blob muted:', audio.muted);
+  //     // Load and play the audio
+  //     audio.load();
+  //     await audio.play();
+  //     console.log('✅ Audio played');
+  //     audio.onended = () => {
+  //       //isPlayingRef.current = false;
+  //       currentTranslatedAudioRef.current = null; // ✅ Clear ref
+  //       URL.revokeObjectURL(nextAudio.blobUrl); // clean up
+  //       audio.src = ''; // clear src to free memory
+  //       // Only play next if still playing
+  //       if (isPlay) {
+  //         playNextAudio(); // play next
+  //       }
+  //     };
+  //   } catch (err) {
+  //     console.error('🔈 Failed to play audio:', err);
+  //     //isPlayingRef.current = false;
+  //     currentTranslatedAudioRef.current = null; // ✅ Clear ref on error
+  //     // Only skip if still playing
+  //     if (isPlay) {
+  //       playNextAudio(); // Skip on error
+  //     }
+  //   }
+  // }, [isPlay]);
+
+
+  // Function to play the next translated audio in the queue
+  // This uses Web Audio API for better control over playback
   const playNextAudio = useCallback(async () => {
-    console.log('🔊 Playing audio in queue audioQueueRef:', audioQueueRef.current);
-    console.log('🔊 Playing audio in queue currentTranslatedAudioRef:', currentTranslatedAudioRef.current);
-    console.log('🔊 Playing audio in queue isPlay:', isPlay);
-    if (currentTranslatedAudioRef.current || audioQueueRef.current.length === 0 || !isPlay) {
+    if (currentTranslatedAudioRef.current || audioQueueRef.current.length === 0 || !isPlay) return;
+
+    const nextAudio = audioQueueRef.current.shift();
+    if (!nextAudio) return;
+
+    const audioContext = audioContextRef.current;
+    if (!audioContext) {
+      console.warn('AudioContext not initialized');
       return;
     }
 
-    const nextAudio = audioQueueRef.current.shift();
-    console.log('🔊 Playing audio in queue nextAudio:', nextAudio);
-    if (!nextAudio) return;
-
-    //const audio = new Audio(nextAudio.blobUrl);
-    // audioElementRef
-    const audio = audioElementRef.current;
-    // Reset the audio element
-    audio.pause();
-    audio.currentTime = 0;
-    audio.src = '';
-    // Set the new audio source
-    audio.src = nextAudio.blobUrl;
-    currentTranslatedAudioRef.current = audio; // 👉 Store current translated audio
-    //isPlayingRef.current = true;
-
     try {
-      console.log('🔊 Playing audio blob volume:', audio.volume);
-      console.log('🔊 Playing audio blob muted:', audio.muted);
-      // Load and play the audio
-      audio.load();
-      await audio.play();
-      console.log('✅ Audio played');
-      audio.onended = () => {
-        //isPlayingRef.current = false;
-        currentTranslatedAudioRef.current = null; // ✅ Clear ref
-        URL.revokeObjectURL(nextAudio.blobUrl); // clean up
-        audio.src = ''; // clear src to free memory
-        // Only play next if still playing
+      // 🔄 Resume context if suspended (especially on iOS Safari)
+      if (audioContext.state === 'suspended') {
+        await audioContext.resume();
+      }
+
+      // 🔊 Fetch and decode audio
+      const response = await fetch(nextAudio.blobUrl);
+      const arrayBuffer = await response.arrayBuffer();
+      const decodedData = await audioContext.decodeAudioData(arrayBuffer);
+
+      // 🎧 Create buffer source
+      const source = audioContext.createBufferSource();
+      source.buffer = decodedData;
+      source.connect(audioContext.destination);
+      currentTranslatedAudioRef.current = source;
+
+      // 🔁 When playback ends
+      source.onended = () => {
+        currentTranslatedAudioRef.current = null;
+        URL.revokeObjectURL(nextAudio.blobUrl);
         if (isPlay) {
-          playNextAudio(); // play next
+          playNextAudio(); // 👉 play next in queue
         }
       };
+
+      // ▶️ Start playback
+      source.start(0);
     } catch (err) {
-      console.error('🔈 Failed to play audio:', err);
-      //isPlayingRef.current = false;
-      currentTranslatedAudioRef.current = null; // ✅ Clear ref on error
-      // Only skip if still playing
+      console.error('❌ Web Audio API playback error:', err);
+      currentTranslatedAudioRef.current = null;
       if (isPlay) {
-        playNextAudio(); // Skip on error
+        playNextAudio(); // skip on error
       }
     }
   }, [isPlay]);
+
 
   // Scroll to the bottom of the translated and original text boxes when new data arrives
   const scrollToBottom = () => {
