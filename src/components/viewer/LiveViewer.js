@@ -610,8 +610,11 @@ function LiveViewer() {
       setIsPlay(false);
       // ⛔ Immediately stop translated audio
       if (currentTranslatedAudioRef.current) {
-        currentTranslatedAudioRef.current.pause();
-        currentTranslatedAudioRef.current.src = '';
+        // ✅ new Audio() or audioElementRef.current (HTMLAudioElement)
+        //currentTranslatedAudioRef.current.pause();
+        //currentTranslatedAudioRef.current.src = '';
+        // ✅ Web Audio API stop
+        currentTranslatedAudioRef.current.stop();
         currentTranslatedAudioRef.current = null;
       }
 
