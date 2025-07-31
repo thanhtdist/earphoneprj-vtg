@@ -458,7 +458,10 @@ function LiveViewer() {
   // Function to play the next translated audio in the queue
   // This uses Web Audio API for better control over playback
   const playNextAudio = useCallback(async () => {
-    if (currentTranslatedAudioRef.current || audioQueueRef.current.length === 0 || !isPlay) return;
+    if (currentTranslatedAudioRef.current || audioQueueRef.current.length === 0 || !isPlay) {
+      console.log('🔊 Skipped audio playback (current audio is playing or queue is empty or isPlay is false)');
+      return;
+    }
 
     const nextAudio = audioQueueRef.current.shift();
     if (!nextAudio) return;
