@@ -56,7 +56,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       coSponsoredCourseNumber
     } = JSON.parse(event.body || '{}');
 
-    console.log('Creating tour with tourNumber: ', tourNumber, 'courseName: ', courseName, 'departureDate' ,departureDate, 'returnDate', returnDate);
+    console.log('Creating tour with tourNumber: ', tourNumber, 'courseName: ', courseName, 'departureDate', departureDate, 'returnDate', returnDate);
 
     // Input validation
     if (!tourNumber || !courseName || !departureDate || !returnDate) {
@@ -67,7 +67,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
         headers: Config.headers,
       };
     }
-console.log("123456789");
+    console.log("123456789");
 
     // Create a new tour item for DynamoDB
     const tourItem = {
@@ -94,7 +94,9 @@ console.log("123456789");
       updatedBy: '',
       deleteFlag: 0,
       tourTestStatus: 'test', // Test and Production
-      tourType:'tour'
+      tourType: 'tour',
+      isMaxConnectionProcessed: false, // default to false
+      maxConnection: 0, // default to 0
     };
 
     // Store the tour in DynamoDB
