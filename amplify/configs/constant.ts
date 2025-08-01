@@ -8,4 +8,5 @@ export const DB_TABLES = {
   USERS: 'users_dev',
   TOURS: 'tours_dev',
   WEBSOCKETCONNECTIONS: 'websocketconnections',
+  CONNECTION_HISTORY: 'websocketconnections_history',
 };
