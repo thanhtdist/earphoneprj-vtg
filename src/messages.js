@@ -20,4 +20,7 @@ export const messages = {
         sameAsConfirmation: "パスワードとパスワード（確認用）が異なります。",
        }
     },
+    guide: {
+        notStart: 'Guide does not start, please wait...',
+    },
 };
