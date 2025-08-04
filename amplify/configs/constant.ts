@@ -7,6 +7,6 @@ export const DEFAULT_HEADERS = {
 export const DB_TABLES = {
   USERS: 'users_dev',
   TOURS: 'tours_dev',
-  WEBSOCKETCONNECTIONS: 'websocketconnections',
-  CONNECTION_HISTORY: 'websocketconnections_history',
+  WEBSOCKETCONNECTIONS: 'websocketconnections_dev',
+  CONNECTION_HISTORY: 'websocketconnections_history_dev',
 };

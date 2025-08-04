@@ -32,6 +32,7 @@ import { messages } from '../../messages';
 //import Loading from '../Loading';
 
 function JapaneseAudio() {
+  const [connectionCount, setConnectionCount] = useState(0);
   const currentTranslatedAudioRef = useRef(null);
   const wsRef = useRef(null);
   const audioQueueRef = useRef([]);
@@ -291,6 +292,16 @@ function JapaneseAudio() {
       connectTimestamp = Date.now();
       console.log('✅ WebSocket Connected at:', new Date(connectTimestamp).toLocaleTimeString());
 
+      // ✅ Send "connectState" message after connecting
+      const connectStatePayload = {
+        action: 'connectState',
+        tourId: tourId,
+        languageCode: 'ja-JP',
+        userType: 'User',
+      };
+      ws.send(JSON.stringify(connectStatePayload));
+      console.log('📤 WebSocket Sent connectState:', connectStatePayload);
+
       // ✅ Start pinging every 4 minutes to keep the connection alive
       pingInterval = setInterval(() => {
         if (ws.readyState === WebSocket.OPEN) {
@@ -298,6 +309,26 @@ function JapaneseAudio() {
           ws.send(JSON.stringify({ action: 'ping' }));
         }
       }, 4 * 60 * 1000); // 4 minutes
+    };
+
+    // ✅ Handle incoming messages
+    ws.onmessage = (event) => {
+      try {
+        const message = JSON.parse(event.data);
+
+        // Handle "connectionUpdate"
+        if (message.type === 'connectionUpdate') {
+          console.log('🔁 WebSocket Received connectionUpdate connectState:', message);
+          console.log('🔁 WebSocket Received message.connectionCount connectState:', message.connectionCount);
+
+          // Optional: Update your UI or state here
+          setConnectionCount(message.connectionCount);
+        } else {
+          console.log('📨 WebSocket Received message:', message);
+        }
+      } catch (error) {
+        console.error('❌ Error parsing WebSocket message:', error);
+      }
     };
 
     // When the WebSocket connection is closed
@@ -334,7 +365,7 @@ function JapaneseAudio() {
 
     // Store the WebSocket instance in a ref so it's accessible globally
     wsRef.current = ws;
-  }, []);
+  }, [tourId]);
 
   // Connect WebSocket
   useEffect(() => {
@@ -492,6 +523,7 @@ function JapaneseAudio() {
         </>)} */}
       <Header count={participantsCount} tourId={tourId} userType={userType} />
       <div className='live-viewer-container'>
+        <p>Connection Count: {connectionCount}</p>
         <audio
           id="audioElementListener"
           ref={audioElementRef}

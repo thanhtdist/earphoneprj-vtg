@@ -30,6 +30,7 @@ import { getTour } from './functions/tours/get-tour/resource';
 import { listTour } from './functions/tours/list-tour/resource';
 import { updateTour } from './functions/tours/update-tour/resource';
 import { deleteTour } from './functions/tours/delete-tour/resource';
+import { calculateMaxConnection } from './functions/tours/calculate-max-connection/resource';
 import { login } from './functions/users/login/resource';
 import { listAdmin } from './functions/users/list-admin/resource';
 import { createBatchTour } from './functions/tours/create-batch-tour/resource';
@@ -47,6 +48,7 @@ import { connect } from './functions/translates/translate-text-speech-socket/con
 import { disconnect } from './functions/translates/translate-text-speech-socket/disconnect/resource';
 import { selectLanguage } from './functions/translates/translate-text-speech-socket/select-language/resource';
 import { translateAudio } from './functions/translates/translate-text-speech-socket/translate-audio/resource';
+import { connectState } from './functions/translates/translate-text-speech-socket/connect-state/resource';
 import { uploadPresignedS3Upload } from './functions/uploadFileS3/upload/resource';
 import { viewPresignedS3Upload } from './functions/uploadFileS3/view/resource';
 import { loginAndGetCredentials } from './functions/loginCognito/get-credentials/resource';
@@ -76,6 +78,7 @@ const backend = defineBackend({
   login, //login admin
   listAdmin,
   createBatchTour,
+  calculateMaxConnection, // calculate max connection for each tour
   getAdmin, // create batch tour by the admin
   createAdmin, // create user by the admin
   updateAdmin, // update admin by the admin
@@ -91,6 +94,7 @@ const backend = defineBackend({
   connect, // translate text to speech by socket
   disconnect, // disconnect socket
   selectLanguage, // select language for translation
+  connectState, // connect state for translation
   translateAudio, // translate text into audio by socket
   uploadPresignedS3Upload, // get pre-signed S3 upload URL
   viewPresignedS3Upload, // view pre-signed S3 upload URL
@@ -347,6 +351,12 @@ tourPath.addMethod("POST", new LambdaIntegration(
   backend.createTour.resources.lambda
 ));
 
+const tourMaxConnectionPath = tourPath.addResource("max-connection");
+// add POST method to create /tours/batch with createTour Lambda integration
+tourMaxConnectionPath.addMethod("POST", new LambdaIntegration(
+  backend.calculateMaxConnection.resources.lambda
+));
+
 // add GET method to /tours with listTour Lambda integration
 tourPath.addMethod("GET", new LambdaIntegration(
   backend.listTour.resources.lambda
@@ -502,6 +512,11 @@ const translateWebSocketStage = new WebSocketStage(apiStack, "TranslateWebSocket
 // 2. Add route: selectLanguage (listener select language for translation)
 translateWebSocketApi.addRoute('selectLanguage', {
   integration: new WebSocketLambdaIntegration('SelectLanguageIntegration', backend.selectLanguage.resources.lambda),
+});
+
+// 2. Add route: connectState (listener select language for translation)
+translateWebSocketApi.addRoute('connectState', {
+  integration: new WebSocketLambdaIntegration('ConnectStateIntegration', backend.connectState.resources.lambda),
 });
 
 // 3. Add route: translateAudio (host send text -> translate + audio -> client)
