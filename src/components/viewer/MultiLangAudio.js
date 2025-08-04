@@ -31,6 +31,7 @@ import TourTitle from '../common/TourTitle';
 import AudioPlayerControl from '../common/AudioPlayerControl';
 
 function MultiLangAudio() {
+  const [connectionCount, setConnectionCount] = useState(0);
   // 👉 Manage currently playing translated audio
   // const audioContextRef = useRef(null);
   const currentTranslatedAudioRef = useRef(null);
@@ -347,12 +348,22 @@ function MultiLangAudio() {
       connectTimestamp = Date.now();
       console.log('✅ WebSocket Connected at:', new Date(connectTimestamp).toLocaleTimeString());
 
-      // Send selected language to backend (required by your system)
+      // // Send selected language to backend (required by your system)
       const targetLanguageCode = getNormalizedLanguageCode(selectedVoiceLanguage);
-      ws.send(JSON.stringify({
-        action: 'selectLanguage',
-        languageCode: targetLanguageCode, // <-- this should come from state or props
-      }));
+      // ws.send(JSON.stringify({
+      //   action: 'selectLanguage',
+      //   languageCode: targetLanguageCode, // <-- this should come from state or props
+      // }));
+
+      // ✅ Send "connectState" message after connecting
+      const connectStatePayload = {
+        action: 'connectState',
+        tourId: tourId,
+        languageCode: targetLanguageCode,
+        userType: 'User',
+      };
+      ws.send(JSON.stringify(connectStatePayload));
+      console.log('📤 WebSocket Sent connectState:', connectStatePayload);
 
       // ✅ Start pinging every 4 minutes to keep the connection alive
       pingInterval = setInterval(() => {
@@ -361,6 +372,26 @@ function MultiLangAudio() {
           ws.send(JSON.stringify({ action: 'ping' }));
         }
       }, 4 * 60 * 1000); // 4 minutes
+    };
+
+    // ✅ Handle incoming messages
+    ws.onmessage = (event) => {
+      try {
+        const message = JSON.parse(event.data);
+
+        // Handle "connectionUpdate"
+        if (message.type === 'connectionUpdate') {
+          console.log('🔁 WebSocket Received connectionUpdate connectState:', message);
+          console.log('🔁 WebSocket Received message.connectionCount connectState:', message.connectionCount);
+
+          // Optional: Update your UI or state here
+          setConnectionCount(message.connectionCount);
+        } else {
+          console.log('📨 WebSocket Received message:', message);
+        }
+      } catch (error) {
+        console.error('❌ Error parsing WebSocket message:', error);
+      }
     };
 
     // When the WebSocket connection is closed
@@ -397,7 +428,7 @@ function MultiLangAudio() {
 
     // Store the WebSocket instance in a ref so it's accessible globally
     wsRef.current = ws;
-  }, [selectedVoiceLanguage]);
+  }, [tourId, selectedVoiceLanguage]);
 
 
   // Function to play the next translated audio in the queue
@@ -710,6 +741,7 @@ function MultiLangAudio() {
             </div>
           </div>
         )}
+        <p>Connection Count: {connectionCount}</p>
         <audio
           id="audioElementListener"
           ref={audioElementRef}

@@ -97,6 +97,9 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       tourType: 'tour',
       isMaxConnectionProcessed: false, // default to false
       maxConnection: 0, // default to 0
+      maxGuide: 0, // default to 0
+      maxSubGuide: 0, // default to 0
+      maxUser: 0, // default to 0
     };
 
     // Store the tour in DynamoDB

@@ -4,8 +4,13 @@ import { Config } from '@configs/config';
 
 const dynamoDB = new AWS.DynamoDB.DocumentClient({ region: Config.region });
 
-// Helper function: get max connection for a tour
-const getMaxConnectionForTour = async (tourId: string): Promise<number> => {
+// Helper function: get max connection stats for a tour (via reduce)
+const getMaxConnectionStatsForTour = async (tourId: string): Promise<{
+  maxConnection: number;
+  maxGuide: number;
+  maxSubGuide: number;
+  maxUser: number;
+}> => {
   const connResult = await dynamoDB.query({
     TableName: Config.dbTables.CONNECTION_HISTORY,
     IndexName: 'tourId-index',
@@ -13,15 +18,33 @@ const getMaxConnectionForTour = async (tourId: string): Promise<number> => {
     ExpressionAttributeValues: {
       ':tourId': tourId,
     },
-    ProjectionExpression: 'connectionCount',
+    ProjectionExpression: 'connectionCount, guideCount, subGuideCount, userCount',
   }).promise();
 
-  return connResult.Items?.reduce((max, conn) => {
-    return conn.connectionCount > max ? conn.connectionCount : max;
-  }, 0) || 0;
+  const {
+    maxConnection,
+    maxGuide,
+    maxSubGuide,
+    maxUser,
+  } = (connResult.Items || []).reduce(
+    (acc, item) => ({
+      maxConnection: Math.max(acc.maxConnection, item.connectionCount || 0),
+      maxGuide: Math.max(acc.maxGuide, item.guideCount || 0),
+      maxSubGuide: Math.max(acc.maxSubGuide, item.subGuideCount || 0),
+      maxUser: Math.max(acc.maxUser, item.userCount || 0),
+    }),
+    {
+      maxConnection: 0,
+      maxGuide: 0,
+      maxSubGuide: 0,
+      maxUser: 0,
+    }
+  );
+
+  return { maxConnection, maxGuide, maxSubGuide, maxUser };
 };
 
-export const handler: APIGatewayProxyHandler = async () => {
+export const handler: APIGatewayProxyHandler = async (_event) => {
   console.time('ProcessingTours');
 
   try {
@@ -49,35 +72,51 @@ export const handler: APIGatewayProxyHandler = async () => {
     console.log(`🔍 Found ${tours.length} tours to process`);
 
     // Step 2: Process tours in parallel
-    const results = await Promise.allSettled(tours.map(async (tour) => {
-      const tourId = tour?.tourId;
-      if (!tourId) {
-        console.warn('⚠️ Skipped tour without tourId');
-        return;
-      }
+    const results = await Promise.allSettled(
+      tours.map(async (tour) => {
+        const tourId = tour?.tourId;
+        if (!tourId) {
+          console.warn('⚠️ Skipped tour without tourId');
+          return;
+        }
 
-      try {
-        const maxConnection = await getMaxConnectionForTour(tourId);
+        try {
+          const {
+            maxConnection,
+            maxGuide,
+            maxSubGuide,
+            maxUser,
+          } = await getMaxConnectionStatsForTour(tourId);
 
-        await dynamoDB.update({
-          TableName: Config.dbTables.TOURS,
-          Key: { tourId },
-          UpdateExpression: 'SET maxConnection = :max, isMaxConnectionProcessed = :true, updatedAt = :now',
-          ExpressionAttributeValues: {
-            ':max': maxConnection,
-            ':true': true,
-            ':now': new Date().toISOString(),
-          },
-        }).promise();
+          await dynamoDB.update({
+            TableName: Config.dbTables.TOURS,
+            Key: { tourId },
+            UpdateExpression: `
+              SET maxConnection = :max,
+                  maxGuide = :guide,
+                  maxSubGuide = :sub,
+                  maxUser = :user,
+                  isMaxConnectionProcessed = :true,
+                  updatedAt = :now`,
+            ExpressionAttributeValues: {
+              ':max': maxConnection,
+              ':guide': maxGuide,
+              ':sub': maxSubGuide,
+              ':user': maxUser,
+              ':true': true,
+              ':now': new Date().toISOString(),
+            },
+          }).promise();
 
-        console.log(`✅ Updated tour ${tourId} with maxConnection = ${maxConnection}`);
-      } catch (err) {
-        console.error(`❌ Failed to process tour ${tourId}:`, err);
-        throw err;
-      }
-    }));
+          console.log(`✅ Updated tour ${tourId}: max=${maxConnection}, guide=${maxGuide}, sub=${maxSubGuide}, user=${maxUser}`);
+        } catch (err) {
+          console.error(`❌ Failed to process tour ${tourId}:`, err);
+          throw err;
+        }
+      })
+    );
 
-    const processedCount = results.filter(r => r.status === 'fulfilled').length;
+    const processedCount = results.filter((r) => r.status === 'fulfilled').length;
 
     console.timeEnd('ProcessingTours');
 
@@ -90,7 +129,6 @@ export const handler: APIGatewayProxyHandler = async () => {
       }),
       headers: Config.headers,
     };
-
   } catch (error: any) {
     console.error('❌ Error calculating max connections:', error);
 

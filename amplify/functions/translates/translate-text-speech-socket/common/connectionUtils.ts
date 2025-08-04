@@ -24,6 +24,9 @@ export async function updateConnectionHistoryAndBroadcast(
 
   const connections = result.Items || [];
   const connectionCount = connections.length;
+  const guideCount = connections.filter(c => c.userType === 'Guide').length;
+  const subGuideCount = connections.filter(c => c.userType === 'Sub-Guide').length;
+  const userCount = connections.filter(c => c.userType === 'User').length;
 
   await dynamoDB
     .put({
@@ -31,10 +34,13 @@ export async function updateConnectionHistoryAndBroadcast(
       Item: {
         connectionHistoryId: uuid(),
         tourId,
-        languageCode,
-        userType,
+        //languageCode,
+        //userType,
         createdAt: new Date().toISOString(),
         connectionCount,
+        guideCount,
+        subGuideCount,
+        userCount,
       },
     })
     .promise();

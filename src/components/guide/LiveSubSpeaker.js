@@ -37,6 +37,8 @@ import AudioPlayerControl from '../common/AudioPlayerControl';
  * The sub speaker can also chat with the main speaker and other listeners
  */
 function LiveSubSpeaker() {
+  // Create a WebSocket reference
+  const wsRef = useRef(null);
   // Get the params from the URL
   const { tourId } = useParams(); // Extracts 'tourId' from the URL
   console.log('tourId:', tourId);
@@ -507,6 +509,89 @@ function LiveSubSpeaker() {
       requestWakeLock();
     }
   }, [meetingSession, requestWakeLock]);
+
+
+  //  Function to connect to WebSocket
+  const connectWebSocket = useCallback(() => {
+    // If a WebSocket connection already exists, skip creating a new one
+    if (wsRef.current) {
+      console.log('🔁 WebSocket already connected.');
+      return;
+    }
+
+    // Create a new WebSocket instance
+    const ws = new WebSocket(Config.webSocketURL);
+
+    // Variables to track connection timestamp and ping interval
+    let connectTimestamp = null;
+    let pingInterval = null;
+
+    // When the WebSocket successfully connects
+    ws.onopen = () => {
+      connectTimestamp = Date.now();
+      console.log('✅ WebSocket Connected at:', new Date(connectTimestamp).toLocaleTimeString());
+
+      // ✅ Send "connectState" message after connecting
+      const connectStatePayload = {
+        action: 'connectState',
+        tourId: tourId,
+        languageCode: 'ja-JP',
+        userType: 'Sub-Guide',
+      };
+      ws.send(JSON.stringify(connectStatePayload));
+      console.log('📤 WebSocket Sent connectState:', connectStatePayload);
+
+      // ✅ Start pinging every 4 minutes to keep the connection alive
+      pingInterval = setInterval(() => {
+        if (ws.readyState === WebSocket.OPEN) {
+          console.log('📡 WebSocket Sending ping...');
+          ws.send(JSON.stringify({ action: 'ping' }));
+        }
+      }, 4 * 60 * 1000); // 4 minutes
+    };
+
+    // When the WebSocket connection is closed
+    ws.onclose = () => {
+      const disconnectTimestamp = Date.now();
+      const duration = connectTimestamp
+        ? ((disconnectTimestamp - connectTimestamp) / 1000).toFixed(1)
+        : 'unknown';
+
+      console.log('❌ WebSocket Disconnected at:', new Date(disconnectTimestamp).toLocaleTimeString());
+      console.log(`🔌 WebSocket Connection lasted: ${duration} seconds`);
+
+      // Stop the ping interval if it was running
+      if (pingInterval) {
+        clearInterval(pingInterval);
+      }
+
+      // Clear the reference so future reconnects are allowed
+      wsRef.current = null;
+    };
+
+    // Handle WebSocket error events
+    ws.onerror = (error) => {
+      console.error('⚠️ WebSocket error:', error);
+
+      // Stop the ping interval on error
+      if (pingInterval) {
+        clearInterval(pingInterval);
+      }
+
+      // Clear the reference
+      wsRef.current = null;
+    };
+
+    // Store the WebSocket instance in a ref so it's accessible globally
+    wsRef.current = ws;
+  }, [tourId]);
+
+  // Connect WebSocket
+  useEffect(() => {
+    console.log('WebSocket Tour connected:', tour);
+    if (!tour) return;
+    connectWebSocket();
+  }, [connectWebSocket, tour]);
 
   // Check if the tour exists, if not, show a not found page
   if (tour === null) {

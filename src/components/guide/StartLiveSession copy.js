@@ -203,8 +203,6 @@ function StartLiveSession() {
     const audioElement = document.getElementById('audioElementMain');
     if (audioElement) {
       await meetingSession.audioVideo.bindAudioElement(audioElement);
-      // Disable autoplay for the audio element
-      audioElement.autoplay = false;
     } else {
       console.error('Audio element not found');
     }
@@ -516,88 +514,46 @@ function StartLiveSession() {
 
   }, [selectedAudioInput]);
 
-  //  Function to connect to WebSocket
   const connectWebSocket = useCallback(() => {
-    // If a WebSocket connection already exists, skip creating a new one
-    if (wsRef.current) {
-      console.log('🔁 WebSocket already connected.');
-      return;
-    }
+    let connectTimestamp = null;
+    let disconnectTimestamp = null;
 
-    // Create a new WebSocket instance
+    if (wsRef.current) return;
+    console.log('Intital WebSocket...');
+
     const ws = new WebSocket(Config.webSocketURL);
 
-    // Variables to track connection timestamp and ping interval
-    let connectTimestamp = null;
-    let pingInterval = null;
-
-    // When the WebSocket successfully connects
     ws.onopen = () => {
       connectTimestamp = Date.now();
       console.log('✅ WebSocket Connected at:', new Date(connectTimestamp).toLocaleTimeString());
-
-      // ✅ Send "connectState" message after connecting
-      const connectStatePayload = {
-        action: 'connectState',
-        tourId: tourId,
-        languageCode: 'ja-JP',
-        userType: 'Guide',
-      };
-      ws.send(JSON.stringify(connectStatePayload));
-      console.log('📤 WebSocket Sent connectState:', connectStatePayload);
-
-      // ✅ Start pinging every 4 minutes to keep the connection alive
-      pingInterval = setInterval(() => {
-        if (ws.readyState === WebSocket.OPEN) {
-          console.log('📡 WebSocket Sending ping...');
-          ws.send(JSON.stringify({ action: 'ping' }));
-        }
-      }, 4 * 60 * 1000); // 4 minutes
+      console.log('✅ Host WebSocket connected');
+      wsRef.current = ws;
     };
 
-    // When the WebSocket connection is closed
     ws.onclose = () => {
-      const disconnectTimestamp = Date.now();
-      const duration = connectTimestamp
-        ? ((disconnectTimestamp - connectTimestamp) / 1000).toFixed(1)
-        : 'unknown';
-
+      disconnectTimestamp = Date.now();
+      const duration = (disconnectTimestamp - connectTimestamp) / 1000;
       console.log('❌ WebSocket Disconnected at:', new Date(disconnectTimestamp).toLocaleTimeString());
       console.log(`🔌 WebSocket Connection lasted: ${duration} seconds`);
 
-      // Stop the ping interval if it was running
-      if (pingInterval) {
-        clearInterval(pingInterval);
-      }
-
-      // Clear the reference so future reconnects are allowed
+      console.log('❌ The host WebSocket disconnected');
+      console.warn('WebSocket closed');
+      console.log('✅ WebSocket closed current', wsRef.current);
       wsRef.current = null;
     };
 
-    // Handle WebSocket error events
-    ws.onerror = (error) => {
-      console.error('⚠️ WebSocket error:', error);
-
-      // Stop the ping interval on error
-      if (pingInterval) {
-        clearInterval(pingInterval);
-      }
-
-      // Clear the reference
-      wsRef.current = null;
+    ws.onerror = (err) => {
+      console.error('WebSocket error:', err);
     };
-
-    // Store the WebSocket instance in a ref so it's accessible globally
-    wsRef.current = ws;
-  }, [tourId]);
+  }, []);
 
   // Handle sending text to the WebSocket server
-  const handleTranslateAudio = useCallback((text) => {
+  const handleTranslateAudio = useCallback(() => {
     console.log('Sending text to WebSocket', wsRef.current?.readyState);
     if (wsRef.current?.readyState === WebSocket.OPEN) {
       const payload = {
         action: 'translateAudio',
-        inputText: text,
+        inputText: 'おやすみなさい！またね！',
         sourceLanguageCode: 'ja-JP',
       };
       wsRef.current.send(JSON.stringify(payload));
@@ -651,7 +607,7 @@ function StartLiveSession() {
       //transcriptListRef.current.push(currentText);
 
       // ✅ Send the text to the WebSocket server
-      handleTranslateAudio(currentText);
+      handleTranslateAudio();
     }
   }, [transcripts, handleTranslateAudio]);
 
@@ -839,6 +795,12 @@ function StartLiveSession() {
           </div>
         </div> */}
         <TourTitle tour={tour} />
+        {meetingSession && (
+          <>
+            <button onClick={handleTranslateAudio}>Send Transcripts</button>
+            <br />
+          </>
+        )}
         <audio id='audioElementMain' ref={audioRef} >
         </audio>
         <AudioPlayerControl
