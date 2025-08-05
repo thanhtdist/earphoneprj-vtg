@@ -31,7 +31,7 @@ import TourTitle from '../common/TourTitle';
 import AudioPlayerControl from '../common/AudioPlayerControl';
 
 function MultiLangAudio() {
-  const [connectionCount, setConnectionCount] = useState(0);
+  // const [connectionCount, setConnectionCount] = useState(0);
   // 👉 Manage currently playing translated audio
   // const audioContextRef = useRef(null);
   const currentTranslatedAudioRef = useRef(null);
@@ -294,7 +294,7 @@ function MultiLangAudio() {
       } else {
         attendeeSet.delete(attendeeId);
       }
-      setParticipantsCount(attendeeSet.size);
+      //setParticipantsCount(attendeeSet.size);
     };
 
     // Subscribe to attendee presence
@@ -385,7 +385,8 @@ function MultiLangAudio() {
           console.log('🔁 WebSocket Received message.connectionCount connectState:', message.connectionCount);
 
           // Optional: Update your UI or state here
-          setConnectionCount(message.connectionCount);
+          //setConnectionCount(message.connectionCount);
+          setParticipantsCount(message.connectionCount);
         } else {
           console.log('📨 WebSocket Received message:', message);
         }
@@ -741,7 +742,7 @@ function MultiLangAudio() {
             </div>
           </div>
         )}
-        <p>Connection Count: {connectionCount}</p>
+        {/* <p>Connection Count: {connectionCount}</p> */}
         <audio
           id="audioElementListener"
           ref={audioElementRef}

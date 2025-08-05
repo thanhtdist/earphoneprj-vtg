@@ -32,7 +32,7 @@ import { messages } from '../../messages';
 //import Loading from '../Loading';
 
 function JapaneseAudio() {
-  const [connectionCount, setConnectionCount] = useState(0);
+  //const [connectionCount, setConnectionCount] = useState(0);
   const currentTranslatedAudioRef = useRef(null);
   const wsRef = useRef(null);
   const audioQueueRef = useRef([]);
@@ -265,7 +265,7 @@ function JapaneseAudio() {
       } else {
         attendeeSet.delete(attendeeId);
       }
-      setParticipantsCount(attendeeSet.size);
+      //setParticipantsCount(attendeeSet.size);
     };
 
     // Subscribe to attendee presence
@@ -322,7 +322,8 @@ function JapaneseAudio() {
           console.log('🔁 WebSocket Received message.connectionCount connectState:', message.connectionCount);
 
           // Optional: Update your UI or state here
-          setConnectionCount(message.connectionCount);
+          //setConnectionCount(message.connectionCount);
+          setParticipantsCount(message.connectionCount);
         } else {
           console.log('📨 WebSocket Received message:', message);
         }
@@ -523,7 +524,7 @@ function JapaneseAudio() {
         </>)} */}
       <Header count={participantsCount} tourId={tourId} userType={userType} />
       <div className='live-viewer-container'>
-        <p>Connection Count: {connectionCount}</p>
+        {/* <p>Connection Count: {connectionCount}</p> */}
         <audio
           id="audioElementListener"
           ref={audioElementRef}

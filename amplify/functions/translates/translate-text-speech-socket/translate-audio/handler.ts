@@ -35,18 +35,27 @@ const getSpeechParams = (text: string, voiceId: string, lang: string): AWS.Polly
 export const handler: APIGatewayProxyWebsocketHandlerV2 = async (event) => {
   try {
     const body = JSON.parse(event.body || '{}');
-    const { inputText, sourceLanguageCode } = body;
+    const { inputText, sourceLanguageCode, tourId } = body;
 
-    if (!inputText || !sourceLanguageCode) {
+    if (!inputText || !sourceLanguageCode || !tourId) {
       return {
         statusCode: 400,
-        body: JSON.stringify({ error: 'inputText and sourceLanguageCode are required.' }),
+        body: JSON.stringify({ error: 'tourId, inputText and sourceLanguageCode are required.' }),
         headers: Config.headers,
       };
     }
 
-    const connections = await dynamoDB.scan({
+    // const connections = await dynamoDB.scan({
+    //   TableName: Config.dbTables.WEBSOCKETCONNECTIONS,
+    // }).promise();
+    // Query connections with the given tourId
+    const connections = await dynamoDB.query({
       TableName: Config.dbTables.WEBSOCKETCONNECTIONS,
+      IndexName: 'tourId-index', // Make sure this GSI exists
+      KeyConditionExpression: 'tourId = :tourId',
+      ExpressionAttributeValues: {
+        ':tourId': tourId,
+      },
     }).promise();
 
     const apiGateway = new AWS.ApiGatewayManagementApi({

@@ -555,6 +555,27 @@ function StartLiveSession() {
       }, 4 * 60 * 1000); // 4 minutes
     };
 
+    // ✅ Handle incoming messages
+    ws.onmessage = (event) => {
+      try {
+        const message = JSON.parse(event.data);
+
+        // Handle "connectionUpdate"
+        if (message.type === 'connectionUpdate') {
+          console.log('🔁 WebSocket Received connectionUpdate connectState:', message);
+          console.log('🔁 WebSocket Received message.connectionCount connectState:', message.connectionCount);
+
+          // Optional: Update your UI or state here
+          //setConnectionCount(message.connectionCount);
+          setParticipantsCount(message.connectionCount);
+        } else {
+          console.log('📨 WebSocket Received message:', message);
+        }
+      } catch (error) {
+        console.error('❌ Error parsing WebSocket message:', error);
+      }
+    };
+
     // When the WebSocket connection is closed
     ws.onclose = () => {
       const disconnectTimestamp = Date.now();
@@ -599,13 +620,14 @@ function StartLiveSession() {
         action: 'translateAudio',
         inputText: text,
         sourceLanguageCode: 'ja-JP',
+        tourId: tourId
       };
       wsRef.current.send(JSON.stringify(payload));
       console.log('📤 Sent to WebSocket:', payload);
     } else {
       console.warn('❌ WebSocket is not open');
     }
-  }, [wsRef]);
+  }, [tourId, wsRef]);
 
 
   useEffect(() => {
@@ -626,7 +648,7 @@ function StartLiveSession() {
       }
 
       // Update the attendee count in the states
-      setParticipantsCount(attendeeSet.size);
+      //setParticipantsCount(attendeeSet.size);
     };
 
     meetingSession.audioVideo.realtimeSubscribeToAttendeeIdPresence(callback);
@@ -839,6 +861,12 @@ function StartLiveSession() {
           </div>
         </div> */}
         <TourTitle tour={tour} />
+        {/* {meetingSession && (
+          <>
+            <button onClick={() => handleTranslateAudio('おやすみなさい')}>Send Transcripts</button>
+            <br />
+          </>
+        )} */}
         <audio id='audioElementMain' ref={audioRef} >
         </audio>
         <AudioPlayerControl

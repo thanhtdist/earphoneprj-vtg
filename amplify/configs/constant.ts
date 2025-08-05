@@ -9,4 +9,5 @@ export const DB_TABLES = {
   TOURS: 'tours_dev',
   WEBSOCKETCONNECTIONS: 'websocketconnections_dev',
   CONNECTION_HISTORY: 'websocketconnections_history_dev',
+  TOUR_MAX_CONNECTIONS: "tourmaxconnections_dev"
 };

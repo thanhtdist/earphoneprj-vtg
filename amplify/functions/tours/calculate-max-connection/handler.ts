@@ -88,21 +88,48 @@ export const handler: APIGatewayProxyHandler = async (_event) => {
             maxUser,
           } = await getMaxConnectionStatsForTour(tourId);
 
+
+          // ✅ Store max stats in separate table
+          await dynamoDB.put({
+            TableName: Config.dbTables.TOUR_MAX_CONNECTIONS, // <-- NEW TABLE
+            Item: {
+              tourId,
+              maxConnection,
+              maxGuide,
+              maxSubGuide,
+              maxUser,
+              updatedAt: new Date().toISOString(),
+              createdAt: new Date().toISOString(),
+            },
+          }).promise();
+
+          // ✅ Update only `isMaxConnectionProcessed` flag in TOURS table
+          // await dynamoDB.update({
+          //   TableName: Config.dbTables.TOURS,
+          //   Key: { tourId },
+          //   UpdateExpression: `
+          //     SET maxConnection = :max,
+          //         maxGuide = :guide,
+          //         maxSubGuide = :sub,
+          //         maxUser = :user,
+          //         isMaxConnectionProcessed = :true,
+          //         updatedAt = :now`,
+          //   ExpressionAttributeValues: {
+          //     ':max': maxConnection,
+          //     ':guide': maxGuide,
+          //     ':sub': maxSubGuide,
+          //     ':user': maxUser,
+          //     ':true': true,
+          //     ':now': new Date().toISOString(),
+          //   },
+          // }).promise();
           await dynamoDB.update({
             TableName: Config.dbTables.TOURS,
             Key: { tourId },
             UpdateExpression: `
-              SET maxConnection = :max,
-                  maxGuide = :guide,
-                  maxSubGuide = :sub,
-                  maxUser = :user,
-                  isMaxConnectionProcessed = :true,
+              SET isMaxConnectionProcessed = :true,
                   updatedAt = :now`,
             ExpressionAttributeValues: {
-              ':max': maxConnection,
-              ':guide': maxGuide,
-              ':sub': maxSubGuide,
-              ':user': maxUser,
               ':true': true,
               ':now': new Date().toISOString(),
             },

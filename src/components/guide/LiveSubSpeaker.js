@@ -482,7 +482,7 @@ function LiveSubSpeaker() {
       }
 
       // Update the attendee count in the state
-      setParticipantsCount(attendeeSet.size);
+      //setParticipantsCount(attendeeSet.size);
     };
 
     meetingSession.audioVideo.realtimeSubscribeToAttendeeIdPresence(callback);
@@ -548,6 +548,27 @@ function LiveSubSpeaker() {
           ws.send(JSON.stringify({ action: 'ping' }));
         }
       }, 4 * 60 * 1000); // 4 minutes
+    };
+
+    // ✅ Handle incoming messages
+    ws.onmessage = (event) => {
+      try {
+        const message = JSON.parse(event.data);
+
+        // Handle "connectionUpdate"
+        if (message.type === 'connectionUpdate') {
+          console.log('🔁 WebSocket Received connectionUpdate connectState:', message);
+          console.log('🔁 WebSocket Received message.connectionCount connectState:', message.connectionCount);
+
+          // Optional: Update your UI or state here
+          //setConnectionCount(message.connectionCount);
+          setParticipantsCount(message.connectionCount);
+        } else {
+          console.log('📨 WebSocket Received message:', message);
+        }
+      } catch (error) {
+        console.error('❌ Error parsing WebSocket message:', error);
+      }
     };
 
     // When the WebSocket connection is closed
