@@ -30,14 +30,12 @@ import TourTitle from '../common/TourTitle';
 import AudioPlayerControl from '../common/AudioPlayerControl';
 import { messages } from '../../messages';
 import useWakeLock from '../../hooks/useWakeLock';
-import usePageVisibility from '../../hooks/usePageVisibility';
 import useConnectWebSocket from '../../hooks/useConnectWebSocket';
 import useWebSocketVisibilityHandler from '../../hooks/useWebSocketVisibilityHandler';
 //import Loading from '../Loading';
 
 function JapaneseAudio() {
   //const [connectionCount, setConnectionCount] = useState(0);
-  const [isActive, setIsActive] = useState(true);
   const currentTranslatedAudioRef = useRef(null);
   const wsRef = useRef(null);
   const audioQueueRef = useRef([]);
@@ -389,7 +387,6 @@ function JapaneseAudio() {
 
   useWebSocketVisibilityHandler({
     tour,
-    isActive,
     connectWebSocket,
     wsRef,
   });
@@ -495,9 +492,6 @@ function JapaneseAudio() {
     //setIsLoading(true);
 
   }, [tour, processTour, isJoinAudio]);
-
-  // Check Page Visibility
-  usePageVisibility(isActive, setIsActive);
 
   // if (tour === undefined) {
   //   return (

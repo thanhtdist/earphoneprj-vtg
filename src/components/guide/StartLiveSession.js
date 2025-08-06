@@ -39,7 +39,6 @@ import TourTitle from '../common/TourTitle';
 import AudioMicControl from '../common/AudioMicControl';
 import AudioPlayerControl from '../common/AudioPlayerControl';
 import useWakeLock from '../../hooks/useWakeLock';
-import usePageVisibility from '../../hooks/usePageVisibility';
 import useConnectWebSocket from '../../hooks/useConnectWebSocket';
 import useWebSocketVisibilityHandler from '../../hooks/useWebSocketVisibilityHandler';
 // import { uploadFileToS3 } from '../services/S3Service';
@@ -52,7 +51,6 @@ import useWebSocketVisibilityHandler from '../../hooks/useWebSocketVisibilityHan
  * The main speaker can also chat with the sub-speaker or listener
  */
 function StartLiveSession() {
-  const [isActive, setIsActive] = useState(true);
   // Create a WebSocket reference
   const wsRef = useRef(null);
   // Get the params from the URL
@@ -626,7 +624,6 @@ function StartLiveSession() {
 
   useWebSocketVisibilityHandler({
     tour,
-    isActive,
     connectWebSocket,
     wsRef,
   });
@@ -851,8 +848,6 @@ function StartLiveSession() {
   //   }
   // }, [meetingSession, requestWakeLock]);
   useWakeLock(meetingSession);
-
-  usePageVisibility(isActive, setIsActive);
 
   console.log("chatRestriction", chatRestriction);
   //console.log("audioData", audioData.current);

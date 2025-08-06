@@ -30,7 +30,6 @@ import NotFound from '../NotFound';
 import TourTitle from '../common/TourTitle';
 import AudioPlayerControl from '../common/AudioPlayerControl';
 import useWakeLock from '../../hooks/useWakeLock';
-import usePageVisibility from '../../hooks/usePageVisibility'; 
 import useConnectWebSocket from '../../hooks/useConnectWebSocket';
 import useWebSocketVisibilityHandler from '../../hooks/useWebSocketVisibilityHandler';
 
@@ -38,7 +37,6 @@ function MultiLangAudio() {
   // const [connectionCount, setConnectionCount] = useState(0);
   // 👉 Manage currently playing translated audio
   // const audioContextRef = useRef(null);
-  const [isActive, setIsActive] = useState(true);
   const currentTranslatedAudioRef = useRef(null);
   const wsRef = useRef(null);
   const audioQueueRef = useRef([]);
@@ -438,25 +436,24 @@ function MultiLangAudio() {
   const targetLanguageCode = getNormalizedLanguageCode(selectedVoiceLanguage);
   console.log("targetLanguageCode", targetLanguageCode);
   const connectWebSocket = useConnectWebSocket({
-  wsRef,
-  tourId: tourId,
-  languageCode: targetLanguageCode,
-  userType: userType,
-  onConnectionUpdate: setParticipantsCount,
-  // additionalInit: (ws) => {
-  //   ws.send(JSON.stringify({
-  //     action: 'selectLanguage',
-  //     languageCode: targetLanguageCode,
-  //   }));
-  // }
-});
+    wsRef,
+    tourId: tourId,
+    languageCode: targetLanguageCode,
+    userType: userType,
+    onConnectionUpdate: setParticipantsCount,
+    // additionalInit: (ws) => {
+    //   ws.send(JSON.stringify({
+    //     action: 'selectLanguage',
+    //     languageCode: targetLanguageCode,
+    //   }));
+    // }
+  });
 
-useWebSocketVisibilityHandler({
-  tour,
-  isActive,
-  connectWebSocket,
-  wsRef,
-});
+  useWebSocketVisibilityHandler({
+    tour,
+    connectWebSocket,
+    wsRef,
+  });
 
 
   // Function to play the next translated audio in the queue
@@ -744,29 +741,6 @@ useWebSocketVisibilityHandler({
   //   }
   // }, [meetingSession, requestWakeLock]);
   useWakeLock(meetingSession);
-
-  // useEffect(() => {
-  //   const handleVisibilityChange = () => {
-  //     console.log("visibilityState", document.visibilityState);
-  //     if (document.visibilityState === 'visible') {
-  //       if (!isActive) {
-  //         console.log("visibilityState Tab is active");
-  //         setIsActive(true);
-  //       }
-  //     } else {
-  //       if (isActive) {
-  //         console.log("visibilityState Tab is inactive");
-  //         setIsActive(false);
-  //       }
-  //     }
-  //   };
-
-  //   document.addEventListener('visibilitychange', handleVisibilityChange);
-  //   return () => {
-  //     document.removeEventListener('visibilitychange', handleVisibilityChange);
-  //   };
-  // }, [isActive]);
-  usePageVisibility(isActive, setIsActive);
 
   // Check if the tour exists, if not, show a not found page
   if (tour === null) {

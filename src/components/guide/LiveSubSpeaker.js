@@ -32,7 +32,6 @@ import TourTitle from '../common/TourTitle';
 import AudioMicControl from '../common/AudioMicControl';
 import AudioPlayerControl from '../common/AudioPlayerControl';
 import useWakeLock from '../../hooks/useWakeLock';
-import usePageVisibility from '../../hooks/usePageVisibility';
 import useConnectWebSocket from '../../hooks/useConnectWebSocket';
 import useWebSocketVisibilityHandler from '../../hooks/useWebSocketVisibilityHandler';
 /**
@@ -41,7 +40,6 @@ import useWebSocketVisibilityHandler from '../../hooks/useWebSocketVisibilityHan
  * The sub speaker can also chat with the main speaker and other listeners
  */
 function LiveSubSpeaker() {
-  const [isActive, setIsActive] = useState(true);
   // Create a WebSocket reference
   const wsRef = useRef(null);
   // Get the params from the URL
@@ -629,13 +627,9 @@ function LiveSubSpeaker() {
 
   useWebSocketVisibilityHandler({
     tour,
-    isActive,
     connectWebSocket,
     wsRef,
   });
-
-  // Check Page Visibility
-  usePageVisibility(isActive, setIsActive);
 
   // Check if the tour exists, if not, show a not found page
   if (tour === null) {

@@ -16,10 +16,10 @@ export const handler: APIGatewayProxyHandler = async (event) => {
 
   try {
     // Authenticate the user
-    // const authHeader = event.headers?.Authorization || '';
-    // console.log('Auth Header: ', authHeader);
-    // const user = await verifyAuth(authHeader);
-    // console.log('Authenticated User:', user);
+    const authHeader = event.headers?.Authorization || '';
+    console.log('Auth Header: ', authHeader);
+    const user = await verifyAuth(authHeader);
+    console.log('Authenticated User:', user);
 
     // Parse body from API Gateway event
     const { userName, email, password } = JSON.parse(event.body || '{}');
