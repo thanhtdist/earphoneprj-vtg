@@ -3306,3 +3306,2175 @@
 [default] 1:19:50 PM START RequestId: ed20371e-8ed5-4198-a5c8-5bedffbaddc5 Version: $LATEST
 [default] 1:19:50 PM END RequestId: ed20371e-8ed5-4198-a5c8-5bedffbaddc5
 [default] 1:19:50 PM REPORT RequestId: ed20371e-8ed5-4198-a5c8-5bedffbaddc5	Duration: 1.42 ms	Billed Duration: 2 ms	Memory Size: 512 MB	Max Memory Used: 69 MB
+[default] 1:20:55 PM 2025-08-05T06:20:55.400Z	0b3618ba-16fe-4b63-b84b-191f9aaa00ec	INFO	✅ Received ping to keep connection alive
+[default] 1:20:55 PM START RequestId: 0b3618ba-16fe-4b63-b84b-191f9aaa00ec Version: $LATEST
+[default] 1:20:55 PM END RequestId: 0b3618ba-16fe-4b63-b84b-191f9aaa00ec
+[default] 1:20:55 PM REPORT RequestId: 0b3618ba-16fe-4b63-b84b-191f9aaa00ec	Duration: 1.24 ms	Billed Duration: 2 ms	Memory Size: 512 MB	Max Memory Used: 69 MB
+[default] 1:21:03 PM START RequestId: 600d8686-c894-4025-949f-c6af712786f1 Version: $LATEST
+[default] 1:21:03 PM 2025-08-05T06:21:03.385Z	600d8686-c894-4025-949f-c6af712786f1	INFO	✅ Received ping to keep connection alive
+[default] 1:21:03 PM END RequestId: 600d8686-c894-4025-949f-c6af712786f1
+[default] 1:21:03 PM REPORT RequestId: 600d8686-c894-4025-949f-c6af712786f1	Duration: 1.51 ms	Billed Duration: 2 ms	Memory Size: 512 MB	Max Memory Used: 69 MB
+[default] 1:21:45 PM 2025-08-05T06:21:45.434Z	491df6aa-01fc-4fb5-b87a-0eddf8a837e8	INFO	✅ Received ping to keep connection alive
+[default] 1:21:45 PM START RequestId: 491df6aa-01fc-4fb5-b87a-0eddf8a837e8 Version: $LATEST
+[default] 1:21:45 PM END RequestId: 491df6aa-01fc-4fb5-b87a-0eddf8a837e8
+[default] 1:21:45 PM REPORT RequestId: 491df6aa-01fc-4fb5-b87a-0eddf8a837e8	Duration: 1.28 ms	Billed Duration: 2 ms	Memory Size: 512 MB	Max Memory Used: 69 MB
+[default] 1:21:51 PM 2025-08-05T06:21:51.386Z	22b20b28-62cf-45ba-91bd-a3583c681a35	INFO	✅ Received ping to keep connection alive
+[default] 1:21:51 PM START RequestId: 22b20b28-62cf-45ba-91bd-a3583c681a35 Version: $LATEST
+[default] 1:21:51 PM END RequestId: 22b20b28-62cf-45ba-91bd-a3583c681a35
+[default] 1:21:51 PM REPORT RequestId: 22b20b28-62cf-45ba-91bd-a3583c681a35	Duration: 1.58 ms	Billed Duration: 2 ms	Memory Size: 512 MB	Max Memory Used: 69 MB
+[default] 1:21:53 PM START RequestId: e1d243d2-9d27-45b2-922b-5bebcf3544d5 Version: $LATEST
+[default] 1:21:53 PM 2025-08-05T06:21:53.443Z	e1d243d2-9d27-45b2-922b-5bebcf3544d5	INFO	✅ Received ping to keep connection alive
+[default] 1:21:53 PM END RequestId: e1d243d2-9d27-45b2-922b-5bebcf3544d5
+[default] 1:21:53 PM REPORT RequestId: e1d243d2-9d27-45b2-922b-5bebcf3544d5	Duration: 1.30 ms	Billed Duration: 2 ms	Memory Size: 512 MB	Max Memory Used: 69 MB
+[default] 1:22:58 PM START RequestId: c35ba31d-b7bf-4ec3-a19d-66b25f8c9588 Version: $LATEST
+[default] 1:22:58 PM 2025-08-05T06:22:58.415Z	c35ba31d-b7bf-4ec3-a19d-66b25f8c9588	INFO	✅ Received ping to keep connection alive
+[default] 1:22:58 PM END RequestId: c35ba31d-b7bf-4ec3-a19d-66b25f8c9588
+[default] 1:22:58 PM REPORT RequestId: c35ba31d-b7bf-4ec3-a19d-66b25f8c9588	Duration: 3.28 ms	Billed Duration: 4 ms	Memory Size: 512 MB	Max Memory Used: 69 MB
+[default] 1:23:21 PM 2025-08-05T06:23:21.367Z	206d9345-0f3d-4ecc-adba-1832881c580b	INFO	✅ Received ping to keep connection alive
+[default] 1:23:21 PM START RequestId: 206d9345-0f3d-4ecc-adba-1832881c580b Version: $LATEST
+[default] 1:23:21 PM END RequestId: 206d9345-0f3d-4ecc-adba-1832881c580b
+[default] 1:23:21 PM REPORT RequestId: 206d9345-0f3d-4ecc-adba-1832881c580b	Duration: 1.50 ms	Billed Duration: 2 ms	Memory Size: 512 MB	Max Memory Used: 69 MB
+[default] 1:23:50 PM START RequestId: 8035e05f-becb-44d6-aa0e-84489fbe0fcf Version: $LATEST
+[default] 1:23:50 PM 2025-08-05T06:23:50.388Z	8035e05f-becb-44d6-aa0e-84489fbe0fcf	INFO	✅ Received ping to keep connection alive
+[default] 1:23:50 PM END RequestId: 8035e05f-becb-44d6-aa0e-84489fbe0fcf
+[default] 1:23:50 PM REPORT RequestId: 8035e05f-becb-44d6-aa0e-84489fbe0fcf	Duration: 1.35 ms	Billed Duration: 2 ms	Memory Size: 512 MB	Max Memory Used: 69 MB
+[default] 1:24:55 PM START RequestId: 6ca8037f-a730-41f7-9e4b-fbba5ab86ef0 Version: $LATEST
+[default] 1:24:55 PM 2025-08-05T06:24:55.408Z	6ca8037f-a730-41f7-9e4b-fbba5ab86ef0	INFO	✅ Received ping to keep connection alive
+[default] 1:24:55 PM END RequestId: 6ca8037f-a730-41f7-9e4b-fbba5ab86ef0
+[default] 1:24:55 PM REPORT RequestId: 6ca8037f-a730-41f7-9e4b-fbba5ab86ef0	Duration: 2.04 ms	Billed Duration: 3 ms	Memory Size: 512 MB	Max Memory Used: 69 MB
+[default] 1:25:03 PM START RequestId: 4c628c15-dba0-4c72-98f8-9b941448e2ff Version: $LATEST
+[default] 1:25:03 PM 2025-08-05T06:25:03.399Z	4c628c15-dba0-4c72-98f8-9b941448e2ff	INFO	✅ Received ping to keep connection alive
+[default] 1:25:03 PM END RequestId: 4c628c15-dba0-4c72-98f8-9b941448e2ff
+[default] 1:25:03 PM REPORT RequestId: 4c628c15-dba0-4c72-98f8-9b941448e2ff	Duration: 2.16 ms	Billed Duration: 3 ms	Memory Size: 512 MB	Max Memory Used: 69 MB
+[default] 1:25:45 PM 2025-08-05T06:25:45.456Z	19d9c02d-3e32-41ed-9d78-5c04c146da53	INFO	✅ Received ping to keep connection alive
+[default] 1:25:45 PM START RequestId: 19d9c02d-3e32-41ed-9d78-5c04c146da53 Version: $LATEST
+[default] 1:25:45 PM END RequestId: 19d9c02d-3e32-41ed-9d78-5c04c146da53
+[default] 1:25:45 PM REPORT RequestId: 19d9c02d-3e32-41ed-9d78-5c04c146da53	Duration: 1.29 ms	Billed Duration: 2 ms	Memory Size: 512 MB	Max Memory Used: 69 MB
+[default] 1:25:51 PM 2025-08-05T06:25:51.396Z	47689cb2-11c9-403d-b383-559be09baffc	INFO	✅ Received ping to keep connection alive
+[default] 1:25:51 PM START RequestId: 47689cb2-11c9-403d-b383-559be09baffc Version: $LATEST
+[default] 1:25:51 PM END RequestId: 47689cb2-11c9-403d-b383-559be09baffc
+[default] 1:25:51 PM REPORT RequestId: 47689cb2-11c9-403d-b383-559be09baffc	Duration: 1.37 ms	Billed Duration: 2 ms	Memory Size: 512 MB	Max Memory Used: 69 MB
+[default] 1:25:53 PM START RequestId: 2f813497-7573-489c-962c-4ff0e15caf39 Version: $LATEST
+[default] 1:25:53 PM 2025-08-05T06:25:53.461Z	2f813497-7573-489c-962c-4ff0e15caf39	INFO	✅ Received ping to keep connection alive
+[default] 1:25:53 PM END RequestId: 2f813497-7573-489c-962c-4ff0e15caf39
+[default] 1:25:53 PM REPORT RequestId: 2f813497-7573-489c-962c-4ff0e15caf39	Duration: 1.22 ms	Billed Duration: 2 ms	Memory Size: 512 MB	Max Memory Used: 69 MB
+[default] 1:26:58 PM 2025-08-05T06:26:58.377Z	f75ed556-c934-4128-bc53-9569e7143fa8	INFO	✅ Received ping to keep connection alive
+[default] 1:26:58 PM START RequestId: f75ed556-c934-4128-bc53-9569e7143fa8 Version: $LATEST
+[default] 1:26:58 PM END RequestId: f75ed556-c934-4128-bc53-9569e7143fa8
+[default] 1:26:58 PM REPORT RequestId: f75ed556-c934-4128-bc53-9569e7143fa8	Duration: 1.43 ms	Billed Duration: 2 ms	Memory Size: 512 MB	Max Memory Used: 69 MB
+[default] 1:27:21 PM 2025-08-05T06:27:21.382Z	56dde62a-d272-4cb4-a04e-b47860e4c8c9	INFO	✅ Received ping to keep connection alive
+[default] 1:27:21 PM START RequestId: 56dde62a-d272-4cb4-a04e-b47860e4c8c9 Version: $LATEST
+[default] 1:27:21 PM END RequestId: 56dde62a-d272-4cb4-a04e-b47860e4c8c9
+[default] 1:27:21 PM REPORT RequestId: 56dde62a-d272-4cb4-a04e-b47860e4c8c9	Duration: 1.42 ms	Billed Duration: 2 ms	Memory Size: 512 MB	Max Memory Used: 69 MB
+[default] 1:27:50 PM START RequestId: 210211c6-0cac-411d-8286-30c55365eab5 Version: $LATEST
+[default] 1:27:50 PM 2025-08-05T06:27:50.384Z	210211c6-0cac-411d-8286-30c55365eab5	INFO	✅ Received ping to keep connection alive
+[default] 1:27:50 PM END RequestId: 210211c6-0cac-411d-8286-30c55365eab5
+[default] 1:27:50 PM REPORT RequestId: 210211c6-0cac-411d-8286-30c55365eab5	Duration: 1.41 ms	Billed Duration: 2 ms	Memory Size: 512 MB	Max Memory Used: 69 MB
+[disconnect] 1:28:11 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[disconnect] 1:28:12 PM 2025-08-05T06:28:12.378Z	undefined	INFO	App DB_TABLES: {
+  USERS: 'users_dev',
+  TOURS: 'tours_dev',
+  WEBSOCKETCONNECTIONS: 'websocketconnections_dev',
+  CONNECTION_HISTORY: 'websocketconnections_history_dev',
+  TOUR_MAX_CONNECTIONS: 'tourmaxconnections_dev'
+}
+[disconnect] 1:28:12 PM 2025-08-05T06:28:12.380Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[disconnect] 1:28:12 PM START RequestId: f3b906b5-d4f0-4fa6-8150-d01413fa58d5 Version: $LATEST
+[disconnect] 1:28:13 PM 2025-08-05T06:28:13.433Z	f3b906b5-d4f0-4fa6-8150-d01413fa58d5	INFO	✅ Disconnected and deleted connectionId: O0YBye8nIAMCIUA=
+[disconnect] 1:28:13 PM 2025-08-05T06:28:13.453Z	fe430692-0a0d-48d2-89b6-09205af3b582	INFO	✅ Disconnected and deleted connectionId: O0X3ne5-IAMCITw=
+[disconnect] 1:28:13 PM 2025-08-05T06:28:13.460Z	31bc9efc-2248-45f1-aeeb-02a159607d58	INFO	✅ Disconnected and deleted connectionId: O0X3Jem4IAMCKlw=
+[disconnect] 1:28:13 PM 2025-08-05T06:28:13.536Z	fdd371c3-0b3a-4554-86c0-1508f49ff6b2	INFO	✅ Disconnected and deleted connectionId: O0YJ-d52oAMCKJQ=
+[disconnect] 1:28:14 PM END RequestId: fe430692-0a0d-48d2-89b6-09205af3b582
+[disconnect] 1:28:14 PM REPORT RequestId: fe430692-0a0d-48d2-89b6-09205af3b582	Duration: 1981.92 ms	Billed Duration: 1982 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 958.46 ms
+[disconnect] 1:28:14 PM END RequestId: 31bc9efc-2248-45f1-aeeb-02a159607d58
+[disconnect] 1:28:14 PM REPORT RequestId: 31bc9efc-2248-45f1-aeeb-02a159607d58	Duration: 2003.55 ms	Billed Duration: 2004 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 942.51 ms
+[disconnect] 1:28:14 PM END RequestId: fdd371c3-0b3a-4554-86c0-1508f49ff6b2
+[disconnect] 1:28:14 PM REPORT RequestId: fdd371c3-0b3a-4554-86c0-1508f49ff6b2	Duration: 1974.88 ms	Billed Duration: 1975 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 982.34 ms
+[disconnect] 1:28:14 PM END RequestId: fbc77a9d-e8f9-4068-94bc-8c7a775e3dcb
+[disconnect] 1:28:14 PM REPORT RequestId: fbc77a9d-e8f9-4068-94bc-8c7a775e3dcb	Duration: 2039.52 ms	Billed Duration: 2040 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 987.38 ms
+[get-tour-by-number-and-date] 2:47:29 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[get-tour-by-number-and-date] 2:47:30 PM 2025-08-05T07:47:30.853Z	undefined	INFO	App DB_TABLES: {
+  USERS: 'users_dev',
+  TOURS: 'tours_dev',
+  WEBSOCKETCONNECTIONS: 'websocketconnections_dev',
+  CONNECTION_HISTORY: 'websocketconnections_history_dev',
+  TOUR_MAX_CONNECTIONS: 'tourmaxconnections_dev'
+}
+[get-tour-by-number-and-date] 2:47:30 PM 2025-08-05T07:47:30.856Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[get-tour-by-number-and-date] 2:47:30 PM START RequestId: 353be84d-d20d-444c-ada3-6653c1865b2f Version: $LATEST
+[get-tour-by-number-and-date] 2:47:30 PM 2025-08-05T07:47:30.875Z	353be84d-d20d-444c-ada3-6653c1865b2f	INFO	Retrieving tour with tourNumber and departureDate:  { tourNumber: 'test0006', departureDate: '2025-08-01' }
+[get-tour-by-number-and-date] 2:47:31 PM 2025-08-05T07:47:31.466Z	353be84d-d20d-444c-ada3-6653c1865b2f	INFO	Tour successfully retrieved:  [
+  {
+    maxConnection: 0,
+    nameOfCoursePersonInCharge: 'test0006',
+    numberOfReceiversInUse: 'test0006',
+    tourType: 'tour',
+    tourNumber: 'test0006',
+    useTheTranslationFunction: true,
+    updatedBy: '',
+    createdBy: 'a90dec4d-042f-4db3-8c8e-dd183c86923b',
+    coSponsoredCourseNumber: 'test0006',
+    planningSalesOfficeTeamName: 'test0006',
+    meetingId: 'ec4d47c5-9ff5-475e-b515-f5004cc44804',
+    departureDate: '2025-08-01',
+    planningAndSalesSignature: 'test0006',
+    courseName: 'test0006',
+    tourTestStatus: 'test',
+    tourConductorName: 'test0006',
+    createdAt: '2025-08-05T04:10:46.331Z',
+    returnDate: '2025-08-03',
+    numberOfSendingDevices: 'test0006',
+    deleteFlag: 0,
+    isMaxConnectionProcessed: true,
+    channelId: '6cb64619-8c9c-4a07-9672-cb30f4d7a112',
+    chatRestriction: 'allChat',
+    updatedAt: '2025-08-05T06:17:23.297Z',
+    subGuideFunctionAvailable: true,
+    tourId: '40a053a3-eb3c-45d4-b7ec-af73d19fad55'
+  }
+]
+[get-tour-by-number-and-date] 2:47:31 PM END RequestId: 353be84d-d20d-444c-ada3-6653c1865b2f
+[get-tour-by-number-and-date] 2:47:31 PM REPORT RequestId: 353be84d-d20d-444c-ada3-6653c1865b2f	Duration: 610.99 ms	Billed Duration: 611 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 954.72 ms
+[get-meeting] 2:47:36 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[get-meeting] 2:47:37 PM 2025-08-05T07:47:37.862Z	undefined	INFO	App DB_TABLES: {
+  USERS: 'users_dev',
+  TOURS: 'tours_dev',
+  WEBSOCKETCONNECTIONS: 'websocketconnections_dev',
+  CONNECTION_HISTORY: 'websocketconnections_history_dev',
+  TOUR_MAX_CONNECTIONS: 'tourmaxconnections_dev'
+}
+[get-meeting] 2:47:37 PM 2025-08-05T07:47:37.864Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[get-meeting] 2:47:37 PM START RequestId: 8ac7ff05-6cbf-4738-9002-2e2910fc7002 Version: $LATEST
+[get-meeting] 2:47:37 PM 2025-08-05T07:47:37.876Z	8ac7ff05-6cbf-4738-9002-2e2910fc7002	INFO	Getting meeting with meetingId:  ec4d47c5-9ff5-475e-b515-f5004cc44804
+[get-meeting-by-tourid] 2:47:34 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[get-meeting-by-tourid] 2:47:35 PM 2025-08-05T07:47:35.739Z	undefined	INFO	App DB_TABLES: {
+  USERS: 'users_dev',
+  TOURS: 'tours_dev',
+  WEBSOCKETCONNECTIONS: 'websocketconnections_dev',
+  CONNECTION_HISTORY: 'websocketconnections_history_dev',
+  TOUR_MAX_CONNECTIONS: 'tourmaxconnections_dev'
+}
+[get-meeting-by-tourid] 2:47:35 PM 2025-08-05T07:47:35.741Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[get-meeting-by-tourid] 2:47:35 PM START RequestId: ff6aa903-57ef-44e7-9352-10b591341378 Version: $LATEST
+[get-meeting-by-tourid] 2:47:35 PM 2025-08-05T07:47:35.769Z	ff6aa903-57ef-44e7-9352-10b591341378	INFO	Retrieving tour with tourId:  40a053a3-eb3c-45d4-b7ec-af73d19fad55
+[get-meeting-by-tourid] 2:47:36 PM 2025-08-05T07:47:36.346Z	ff6aa903-57ef-44e7-9352-10b591341378	INFO	Tour successfully retrieved:  {
+  channelId: '6cb64619-8c9c-4a07-9672-cb30f4d7a112',
+  chatRestriction: 'allChat',
+  coSponsoredCourseNumber: 'test0006',
+  courseName: 'test0006',
+  createdAt: '2025-08-05T04:10:46.331Z',
+  createdBy: 'a90dec4d-042f-4db3-8c8e-dd183c86923b',
+  deleteFlag: 0,
+  departureDate: '2025-08-01',
+  isMaxConnectionProcessed: true,
+  maxConnection: 0,
+  meetingId: 'ec4d47c5-9ff5-475e-b515-f5004cc44804',
+  nameOfCoursePersonInCharge: 'test0006',
+  numberOfReceiversInUse: 'test0006',
+  numberOfSendingDevices: 'test0006',
+  planningAndSalesSignature: 'test0006',
+  planningSalesOfficeTeamName: 'test0006',
+  returnDate: '2025-08-03',
+  subGuideFunctionAvailable: true,
+  tourConductorName: 'test0006',
+  tourId: '40a053a3-eb3c-45d4-b7ec-af73d19fad55',
+  tourNumber: 'test0006',
+  tourTestStatus: 'test',
+  tourType: 'tour',
+  updatedAt: '2025-08-05T06:17:23.297Z',
+  updatedBy: '',
+  useTheTranslationFunction: true
+}
+[get-meeting-by-tourid] 2:47:36 PM END RequestId: ff6aa903-57ef-44e7-9352-10b591341378
+[get-meeting-by-tourid] 2:47:36 PM REPORT RequestId: ff6aa903-57ef-44e7-9352-10b591341378	Duration: 597.71 ms	Billed Duration: 598 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 896.27 ms
+[connect] 2:47:37 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[connect] 2:47:38 PM 2025-08-05T07:47:38.351Z	undefined	INFO	App DB_TABLES: {
+  USERS: 'users_dev',
+  TOURS: 'tours_dev',
+  WEBSOCKETCONNECTIONS: 'websocketconnections_dev',
+  CONNECTION_HISTORY: 'websocketconnections_history_dev',
+  TOUR_MAX_CONNECTIONS: 'tourmaxconnections_dev'
+}
+[connect] 2:47:38 PM 2025-08-05T07:47:38.353Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[connect] 2:47:38 PM START RequestId: b3b76b09-0fb9-426b-87cc-d4aa924ddd12 Version: $LATEST
+[connect] 2:47:38 PM 2025-08-05T07:47:38.368Z	b3b76b09-0fb9-426b-87cc-d4aa924ddd12	INFO	🔌 WebSocket connection event: O0mL_fWfIAMCJ2Q=
+[connect] 2:47:38 PM END RequestId: b3b76b09-0fb9-426b-87cc-d4aa924ddd12
+[connect] 2:47:38 PM REPORT RequestId: b3b76b09-0fb9-426b-87cc-d4aa924ddd12	Duration: 2.44 ms	Billed Duration: 3 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 935.05 ms
+[create-meeting] 2:47:42 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[create-meeting] 2:47:43 PM 2025-08-05T07:47:43.140Z	undefined	INFO	App DB_TABLES: {
+  USERS: 'users_dev',
+  TOURS: 'tours_dev',
+  WEBSOCKETCONNECTIONS: 'websocketconnections_dev',
+  CONNECTION_HISTORY: 'websocketconnections_history_dev',
+  TOUR_MAX_CONNECTIONS: 'tourmaxconnections_dev'
+}
+[create-meeting] 2:47:43 PM 2025-08-05T07:47:43.143Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[create-meeting] 2:47:43 PM START RequestId: 340e117a-39eb-4687-8d90-93f126704637 Version: $LATEST
+[create-meeting] 2:47:43 PM 2025-08-05T07:47:43.155Z	340e117a-39eb-4687-8d90-93f126704637	INFO	Creating meeting with clientRequestToken:  062b5866-175e-4560-8262-a6f1a80da13c externalMeetingId:  f935b6f4-5fce-44d1-8102-0e18465d1a2a
+[create-meeting] 2:47:43 PM 2025-08-05T07:47:43.995Z	340e117a-39eb-4687-8d90-93f126704637	INFO	Created Meeting Response:  1cbad8b5-970c-4d85-a60f-4807369c4804
+[create-meeting] 2:47:43 PM END RequestId: 340e117a-39eb-4687-8d90-93f126704637
+[create-meeting] 2:47:43 PM REPORT RequestId: 340e117a-39eb-4687-8d90-93f126704637	Duration: 848.24 ms	Billed Duration: 849 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 958.54 ms
+[get-meeting] 2:47:38 PM 2025-08-05T07:47:38.586Z	8ac7ff05-6cbf-4738-9002-2e2910fc7002	INFO	Get Meeting Response:  ec4d47c5-9ff5-475e-b515-f5004cc44804
+[get-meeting] 2:47:38 PM END RequestId: 8ac7ff05-6cbf-4738-9002-2e2910fc7002
+[get-meeting] 2:47:38 PM REPORT RequestId: 8ac7ff05-6cbf-4738-9002-2e2910fc7002	Duration: 726.50 ms	Billed Duration: 727 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 915.69 ms
+[create-attendee] 2:47:45 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[create-attendee] 2:47:46 PM 2025-08-05T07:47:46.755Z	undefined	INFO	App DB_TABLES: {
+  USERS: 'users_dev',
+  TOURS: 'tours_dev',
+  WEBSOCKETCONNECTIONS: 'websocketconnections_dev',
+  CONNECTION_HISTORY: 'websocketconnections_history_dev',
+  TOUR_MAX_CONNECTIONS: 'tourmaxconnections_dev'
+}
+[create-attendee] 2:47:46 PM 2025-08-05T07:47:46.758Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[create-attendee] 2:47:46 PM START RequestId: 9a903df1-72aa-48d1-8f06-e7632f83727e Version: $LATEST
+[create-attendee] 2:47:46 PM 2025-08-05T07:47:46.769Z	9a903df1-72aa-48d1-8f06-e7632f83727e	INFO	Creating attendee with meetingId:  1cbad8b5-970c-4d85-a60f-4807369c4804 externalUserId:  Guide|1754380063438
+[create-attendee] 2:47:47 PM 2025-08-05T07:47:47.525Z	9a903df1-72aa-48d1-8f06-e7632f83727e	INFO	Created Attendee Response:  7f5827c7-c3e4-eaaf-bb08-d7f05aa6cf63
+[create-attendee] 2:47:47 PM END RequestId: 9a903df1-72aa-48d1-8f06-e7632f83727e
+[create-attendee] 2:47:47 PM REPORT RequestId: 9a903df1-72aa-48d1-8f06-e7632f83727e	Duration: 764.08 ms	Billed Duration: 765 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 980.18 ms
+[connect-state] 2:47:40 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[connect-state] 2:47:41 PM 2025-08-05T07:47:41.539Z	undefined	INFO	App DB_TABLES: {
+  USERS: 'users_dev',
+  TOURS: 'tours_dev',
+  WEBSOCKETCONNECTIONS: 'websocketconnections_dev',
+  CONNECTION_HISTORY: 'websocketconnections_history_dev',
+  TOUR_MAX_CONNECTIONS: 'tourmaxconnections_dev'
+}
+[connect-state] 2:47:41 PM 2025-08-05T07:47:41.541Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[connect-state] 2:47:41 PM START RequestId: 50ca028a-ca7a-4b8c-b0a6-a9ad193c7d3c Version: $LATEST
+[connect-state] 2:47:43 PM END RequestId: 50ca028a-ca7a-4b8c-b0a6-a9ad193c7d3c
+[connect-state] 2:47:43 PM REPORT RequestId: 50ca028a-ca7a-4b8c-b0a6-a9ad193c7d3c	Duration: 1586.00 ms	Billed Duration: 1586 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 961.23 ms
+[get-meeting-by-tourid] 2:47:44 PM START RequestId: 7a1d027e-57c5-4c2d-ad01-852858175e5a Version: $LATEST
+[get-meeting-by-tourid] 2:47:44 PM 2025-08-05T07:47:44.096Z	7a1d027e-57c5-4c2d-ad01-852858175e5a	INFO	Retrieving tour with tourId:  40a053a3-eb3c-45d4-b7ec-af73d19fad55
+[get-meeting-by-tourid] 2:47:44 PM 2025-08-05T07:47:44.567Z	7a1d027e-57c5-4c2d-ad01-852858175e5a	INFO	Tour successfully retrieved:  {
+  channelId: '6cb64619-8c9c-4a07-9672-cb30f4d7a112',
+  chatRestriction: 'allChat',
+  coSponsoredCourseNumber: 'test0006',
+  courseName: 'test0006',
+  createdAt: '2025-08-05T04:10:46.331Z',
+  createdBy: 'a90dec4d-042f-4db3-8c8e-dd183c86923b',
+  deleteFlag: 0,
+  departureDate: '2025-08-01',
+  isMaxConnectionProcessed: true,
+  maxConnection: 0,
+  meetingId: 'ec4d47c5-9ff5-475e-b515-f5004cc44804',
+  nameOfCoursePersonInCharge: 'test0006',
+  numberOfReceiversInUse: 'test0006',
+  numberOfSendingDevices: 'test0006',
+  planningAndSalesSignature: 'test0006',
+  planningSalesOfficeTeamName: 'test0006',
+  returnDate: '2025-08-03',
+  subGuideFunctionAvailable: true,
+  tourConductorName: 'test0006',
+  tourId: '40a053a3-eb3c-45d4-b7ec-af73d19fad55',
+  tourNumber: 'test0006',
+  tourTestStatus: 'test',
+  tourType: 'tour',
+  updatedAt: '2025-08-05T06:17:23.297Z',
+  updatedBy: '',
+  useTheTranslationFunction: true
+}
+[get-meeting-by-tourid] 2:47:44 PM END RequestId: 7a1d027e-57c5-4c2d-ad01-852858175e5a
+[get-meeting-by-tourid] 2:47:44 PM REPORT RequestId: 7a1d027e-57c5-4c2d-ad01-852858175e5a	Duration: 474.08 ms	Billed Duration: 475 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[get-meeting-by-tourid] 2:47:51 PM START RequestId: d1b8ca41-2756-4bd5-b939-e244989127f3 Version: $LATEST
+[get-meeting-by-tourid] 2:47:51 PM 2025-08-05T07:47:51.672Z	d1b8ca41-2756-4bd5-b939-e244989127f3	INFO	Retrieving tour with tourId:  40a053a3-eb3c-45d4-b7ec-af73d19fad55
+[get-meeting-by-tourid] 2:47:52 PM 2025-08-05T07:47:52.137Z	d1b8ca41-2756-4bd5-b939-e244989127f3	INFO	Tour successfully retrieved:  {
+  maxConnection: 0,
+  nameOfCoursePersonInCharge: 'test0006',
+  numberOfReceiversInUse: 'test0006',
+  tourType: 'tour',
+  tourNumber: 'test0006',
+  useTheTranslationFunction: true,
+  updatedBy: '',
+  createdBy: 'a90dec4d-042f-4db3-8c8e-dd183c86923b',
+  coSponsoredCourseNumber: 'test0006',
+  planningSalesOfficeTeamName: 'test0006',
+  meetingId: 'ec4d47c5-9ff5-475e-b515-f5004cc44804',
+  departureDate: '2025-08-01',
+  planningAndSalesSignature: 'test0006',
+  courseName: 'test0006',
+  tourTestStatus: 'test',
+  tourConductorName: 'test0006',
+  createdAt: '2025-08-05T04:10:46.331Z',
+  numberOfSendingDevices: 'test0006',
+  returnDate: '2025-08-03',
+  deleteFlag: 0,
+  isMaxConnectionProcessed: true,
+  channelId: '6cb64619-8c9c-4a07-9672-cb30f4d7a112',
+  chatRestriction: 'allChat',
+  updatedAt: '2025-08-05T06:17:23.297Z',
+  subGuideFunctionAvailable: true,
+  tourId: '40a053a3-eb3c-45d4-b7ec-af73d19fad55'
+}
+[get-meeting-by-tourid] 2:47:52 PM END RequestId: d1b8ca41-2756-4bd5-b939-e244989127f3
+[get-meeting-by-tourid] 2:47:52 PM REPORT RequestId: d1b8ca41-2756-4bd5-b939-e244989127f3	Duration: 467.03 ms	Billed Duration: 468 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[create-app-instance-user] 2:47:49 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[create-app-instance-user] 2:47:50 PM 2025-08-05T07:47:50.361Z	undefined	INFO	App DB_TABLES: {
+  USERS: 'users_dev',
+  TOURS: 'tours_dev',
+  WEBSOCKETCONNECTIONS: 'websocketconnections_dev',
+  CONNECTION_HISTORY: 'websocketconnections_history_dev',
+  TOUR_MAX_CONNECTIONS: 'tourmaxconnections_dev'
+}
+[create-app-instance-user] 2:47:50 PM 2025-08-05T07:47:50.363Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[create-app-instance-user] 2:47:50 PM START RequestId: 9e65ce14-a307-4a7a-982b-e78df223f57f Version: $LATEST
+[create-app-instance-user] 2:47:50 PM 2025-08-05T07:47:50.375Z	9e65ce14-a307-4a7a-982b-e78df223f57f	INFO	Creating App Instance User with appInstanceArn:  arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0 appInstanceUserId:  f4eee2fc-5b8b-4d32-878c-3dc2e5942b8c clientRequestToken:  d12f1e45-295b-4fee-a762-5814bd129789 name:  Guide expirationCriterion:  CREATED_TIMESTAMP expirationDays:  1
+[create-app-instance-user] 2:47:50 PM 2025-08-05T07:47:50.586Z	9e65ce14-a307-4a7a-982b-e78df223f57f	INFO	Created App Instance User Response:  arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0/user/f4eee2fc-5b8b-4d32-878c-3dc2e5942b8c
+[create-app-instance-user] 2:47:50 PM END RequestId: 9e65ce14-a307-4a7a-982b-e78df223f57f
+[create-app-instance-user] 2:47:50 PM REPORT RequestId: 9e65ce14-a307-4a7a-982b-e78df223f57f	Duration: 222.62 ms	Billed Duration: 223 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 918.74 ms
+[create-channel] 2:47:51 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[create-channel] 2:47:52 PM 2025-08-05T07:47:52.493Z	undefined	INFO	App DB_TABLES: {
+  USERS: 'users_dev',
+  TOURS: 'tours_dev',
+  WEBSOCKETCONNECTIONS: 'websocketconnections_dev',
+  CONNECTION_HISTORY: 'websocketconnections_history_dev',
+  TOUR_MAX_CONNECTIONS: 'tourmaxconnections_dev'
+}
+[create-channel] 2:47:52 PM 2025-08-05T07:47:52.496Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[create-channel] 2:47:52 PM START RequestId: 2ac13bd0-81da-4b46-b762-98d60fd2bf88 Version: $LATEST
+[create-channel] 2:47:52 PM 2025-08-05T07:47:52.524Z	2ac13bd0-81da-4b46-b762-98d60fd2bf88	INFO	Creating channel with appInstanceArn:  arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0 name:  LiveSession mode: UNRESTRICTED privacy:  PUBLIC clientRequestToken:  8c6bbe57-7801-4104-a0a9-f6c5fac382c6 chimeBearer:  arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0/user/f4eee2fc-5b8b-4d32-878c-3dc2e5942b8c expirationCriterion:  LAST_MESSAGE_TIMESTAMP expirationDays:  1
+[create-channel] 2:47:52 PM 2025-08-05T07:47:52.749Z	2ac13bd0-81da-4b46-b762-98d60fd2bf88	INFO	Created Channel Response:  arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0/channel/0db7c76a-9be8-41d4-83e2-77eb0fcc7626
+[create-channel] 2:47:52 PM END RequestId: 2ac13bd0-81da-4b46-b762-98d60fd2bf88
+[create-channel] 2:47:52 PM REPORT RequestId: 2ac13bd0-81da-4b46-b762-98d60fd2bf88	Duration: 262.72 ms	Billed Duration: 263 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 952.22 ms
+[start-meeting-transcription] 2:47:51 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[start-meeting-transcription] 2:47:52 PM 2025-08-05T07:47:52.816Z	undefined	INFO	App DB_TABLES: {
+  USERS: 'users_dev',
+  TOURS: 'tours_dev',
+  WEBSOCKETCONNECTIONS: 'websocketconnections_dev',
+  CONNECTION_HISTORY: 'websocketconnections_history_dev',
+  TOUR_MAX_CONNECTIONS: 'tourmaxconnections_dev'
+}
+[start-meeting-transcription] 2:47:52 PM 2025-08-05T07:47:52.819Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[start-meeting-transcription] 2:47:52 PM START RequestId: 170fb527-c707-4e29-a33b-ca10a4b6ecba Version: $LATEST
+[start-meeting-transcription] 2:47:52 PM 2025-08-05T07:47:52.830Z	170fb527-c707-4e29-a33b-ca10a4b6ecba	INFO	Start MeetingTranscription with meetingId:  1cbad8b5-970c-4d85-a60f-4807369c4804 languageCode:  ja-JP
+[start-meeting-transcription] 2:47:53 PM 2025-08-05T07:47:53.561Z	170fb527-c707-4e29-a33b-ca10a4b6ecba	INFO	Started Meeting Transcription Response:  {}
+[start-meeting-transcription] 2:47:53 PM END RequestId: 170fb527-c707-4e29-a33b-ca10a4b6ecba
+[start-meeting-transcription] 2:47:53 PM REPORT RequestId: 170fb527-c707-4e29-a33b-ca10a4b6ecba	Duration: 738.76 ms	Billed Duration: 739 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 926.93 ms
+[list-attendee] 2:47:56 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[list-attendee] 2:47:57 PM 2025-08-05T07:47:57.354Z	undefined	INFO	App DB_TABLES: {
+  USERS: 'users_dev',
+  TOURS: 'tours_dev',
+  WEBSOCKETCONNECTIONS: 'websocketconnections_dev',
+  CONNECTION_HISTORY: 'websocketconnections_history_dev',
+  TOUR_MAX_CONNECTIONS: 'tourmaxconnections_dev'
+}
+[list-attendee] 2:47:57 PM 2025-08-05T07:47:57.357Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[list-attendee] 2:47:57 PM START RequestId: 2d555825-d19e-4b5b-a737-f8e5f6b06744 Version: $LATEST
+[list-attendee] 2:47:57 PM 2025-08-05T07:47:57.370Z	2d555825-d19e-4b5b-a737-f8e5f6b06744	INFO	List Attendees with meetingId:  ec4d47c5-9ff5-475e-b515-f5004cc44804
+[list-attendee] 2:47:58 PM 2025-08-05T07:47:58.109Z	2d555825-d19e-4b5b-a737-f8e5f6b06744	INFO	Current batch size: 2
+[list-attendee] 2:47:58 PM 2025-08-05T07:47:58.110Z	2d555825-d19e-4b5b-a737-f8e5f6b06744	INFO	Total attendees count: 2
+[list-attendee] 2:47:58 PM 2025-08-05T07:47:58.110Z	2d555825-d19e-4b5b-a737-f8e5f6b06744	INFO	List attendees: [
+  {
+    ExternalUserId: 'User|1754380073025',
+    AttendeeId: '60b31db6-eaff-7b93-9356-e8a872bdd9a5',
+    JoinToken: 'NjBiMzFkYjYtZWFmZi03YjkzLTkzNTYtZThhODcyYmRkOWE1OjZjYmIwNWI1LWE1NmQtNGM5Zi05YTRiLTlmNzA0ODU1OGVkOA',
+    Capabilities: { Audio: 'SendReceive', Video: 'None', Content: 'None' }
+  },
+  {
+    ExternalUserId: 'Guide|1754379662642',
+    AttendeeId: '6cd3d7de-a0f6-fc31-666c-cc01873998c1',
+    JoinToken: 'NmNkM2Q3ZGUtYTBmNi1mYzMxLTY2NmMtY2MwMTg3Mzk5OGMxOmFmNmUxYWI5LTFkMDEtNDMwYS1iYmNlLTc4ZGNhYzgzMDY3OQ',
+    Capabilities: { Audio: 'SendReceive', Video: 'None', Content: 'None' }
+  }
+]
+[list-attendee] 2:47:58 PM END RequestId: 2d555825-d19e-4b5b-a737-f8e5f6b06744
+[list-attendee] 2:47:58 PM REPORT RequestId: 2d555825-d19e-4b5b-a737-f8e5f6b06744	Duration: 748.78 ms	Billed Duration: 749 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 972.87 ms
+[update-meeting-by-tourid] 2:47:55 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[update-meeting-by-tourid] 2:47:56 PM 2025-08-05T07:47:56.861Z	undefined	INFO	App DB_TABLES: {
+  USERS: 'users_dev',
+  TOURS: 'tours_dev',
+  WEBSOCKETCONNECTIONS: 'websocketconnections_dev',
+  CONNECTION_HISTORY: 'websocketconnections_history_dev',
+  TOUR_MAX_CONNECTIONS: 'tourmaxconnections_dev'
+}
+[update-meeting-by-tourid] 2:47:56 PM 2025-08-05T07:47:56.864Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[update-meeting-by-tourid] 2:47:56 PM START RequestId: 0cb72623-d2d2-45be-84a1-b5ba5fae6920 Version: $LATEST
+[update-meeting-by-tourid] 2:47:56 PM 2025-08-05T07:47:56.883Z	0cb72623-d2d2-45be-84a1-b5ba5fae6920	INFO	Updating tour with tourId:  40a053a3-eb3c-45d4-b7ec-af73d19fad55 meetingId:  1cbad8b5-970c-4d85-a60f-4807369c4804 channelId:  0db7c76a-9be8-41d4-83e2-77eb0fcc7626
+[update-meeting-by-tourid] 2:47:57 PM 2025-08-05T07:47:57.484Z	0cb72623-d2d2-45be-84a1-b5ba5fae6920	INFO	Tour successfully updated:  {
+  tourId: '40a053a3-eb3c-45d4-b7ec-af73d19fad55',
+  ':meetingId': '1cbad8b5-970c-4d85-a60f-4807369c4804',
+  ':channelId': '0db7c76a-9be8-41d4-83e2-77eb0fcc7626'
+}
+[update-meeting-by-tourid] 2:47:57 PM END RequestId: 0cb72623-d2d2-45be-84a1-b5ba5fae6920
+[update-meeting-by-tourid] 2:47:57 PM REPORT RequestId: 0cb72623-d2d2-45be-84a1-b5ba5fae6920	Duration: 632.32 ms	Billed Duration: 633 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 921.22 ms
+[get-meeting] 2:47:52 PM START RequestId: e4dc16af-5032-4749-b35c-2f4ae7e797a8 Version: $LATEST
+[get-meeting] 2:47:52 PM 2025-08-05T07:47:52.921Z	e4dc16af-5032-4749-b35c-2f4ae7e797a8	INFO	Getting meeting with meetingId:  ec4d47c5-9ff5-475e-b515-f5004cc44804
+[get-meeting] 2:47:53 PM 2025-08-05T07:47:53.585Z	e4dc16af-5032-4749-b35c-2f4ae7e797a8	INFO	Get Meeting Response:  ec4d47c5-9ff5-475e-b515-f5004cc44804
+[get-meeting] 2:47:53 PM END RequestId: e4dc16af-5032-4749-b35c-2f4ae7e797a8
+[get-meeting] 2:47:53 PM REPORT RequestId: e4dc16af-5032-4749-b35c-2f4ae7e797a8	Duration: 669.19 ms	Billed Duration: 670 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[add-channel-membership] 2:47:53 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[add-channel-membership] 2:47:54 PM 2025-08-05T07:47:54.462Z	undefined	INFO	App DB_TABLES: {
+  USERS: 'users_dev',
+  TOURS: 'tours_dev',
+  WEBSOCKETCONNECTIONS: 'websocketconnections_dev',
+  CONNECTION_HISTORY: 'websocketconnections_history_dev',
+  TOUR_MAX_CONNECTIONS: 'tourmaxconnections_dev'
+}
+[add-channel-membership] 2:47:54 PM 2025-08-05T07:47:54.468Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[add-channel-membership] 2:47:54 PM START RequestId: 8b670ea9-896a-454e-aac8-75d57a59f8a9 Version: $LATEST
+[add-channel-membership] 2:47:54 PM 2025-08-05T07:47:54.487Z	8b670ea9-896a-454e-aac8-75d57a59f8a9	INFO	Creating Channel Membership with channelArn:  arn%3Aaws%3Achime%3Aus-east-1%3A647755634525%3Aapp-instance%2F1007fa5f-d281-43e6-ac7d-758a23201cc0%2Fchannel%2F0db7c76a-9be8-41d4-83e2-77eb0fcc7626 memberArn:  arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0/user/f4eee2fc-5b8b-4d32-878c-3dc2e5942b8c type: DEFAULT chimeBearer:  arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0/user/f4eee2fc-5b8b-4d32-878c-3dc2e5942b8c
+[add-channel-membership] 2:47:54 PM 2025-08-05T07:47:54.645Z	8b670ea9-896a-454e-aac8-75d57a59f8a9	INFO	Created Channel Membership Response:  {
+  ChannelArn: 'arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0/channel/0db7c76a-9be8-41d4-83e2-77eb0fcc7626',
+  Member: {
+    Arn: 'arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0/user/f4eee2fc-5b8b-4d32-878c-3dc2e5942b8c',
+    Name: 'Guide'
+  },
+  SubChannelId: null
+}
+[add-channel-membership] 2:47:54 PM END RequestId: 8b670ea9-896a-454e-aac8-75d57a59f8a9
+[add-channel-membership] 2:47:54 PM REPORT RequestId: 8b670ea9-896a-454e-aac8-75d57a59f8a9	Duration: 172.91 ms	Billed Duration: 173 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 924.94 ms
+[add-channel-membership] 2:48:00 PM START RequestId: 3acfb024-868d-4601-aaff-72436579f517 Version: $LATEST
+[add-channel-membership] 2:48:00 PM 2025-08-05T07:48:00.264Z	3acfb024-868d-4601-aaff-72436579f517	INFO	Creating Channel Membership with channelArn:  arn%3Aaws%3Achime%3Aus-east-1%3A647755634525%3Aapp-instance%2F1007fa5f-d281-43e6-ac7d-758a23201cc0%2Fchannel%2F6cb64619-8c9c-4a07-9672-cb30f4d7a112 memberArn:  arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0/user/a3246665-d5d8-405e-8481-9225ac308698 type: DEFAULT chimeBearer:  arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0/user/a3246665-d5d8-405e-8481-9225ac308698
+[add-channel-membership] 2:48:00 PM 2025-08-05T07:48:00.379Z	3acfb024-868d-4601-aaff-72436579f517	INFO	Created Channel Membership Response:  {
+  ChannelArn: 'arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0/channel/6cb64619-8c9c-4a07-9672-cb30f4d7a112',
+  Member: {
+    Arn: 'arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0/user/a3246665-d5d8-405e-8481-9225ac308698',
+    Name: 'User1'
+  },
+  SubChannelId: null
+}
+[add-channel-membership] 2:48:00 PM END RequestId: 3acfb024-868d-4601-aaff-72436579f517
+[add-channel-membership] 2:48:00 PM REPORT RequestId: 3acfb024-868d-4601-aaff-72436579f517	Duration: 117.77 ms	Billed Duration: 118 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[connect] 2:47:52 PM START RequestId: 2fee13f2-2337-4c76-b943-5ab8ee8b31e5 Version: $LATEST
+[connect] 2:47:52 PM 2025-08-05T07:47:52.983Z	2fee13f2-2337-4c76-b943-5ab8ee8b31e5	INFO	🔌 WebSocket connection event: O0mOdf1MoAMCLnQ=
+[connect] 2:47:53 PM END RequestId: 2fee13f2-2337-4c76-b943-5ab8ee8b31e5
+[connect] 2:47:53 PM REPORT RequestId: 2fee13f2-2337-4c76-b943-5ab8ee8b31e5	Duration: 33.51 ms	Billed Duration: 34 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[connect-state] 2:47:53 PM START RequestId: c98e7aa5-1220-411d-b68d-a972ef3d4879 Version: $LATEST
+[connect-state] 2:47:54 PM END RequestId: c98e7aa5-1220-411d-b68d-a972ef3d4879
+[connect-state] 2:47:54 PM REPORT RequestId: c98e7aa5-1220-411d-b68d-a972ef3d4879	Duration: 1448.01 ms	Billed Duration: 1449 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[create-attendee] 2:47:54 PM START RequestId: 846c500c-fab6-4708-835a-a2b6f8a96b75 Version: $LATEST
+[create-attendee] 2:47:54 PM 2025-08-05T07:47:54.589Z	846c500c-fab6-4708-835a-a2b6f8a96b75	INFO	Creating attendee with meetingId:  ec4d47c5-9ff5-475e-b515-f5004cc44804 externalUserId:  User|1754380073025
+[create-attendee] 2:47:55 PM 2025-08-05T07:47:55.231Z	846c500c-fab6-4708-835a-a2b6f8a96b75	INFO	Created Attendee Response:  60b31db6-eaff-7b93-9356-e8a872bdd9a5
+[create-attendee] 2:47:55 PM END RequestId: 846c500c-fab6-4708-835a-a2b6f8a96b75
+[create-attendee] 2:47:55 PM REPORT RequestId: 846c500c-fab6-4708-835a-a2b6f8a96b75	Duration: 645.59 ms	Billed Duration: 646 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[create-app-instance-user] 2:47:59 PM START RequestId: 80aa6ed8-ce75-4f45-8fc8-820ba3105017 Version: $LATEST
+[create-app-instance-user] 2:47:59 PM 2025-08-05T07:47:59.623Z	80aa6ed8-ce75-4f45-8fc8-820ba3105017	INFO	Creating App Instance User with appInstanceArn:  arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0 appInstanceUserId:  a3246665-d5d8-405e-8481-9225ac308698 clientRequestToken:  07778bcd-766a-47bd-82f0-d55bfe202b59 name:  User1 expirationCriterion:  CREATED_TIMESTAMP expirationDays:  1
+[create-app-instance-user] 2:47:59 PM 2025-08-05T07:47:59.711Z	80aa6ed8-ce75-4f45-8fc8-820ba3105017	INFO	Created App Instance User Response:  arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0/user/a3246665-d5d8-405e-8481-9225ac308698
+[create-app-instance-user] 2:47:59 PM END RequestId: 80aa6ed8-ce75-4f45-8fc8-820ba3105017
+[create-app-instance-user] 2:47:59 PM REPORT RequestId: 80aa6ed8-ce75-4f45-8fc8-820ba3105017	Duration: 90.84 ms	Billed Duration: 91 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[disconnect] 2:48:15 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[disconnect] 2:48:16 PM 2025-08-05T07:48:16.403Z	undefined	INFO	App DB_TABLES: {
+  USERS: 'users_dev',
+  TOURS: 'tours_dev',
+  WEBSOCKETCONNECTIONS: 'websocketconnections_dev',
+  CONNECTION_HISTORY: 'websocketconnections_history_dev',
+  TOUR_MAX_CONNECTIONS: 'tourmaxconnections_dev'
+}
+[disconnect] 2:48:16 PM 2025-08-05T07:48:16.405Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[disconnect] 2:48:16 PM START RequestId: 96ac8d21-e522-41c1-9245-62a79ccb6626 Version: $LATEST
+[disconnect] 2:48:16 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[disconnect] 2:48:17 PM 2025-08-05T07:48:17.481Z	96ac8d21-e522-41c1-9245-62a79ccb6626	INFO	✅ Disconnected and deleted connectionId: O0mOdf1MoAMCLnQ=
+[disconnect] 2:48:17 PM 2025-08-05T07:48:17.768Z	undefined	INFO	App DB_TABLES: {
+  USERS: 'users_dev',
+  TOURS: 'tours_dev',
+  WEBSOCKETCONNECTIONS: 'websocketconnections_dev',
+  CONNECTION_HISTORY: 'websocketconnections_history_dev',
+  TOUR_MAX_CONNECTIONS: 'tourmaxconnections_dev'
+}
+[disconnect] 2:48:17 PM 2025-08-05T07:48:17.773Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[disconnect] 2:48:17 PM START RequestId: 7f250eb7-58b1-47ed-a2a6-dece4af69d9b Version: $LATEST
+[disconnect] 2:48:18 PM 2025-08-05T07:48:18.494Z	96ac8d21-e522-41c1-9245-62a79ccb6626	WARN	🔌 Stale connection: O0mL_fWfIAMCJ2Q=
+[disconnect] 2:48:18 PM 2025-08-05T07:48:18.837Z	7f250eb7-58b1-47ed-a2a6-dece4af69d9b	INFO	✅ Disconnected and deleted connectionId: O0mL_fWfIAMCJ2Q=
+[disconnect] 2:48:18 PM END RequestId: 96ac8d21-e522-41c1-9245-62a79ccb6626
+[disconnect] 2:48:18 PM REPORT RequestId: 96ac8d21-e522-41c1-9245-62a79ccb6626	Duration: 2560.34 ms	Billed Duration: 2561 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 941.03 ms
+[disconnect] 2:48:19 PM END RequestId: 7f250eb7-58b1-47ed-a2a6-dece4af69d9b
+[disconnect] 2:48:19 PM REPORT RequestId: 7f250eb7-58b1-47ed-a2a6-dece4af69d9b	Duration: 2004.76 ms	Billed Duration: 2005 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 944.71 ms
+[get-tour-by-number-and-date] 6:36:42 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[get-tour-by-number-and-date] 6:36:43 PM 2025-08-05T11:36:43.429Z	undefined	INFO	App DB_TABLES: {
+  USERS: 'users_dev',
+  TOURS: 'tours_dev',
+  WEBSOCKETCONNECTIONS: 'websocketconnections_dev',
+  CONNECTION_HISTORY: 'websocketconnections_history_dev',
+  TOUR_MAX_CONNECTIONS: 'tourmaxconnections_dev'
+}
+[get-tour-by-number-and-date] 6:36:43 PM 2025-08-05T11:36:43.431Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[get-tour-by-number-and-date] 6:36:43 PM START RequestId: 36e622d0-d19e-4f07-b31a-8b6b1b0b33c6 Version: $LATEST
+[get-tour-by-number-and-date] 6:36:43 PM 2025-08-05T11:36:43.466Z	36e622d0-d19e-4f07-b31a-8b6b1b0b33c6	INFO	Retrieving tour with tourNumber and departureDate:  { tourNumber: 'test0006', departureDate: '2025-08-01' }
+[get-tour-by-number-and-date] 6:36:44 PM 2025-08-05T11:36:44.064Z	36e622d0-d19e-4f07-b31a-8b6b1b0b33c6	INFO	Tour successfully retrieved:  [
+  {
+    maxConnection: 0,
+    nameOfCoursePersonInCharge: 'test0006',
+    numberOfReceiversInUse: 'test0006',
+    tourType: 'tour',
+    tourNumber: 'test0006',
+    useTheTranslationFunction: true,
+    updatedBy: '',
+    createdBy: 'a90dec4d-042f-4db3-8c8e-dd183c86923b',
+    coSponsoredCourseNumber: 'test0006',
+    planningSalesOfficeTeamName: 'test0006',
+    meetingId: '6b94a991-abc6-4b5b-86de-b9350fb84804',
+    departureDate: '2025-08-01',
+    planningAndSalesSignature: 'test0006',
+    courseName: 'test0006',
+    tourTestStatus: 'test',
+    tourConductorName: 'test0006',
+    createdAt: '2025-08-05T04:10:46.331Z',
+    returnDate: '2025-08-03',
+    numberOfSendingDevices: 'test0006',
+    deleteFlag: 0,
+    isMaxConnectionProcessed: true,
+    channelId: '853bd573-af95-4046-a3c9-a921d55a421b',
+    chatRestriction: 'allChat',
+    updatedAt: '2025-08-05T06:17:23.297Z',
+    subGuideFunctionAvailable: true,
+    tourId: '40a053a3-eb3c-45d4-b7ec-af73d19fad55'
+  }
+]
+[get-tour-by-number-and-date] 6:36:44 PM END RequestId: 36e622d0-d19e-4f07-b31a-8b6b1b0b33c6
+[get-tour-by-number-and-date] 6:36:44 PM REPORT RequestId: 36e622d0-d19e-4f07-b31a-8b6b1b0b33c6	Duration: 629.06 ms	Billed Duration: 630 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 959.77 ms
+[create-meeting] 6:36:57 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[create-meeting] 6:36:58 PM 2025-08-05T11:36:58.366Z	undefined	INFO	App DB_TABLES: {
+  USERS: 'users_dev',
+  TOURS: 'tours_dev',
+  WEBSOCKETCONNECTIONS: 'websocketconnections_dev',
+  CONNECTION_HISTORY: 'websocketconnections_history_dev',
+  TOUR_MAX_CONNECTIONS: 'tourmaxconnections_dev'
+}
+[create-meeting] 6:36:58 PM 2025-08-05T11:36:58.368Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[create-meeting] 6:36:58 PM START RequestId: 14717098-95ab-4b06-b4eb-702d98bc31a7 Version: $LATEST
+[create-meeting] 6:36:58 PM 2025-08-05T11:36:58.380Z	14717098-95ab-4b06-b4eb-702d98bc31a7	INFO	Creating meeting with clientRequestToken:  b3256413-6e89-42a4-b97b-91408cf0491a externalMeetingId:  3c4afad7-fd94-43ce-9fbb-a9ab0bb034eb
+[create-meeting] 6:36:59 PM 2025-08-05T11:36:59.238Z	14717098-95ab-4b06-b4eb-702d98bc31a7	INFO	Created Meeting Response:  7a7ca3d5-025a-47d3-8b3b-b493cbde4804
+[create-meeting] 6:36:59 PM END RequestId: 14717098-95ab-4b06-b4eb-702d98bc31a7
+[create-meeting] 6:36:59 PM REPORT RequestId: 14717098-95ab-4b06-b4eb-702d98bc31a7	Duration: 865.44 ms	Billed Duration: 866 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 952.72 ms
+[get-meeting] 6:36:49 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[get-meeting] 6:36:50 PM 2025-08-05T11:36:50.646Z	undefined	INFO	App DB_TABLES: {
+  USERS: 'users_dev',
+  TOURS: 'tours_dev',
+  WEBSOCKETCONNECTIONS: 'websocketconnections_dev',
+  CONNECTION_HISTORY: 'websocketconnections_history_dev',
+  TOUR_MAX_CONNECTIONS: 'tourmaxconnections_dev'
+}
+[get-meeting] 6:36:50 PM 2025-08-05T11:36:50.648Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[get-meeting] 6:36:50 PM START RequestId: 934a5058-080a-4ffd-a4f5-6f02a4d541fc Version: $LATEST
+[get-meeting] 6:36:50 PM 2025-08-05T11:36:50.660Z	934a5058-080a-4ffd-a4f5-6f02a4d541fc	INFO	Getting meeting with meetingId:  6b94a991-abc6-4b5b-86de-b9350fb84804
+[get-meeting] 6:36:51 PM 2025-08-05T11:36:51.402Z	934a5058-080a-4ffd-a4f5-6f02a4d541fc	ERROR	Failed to Get Meeting:  {
+  error: NotFound: Meeting <6b94a991-abc6-4b5b-86de-b9350fb84804> not found
+      at Object.qJ [as extractError] (file:///var/task/index.mjs:2:5259)
+      at constructor.e9 (file:///var/task/index.mjs:2:17862)
+      at constructor.callListeners (file:///var/task/index.mjs:2:48795)
+      at constructor.emit (file:///var/task/index.mjs:2:48503)
+      at constructor.emitEvent (file:///var/task/index.mjs:3:28427)
+      at constructor.t (file:///var/task/index.mjs:3:23986)
+      at Rc.runTo (file:///var/task/index.mjs:3:1217)
+      at file:///var/task/index.mjs:3:1429
+      at constructor.<anonymous> (file:///var/task/index.mjs:3:24200)
+      at constructor.<anonymous> (file:///var/task/index.mjs:3:28482) {
+    code: 'NotFound',
+    '[Code]': 'See error.Code for details.',
+    '[Message]': 'See error.Message for details.',
+    '[RequestId]': 'See error.RequestId for details.',
+    time: 2025-08-05T11:36:51.400Z,
+    requestId: 'bbf6a1ff-dea5-4506-9442-2932b21f1bff',
+    statusCode: 404,
+    retryable: false,
+    retryDelay: 19.66979800055895
+  },
+  event: {
+    resource: '/meetings/{MeetingID}',
+    path: '/meetings/6b94a991-abc6-4b5b-86de-b9350fb84804',
+    httpMethod: 'GET',
+    headers: {
+      Accept: '*/*',
+      'Accept-Encoding': 'gzip, deflate, br, zstd',
+      'Accept-Language': 'en,ja;q=0.9,vi;q=0.8,en-US;q=0.7',
+      'CloudFront-Forwarded-Proto': 'https',
+      'CloudFront-Is-Desktop-Viewer': 'true',
+      'CloudFront-Is-Mobile-Viewer': 'false',
+      'CloudFront-Is-SmartTV-Viewer': 'false',
+      'CloudFront-Is-Tablet-Viewer': 'false',
+      'CloudFront-Viewer-ASN': '45899',
+      'CloudFront-Viewer-Country': 'VN',
+      Host: '6xw6fqp8g4.execute-api.us-east-1.amazonaws.com',
+      origin: 'http://localhost:3000',
+      priority: 'u=1, i',
+      Referer: 'http://localhost:3000/',
+      'sec-ch-ua': '"Not)A;Brand";v="8", "Chromium";v="138", "Google Chrome";v="138"',
+      'sec-ch-ua-mobile': '?0',
+      'sec-ch-ua-platform': '"Windows"',
+      'sec-fetch-dest': 'empty',
+      'sec-fetch-mode': 'cors',
+      'sec-fetch-site': 'cross-site',
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+      Via: '2.0 0e0034e6b4d6478909834eb510491848.cloudfront.net (CloudFront)',
+      'X-Amz-Cf-Id': 'Ezxb7-FNmEETIskWC3Tb6r-uIIbjKlkI6AGrh8wzIvqofXQ4Jkaa0A==',
+      'X-Amzn-Trace-Id': 'Root=1-6891ecd1-5c6bafdb203a03ee5493fdbd',
+      'X-Forwarded-For': '14.161.12.17, 15.158.13.115',
+      'X-Forwarded-Port': '443',
+      'X-Forwarded-Proto': 'https'
+    },
+    multiValueHeaders: {
+      Accept: [Array],
+      'Accept-Encoding': [Array],
+      'Accept-Language': [Array],
+      'CloudFront-Forwarded-Proto': [Array],
+      'CloudFront-Is-Desktop-Viewer': [Array],
+      'CloudFront-Is-Mobile-Viewer': [Array],
+      'CloudFront-Is-SmartTV-Viewer': [Array],
+      'CloudFront-Is-Tablet-Viewer': [Array],
+      'CloudFront-Viewer-ASN': [Array],
+      'CloudFront-Viewer-Country': [Array],
+      Host: [Array],
+      origin: [Array],
+      priority: [Array],
+      Referer: [Array],
+      'sec-ch-ua': [Array],
+      'sec-ch-ua-mobile': [Array],
+      'sec-ch-ua-platform': [Array],
+      'sec-fetch-dest': [Array],
+      'sec-fetch-mode': [Array],
+      'sec-fetch-site': [Array],
+      'User-Agent': [Array],
+      Via: [Array],
+      'X-Amz-Cf-Id': [Array],
+      'X-Amzn-Trace-Id': [Array],
+      'X-Forwarded-For': [Array],
+      'X-Forwarded-Port': [Array],
+      'X-Forwarded-Proto': [Array]
+    },
+    queryStringParameters: null,
+    multiValueQueryStringParameters: null,
+    pathParameters: { MeetingID: '6b94a991-abc6-4b5b-86de-b9350fb84804' },
+    stageVariables: null,
+    requestContext: {
+      resourceId: 'gais01',
+      resourcePath: '/meetings/{MeetingID}',
+      httpMethod: 'GET',
+      extendedRequestId: 'O1HwyGkdIAMEU9g=',
+      requestTime: '05/Aug/2025:11:36:49 +0000',
+      path: '/prod/meetings/6b94a991-abc6-4b5b-86de-b9350fb84804',
+      accountId: '647755634525',
+      protocol: 'HTTP/1.1',
+      stage: 'prod',
+      domainPrefix: '6xw6fqp8g4',
+      requestTimeEpoch: 1754393809438,
+      requestId: '97b65dc8-c08f-46d2-9ba5-93ac727d0184',
+      identity: [Object],
+      domainName: '6xw6fqp8g4.execute-api.us-east-1.amazonaws.com',
+      deploymentId: 'yu2tb4',
+      apiId: '6xw6fqp8g4'
+    },
+    body: null,
+    isBase64Encoded: false
+  }
+}
+[get-meeting] 6:36:51 PM END RequestId: 934a5058-080a-4ffd-a4f5-6f02a4d541fc
+[get-meeting] 6:36:51 PM REPORT RequestId: 934a5058-080a-4ffd-a4f5-6f02a4d541fc	Duration: 767.45 ms	Billed Duration: 768 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 972.05 ms
+[get-meeting] 6:36:52 PM START RequestId: da4a1b30-79f0-4427-ad8c-8084596a5203 Version: $LATEST
+[get-meeting] 6:36:52 PM 2025-08-05T11:36:52.946Z	da4a1b30-79f0-4427-ad8c-8084596a5203	INFO	Getting meeting with meetingId:  6b94a991-abc6-4b5b-86de-b9350fb84804
+[get-meeting] 6:36:53 PM 2025-08-05T11:36:53.597Z	da4a1b30-79f0-4427-ad8c-8084596a5203	ERROR	Failed to Get Meeting:  {
+  error: NotFound: Meeting <6b94a991-abc6-4b5b-86de-b9350fb84804> not found
+      at Object.qJ [as extractError] (file:///var/task/index.mjs:2:5259)
+      at constructor.e9 (file:///var/task/index.mjs:2:17862)
+      at constructor.callListeners (file:///var/task/index.mjs:2:48795)
+      at constructor.emit (file:///var/task/index.mjs:2:48503)
+      at constructor.emitEvent (file:///var/task/index.mjs:3:28427)
+      at constructor.t (file:///var/task/index.mjs:3:23986)
+      at Rc.runTo (file:///var/task/index.mjs:3:1217)
+      at file:///var/task/index.mjs:3:1429
+      at constructor.<anonymous> (file:///var/task/index.mjs:3:24200)
+      at constructor.<anonymous> (file:///var/task/index.mjs:3:28482) {
+    code: 'NotFound',
+    '[Code]': 'See error.Code for details.',
+    '[Message]': 'See error.Message for details.',
+    '[RequestId]': 'See error.RequestId for details.',
+    time: 2025-08-05T11:36:53.597Z,
+    requestId: 'a27952b2-3e6c-4b07-9004-c66d0037ac6d',
+    statusCode: 404,
+    retryable: false,
+    retryDelay: 25.210960793187475
+  },
+  event: {
+    resource: '/meetings/{MeetingID}',
+    path: '/meetings/6b94a991-abc6-4b5b-86de-b9350fb84804',
+    httpMethod: 'GET',
+    headers: {
+      Accept: '*/*',
+      'Accept-Encoding': 'gzip, deflate, br, zstd',
+      'Accept-Language': 'en,ja;q=0.9,vi;q=0.8,en-US;q=0.7',
+      'CloudFront-Forwarded-Proto': 'https',
+      'CloudFront-Is-Desktop-Viewer': 'true',
+      'CloudFront-Is-Mobile-Viewer': 'false',
+      'CloudFront-Is-SmartTV-Viewer': 'false',
+      'CloudFront-Is-Tablet-Viewer': 'false',
+      'CloudFront-Viewer-ASN': '45899',
+      'CloudFront-Viewer-Country': 'VN',
+      Host: '6xw6fqp8g4.execute-api.us-east-1.amazonaws.com',
+      origin: 'http://localhost:3000',
+      priority: 'u=1, i',
+      Referer: 'http://localhost:3000/',
+      'sec-ch-ua': '"Not)A;Brand";v="8", "Chromium";v="138", "Google Chrome";v="138"',
+      'sec-ch-ua-mobile': '?0',
+      'sec-ch-ua-platform': '"Windows"',
+      'sec-fetch-dest': 'empty',
+      'sec-fetch-mode': 'cors',
+      'sec-fetch-site': 'cross-site',
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+      Via: '2.0 0e0034e6b4d6478909834eb510491848.cloudfront.net (CloudFront)',
+      'X-Amz-Cf-Id': 'VXlpGMq9YFeygDju6Bh2UcPquuTpxMOSvAIj9t7bnNYwyvwcJUvOmw==',
+      'X-Amzn-Trace-Id': 'Root=1-6891ecd4-6d16c17b0cff1a563f428b9f',
+      'X-Forwarded-For': '14.161.12.17, 15.158.13.102',
+      'X-Forwarded-Port': '443',
+      'X-Forwarded-Proto': 'https'
+    },
+    multiValueHeaders: {
+      Accept: [Array],
+      'Accept-Encoding': [Array],
+      'Accept-Language': [Array],
+      'CloudFront-Forwarded-Proto': [Array],
+      'CloudFront-Is-Desktop-Viewer': [Array],
+      'CloudFront-Is-Mobile-Viewer': [Array],
+      'CloudFront-Is-SmartTV-Viewer': [Array],
+      'CloudFront-Is-Tablet-Viewer': [Array],
+      'CloudFront-Viewer-ASN': [Array],
+      'CloudFront-Viewer-Country': [Array],
+      Host: [Array],
+      origin: [Array],
+      priority: [Array],
+      Referer: [Array],
+      'sec-ch-ua': [Array],
+      'sec-ch-ua-mobile': [Array],
+      'sec-ch-ua-platform': [Array],
+      'sec-fetch-dest': [Array],
+      'sec-fetch-mode': [Array],
+      'sec-fetch-site': [Array],
+      'User-Agent': [Array],
+      Via: [Array],
+      'X-Amz-Cf-Id': [Array],
+      'X-Amzn-Trace-Id': [Array],
+      'X-Forwarded-For': [Array],
+      'X-Forwarded-Port': [Array],
+      'X-Forwarded-Proto': [Array]
+    },
+    queryStringParameters: null,
+    multiValueQueryStringParameters: null,
+    pathParameters: { MeetingID: '6b94a991-abc6-4b5b-86de-b9350fb84804' },
+    stageVariables: null,
+    requestContext: {
+      resourceId: 'gais01',
+      resourcePath: '/meetings/{MeetingID}',
+      httpMethod: 'GET',
+      extendedRequestId: 'O1HxVGKFIAMEbdA=',
+      requestTime: '05/Aug/2025:11:36:52 +0000',
+      path: '/prod/meetings/6b94a991-abc6-4b5b-86de-b9350fb84804',
+      accountId: '647755634525',
+      protocol: 'HTTP/1.1',
+      stage: 'prod',
+      domainPrefix: '6xw6fqp8g4',
+      requestTimeEpoch: 1754393812925,
+      requestId: '7903c295-73cb-4685-b950-ae357ffad33d',
+      identity: [Object],
+      domainName: '6xw6fqp8g4.execute-api.us-east-1.amazonaws.com',
+      deploymentId: 'yu2tb4',
+      apiId: '6xw6fqp8g4'
+    },
+    body: null,
+    isBase64Encoded: false
+  }
+}
+[get-meeting] 6:36:53 PM END RequestId: da4a1b30-79f0-4427-ad8c-8084596a5203
+[get-meeting] 6:36:53 PM REPORT RequestId: da4a1b30-79f0-4427-ad8c-8084596a5203	Duration: 654.09 ms	Billed Duration: 655 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[get-meeting] 6:36:54 PM START RequestId: dbc33fb9-2be3-4153-a20d-c9da15cef257 Version: $LATEST
+[get-meeting] 6:36:54 PM 2025-08-05T11:36:54.956Z	dbc33fb9-2be3-4153-a20d-c9da15cef257	INFO	Getting meeting with meetingId:  6b94a991-abc6-4b5b-86de-b9350fb84804
+[get-meeting] 6:36:55 PM 2025-08-05T11:36:55.583Z	dbc33fb9-2be3-4153-a20d-c9da15cef257	ERROR	Failed to Get Meeting:  {
+  error: NotFound: Meeting <6b94a991-abc6-4b5b-86de-b9350fb84804> not found
+      at Object.qJ [as extractError] (file:///var/task/index.mjs:2:5259)
+      at constructor.e9 (file:///var/task/index.mjs:2:17862)
+      at constructor.callListeners (file:///var/task/index.mjs:2:48795)
+      at constructor.emit (file:///var/task/index.mjs:2:48503)
+      at constructor.emitEvent (file:///var/task/index.mjs:3:28427)
+      at constructor.t (file:///var/task/index.mjs:3:23986)
+      at Rc.runTo (file:///var/task/index.mjs:3:1217)
+      at file:///var/task/index.mjs:3:1429
+      at constructor.<anonymous> (file:///var/task/index.mjs:3:24200)
+      at constructor.<anonymous> (file:///var/task/index.mjs:3:28482) {
+    code: 'NotFound',
+    '[Code]': 'See error.Code for details.',
+    '[Message]': 'See error.Message for details.',
+    '[RequestId]': 'See error.RequestId for details.',
+    time: 2025-08-05T11:36:55.583Z,
+    requestId: '629f6176-295c-488a-8497-a6c9b8dea7d5',
+    statusCode: 404,
+    retryable: false,
+    retryDelay: 32.19432983211454
+  },
+  event: {
+    resource: '/meetings/{MeetingID}',
+    path: '/meetings/6b94a991-abc6-4b5b-86de-b9350fb84804',
+    httpMethod: 'GET',
+    headers: {
+      Accept: '*/*',
+      'Accept-Encoding': 'gzip, deflate, br, zstd',
+      'Accept-Language': 'en,ja;q=0.9,vi;q=0.8,en-US;q=0.7',
+      'CloudFront-Forwarded-Proto': 'https',
+      'CloudFront-Is-Desktop-Viewer': 'true',
+      'CloudFront-Is-Mobile-Viewer': 'false',
+      'CloudFront-Is-SmartTV-Viewer': 'false',
+      'CloudFront-Is-Tablet-Viewer': 'false',
+      'CloudFront-Viewer-ASN': '45899',
+      'CloudFront-Viewer-Country': 'VN',
+      Host: '6xw6fqp8g4.execute-api.us-east-1.amazonaws.com',
+      origin: 'http://localhost:3000',
+      priority: 'u=1, i',
+      Referer: 'http://localhost:3000/',
+      'sec-ch-ua': '"Not)A;Brand";v="8", "Chromium";v="138", "Google Chrome";v="138"',
+      'sec-ch-ua-mobile': '?0',
+      'sec-ch-ua-platform': '"Windows"',
+      'sec-fetch-dest': 'empty',
+      'sec-fetch-mode': 'cors',
+      'sec-fetch-site': 'cross-site',
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+      Via: '2.0 0e0034e6b4d6478909834eb510491848.cloudfront.net (CloudFront)',
+      'X-Amz-Cf-Id': 'UlHPCd02LvtQ07N1PHJOuILvqZHe63xSnhjml9LZ2RtgOc596MPsMA==',
+      'X-Amzn-Trace-Id': 'Root=1-6891ecd6-686467ef3f8da94d71a3f2d3',
+      'X-Forwarded-For': '14.161.12.17, 15.158.13.86',
+      'X-Forwarded-Port': '443',
+      'X-Forwarded-Proto': 'https'
+    },
+    multiValueHeaders: {
+      Accept: [Array],
+      'Accept-Encoding': [Array],
+      'Accept-Language': [Array],
+      'CloudFront-Forwarded-Proto': [Array],
+      'CloudFront-Is-Desktop-Viewer': [Array],
+      'CloudFront-Is-Mobile-Viewer': [Array],
+      'CloudFront-Is-SmartTV-Viewer': [Array],
+      'CloudFront-Is-Tablet-Viewer': [Array],
+      'CloudFront-Viewer-ASN': [Array],
+      'CloudFront-Viewer-Country': [Array],
+      Host: [Array],
+      origin: [Array],
+      priority: [Array],
+      Referer: [Array],
+      'sec-ch-ua': [Array],
+      'sec-ch-ua-mobile': [Array],
+      'sec-ch-ua-platform': [Array],
+      'sec-fetch-dest': [Array],
+      'sec-fetch-mode': [Array],
+      'sec-fetch-site': [Array],
+      'User-Agent': [Array],
+      Via: [Array],
+      'X-Amz-Cf-Id': [Array],
+      'X-Amzn-Trace-Id': [Array],
+      'X-Forwarded-For': [Array],
+      'X-Forwarded-Port': [Array],
+      'X-Forwarded-Proto': [Array]
+    },
+    queryStringParameters: null,
+    multiValueQueryStringParameters: null,
+    pathParameters: { MeetingID: '6b94a991-abc6-4b5b-86de-b9350fb84804' },
+    stageVariables: null,
+    requestContext: {
+      resourceId: 'gais01',
+      resourcePath: '/meetings/{MeetingID}',
+      httpMethod: 'GET',
+      extendedRequestId: 'O1HxpHrboAMELEw=',
+      requestTime: '05/Aug/2025:11:36:54 +0000',
+      path: '/prod/meetings/6b94a991-abc6-4b5b-86de-b9350fb84804',
+      accountId: '647755634525',
+      protocol: 'HTTP/1.1',
+      stage: 'prod',
+      domainPrefix: '6xw6fqp8g4',
+      requestTimeEpoch: 1754393814926,
+      requestId: '2b50ab4e-a5d6-4bc0-96c5-75d46953770e',
+      identity: [Object],
+      domainName: '6xw6fqp8g4.execute-api.us-east-1.amazonaws.com',
+      deploymentId: 'yu2tb4',
+      apiId: '6xw6fqp8g4'
+    },
+    body: null,
+    isBase64Encoded: false
+  }
+}
+[get-meeting] 6:36:55 PM END RequestId: dbc33fb9-2be3-4153-a20d-c9da15cef257
+[get-meeting] 6:36:55 PM REPORT RequestId: dbc33fb9-2be3-4153-a20d-c9da15cef257	Duration: 629.86 ms	Billed Duration: 630 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[get-meeting] 6:36:56 PM START RequestId: 47c75e79-9fe4-4117-bf8d-1acc91a1d464 Version: $LATEST
+[get-meeting] 6:36:56 PM 2025-08-05T11:36:56.351Z	47c75e79-9fe4-4117-bf8d-1acc91a1d464	INFO	Getting meeting with meetingId:  6b94a991-abc6-4b5b-86de-b9350fb84804
+[get-meeting] 6:36:56 PM 2025-08-05T11:36:56.991Z	47c75e79-9fe4-4117-bf8d-1acc91a1d464	ERROR	Failed to Get Meeting:  {
+  error: NotFound: Meeting <6b94a991-abc6-4b5b-86de-b9350fb84804> not found
+      at Object.qJ [as extractError] (file:///var/task/index.mjs:2:5259)
+      at constructor.e9 (file:///var/task/index.mjs:2:17862)
+      at constructor.callListeners (file:///var/task/index.mjs:2:48795)
+      at constructor.emit (file:///var/task/index.mjs:2:48503)
+      at constructor.emitEvent (file:///var/task/index.mjs:3:28427)
+      at constructor.t (file:///var/task/index.mjs:3:23986)
+      at Rc.runTo (file:///var/task/index.mjs:3:1217)
+      at file:///var/task/index.mjs:3:1429
+      at constructor.<anonymous> (file:///var/task/index.mjs:3:24200)
+      at constructor.<anonymous> (file:///var/task/index.mjs:3:28482) {
+    code: 'NotFound',
+    '[Code]': 'See error.Code for details.',
+    '[Message]': 'See error.Message for details.',
+    '[RequestId]': 'See error.RequestId for details.',
+    time: 2025-08-05T11:36:56.991Z,
+    requestId: 'a607635a-452e-47f9-9a01-961ac24456d3',
+    statusCode: 404,
+    retryable: false,
+    retryDelay: 96.67500134606092
+  },
+  event: {
+    resource: '/meetings/{MeetingID}',
+    path: '/meetings/6b94a991-abc6-4b5b-86de-b9350fb84804',
+    httpMethod: 'GET',
+    headers: {
+      Accept: '*/*',
+      'Accept-Encoding': 'gzip, deflate, br, zstd',
+      'Accept-Language': 'en,ja;q=0.9,vi;q=0.8,en-US;q=0.7',
+      'CloudFront-Forwarded-Proto': 'https',
+      'CloudFront-Is-Desktop-Viewer': 'true',
+      'CloudFront-Is-Mobile-Viewer': 'false',
+      'CloudFront-Is-SmartTV-Viewer': 'false',
+      'CloudFront-Is-Tablet-Viewer': 'false',
+      'CloudFront-Viewer-ASN': '45899',
+      'CloudFront-Viewer-Country': 'VN',
+      Host: '6xw6fqp8g4.execute-api.us-east-1.amazonaws.com',
+      origin: 'http://localhost:3000',
+      priority: 'u=1, i',
+      Referer: 'http://localhost:3000/',
+      'sec-ch-ua': '"Not)A;Brand";v="8", "Chromium";v="138", "Google Chrome";v="138"',
+      'sec-ch-ua-mobile': '?0',
+      'sec-ch-ua-platform': '"Windows"',
+      'sec-fetch-dest': 'empty',
+      'sec-fetch-mode': 'cors',
+      'sec-fetch-site': 'cross-site',
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+      Via: '2.0 0e0034e6b4d6478909834eb510491848.cloudfront.net (CloudFront)',
+      'X-Amz-Cf-Id': 'FdxdHplS499LhwU-AM-bBMa5fBbvwwotYZYaBKwVIP3u9idgrS0zHQ==',
+      'X-Amzn-Trace-Id': 'Root=1-6891ecd8-7fe070eb26d2af2356fe8042',
+      'X-Forwarded-For': '14.161.12.17, 15.158.13.116',
+      'X-Forwarded-Port': '443',
+      'X-Forwarded-Proto': 'https'
+    },
+    multiValueHeaders: {
+      Accept: [Array],
+      'Accept-Encoding': [Array],
+      'Accept-Language': [Array],
+      'CloudFront-Forwarded-Proto': [Array],
+      'CloudFront-Is-Desktop-Viewer': [Array],
+      'CloudFront-Is-Mobile-Viewer': [Array],
+      'CloudFront-Is-SmartTV-Viewer': [Array],
+      'CloudFront-Is-Tablet-Viewer': [Array],
+      'CloudFront-Viewer-ASN': [Array],
+      'CloudFront-Viewer-Country': [Array],
+      Host: [Array],
+      origin: [Array],
+      priority: [Array],
+      Referer: [Array],
+      'sec-ch-ua': [Array],
+      'sec-ch-ua-mobile': [Array],
+      'sec-ch-ua-platform': [Array],
+      'sec-fetch-dest': [Array],
+      'sec-fetch-mode': [Array],
+      'sec-fetch-site': [Array],
+      'User-Agent': [Array],
+      Via: [Array],
+      'X-Amz-Cf-Id': [Array],
+      'X-Amzn-Trace-Id': [Array],
+      'X-Forwarded-For': [Array],
+      'X-Forwarded-Port': [Array],
+      'X-Forwarded-Proto': [Array]
+    },
+    queryStringParameters: null,
+    multiValueQueryStringParameters: null,
+    pathParameters: { MeetingID: '6b94a991-abc6-4b5b-86de-b9350fb84804' },
+    stageVariables: null,
+    requestContext: {
+      resourceId: 'gais01',
+      resourcePath: '/meetings/{MeetingID}',
+      httpMethod: 'GET',
+      extendedRequestId: 'O1Hx3ETUIAMEECA=',
+      requestTime: '05/Aug/2025:11:36:56 +0000',
+      path: '/prod/meetings/6b94a991-abc6-4b5b-86de-b9350fb84804',
+      accountId: '647755634525',
+      protocol: 'HTTP/1.1',
+      stage: 'prod',
+      domainPrefix: '6xw6fqp8g4',
+      requestTimeEpoch: 1754393816331,
+      requestId: '46c28297-03e0-4709-8dcd-e724c9b672af',
+      identity: [Object],
+      domainName: '6xw6fqp8g4.execute-api.us-east-1.amazonaws.com',
+      deploymentId: 'yu2tb4',
+      apiId: '6xw6fqp8g4'
+    },
+    body: null,
+    isBase64Encoded: false
+  }
+}
+[get-meeting] 6:36:56 PM END RequestId: 47c75e79-9fe4-4117-bf8d-1acc91a1d464
+[get-meeting] 6:36:56 PM REPORT RequestId: 47c75e79-9fe4-4117-bf8d-1acc91a1d464	Duration: 644.90 ms	Billed Duration: 645 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[get-meeting] 6:36:58 PM START RequestId: f6bc2464-2f99-4c08-8eb0-07e14c6e2e45 Version: $LATEST
+[get-meeting] 6:36:58 PM 2025-08-05T11:36:58.977Z	f6bc2464-2f99-4c08-8eb0-07e14c6e2e45	INFO	Getting meeting with meetingId:  6b94a991-abc6-4b5b-86de-b9350fb84804
+[get-meeting] 6:36:59 PM 2025-08-05T11:36:59.596Z	f6bc2464-2f99-4c08-8eb0-07e14c6e2e45	ERROR	Failed to Get Meeting:  {
+  error: NotFound: Meeting <6b94a991-abc6-4b5b-86de-b9350fb84804> not found
+      at Object.qJ [as extractError] (file:///var/task/index.mjs:2:5259)
+      at constructor.e9 (file:///var/task/index.mjs:2:17862)
+      at constructor.callListeners (file:///var/task/index.mjs:2:48795)
+      at constructor.emit (file:///var/task/index.mjs:2:48503)
+      at constructor.emitEvent (file:///var/task/index.mjs:3:28427)
+      at constructor.t (file:///var/task/index.mjs:3:23986)
+      at Rc.runTo (file:///var/task/index.mjs:3:1217)
+      at file:///var/task/index.mjs:3:1429
+      at constructor.<anonymous> (file:///var/task/index.mjs:3:24200)
+      at constructor.<anonymous> (file:///var/task/index.mjs:3:28482) {
+    code: 'NotFound',
+    '[Code]': 'See error.Code for details.',
+    '[Message]': 'See error.Message for details.',
+    '[RequestId]': 'See error.RequestId for details.',
+    time: 2025-08-05T11:36:59.595Z,
+    requestId: 'aca2c918-efbc-49ac-9f96-51a6bc34f16c',
+    statusCode: 404,
+    retryable: false,
+    retryDelay: 64.06877045851844
+  },
+  event: {
+    resource: '/meetings/{MeetingID}',
+    path: '/meetings/6b94a991-abc6-4b5b-86de-b9350fb84804',
+    httpMethod: 'GET',
+    headers: {
+      Accept: '*/*',
+      'Accept-Encoding': 'gzip, deflate, br, zstd',
+      'Accept-Language': 'en,ja;q=0.9,vi;q=0.8,en-US;q=0.7',
+      'CloudFront-Forwarded-Proto': 'https',
+      'CloudFront-Is-Desktop-Viewer': 'true',
+      'CloudFront-Is-Mobile-Viewer': 'false',
+      'CloudFront-Is-SmartTV-Viewer': 'false',
+      'CloudFront-Is-Tablet-Viewer': 'false',
+      'CloudFront-Viewer-ASN': '45899',
+      'CloudFront-Viewer-Country': 'VN',
+      Host: '6xw6fqp8g4.execute-api.us-east-1.amazonaws.com',
+      origin: 'http://localhost:3000',
+      priority: 'u=1, i',
+      Referer: 'http://localhost:3000/',
+      'sec-ch-ua': '"Not)A;Brand";v="8", "Chromium";v="138", "Google Chrome";v="138"',
+      'sec-ch-ua-mobile': '?0',
+      'sec-ch-ua-platform': '"Windows"',
+      'sec-fetch-dest': 'empty',
+      'sec-fetch-mode': 'cors',
+      'sec-fetch-site': 'cross-site',
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+      Via: '2.0 0e0034e6b4d6478909834eb510491848.cloudfront.net (CloudFront)',
+      'X-Amz-Cf-Id': '4_OQQ1oRGXocn230V9oUDPrA2cP-t-lYy9H5Apk-TikTLWqC4ALZZA==',
+      'X-Amzn-Trace-Id': 'Root=1-6891ecda-2e552d30331711db5a6addc1',
+      'X-Forwarded-For': '14.161.12.17, 15.158.13.112',
+      'X-Forwarded-Port': '443',
+      'X-Forwarded-Proto': 'https'
+    },
+    multiValueHeaders: {
+      Accept: [Array],
+      'Accept-Encoding': [Array],
+      'Accept-Language': [Array],
+      'CloudFront-Forwarded-Proto': [Array],
+      'CloudFront-Is-Desktop-Viewer': [Array],
+      'CloudFront-Is-Mobile-Viewer': [Array],
+      'CloudFront-Is-SmartTV-Viewer': [Array],
+      'CloudFront-Is-Tablet-Viewer': [Array],
+      'CloudFront-Viewer-ASN': [Array],
+      'CloudFront-Viewer-Country': [Array],
+      Host: [Array],
+      origin: [Array],
+      priority: [Array],
+      Referer: [Array],
+      'sec-ch-ua': [Array],
+      'sec-ch-ua-mobile': [Array],
+      'sec-ch-ua-platform': [Array],
+      'sec-fetch-dest': [Array],
+      'sec-fetch-mode': [Array],
+      'sec-fetch-site': [Array],
+      'User-Agent': [Array],
+      Via: [Array],
+      'X-Amz-Cf-Id': [Array],
+      'X-Amzn-Trace-Id': [Array],
+      'X-Forwarded-For': [Array],
+      'X-Forwarded-Port': [Array],
+      'X-Forwarded-Proto': [Array]
+    },
+    queryStringParameters: null,
+    multiValueQueryStringParameters: null,
+    pathParameters: { MeetingID: '6b94a991-abc6-4b5b-86de-b9350fb84804' },
+    stageVariables: null,
+    requestContext: {
+      resourceId: 'gais01',
+      resourcePath: '/meetings/{MeetingID}',
+      httpMethod: 'GET',
+      extendedRequestId: 'O1HyRHZYoAMEr4A=',
+      requestTime: '05/Aug/2025:11:36:58 +0000',
+      path: '/prod/meetings/6b94a991-abc6-4b5b-86de-b9350fb84804',
+      accountId: '647755634525',
+      protocol: 'HTTP/1.1',
+      stage: 'prod',
+      domainPrefix: '6xw6fqp8g4',
+      requestTimeEpoch: 1754393818957,
+      requestId: '795eeef1-2433-46fb-bf6f-4de7a5d6eee2',
+      identity: [Object],
+      domainName: '6xw6fqp8g4.execute-api.us-east-1.amazonaws.com',
+      deploymentId: 'yu2tb4',
+      apiId: '6xw6fqp8g4'
+    },
+    body: null,
+    isBase64Encoded: false
+  }
+}
+[get-meeting] 6:36:59 PM END RequestId: f6bc2464-2f99-4c08-8eb0-07e14c6e2e45
+[get-meeting] 6:36:59 PM REPORT RequestId: f6bc2464-2f99-4c08-8eb0-07e14c6e2e45	Duration: 622.35 ms	Billed Duration: 623 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[get-meeting] 6:37:00 PM START RequestId: 8c1f2475-fd53-490b-a059-50f90fdad384 Version: $LATEST
+[get-meeting] 6:37:00 PM 2025-08-05T11:37:00.940Z	8c1f2475-fd53-490b-a059-50f90fdad384	INFO	Getting meeting with meetingId:  6b94a991-abc6-4b5b-86de-b9350fb84804
+[get-meeting] 6:37:01 PM 2025-08-05T11:37:01.559Z	8c1f2475-fd53-490b-a059-50f90fdad384	ERROR	Failed to Get Meeting:  {
+  error: NotFound: Meeting <6b94a991-abc6-4b5b-86de-b9350fb84804> not found
+      at Object.qJ [as extractError] (file:///var/task/index.mjs:2:5259)
+      at constructor.e9 (file:///var/task/index.mjs:2:17862)
+      at constructor.callListeners (file:///var/task/index.mjs:2:48795)
+      at constructor.emit (file:///var/task/index.mjs:2:48503)
+      at constructor.emitEvent (file:///var/task/index.mjs:3:28427)
+      at constructor.t (file:///var/task/index.mjs:3:23986)
+      at Rc.runTo (file:///var/task/index.mjs:3:1217)
+      at file:///var/task/index.mjs:3:1429
+      at constructor.<anonymous> (file:///var/task/index.mjs:3:24200)
+      at constructor.<anonymous> (file:///var/task/index.mjs:3:28482) {
+    code: 'NotFound',
+    '[Code]': 'See error.Code for details.',
+    '[Message]': 'See error.Message for details.',
+    '[RequestId]': 'See error.RequestId for details.',
+    time: 2025-08-05T11:37:01.559Z,
+    requestId: 'e9e49f87-24c4-444a-8cef-5719f08736e1',
+    statusCode: 404,
+    retryable: false,
+    retryDelay: 46.78083829250146
+  },
+  event: {
+    resource: '/meetings/{MeetingID}',
+    path: '/meetings/6b94a991-abc6-4b5b-86de-b9350fb84804',
+    httpMethod: 'GET',
+    headers: {
+      Accept: '*/*',
+      'Accept-Encoding': 'gzip, deflate, br, zstd',
+      'Accept-Language': 'en,ja;q=0.9,vi;q=0.8,en-US;q=0.7',
+      'CloudFront-Forwarded-Proto': 'https',
+      'CloudFront-Is-Desktop-Viewer': 'true',
+      'CloudFront-Is-Mobile-Viewer': 'false',
+      'CloudFront-Is-SmartTV-Viewer': 'false',
+      'CloudFront-Is-Tablet-Viewer': 'false',
+      'CloudFront-Viewer-ASN': '45899',
+      'CloudFront-Viewer-Country': 'VN',
+      Host: '6xw6fqp8g4.execute-api.us-east-1.amazonaws.com',
+      origin: 'http://localhost:3000',
+      priority: 'u=1, i',
+      Referer: 'http://localhost:3000/',
+      'sec-ch-ua': '"Not)A;Brand";v="8", "Chromium";v="138", "Google Chrome";v="138"',
+      'sec-ch-ua-mobile': '?0',
+      'sec-ch-ua-platform': '"Windows"',
+      'sec-fetch-dest': 'empty',
+      'sec-fetch-mode': 'cors',
+      'sec-fetch-site': 'cross-site',
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+      Via: '2.0 0e0034e6b4d6478909834eb510491848.cloudfront.net (CloudFront)',
+      'X-Amz-Cf-Id': 'OXSjzJZw16UzGWuxuqJujNrbIeDSBu5GRJPzT9jhx_33qnt4FCooRA==',
+      'X-Amzn-Trace-Id': 'Root=1-6891ecdc-2f43f955541dd9851a7c8285',
+      'X-Forwarded-For': '14.161.12.17, 15.158.13.117',
+      'X-Forwarded-Port': '443',
+      'X-Forwarded-Proto': 'https'
+    },
+    multiValueHeaders: {
+      Accept: [Array],
+      'Accept-Encoding': [Array],
+      'Accept-Language': [Array],
+      'CloudFront-Forwarded-Proto': [Array],
+      'CloudFront-Is-Desktop-Viewer': [Array],
+      'CloudFront-Is-Mobile-Viewer': [Array],
+      'CloudFront-Is-SmartTV-Viewer': [Array],
+      'CloudFront-Is-Tablet-Viewer': [Array],
+      'CloudFront-Viewer-ASN': [Array],
+      'CloudFront-Viewer-Country': [Array],
+      Host: [Array],
+      origin: [Array],
+      priority: [Array],
+      Referer: [Array],
+      'sec-ch-ua': [Array],
+      'sec-ch-ua-mobile': [Array],
+      'sec-ch-ua-platform': [Array],
+      'sec-fetch-dest': [Array],
+      'sec-fetch-mode': [Array],
+      'sec-fetch-site': [Array],
+      'User-Agent': [Array],
+      Via: [Array],
+      'X-Amz-Cf-Id': [Array],
+      'X-Amzn-Trace-Id': [Array],
+      'X-Forwarded-For': [Array],
+      'X-Forwarded-Port': [Array],
+      'X-Forwarded-Proto': [Array]
+    },
+    queryStringParameters: null,
+    multiValueQueryStringParameters: null,
+    pathParameters: { MeetingID: '6b94a991-abc6-4b5b-86de-b9350fb84804' },
+    stageVariables: null,
+    requestContext: {
+      resourceId: 'gais01',
+      resourcePath: '/meetings/{MeetingID}',
+      httpMethod: 'GET',
+      extendedRequestId: 'O1HylFBCIAMEnpw=',
+      requestTime: '05/Aug/2025:11:37:00 +0000',
+      path: '/prod/meetings/6b94a991-abc6-4b5b-86de-b9350fb84804',
+      accountId: '647755634525',
+      protocol: 'HTTP/1.1',
+      stage: 'prod',
+      domainPrefix: '6xw6fqp8g4',
+      requestTimeEpoch: 1754393820916,
+      requestId: '96c9cc7e-a684-4566-b534-41d26a6e715b',
+      identity: [Object],
+      domainName: '6xw6fqp8g4.execute-api.us-east-1.amazonaws.com',
+      deploymentId: 'yu2tb4',
+      apiId: '6xw6fqp8g4'
+    },
+    body: null,
+    isBase64Encoded: false
+  }
+}
+[get-meeting] 6:37:01 PM END RequestId: 8c1f2475-fd53-490b-a059-50f90fdad384
+[get-meeting] 6:37:01 PM REPORT RequestId: 8c1f2475-fd53-490b-a059-50f90fdad384	Duration: 622.05 ms	Billed Duration: 623 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[create-attendee] 6:37:00 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[create-attendee] 6:37:01 PM 2025-08-05T11:37:01.955Z	undefined	INFO	App DB_TABLES: {
+  USERS: 'users_dev',
+  TOURS: 'tours_dev',
+  WEBSOCKETCONNECTIONS: 'websocketconnections_dev',
+  CONNECTION_HISTORY: 'websocketconnections_history_dev',
+  TOUR_MAX_CONNECTIONS: 'tourmaxconnections_dev'
+}
+[create-attendee] 6:37:01 PM 2025-08-05T11:37:01.958Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[create-attendee] 6:37:01 PM START RequestId: 199b614e-52b7-4511-9c04-5eb0e5741765 Version: $LATEST
+[create-attendee] 6:37:01 PM 2025-08-05T11:37:01.971Z	199b614e-52b7-4511-9c04-5eb0e5741765	INFO	Creating attendee with meetingId:  7a7ca3d5-025a-47d3-8b3b-b493cbde4804 externalUserId:  Guide|1754393818622
+[create-attendee] 6:37:02 PM 2025-08-05T11:37:02.771Z	199b614e-52b7-4511-9c04-5eb0e5741765	INFO	Created Attendee Response:  3ba46831-64ac-730e-4089-cf11687f517a
+[create-attendee] 6:37:02 PM END RequestId: 199b614e-52b7-4511-9c04-5eb0e5741765
+[create-attendee] 6:37:02 PM REPORT RequestId: 199b614e-52b7-4511-9c04-5eb0e5741765	Duration: 809.86 ms	Billed Duration: 810 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 960.93 ms
+[start-meeting-transcription] 6:37:06 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[start-meeting-transcription] 6:37:07 PM 2025-08-05T11:37:07.460Z	undefined	INFO	App DB_TABLES: {
+  USERS: 'users_dev',
+  TOURS: 'tours_dev',
+  WEBSOCKETCONNECTIONS: 'websocketconnections_dev',
+  CONNECTION_HISTORY: 'websocketconnections_history_dev',
+  TOUR_MAX_CONNECTIONS: 'tourmaxconnections_dev'
+}
+[start-meeting-transcription] 6:37:07 PM 2025-08-05T11:37:07.467Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[start-meeting-transcription] 6:37:07 PM START RequestId: c477629a-a960-4bf0-90a6-c804bc98428a Version: $LATEST
+[start-meeting-transcription] 6:37:07 PM 2025-08-05T11:37:07.487Z	c477629a-a960-4bf0-90a6-c804bc98428a	INFO	Start MeetingTranscription with meetingId:  7a7ca3d5-025a-47d3-8b3b-b493cbde4804 languageCode:  ja-JP
+[start-meeting-transcription] 6:37:08 PM 2025-08-05T11:37:08.221Z	c477629a-a960-4bf0-90a6-c804bc98428a	INFO	Started Meeting Transcription Response:  {}
+[start-meeting-transcription] 6:37:08 PM END RequestId: c477629a-a960-4bf0-90a6-c804bc98428a
+[start-meeting-transcription] 6:37:08 PM REPORT RequestId: c477629a-a960-4bf0-90a6-c804bc98428a	Duration: 749.55 ms	Billed Duration: 750 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 1019.62 ms
+[get-meeting-by-tourid] 6:36:47 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[get-meeting-by-tourid] 6:36:48 PM 2025-08-05T11:36:48.491Z	undefined	INFO	App DB_TABLES: {
+  USERS: 'users_dev',
+  TOURS: 'tours_dev',
+  WEBSOCKETCONNECTIONS: 'websocketconnections_dev',
+  CONNECTION_HISTORY: 'websocketconnections_history_dev',
+  TOUR_MAX_CONNECTIONS: 'tourmaxconnections_dev'
+}
+[get-meeting-by-tourid] 6:36:48 PM 2025-08-05T11:36:48.494Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[get-meeting-by-tourid] 6:36:48 PM START RequestId: 1d1023b0-e52c-4ba5-817e-800b27e63772 Version: $LATEST
+[get-meeting-by-tourid] 6:36:48 PM 2025-08-05T11:36:48.522Z	1d1023b0-e52c-4ba5-817e-800b27e63772	INFO	Retrieving tour with tourId:  40a053a3-eb3c-45d4-b7ec-af73d19fad55
+[get-meeting-by-tourid] 6:36:49 PM 2025-08-05T11:36:49.100Z	1d1023b0-e52c-4ba5-817e-800b27e63772	INFO	Tour successfully retrieved:  {
+  maxConnection: 0,
+  nameOfCoursePersonInCharge: 'test0006',
+  numberOfReceiversInUse: 'test0006',
+  tourType: 'tour',
+  tourNumber: 'test0006',
+  useTheTranslationFunction: true,
+  updatedBy: '',
+  createdBy: 'a90dec4d-042f-4db3-8c8e-dd183c86923b',
+  coSponsoredCourseNumber: 'test0006',
+  planningSalesOfficeTeamName: 'test0006',
+  meetingId: '6b94a991-abc6-4b5b-86de-b9350fb84804',
+  departureDate: '2025-08-01',
+  planningAndSalesSignature: 'test0006',
+  courseName: 'test0006',
+  tourTestStatus: 'test',
+  tourConductorName: 'test0006',
+  createdAt: '2025-08-05T04:10:46.331Z',
+  numberOfSendingDevices: 'test0006',
+  returnDate: '2025-08-03',
+  deleteFlag: 0,
+  isMaxConnectionProcessed: true,
+  channelId: '853bd573-af95-4046-a3c9-a921d55a421b',
+  chatRestriction: 'allChat',
+  updatedAt: '2025-08-05T06:17:23.297Z',
+  subGuideFunctionAvailable: true,
+  tourId: '40a053a3-eb3c-45d4-b7ec-af73d19fad55'
+}
+[get-meeting-by-tourid] 6:36:49 PM END RequestId: 1d1023b0-e52c-4ba5-817e-800b27e63772
+[get-meeting-by-tourid] 6:36:49 PM REPORT RequestId: 1d1023b0-e52c-4ba5-817e-800b27e63772	Duration: 603.04 ms	Billed Duration: 604 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 920.77 ms
+[get-meeting-by-tourid] 6:36:51 PM START RequestId: 798b6dec-5593-4cd5-b7aa-4620ed50d4bf Version: $LATEST
+[get-meeting-by-tourid] 6:36:51 PM 2025-08-05T11:36:51.290Z	798b6dec-5593-4cd5-b7aa-4620ed50d4bf	INFO	Retrieving tour with tourId:  40a053a3-eb3c-45d4-b7ec-af73d19fad55
+[get-meeting-by-tourid] 6:36:51 PM 2025-08-05T11:36:51.775Z	798b6dec-5593-4cd5-b7aa-4620ed50d4bf	INFO	Tour successfully retrieved:  {
+  maxConnection: 0,
+  nameOfCoursePersonInCharge: 'test0006',
+  numberOfReceiversInUse: 'test0006',
+  tourType: 'tour',
+  tourNumber: 'test0006',
+  useTheTranslationFunction: true,
+  updatedBy: '',
+  createdBy: 'a90dec4d-042f-4db3-8c8e-dd183c86923b',
+  coSponsoredCourseNumber: 'test0006',
+  planningSalesOfficeTeamName: 'test0006',
+  meetingId: '6b94a991-abc6-4b5b-86de-b9350fb84804',
+  departureDate: '2025-08-01',
+  planningAndSalesSignature: 'test0006',
+  courseName: 'test0006',
+  tourTestStatus: 'test',
+  tourConductorName: 'test0006',
+  createdAt: '2025-08-05T04:10:46.331Z',
+  numberOfSendingDevices: 'test0006',
+  returnDate: '2025-08-03',
+  deleteFlag: 0,
+  isMaxConnectionProcessed: true,
+  channelId: '853bd573-af95-4046-a3c9-a921d55a421b',
+  chatRestriction: 'allChat',
+  updatedAt: '2025-08-05T06:17:23.297Z',
+  subGuideFunctionAvailable: true,
+  tourId: '40a053a3-eb3c-45d4-b7ec-af73d19fad55'
+}
+[get-meeting-by-tourid] 6:36:51 PM END RequestId: 798b6dec-5593-4cd5-b7aa-4620ed50d4bf
+[get-meeting-by-tourid] 6:36:51 PM REPORT RequestId: 798b6dec-5593-4cd5-b7aa-4620ed50d4bf	Duration: 487.28 ms	Billed Duration: 488 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[get-meeting-by-tourid] 6:36:54 PM START RequestId: d123c2de-bc85-4ac0-b8c3-99cfc9b51fb7 Version: $LATEST
+[get-meeting-by-tourid] 6:36:54 PM 2025-08-05T11:36:54.029Z	d123c2de-bc85-4ac0-b8c3-99cfc9b51fb7	INFO	Retrieving tour with tourId:  40a053a3-eb3c-45d4-b7ec-af73d19fad55
+[get-meeting-by-tourid] 6:36:54 PM 2025-08-05T11:36:54.493Z	d123c2de-bc85-4ac0-b8c3-99cfc9b51fb7	INFO	Tour successfully retrieved:  {
+  channelId: '853bd573-af95-4046-a3c9-a921d55a421b',
+  chatRestriction: 'allChat',
+  coSponsoredCourseNumber: 'test0006',
+  courseName: 'test0006',
+  createdAt: '2025-08-05T04:10:46.331Z',
+  createdBy: 'a90dec4d-042f-4db3-8c8e-dd183c86923b',
+  deleteFlag: 0,
+  departureDate: '2025-08-01',
+  isMaxConnectionProcessed: true,
+  maxConnection: 0,
+  meetingId: '6b94a991-abc6-4b5b-86de-b9350fb84804',
+  nameOfCoursePersonInCharge: 'test0006',
+  numberOfReceiversInUse: 'test0006',
+  numberOfSendingDevices: 'test0006',
+  planningAndSalesSignature: 'test0006',
+  planningSalesOfficeTeamName: 'test0006',
+  returnDate: '2025-08-03',
+  subGuideFunctionAvailable: true,
+  tourConductorName: 'test0006',
+  tourId: '40a053a3-eb3c-45d4-b7ec-af73d19fad55',
+  tourNumber: 'test0006',
+  tourTestStatus: 'test',
+  tourType: 'tour',
+  updatedAt: '2025-08-05T06:17:23.297Z',
+  updatedBy: '',
+  useTheTranslationFunction: true
+}
+[get-meeting-by-tourid] 6:36:54 PM END RequestId: d123c2de-bc85-4ac0-b8c3-99cfc9b51fb7
+[get-meeting-by-tourid] 6:36:54 PM REPORT RequestId: d123c2de-bc85-4ac0-b8c3-99cfc9b51fb7	Duration: 467.02 ms	Billed Duration: 468 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[get-meeting-by-tourid] 6:37:06 PM START RequestId: 49e60cc7-f07d-47d7-8321-9418d810f1b4 Version: $LATEST
+[get-meeting-by-tourid] 6:37:06 PM 2025-08-05T11:37:06.981Z	49e60cc7-f07d-47d7-8321-9418d810f1b4	INFO	Retrieving tour with tourId:  40a053a3-eb3c-45d4-b7ec-af73d19fad55
+[get-meeting-by-tourid] 6:37:07 PM 2025-08-05T11:37:07.512Z	49e60cc7-f07d-47d7-8321-9418d810f1b4	INFO	Tour successfully retrieved:  {
+  maxConnection: 0,
+  nameOfCoursePersonInCharge: 'test0006',
+  numberOfReceiversInUse: 'test0006',
+  tourType: 'tour',
+  tourNumber: 'test0006',
+  useTheTranslationFunction: true,
+  updatedBy: '',
+  createdBy: 'a90dec4d-042f-4db3-8c8e-dd183c86923b',
+  coSponsoredCourseNumber: 'test0006',
+  planningSalesOfficeTeamName: 'test0006',
+  meetingId: '7a7ca3d5-025a-47d3-8b3b-b493cbde4804',
+  departureDate: '2025-08-01',
+  planningAndSalesSignature: 'test0006',
+  courseName: 'test0006',
+  tourTestStatus: 'test',
+  tourConductorName: 'test0006',
+  createdAt: '2025-08-05T04:10:46.331Z',
+  numberOfSendingDevices: 'test0006',
+  returnDate: '2025-08-03',
+  deleteFlag: 0,
+  isMaxConnectionProcessed: true,
+  channelId: '0db7c76a-9be8-41d4-83e2-77eb0fcc7626',
+  chatRestriction: 'allChat',
+  updatedAt: '2025-08-05T06:17:23.297Z',
+  subGuideFunctionAvailable: true,
+  tourId: '40a053a3-eb3c-45d4-b7ec-af73d19fad55'
+}
+[get-meeting-by-tourid] 6:37:07 PM END RequestId: 49e60cc7-f07d-47d7-8321-9418d810f1b4
+[get-meeting-by-tourid] 6:37:07 PM REPORT RequestId: 49e60cc7-f07d-47d7-8321-9418d810f1b4	Duration: 571.36 ms	Billed Duration: 572 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[get-meeting-by-tourid] 6:37:09 PM START RequestId: 084e288c-b85d-484a-aa54-ef0dafa1ccdd Version: $LATEST
+[get-meeting-by-tourid] 6:37:09 PM 2025-08-05T11:37:09.961Z	084e288c-b85d-484a-aa54-ef0dafa1ccdd	INFO	Retrieving tour with tourId:  40a053a3-eb3c-45d4-b7ec-af73d19fad55
+[get-meeting-by-tourid] 6:37:10 PM 2025-08-05T11:37:10.482Z	084e288c-b85d-484a-aa54-ef0dafa1ccdd	INFO	Tour successfully retrieved:  {
+  maxConnection: 0,
+  nameOfCoursePersonInCharge: 'test0006',
+  numberOfReceiversInUse: 'test0006',
+  tourType: 'tour',
+  tourNumber: 'test0006',
+  useTheTranslationFunction: true,
+  updatedBy: '',
+  createdBy: 'a90dec4d-042f-4db3-8c8e-dd183c86923b',
+  coSponsoredCourseNumber: 'test0006',
+  planningSalesOfficeTeamName: 'test0006',
+  meetingId: '7a7ca3d5-025a-47d3-8b3b-b493cbde4804',
+  departureDate: '2025-08-01',
+  planningAndSalesSignature: 'test0006',
+  courseName: 'test0006',
+  tourTestStatus: 'test',
+  tourConductorName: 'test0006',
+  createdAt: '2025-08-05T04:10:46.331Z',
+  numberOfSendingDevices: 'test0006',
+  returnDate: '2025-08-03',
+  deleteFlag: 0,
+  isMaxConnectionProcessed: true,
+  channelId: '0db7c76a-9be8-41d4-83e2-77eb0fcc7626',
+  chatRestriction: 'allChat',
+  updatedAt: '2025-08-05T06:17:23.297Z',
+  subGuideFunctionAvailable: true,
+  tourId: '40a053a3-eb3c-45d4-b7ec-af73d19fad55'
+}
+[get-meeting-by-tourid] 6:37:10 PM END RequestId: 084e288c-b85d-484a-aa54-ef0dafa1ccdd
+[get-meeting-by-tourid] 6:37:10 PM REPORT RequestId: 084e288c-b85d-484a-aa54-ef0dafa1ccdd	Duration: 578.75 ms	Billed Duration: 579 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[update-meeting-by-tourid] 6:37:04 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[update-meeting-by-tourid] 6:37:05 PM 2025-08-05T11:37:05.473Z	undefined	INFO	App DB_TABLES: {
+  USERS: 'users_dev',
+  TOURS: 'tours_dev',
+  WEBSOCKETCONNECTIONS: 'websocketconnections_dev',
+  CONNECTION_HISTORY: 'websocketconnections_history_dev',
+  TOUR_MAX_CONNECTIONS: 'tourmaxconnections_dev'
+}
+[update-meeting-by-tourid] 6:37:05 PM 2025-08-05T11:37:05.480Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[update-meeting-by-tourid] 6:37:05 PM START RequestId: 774b4d06-a403-4713-85a4-ce275132b756 Version: $LATEST
+[update-meeting-by-tourid] 6:37:05 PM 2025-08-05T11:37:05.504Z	774b4d06-a403-4713-85a4-ce275132b756	INFO	Updating tour with tourId:  40a053a3-eb3c-45d4-b7ec-af73d19fad55 meetingId:  7a7ca3d5-025a-47d3-8b3b-b493cbde4804 channelId:  0db7c76a-9be8-41d4-83e2-77eb0fcc7626
+[update-meeting-by-tourid] 6:37:06 PM 2025-08-05T11:37:06.090Z	774b4d06-a403-4713-85a4-ce275132b756	INFO	Tour successfully updated:  {
+  tourId: '40a053a3-eb3c-45d4-b7ec-af73d19fad55',
+  ':meetingId': '7a7ca3d5-025a-47d3-8b3b-b493cbde4804',
+  ':channelId': '0db7c76a-9be8-41d4-83e2-77eb0fcc7626'
+}
+[update-meeting-by-tourid] 6:37:06 PM END RequestId: 774b4d06-a403-4713-85a4-ce275132b756
+[update-meeting-by-tourid] 6:37:06 PM REPORT RequestId: 774b4d06-a403-4713-85a4-ce275132b756	Duration: 614.50 ms	Billed Duration: 615 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 925.14 ms
+[connect] 6:36:50 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[connect] 6:36:51 PM 2025-08-05T11:36:51.078Z	undefined	INFO	App DB_TABLES: {
+  USERS: 'users_dev',
+  TOURS: 'tours_dev',
+  WEBSOCKETCONNECTIONS: 'websocketconnections_dev',
+  CONNECTION_HISTORY: 'websocketconnections_history_dev',
+  TOUR_MAX_CONNECTIONS: 'tourmaxconnections_dev'
+}
+[connect] 6:36:51 PM 2025-08-05T11:36:51.081Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[connect] 6:36:51 PM START RequestId: 888dc18b-b440-4bf8-87c5-56dd4f0619a2 Version: $LATEST
+[connect] 6:36:51 PM 2025-08-05T11:36:51.100Z	888dc18b-b440-4bf8-87c5-56dd4f0619a2	INFO	🔌 WebSocket connection event: O1Hw3ebLoAMCL8A=
+[connect] 6:36:51 PM END RequestId: 888dc18b-b440-4bf8-87c5-56dd4f0619a2
+[connect] 6:36:51 PM REPORT RequestId: 888dc18b-b440-4bf8-87c5-56dd4f0619a2	Duration: 2.70 ms	Billed Duration: 3 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 929.34 ms
+[connect] 6:36:55 PM 2025-08-05T11:36:55.303Z	995699dd-1a68-4d34-bfad-a866911fabc8	INFO	🔌 WebSocket connection event: O1Hxsc8KoAMCK-w=
+[connect] 6:36:55 PM START RequestId: 995699dd-1a68-4d34-bfad-a866911fabc8 Version: $LATEST
+[connect] 6:36:55 PM END RequestId: 995699dd-1a68-4d34-bfad-a866911fabc8
+[connect] 6:36:55 PM REPORT RequestId: 995699dd-1a68-4d34-bfad-a866911fabc8	Duration: 1.65 ms	Billed Duration: 2 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[disconnect] 6:37:06 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[disconnect] 6:37:07 PM 2025-08-05T11:37:07.416Z	undefined	INFO	App DB_TABLES: {
+  USERS: 'users_dev',
+  TOURS: 'tours_dev',
+  WEBSOCKETCONNECTIONS: 'websocketconnections_dev',
+  CONNECTION_HISTORY: 'websocketconnections_history_dev',
+  TOUR_MAX_CONNECTIONS: 'tourmaxconnections_dev'
+}
+[disconnect] 6:37:07 PM 2025-08-05T11:37:07.418Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[disconnect] 6:37:07 PM START RequestId: 0e0f3c4b-a08c-4a89-9382-dda85edca1ca Version: $LATEST
+[disconnect] 6:37:08 PM 2025-08-05T11:37:08.511Z	0e0f3c4b-a08c-4a89-9382-dda85edca1ca	INFO	✅ Disconnected and deleted connectionId: O1Hxsc8KoAMCK-w=
+[disconnect] 6:37:09 PM END RequestId: 0e0f3c4b-a08c-4a89-9382-dda85edca1ca
+[disconnect] 6:37:09 PM REPORT RequestId: 0e0f3c4b-a08c-4a89-9382-dda85edca1ca	Duration: 2103.45 ms	Billed Duration: 2104 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 951.79 ms
+[connect-state] 6:36:51 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[connect-state] 6:36:52 PM 2025-08-05T11:36:52.559Z	undefined	INFO	App DB_TABLES: {
+  USERS: 'users_dev',
+  TOURS: 'tours_dev',
+  WEBSOCKETCONNECTIONS: 'websocketconnections_dev',
+  CONNECTION_HISTORY: 'websocketconnections_history_dev',
+  TOUR_MAX_CONNECTIONS: 'tourmaxconnections_dev'
+}
+[connect-state] 6:36:52 PM 2025-08-05T11:36:52.561Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[connect-state] 6:36:52 PM START RequestId: 97163146-59b6-47b0-9e39-681235c16de2 Version: $LATEST
+[connect-state] 6:36:54 PM END RequestId: 97163146-59b6-47b0-9e39-681235c16de2
+[connect-state] 6:36:54 PM REPORT RequestId: 97163146-59b6-47b0-9e39-681235c16de2	Duration: 1578.30 ms	Billed Duration: 1579 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 935.15 ms
+[connect-state] 6:36:55 PM START RequestId: a0938052-7250-43de-8217-13fc53679854 Version: $LATEST
+[connect-state] 6:36:57 PM END RequestId: a0938052-7250-43de-8217-13fc53679854
+[connect-state] 6:36:57 PM REPORT RequestId: a0938052-7250-43de-8217-13fc53679854	Duration: 1466.21 ms	Billed Duration: 1467 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[get-meeting] 6:37:11 PM START RequestId: b71b126f-1dcc-44c9-affe-3593ffba3d93 Version: $LATEST
+[get-meeting] 6:37:11 PM 2025-08-05T11:37:11.241Z	b71b126f-1dcc-44c9-affe-3593ffba3d93	INFO	Getting meeting with meetingId:  7a7ca3d5-025a-47d3-8b3b-b493cbde4804
+[get-meeting] 6:37:11 PM 2025-08-05T11:37:11.868Z	b71b126f-1dcc-44c9-affe-3593ffba3d93	INFO	Get Meeting Response:  7a7ca3d5-025a-47d3-8b3b-b493cbde4804
+[get-meeting] 6:37:11 PM END RequestId: b71b126f-1dcc-44c9-affe-3593ffba3d93
+[get-meeting] 6:37:11 PM REPORT RequestId: b71b126f-1dcc-44c9-affe-3593ffba3d93	Duration: 629.04 ms	Billed Duration: 630 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[list-attendee] 6:37:16 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[list-attendee] 6:37:17 PM 2025-08-05T11:37:17.289Z	undefined	INFO	App DB_TABLES: {
+  USERS: 'users_dev',
+  TOURS: 'tours_dev',
+  WEBSOCKETCONNECTIONS: 'websocketconnections_dev',
+  CONNECTION_HISTORY: 'websocketconnections_history_dev',
+  TOUR_MAX_CONNECTIONS: 'tourmaxconnections_dev'
+}
+[list-attendee] 6:37:17 PM 2025-08-05T11:37:17.291Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[list-attendee] 6:37:17 PM START RequestId: 096361f6-e006-4f3a-8928-331511c4ad8a Version: $LATEST
+[list-attendee] 6:37:17 PM 2025-08-05T11:37:17.305Z	096361f6-e006-4f3a-8928-331511c4ad8a	INFO	List Attendees with meetingId:  7a7ca3d5-025a-47d3-8b3b-b493cbde4804
+[list-attendee] 6:37:18 PM 2025-08-05T11:37:18.041Z	096361f6-e006-4f3a-8928-331511c4ad8a	INFO	Current batch size: 2
+[list-attendee] 6:37:18 PM 2025-08-05T11:37:18.041Z	096361f6-e006-4f3a-8928-331511c4ad8a	INFO	Total attendees count: 2
+[list-attendee] 6:37:18 PM 2025-08-05T11:37:18.054Z	096361f6-e006-4f3a-8928-331511c4ad8a	INFO	List attendees: [
+  {
+    ExternalUserId: 'Guide|1754393818622',
+    AttendeeId: '3ba46831-64ac-730e-4089-cf11687f517a',
+    JoinToken: 'M2JhNDY4MzEtNjRhYy03MzBlLTQwODktY2YxMTY4N2Y1MTdhOjY5NWM1NDgwLTQ4YTgtNGNhYS05ZDBjLTE5MGUyOTYzMzJhOQ',
+    Capabilities: { Audio: 'SendReceive', Video: 'None', Content: 'None' }
+  },
+  {
+    ExternalUserId: 'User|1754393831257',
+    AttendeeId: '882ebcfb-12f9-110d-de4d-812fec6b0935',
+    JoinToken: 'ODgyZWJjZmItMTJmOS0xMTBkLWRlNGQtODEyZmVjNmIwOTM1OmU4YmU5OThiLTBmMDEtNGU3MS04MjVmLTg1YjFkMWZkMmQxOA',
+    Capabilities: { Audio: 'SendReceive', Video: 'None', Content: 'None' }
+  }
+]
+[list-attendee] 6:37:18 PM END RequestId: 096361f6-e006-4f3a-8928-331511c4ad8a
+[list-attendee] 6:37:18 PM REPORT RequestId: 096361f6-e006-4f3a-8928-331511c4ad8a	Duration: 757.34 ms	Billed Duration: 758 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 984.64 ms
+[connect] 6:37:11 PM START RequestId: 95a41aac-9d45-4261-b3fa-dd9fb6d84ae5 Version: $LATEST
+[connect] 6:37:11 PM 2025-08-05T11:37:11.271Z	95a41aac-9d45-4261-b3fa-dd9fb6d84ae5	INFO	🔌 WebSocket connection event: O1H0MfEioAMCKeA=
+[connect] 6:37:11 PM END RequestId: 95a41aac-9d45-4261-b3fa-dd9fb6d84ae5
+[connect] 6:37:11 PM REPORT RequestId: 95a41aac-9d45-4261-b3fa-dd9fb6d84ae5	Duration: 28.28 ms	Billed Duration: 29 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[connect-state] 6:37:11 PM START RequestId: 70ac4c8d-9860-44bd-8631-fb87c3110280 Version: $LATEST
+[connect-state] 6:37:13 PM END RequestId: 70ac4c8d-9860-44bd-8631-fb87c3110280
+[connect-state] 6:37:13 PM REPORT RequestId: 70ac4c8d-9860-44bd-8631-fb87c3110280	Duration: 1650.78 ms	Billed Duration: 1651 ms	Memory Size: 512 MB	Max Memory Used: 318 MB
+[create-attendee] 6:37:13 PM START RequestId: 8cbe978b-d4ab-40ae-9572-9f7a251f778f Version: $LATEST
+[create-attendee] 6:37:13 PM 2025-08-05T11:37:13.432Z	8cbe978b-d4ab-40ae-9572-9f7a251f778f	INFO	Creating attendee with meetingId:  7a7ca3d5-025a-47d3-8b3b-b493cbde4804 externalUserId:  User|1754393831257
+[create-attendee] 6:37:14 PM 2025-08-05T11:37:14.151Z	8cbe978b-d4ab-40ae-9572-9f7a251f778f	INFO	Created Attendee Response:  882ebcfb-12f9-110d-de4d-812fec6b0935
+[create-attendee] 6:37:14 PM END RequestId: 8cbe978b-d4ab-40ae-9572-9f7a251f778f
+[create-attendee] 6:37:14 PM REPORT RequestId: 8cbe978b-d4ab-40ae-9572-9f7a251f778f	Duration: 762.30 ms	Billed Duration: 763 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[create-app-instance-user] 6:37:19 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[create-app-instance-user] 6:37:20 PM 2025-08-05T11:37:20.795Z	undefined	INFO	App DB_TABLES: {
+  USERS: 'users_dev',
+  TOURS: 'tours_dev',
+  WEBSOCKETCONNECTIONS: 'websocketconnections_dev',
+  CONNECTION_HISTORY: 'websocketconnections_history_dev',
+  TOUR_MAX_CONNECTIONS: 'tourmaxconnections_dev'
+}
+[create-app-instance-user] 6:37:20 PM 2025-08-05T11:37:20.797Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[create-app-instance-user] 6:37:20 PM START RequestId: 8bf58faf-b53c-4e3e-8989-30d348029602 Version: $LATEST
+[create-app-instance-user] 6:37:20 PM 2025-08-05T11:37:20.808Z	8bf58faf-b53c-4e3e-8989-30d348029602	INFO	Creating App Instance User with appInstanceArn:  arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0 appInstanceUserId:  43531b4e-3f34-4a88-be40-7a238c749415 clientRequestToken:  aa4e5930-76fd-4729-a79e-4d146c1a2e33 name:  User1 expirationCriterion:  CREATED_TIMESTAMP expirationDays:  1
+[create-app-instance-user] 6:37:20 PM 2025-08-05T11:37:20.988Z	8bf58faf-b53c-4e3e-8989-30d348029602	INFO	Created App Instance User Response:  arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0/user/43531b4e-3f34-4a88-be40-7a238c749415
+[create-app-instance-user] 6:37:21 PM END RequestId: 8bf58faf-b53c-4e3e-8989-30d348029602
+[create-app-instance-user] 6:37:21 PM REPORT RequestId: 8bf58faf-b53c-4e3e-8989-30d348029602	Duration: 203.47 ms	Billed Duration: 204 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 918.27 ms
+[add-channel-membership] 6:37:22 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[add-channel-membership] 6:37:22 PM 2025-08-05T11:37:22.984Z	undefined	INFO	App DB_TABLES: {
+  USERS: 'users_dev',
+  TOURS: 'tours_dev',
+  WEBSOCKETCONNECTIONS: 'websocketconnections_dev',
+  CONNECTION_HISTORY: 'websocketconnections_history_dev',
+  TOUR_MAX_CONNECTIONS: 'tourmaxconnections_dev'
+}
+[add-channel-membership] 6:37:22 PM 2025-08-05T11:37:22.990Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[add-channel-membership] 6:37:22 PM START RequestId: d2b2314b-8be3-4030-93d5-e526823328dc Version: $LATEST
+[add-channel-membership] 6:37:23 PM 2025-08-05T11:37:23.008Z	d2b2314b-8be3-4030-93d5-e526823328dc	INFO	Creating Channel Membership with channelArn:  arn%3Aaws%3Achime%3Aus-east-1%3A647755634525%3Aapp-instance%2F1007fa5f-d281-43e6-ac7d-758a23201cc0%2Fchannel%2F0db7c76a-9be8-41d4-83e2-77eb0fcc7626 memberArn:  arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0/user/43531b4e-3f34-4a88-be40-7a238c749415 type: DEFAULT chimeBearer:  arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0/user/43531b4e-3f34-4a88-be40-7a238c749415
+[add-channel-membership] 6:37:23 PM 2025-08-05T11:37:23.211Z	d2b2314b-8be3-4030-93d5-e526823328dc	INFO	Created Channel Membership Response:  {
+  ChannelArn: 'arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0/channel/0db7c76a-9be8-41d4-83e2-77eb0fcc7626',
+  Member: {
+    Arn: 'arn:aws:chime:us-east-1:647755634525:app-instance/1007fa5f-d281-43e6-ac7d-758a23201cc0/user/43531b4e-3f34-4a88-be40-7a238c749415',
+    Name: 'User1'
+  },
+  SubChannelId: null
+}
+[add-channel-membership] 6:37:23 PM END RequestId: d2b2314b-8be3-4030-93d5-e526823328dc
+[add-channel-membership] 6:37:23 PM REPORT RequestId: d2b2314b-8be3-4030-93d5-e526823328dc	Duration: 233.44 ms	Billed Duration: 234 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 981.95 ms
+[get-meeting-by-tourid] 6:37:45 PM START RequestId: 4de0a516-5d26-4167-a215-920613fc21c3 Version: $LATEST
+[get-meeting-by-tourid] 6:37:45 PM 2025-08-05T11:37:45.826Z	4de0a516-5d26-4167-a215-920613fc21c3	INFO	Retrieving tour with tourId:  40a053a3-eb3c-45d4-b7ec-af73d19fad55
+[get-meeting-by-tourid] 6:37:46 PM 2025-08-05T11:37:46.340Z	4de0a516-5d26-4167-a215-920613fc21c3	INFO	Tour successfully retrieved:  {
+  channelId: '0db7c76a-9be8-41d4-83e2-77eb0fcc7626',
+  chatRestriction: 'allChat',
+  coSponsoredCourseNumber: 'test0006',
+  courseName: 'test0006',
+  createdAt: '2025-08-05T04:10:46.331Z',
+  createdBy: 'a90dec4d-042f-4db3-8c8e-dd183c86923b',
+  deleteFlag: 0,
+  departureDate: '2025-08-01',
+  isMaxConnectionProcessed: true,
+  maxConnection: 0,
+  meetingId: '7a7ca3d5-025a-47d3-8b3b-b493cbde4804',
+  nameOfCoursePersonInCharge: 'test0006',
+  numberOfReceiversInUse: 'test0006',
+  numberOfSendingDevices: 'test0006',
+  planningAndSalesSignature: 'test0006',
+  planningSalesOfficeTeamName: 'test0006',
+  returnDate: '2025-08-03',
+  subGuideFunctionAvailable: true,
+  tourConductorName: 'test0006',
+  tourId: '40a053a3-eb3c-45d4-b7ec-af73d19fad55',
+  tourNumber: 'test0006',
+  tourTestStatus: 'test',
+  tourType: 'tour',
+  updatedAt: '2025-08-05T06:17:23.297Z',
+  updatedBy: '',
+  useTheTranslationFunction: true
+}
+[get-meeting-by-tourid] 6:37:46 PM END RequestId: 4de0a516-5d26-4167-a215-920613fc21c3
+[get-meeting-by-tourid] 6:37:46 PM REPORT RequestId: 4de0a516-5d26-4167-a215-920613fc21c3	Duration: 517.93 ms	Billed Duration: 518 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[disconnect] 6:37:44 PM START RequestId: 7490f48c-bf95-40de-a9af-b1edfd7f53eb Version: $LATEST
+[disconnect] 6:37:45 PM 2025-08-05T11:37:45.621Z	7490f48c-bf95-40de-a9af-b1edfd7f53eb	INFO	✅ Disconnected and deleted connectionId: O1H0MfEioAMCKeA=
+[disconnect] 6:37:46 PM END RequestId: 7490f48c-bf95-40de-a9af-b1edfd7f53eb
+[disconnect] 6:37:46 PM REPORT RequestId: 7490f48c-bf95-40de-a9af-b1edfd7f53eb	Duration: 2117.59 ms	Billed Duration: 2118 ms	Memory Size: 512 MB	Max Memory Used: 318 MB
+[get-meeting-by-tourid] 6:38:13 PM START RequestId: ac66890b-892c-4d05-9bc3-c7c1fbf00c08 Version: $LATEST
+[get-meeting-by-tourid] 6:38:13 PM 2025-08-05T11:38:13.182Z	ac66890b-892c-4d05-9bc3-c7c1fbf00c08	INFO	Retrieving tour with tourId:  40a053a3-eb3c-45d4-b7ec-af73d19fad55
+[get-meeting-by-tourid] 6:38:13 PM 2025-08-05T11:38:13.659Z	ac66890b-892c-4d05-9bc3-c7c1fbf00c08	INFO	Tour successfully retrieved:  {
+  channelId: '0db7c76a-9be8-41d4-83e2-77eb0fcc7626',
+  chatRestriction: 'allChat',
+  coSponsoredCourseNumber: 'test0006',
+  courseName: 'test0006',
+  createdAt: '2025-08-05T04:10:46.331Z',
+  createdBy: 'a90dec4d-042f-4db3-8c8e-dd183c86923b',
+  deleteFlag: 0,
+  departureDate: '2025-08-01',
+  isMaxConnectionProcessed: true,
+  maxConnection: 0,
+  meetingId: '7a7ca3d5-025a-47d3-8b3b-b493cbde4804',
+  nameOfCoursePersonInCharge: 'test0006',
+  numberOfReceiversInUse: 'test0006',
+  numberOfSendingDevices: 'test0006',
+  planningAndSalesSignature: 'test0006',
+  planningSalesOfficeTeamName: 'test0006',
+  returnDate: '2025-08-03',
+  subGuideFunctionAvailable: true,
+  tourConductorName: 'test0006',
+  tourId: '40a053a3-eb3c-45d4-b7ec-af73d19fad55',
+  tourNumber: 'test0006',
+  tourTestStatus: 'test',
+  tourType: 'tour',
+  updatedAt: '2025-08-05T06:17:23.297Z',
+  updatedBy: '',
+  useTheTranslationFunction: true
+}
+[get-meeting-by-tourid] 6:38:13 PM END RequestId: ac66890b-892c-4d05-9bc3-c7c1fbf00c08
+[get-meeting-by-tourid] 6:38:13 PM REPORT RequestId: ac66890b-892c-4d05-9bc3-c7c1fbf00c08	Duration: 479.65 ms	Billed Duration: 480 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[get-meeting-by-tourid] 6:38:15 PM 2025-08-05T11:38:15.761Z	39684df7-f359-4270-97f3-046aef74e135	INFO	Retrieving tour with tourId:  40a053a3-eb3c-45d4-b7ec-af73d19fad55
+[get-meeting-by-tourid] 6:38:15 PM START RequestId: 39684df7-f359-4270-97f3-046aef74e135 Version: $LATEST
+[get-meeting-by-tourid] 6:38:16 PM 2025-08-05T11:38:16.232Z	39684df7-f359-4270-97f3-046aef74e135	INFO	Tour successfully retrieved:  {
+  maxConnection: 0,
+  nameOfCoursePersonInCharge: 'test0006',
+  numberOfReceiversInUse: 'test0006',
+  tourType: 'tour',
+  tourNumber: 'test0006',
+  useTheTranslationFunction: true,
+  updatedBy: '',
+  createdBy: 'a90dec4d-042f-4db3-8c8e-dd183c86923b',
+  coSponsoredCourseNumber: 'test0006',
+  planningSalesOfficeTeamName: 'test0006',
+  meetingId: '7a7ca3d5-025a-47d3-8b3b-b493cbde4804',
+  departureDate: '2025-08-01',
+  planningAndSalesSignature: 'test0006',
+  courseName: 'test0006',
+  tourTestStatus: 'test',
+  tourConductorName: 'test0006',
+  createdAt: '2025-08-05T04:10:46.331Z',
+  numberOfSendingDevices: 'test0006',
+  returnDate: '2025-08-03',
+  deleteFlag: 0,
+  isMaxConnectionProcessed: true,
+  channelId: '0db7c76a-9be8-41d4-83e2-77eb0fcc7626',
+  chatRestriction: 'allChat',
+  updatedAt: '2025-08-05T06:17:23.297Z',
+  subGuideFunctionAvailable: true,
+  tourId: '40a053a3-eb3c-45d4-b7ec-af73d19fad55'
+}
+[get-meeting-by-tourid] 6:38:16 PM END RequestId: 39684df7-f359-4270-97f3-046aef74e135
+[get-meeting-by-tourid] 6:38:16 PM REPORT RequestId: 39684df7-f359-4270-97f3-046aef74e135	Duration: 473.16 ms	Billed Duration: 474 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[get-meeting] 6:38:17 PM START RequestId: 934e1769-cddf-4b00-9e5f-8e558ef9fb0f Version: $LATEST
+[get-meeting] 6:38:17 PM 2025-08-05T11:38:17.061Z	934e1769-cddf-4b00-9e5f-8e558ef9fb0f	INFO	Getting meeting with meetingId:  7a7ca3d5-025a-47d3-8b3b-b493cbde4804
+[get-meeting] 6:38:17 PM 2025-08-05T11:38:17.782Z	934e1769-cddf-4b00-9e5f-8e558ef9fb0f	INFO	Get Meeting Response:  7a7ca3d5-025a-47d3-8b3b-b493cbde4804
+[get-meeting] 6:38:17 PM END RequestId: 934e1769-cddf-4b00-9e5f-8e558ef9fb0f
+[get-meeting] 6:38:17 PM REPORT RequestId: 934e1769-cddf-4b00-9e5f-8e558ef9fb0f	Duration: 771.29 ms	Billed Duration: 772 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[get-meeting] 6:38:18 PM START RequestId: 6d337576-f34e-4eda-ae00-546c85091e13 Version: $LATEST
+[get-meeting] 6:38:18 PM 2025-08-05T11:38:18.581Z	6d337576-f34e-4eda-ae00-546c85091e13	INFO	Getting meeting with meetingId:  7a7ca3d5-025a-47d3-8b3b-b493cbde4804
+[get-meeting] 6:38:19 PM 2025-08-05T11:38:19.230Z	6d337576-f34e-4eda-ae00-546c85091e13	INFO	Get Meeting Response:  7a7ca3d5-025a-47d3-8b3b-b493cbde4804
+[get-meeting] 6:38:19 PM END RequestId: 6d337576-f34e-4eda-ae00-546c85091e13
+[get-meeting] 6:38:19 PM REPORT RequestId: 6d337576-f34e-4eda-ae00-546c85091e13	Duration: 696.08 ms	Billed Duration: 697 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[connect] 6:38:17 PM START RequestId: 65aa8a7d-c5fa-4c2f-af51-b33f6fc1e194 Version: $LATEST
+[connect] 6:38:17 PM 2025-08-05T11:38:17.055Z	65aa8a7d-c5fa-4c2f-af51-b33f6fc1e194	INFO	🔌 WebSocket connection event: O1H-ecpxIAMCKQQ=
+[connect] 6:38:17 PM END RequestId: 65aa8a7d-c5fa-4c2f-af51-b33f6fc1e194
+[connect] 6:38:17 PM REPORT RequestId: 65aa8a7d-c5fa-4c2f-af51-b33f6fc1e194	Duration: 29.96 ms	Billed Duration: 30 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[connect-state] 6:38:17 PM START RequestId: b695ea43-8342-45e4-bac7-b685ccf489cc Version: $LATEST
+[connect-state] 6:38:18 PM END RequestId: b695ea43-8342-45e4-bac7-b685ccf489cc
+[connect-state] 6:38:18 PM REPORT RequestId: b695ea43-8342-45e4-bac7-b685ccf489cc	Duration: 1490.20 ms	Billed Duration: 1491 ms	Memory Size: 512 MB	Max Memory Used: 318 MB
+[disconnect] 6:39:46 PM START RequestId: 7dfc82d7-9550-4eb4-b521-f9f549e10068 Version: $LATEST
+[disconnect] 6:39:47 PM 2025-08-05T11:39:47.264Z	7dfc82d7-9550-4eb4-b521-f9f549e10068	INFO	✅ Disconnected and deleted connectionId: O1H-ecpxIAMCKQQ=
+[disconnect] 6:39:48 PM END RequestId: 7dfc82d7-9550-4eb4-b521-f9f549e10068
+[disconnect] 6:39:48 PM REPORT RequestId: 7dfc82d7-9550-4eb4-b521-f9f549e10068	Duration: 1956.80 ms	Billed Duration: 1957 ms	Memory Size: 512 MB	Max Memory Used: 318 MB
+[get-meeting] 6:39:52 PM START RequestId: 3b59757b-55a1-4529-b9c2-aae7cb29f94a Version: $LATEST
+[get-meeting] 6:39:52 PM 2025-08-05T11:39:52.120Z	3b59757b-55a1-4529-b9c2-aae7cb29f94a	INFO	Getting meeting with meetingId:  7a7ca3d5-025a-47d3-8b3b-b493cbde4804
+[get-meeting] 6:39:52 PM 2025-08-05T11:39:52.738Z	3b59757b-55a1-4529-b9c2-aae7cb29f94a	INFO	Get Meeting Response:  7a7ca3d5-025a-47d3-8b3b-b493cbde4804
+[get-meeting] 6:39:52 PM END RequestId: 3b59757b-55a1-4529-b9c2-aae7cb29f94a
+[get-meeting] 6:39:52 PM REPORT RequestId: 3b59757b-55a1-4529-b9c2-aae7cb29f94a	Duration: 620.66 ms	Billed Duration: 621 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[get-meeting] 6:39:53 PM START RequestId: fbe58610-5cdb-4bcb-a9d5-7067382ad9a9 Version: $LATEST
+[get-meeting] 6:39:53 PM 2025-08-05T11:39:53.510Z	fbe58610-5cdb-4bcb-a9d5-7067382ad9a9	INFO	Getting meeting with meetingId:  7a7ca3d5-025a-47d3-8b3b-b493cbde4804
+[get-meeting] 6:39:54 PM 2025-08-05T11:39:54.113Z	fbe58610-5cdb-4bcb-a9d5-7067382ad9a9	INFO	Get Meeting Response:  7a7ca3d5-025a-47d3-8b3b-b493cbde4804
+[get-meeting] 6:39:54 PM END RequestId: fbe58610-5cdb-4bcb-a9d5-7067382ad9a9
+[get-meeting] 6:39:54 PM REPORT RequestId: fbe58610-5cdb-4bcb-a9d5-7067382ad9a9	Duration: 605.15 ms	Billed Duration: 606 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[get-meeting-by-tourid] 6:39:48 PM START RequestId: 2af31697-26d1-4214-93be-6cded9825a80 Version: $LATEST
+[get-meeting-by-tourid] 6:39:48 PM 2025-08-05T11:39:48.075Z	2af31697-26d1-4214-93be-6cded9825a80	INFO	Retrieving tour with tourId:  40a053a3-eb3c-45d4-b7ec-af73d19fad55
+[get-meeting-by-tourid] 6:39:48 PM 2025-08-05T11:39:48.550Z	2af31697-26d1-4214-93be-6cded9825a80	INFO	Tour successfully retrieved:  {
+  maxConnection: 0,
+  nameOfCoursePersonInCharge: 'test0006',
+  numberOfReceiversInUse: 'test0006',
+  tourType: 'tour',
+  tourNumber: 'test0006',
+  useTheTranslationFunction: true,
+  updatedBy: '',
+  createdBy: 'a90dec4d-042f-4db3-8c8e-dd183c86923b',
+  coSponsoredCourseNumber: 'test0006',
+  planningSalesOfficeTeamName: 'test0006',
+  meetingId: '7a7ca3d5-025a-47d3-8b3b-b493cbde4804',
+  departureDate: '2025-08-01',
+  planningAndSalesSignature: 'test0006',
+  courseName: 'test0006',
+  tourTestStatus: 'test',
+  tourConductorName: 'test0006',
+  createdAt: '2025-08-05T04:10:46.331Z',
+  numberOfSendingDevices: 'test0006',
+  returnDate: '2025-08-03',
+  deleteFlag: 0,
+  isMaxConnectionProcessed: true,
+  channelId: '0db7c76a-9be8-41d4-83e2-77eb0fcc7626',
+  chatRestriction: 'allChat',
+  updatedAt: '2025-08-05T06:17:23.297Z',
+  subGuideFunctionAvailable: true,
+  tourId: '40a053a3-eb3c-45d4-b7ec-af73d19fad55'
+}
+[get-meeting-by-tourid] 6:39:48 PM END RequestId: 2af31697-26d1-4214-93be-6cded9825a80
+[get-meeting-by-tourid] 6:39:48 PM REPORT RequestId: 2af31697-26d1-4214-93be-6cded9825a80	Duration: 478.33 ms	Billed Duration: 479 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[get-meeting-by-tourid] 6:39:50 PM 2025-08-05T11:39:50.899Z	2b80e352-f0a8-4f1d-be17-e0aa141aa9ec	INFO	Retrieving tour with tourId:  40a053a3-eb3c-45d4-b7ec-af73d19fad55
+[get-meeting-by-tourid] 6:39:50 PM START RequestId: 2b80e352-f0a8-4f1d-be17-e0aa141aa9ec Version: $LATEST
+[get-meeting-by-tourid] 6:39:51 PM 2025-08-05T11:39:51.354Z	2b80e352-f0a8-4f1d-be17-e0aa141aa9ec	INFO	Tour successfully retrieved:  {
+  maxConnection: 0,
+  nameOfCoursePersonInCharge: 'test0006',
+  numberOfReceiversInUse: 'test0006',
+  tourType: 'tour',
+  tourNumber: 'test0006',
+  useTheTranslationFunction: true,
+  updatedBy: '',
+  createdBy: 'a90dec4d-042f-4db3-8c8e-dd183c86923b',
+  coSponsoredCourseNumber: 'test0006',
+  planningSalesOfficeTeamName: 'test0006',
+  meetingId: '7a7ca3d5-025a-47d3-8b3b-b493cbde4804',
+  departureDate: '2025-08-01',
+  planningAndSalesSignature: 'test0006',
+  courseName: 'test0006',
+  tourTestStatus: 'test',
+  tourConductorName: 'test0006',
+  createdAt: '2025-08-05T04:10:46.331Z',
+  numberOfSendingDevices: 'test0006',
+  returnDate: '2025-08-03',
+  deleteFlag: 0,
+  isMaxConnectionProcessed: true,
+  channelId: '0db7c76a-9be8-41d4-83e2-77eb0fcc7626',
+  chatRestriction: 'allChat',
+  updatedAt: '2025-08-05T06:17:23.297Z',
+  subGuideFunctionAvailable: true,
+  tourId: '40a053a3-eb3c-45d4-b7ec-af73d19fad55'
+}
+[get-meeting-by-tourid] 6:39:51 PM END RequestId: 2b80e352-f0a8-4f1d-be17-e0aa141aa9ec
+[get-meeting-by-tourid] 6:39:51 PM REPORT RequestId: 2b80e352-f0a8-4f1d-be17-e0aa141aa9ec	Duration: 458.28 ms	Billed Duration: 459 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[connect] 6:39:52 PM START RequestId: 94ce1a22-5b22-4461-8ca4-9c11b087a688 Version: $LATEST
+[connect] 6:39:52 PM 2025-08-05T11:39:52.168Z	94ce1a22-5b22-4461-8ca4-9c11b087a688	INFO	🔌 WebSocket connection event: O1INVcMCIAMCJBA=
+[connect] 6:39:52 PM END RequestId: 94ce1a22-5b22-4461-8ca4-9c11b087a688
+[connect] 6:39:52 PM REPORT RequestId: 94ce1a22-5b22-4461-8ca4-9c11b087a688	Duration: 2.54 ms	Billed Duration: 3 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[connect-state] 6:39:52 PM START RequestId: a81b7dc2-5fb8-4ec2-8de4-99ff0e8a5aec Version: $LATEST
+[connect-state] 6:39:53 PM END RequestId: a81b7dc2-5fb8-4ec2-8de4-99ff0e8a5aec
+[connect-state] 6:39:53 PM REPORT RequestId: a81b7dc2-5fb8-4ec2-8de4-99ff0e8a5aec	Duration: 1476.78 ms	Billed Duration: 1477 ms	Memory Size: 512 MB	Max Memory Used: 318 MB
+[default] 6:40:51 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[default] 6:40:51 PM 2025-08-05T11:40:51.762Z	undefined	INFO	App DB_TABLES: {
+  USERS: 'users_dev',
+  TOURS: 'tours_dev',
+  WEBSOCKETCONNECTIONS: 'websocketconnections_dev',
+  CONNECTION_HISTORY: 'websocketconnections_history_dev',
+  TOUR_MAX_CONNECTIONS: 'tourmaxconnections_dev'
+}
+[default] 6:40:51 PM 2025-08-05T11:40:51.764Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[default] 6:40:51 PM START RequestId: 4aa1f650-2e1d-4194-91c2-7435688e217f Version: $LATEST
+[default] 6:40:51 PM 2025-08-05T11:40:51.772Z	4aa1f650-2e1d-4194-91c2-7435688e217f	INFO	✅ Received ping to keep connection alive
+[default] 6:40:51 PM END RequestId: 4aa1f650-2e1d-4194-91c2-7435688e217f
+[default] 6:40:51 PM REPORT RequestId: 4aa1f650-2e1d-4194-91c2-7435688e217f	Duration: 3.06 ms	Billed Duration: 4 ms	Memory Size: 512 MB	Max Memory Used: 68 MB	Init Duration: 185.70 ms
+[disconnect] 6:42:24 PM START RequestId: e352115d-1db3-4b7d-b616-ddece70d0c4e Version: $LATEST
+[disconnect] 6:42:25 PM 2025-08-05T11:42:25.830Z	e352115d-1db3-4b7d-b616-ddece70d0c4e	INFO	✅ Disconnected and deleted connectionId: O1INVcMCIAMCJBA=
+[disconnect] 6:42:26 PM END RequestId: e352115d-1db3-4b7d-b616-ddece70d0c4e
+[disconnect] 6:42:26 PM REPORT RequestId: e352115d-1db3-4b7d-b616-ddece70d0c4e	Duration: 2014.02 ms	Billed Duration: 2015 ms	Memory Size: 512 MB	Max Memory Used: 318 MB
+[get-meeting-by-tourid] 6:42:26 PM START RequestId: 70e42790-f8c5-483c-adb5-d8a3f70dae1e Version: $LATEST
+[get-meeting-by-tourid] 6:42:26 PM 2025-08-05T11:42:26.779Z	70e42790-f8c5-483c-adb5-d8a3f70dae1e	INFO	Retrieving tour with tourId:  40a053a3-eb3c-45d4-b7ec-af73d19fad55
+[get-meeting-by-tourid] 6:42:27 PM 2025-08-05T11:42:27.232Z	70e42790-f8c5-483c-adb5-d8a3f70dae1e	INFO	Tour successfully retrieved:  {
+  maxConnection: 0,
+  nameOfCoursePersonInCharge: 'test0006',
+  numberOfReceiversInUse: 'test0006',
+  tourType: 'tour',
+  tourNumber: 'test0006',
+  useTheTranslationFunction: true,
+  updatedBy: '',
+  createdBy: 'a90dec4d-042f-4db3-8c8e-dd183c86923b',
+  coSponsoredCourseNumber: 'test0006',
+  planningSalesOfficeTeamName: 'test0006',
+  meetingId: '7a7ca3d5-025a-47d3-8b3b-b493cbde4804',
+  departureDate: '2025-08-01',
+  planningAndSalesSignature: 'test0006',
+  courseName: 'test0006',
+  tourTestStatus: 'test',
+  tourConductorName: 'test0006',
+  createdAt: '2025-08-05T04:10:46.331Z',
+  numberOfSendingDevices: 'test0006',
+  returnDate: '2025-08-03',
+  deleteFlag: 0,
+  isMaxConnectionProcessed: true,
+  channelId: '0db7c76a-9be8-41d4-83e2-77eb0fcc7626',
+  chatRestriction: 'allChat',
+  updatedAt: '2025-08-05T06:17:23.297Z',
+  subGuideFunctionAvailable: true,
+  tourId: '40a053a3-eb3c-45d4-b7ec-af73d19fad55'
+}
+[get-meeting-by-tourid] 6:42:27 PM END RequestId: 70e42790-f8c5-483c-adb5-d8a3f70dae1e
+[get-meeting-by-tourid] 6:42:27 PM REPORT RequestId: 70e42790-f8c5-483c-adb5-d8a3f70dae1e	Duration: 457.08 ms	Billed Duration: 458 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[default] 6:44:51 PM START RequestId: 98bf26cf-5782-4b94-be1b-216f1c258a7f Version: $LATEST
+[default] 6:44:51 PM 2025-08-05T11:44:51.544Z	98bf26cf-5782-4b94-be1b-216f1c258a7f	INFO	✅ Received ping to keep connection alive
+[default] 6:44:51 PM END RequestId: 98bf26cf-5782-4b94-be1b-216f1c258a7f
+[default] 6:44:51 PM REPORT RequestId: 98bf26cf-5782-4b94-be1b-216f1c258a7f	Duration: 80.59 ms	Billed Duration: 81 ms	Memory Size: 512 MB	Max Memory Used: 69 MB
+[get-meeting-by-tourid] 6:47:36 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[get-meeting-by-tourid] 6:47:37 PM 2025-08-05T11:47:37.239Z	undefined	INFO	App DB_TABLES: {
+  USERS: 'users_dev',
+  TOURS: 'tours_dev',
+  WEBSOCKETCONNECTIONS: 'websocketconnections_dev',
+  CONNECTION_HISTORY: 'websocketconnections_history_dev',
+  TOUR_MAX_CONNECTIONS: 'tourmaxconnections_dev'
+}
+[get-meeting-by-tourid] 6:47:37 PM 2025-08-05T11:47:37.241Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[get-meeting-by-tourid] 6:47:37 PM START RequestId: e66fab69-ee6e-49d7-b80f-4fe6ce8ebff7 Version: $LATEST
+[get-meeting-by-tourid] 6:47:37 PM 2025-08-05T11:47:37.261Z	e66fab69-ee6e-49d7-b80f-4fe6ce8ebff7	INFO	Retrieving tour with tourId:  40a053a3-eb3c-45d4-b7ec-af73d19fad55
+[get-meeting-by-tourid] 6:47:37 PM 2025-08-05T11:47:37.862Z	e66fab69-ee6e-49d7-b80f-4fe6ce8ebff7	INFO	Tour successfully retrieved:  {
+  maxConnection: 0,
+  nameOfCoursePersonInCharge: 'test0006',
+  numberOfReceiversInUse: 'test0006',
+  tourType: 'tour',
+  tourNumber: 'test0006',
+  useTheTranslationFunction: true,
+  updatedBy: '',
+  createdBy: 'a90dec4d-042f-4db3-8c8e-dd183c86923b',
+  coSponsoredCourseNumber: 'test0006',
+  planningSalesOfficeTeamName: 'test0006',
+  meetingId: '7a7ca3d5-025a-47d3-8b3b-b493cbde4804',
+  departureDate: '2025-08-01',
+  planningAndSalesSignature: 'test0006',
+  courseName: 'test0006',
+  tourTestStatus: 'test',
+  tourConductorName: 'test0006',
+  createdAt: '2025-08-05T04:10:46.331Z',
+  numberOfSendingDevices: 'test0006',
+  returnDate: '2025-08-03',
+  deleteFlag: 0,
+  isMaxConnectionProcessed: true,
+  channelId: '0db7c76a-9be8-41d4-83e2-77eb0fcc7626',
+  chatRestriction: 'allChat',
+  updatedAt: '2025-08-05T06:17:23.297Z',
+  subGuideFunctionAvailable: true,
+  tourId: '40a053a3-eb3c-45d4-b7ec-af73d19fad55'
+}
+[get-meeting-by-tourid] 6:47:37 PM END RequestId: e66fab69-ee6e-49d7-b80f-4fe6ce8ebff7
+[get-meeting-by-tourid] 6:47:37 PM REPORT RequestId: e66fab69-ee6e-49d7-b80f-4fe6ce8ebff7	Duration: 631.00 ms	Billed Duration: 631 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 929.55 ms
+[default] 6:48:51 PM START RequestId: f861e3a9-a56d-4b83-b242-53e46a393216 Version: $LATEST
+[default] 6:48:51 PM 2025-08-05T11:48:51.463Z	f861e3a9-a56d-4b83-b242-53e46a393216	INFO	✅ Received ping to keep connection alive
+[default] 6:48:51 PM END RequestId: f861e3a9-a56d-4b83-b242-53e46a393216
+[default] 6:48:51 PM REPORT RequestId: f861e3a9-a56d-4b83-b242-53e46a393216	Duration: 28.14 ms	Billed Duration: 29 ms	Memory Size: 512 MB	Max Memory Used: 69 MB
+[get-meeting-by-tourid] 6:52:47 PM START RequestId: 2d032f29-b534-4f8c-9ca8-541810f86065 Version: $LATEST
+[get-meeting-by-tourid] 6:52:47 PM 2025-08-05T11:52:47.820Z	2d032f29-b534-4f8c-9ca8-541810f86065	INFO	Retrieving tour with tourId:  40a053a3-eb3c-45d4-b7ec-af73d19fad55
+[get-meeting-by-tourid] 6:52:48 PM 2025-08-05T11:52:48.300Z	2d032f29-b534-4f8c-9ca8-541810f86065	INFO	Tour successfully retrieved:  {
+  maxConnection: 0,
+  nameOfCoursePersonInCharge: 'test0006',
+  numberOfReceiversInUse: 'test0006',
+  tourType: 'tour',
+  tourNumber: 'test0006',
+  useTheTranslationFunction: true,
+  updatedBy: '',
+  createdBy: 'a90dec4d-042f-4db3-8c8e-dd183c86923b',
+  coSponsoredCourseNumber: 'test0006',
+  planningSalesOfficeTeamName: 'test0006',
+  meetingId: '7a7ca3d5-025a-47d3-8b3b-b493cbde4804',
+  departureDate: '2025-08-01',
+  planningAndSalesSignature: 'test0006',
+  courseName: 'test0006',
+  tourTestStatus: 'test',
+  tourConductorName: 'test0006',
+  createdAt: '2025-08-05T04:10:46.331Z',
+  numberOfSendingDevices: 'test0006',
+  returnDate: '2025-08-03',
+  deleteFlag: 0,
+  isMaxConnectionProcessed: true,
+  channelId: '0db7c76a-9be8-41d4-83e2-77eb0fcc7626',
+  chatRestriction: 'allChat',
+  updatedAt: '2025-08-05T06:17:23.297Z',
+  subGuideFunctionAvailable: true,
+  tourId: '40a053a3-eb3c-45d4-b7ec-af73d19fad55'
+}
+[get-meeting-by-tourid] 6:52:48 PM END RequestId: 2d032f29-b534-4f8c-9ca8-541810f86065
+[get-meeting-by-tourid] 6:52:48 PM REPORT RequestId: 2d032f29-b534-4f8c-9ca8-541810f86065	Duration: 542.84 ms	Billed Duration: 543 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[default] 6:52:51 PM START RequestId: f9512e83-652d-428f-af8c-7c00a3b09ff1 Version: $LATEST
+[default] 6:52:51 PM 2025-08-05T11:52:51.484Z	f9512e83-652d-428f-af8c-7c00a3b09ff1	INFO	✅ Received ping to keep connection alive
+[default] 6:52:51 PM END RequestId: f9512e83-652d-428f-af8c-7c00a3b09ff1
+[default] 6:52:51 PM REPORT RequestId: f9512e83-652d-428f-af8c-7c00a3b09ff1	Duration: 8.37 ms	Billed Duration: 9 ms	Memory Size: 512 MB	Max Memory Used: 69 MB
+[get-meeting-by-tourid] 6:56:47 PM START RequestId: 6d1b522a-1c12-4177-96c7-36b81923a2bd Version: $LATEST
+[get-meeting-by-tourid] 6:56:47 PM 2025-08-05T11:56:47.180Z	6d1b522a-1c12-4177-96c7-36b81923a2bd	INFO	Retrieving tour with tourId:  40a053a3-eb3c-45d4-b7ec-af73d19fad55
+[get-meeting-by-tourid] 6:56:47 PM 2025-08-05T11:56:47.712Z	6d1b522a-1c12-4177-96c7-36b81923a2bd	INFO	Tour successfully retrieved:  {
+  maxConnection: 0,
+  nameOfCoursePersonInCharge: 'test0006',
+  numberOfReceiversInUse: 'test0006',
+  tourType: 'tour',
+  tourNumber: 'test0006',
+  useTheTranslationFunction: true,
+  updatedBy: '',
+  createdBy: 'a90dec4d-042f-4db3-8c8e-dd183c86923b',
+  coSponsoredCourseNumber: 'test0006',
+  planningSalesOfficeTeamName: 'test0006',
+  meetingId: '7a7ca3d5-025a-47d3-8b3b-b493cbde4804',
+  departureDate: '2025-08-01',
+  planningAndSalesSignature: 'test0006',
+  courseName: 'test0006',
+  tourTestStatus: 'test',
+  tourConductorName: 'test0006',
+  createdAt: '2025-08-05T04:10:46.331Z',
+  numberOfSendingDevices: 'test0006',
+  returnDate: '2025-08-03',
+  deleteFlag: 0,
+  isMaxConnectionProcessed: true,
+  channelId: '0db7c76a-9be8-41d4-83e2-77eb0fcc7626',
+  chatRestriction: 'allChat',
+  updatedAt: '2025-08-05T06:17:23.297Z',
+  subGuideFunctionAvailable: true,
+  tourId: '40a053a3-eb3c-45d4-b7ec-af73d19fad55'
+}
+[get-meeting-by-tourid] 6:56:47 PM END RequestId: 6d1b522a-1c12-4177-96c7-36b81923a2bd
+[get-meeting-by-tourid] 6:56:47 PM REPORT RequestId: 6d1b522a-1c12-4177-96c7-36b81923a2bd	Duration: 610.50 ms	Billed Duration: 611 ms	Memory Size: 512 MB	Max Memory Used: 317 MB
+[default] 6:56:51 PM START RequestId: 59187027-2827-42d7-a31e-fa86fb8aa4e4 Version: $LATEST
+[default] 6:56:51 PM 2025-08-05T11:56:51.520Z	59187027-2827-42d7-a31e-fa86fb8aa4e4	INFO	✅ Received ping to keep connection alive
+[default] 6:56:51 PM END RequestId: 59187027-2827-42d7-a31e-fa86fb8aa4e4
+[default] 6:56:51 PM REPORT RequestId: 59187027-2827-42d7-a31e-fa86fb8aa4e4	Duration: 3.19 ms	Billed Duration: 4 ms	Memory Size: 512 MB	Max Memory Used: 69 MB
+[default] 7:00:51 PM 2025-08-05T12:00:51.478Z	161ee3b9-59f0-4ba4-a197-11bb4a9df1be	INFO	✅ Received ping to keep connection alive
+[default] 7:00:51 PM START RequestId: 161ee3b9-59f0-4ba4-a197-11bb4a9df1be Version: $LATEST
+[default] 7:00:51 PM END RequestId: 161ee3b9-59f0-4ba4-a197-11bb4a9df1be
+[default] 7:00:51 PM REPORT RequestId: 161ee3b9-59f0-4ba4-a197-11bb4a9df1be	Duration: 2.03 ms	Billed Duration: 3 ms	Memory Size: 512 MB	Max Memory Used: 69 MB
+[default] 7:04:51 PM START RequestId: f17703e1-c679-4304-991c-ba2d81b22246 Version: $LATEST
+[default] 7:04:51 PM 2025-08-05T12:04:51.462Z	f17703e1-c679-4304-991c-ba2d81b22246	INFO	✅ Received ping to keep connection alive
+[default] 7:04:51 PM END RequestId: f17703e1-c679-4304-991c-ba2d81b22246
+[default] 7:04:51 PM REPORT RequestId: f17703e1-c679-4304-991c-ba2d81b22246	Duration: 3.26 ms	Billed Duration: 4 ms	Memory Size: 512 MB	Max Memory Used: 69 MB
+[default] 7:08:51 PM 2025-08-05T12:08:51.484Z	518bbefc-1ef7-45ce-8894-1c0dae003699	INFO	✅ Received ping to keep connection alive
+[default] 7:08:51 PM START RequestId: 518bbefc-1ef7-45ce-8894-1c0dae003699 Version: $LATEST
+[default] 7:08:51 PM END RequestId: 518bbefc-1ef7-45ce-8894-1c0dae003699
+[default] 7:08:51 PM REPORT RequestId: 518bbefc-1ef7-45ce-8894-1c0dae003699	Duration: 2.43 ms	Billed Duration: 3 ms	Memory Size: 512 MB	Max Memory Used: 69 MB
+[default] 7:12:51 PM 2025-08-05T12:12:51.474Z	eaa163a9-b9c0-4efd-903f-c4395c513970	INFO	✅ Received ping to keep connection alive
+[default] 7:12:51 PM START RequestId: eaa163a9-b9c0-4efd-903f-c4395c513970 Version: $LATEST
+[default] 7:12:51 PM END RequestId: eaa163a9-b9c0-4efd-903f-c4395c513970
+[default] 7:12:51 PM REPORT RequestId: eaa163a9-b9c0-4efd-903f-c4395c513970	Duration: 1.96 ms	Billed Duration: 2 ms	Memory Size: 512 MB	Max Memory Used: 69 MB
+[default] 7:16:51 PM START RequestId: e9f75b8c-f601-40b8-af38-17d9872582bf Version: $LATEST
+[default] 7:16:51 PM 2025-08-05T12:16:51.487Z	e9f75b8c-f601-40b8-af38-17d9872582bf	INFO	✅ Received ping to keep connection alive
+[default] 7:16:51 PM END RequestId: e9f75b8c-f601-40b8-af38-17d9872582bf
+[default] 7:16:51 PM REPORT RequestId: e9f75b8c-f601-40b8-af38-17d9872582bf	Duration: 1.80 ms	Billed Duration: 2 ms	Memory Size: 512 MB	Max Memory Used: 69 MB
+[default] 7:20:51 PM START RequestId: d9eb2f0c-ffe9-4836-8a37-40f037825763 Version: $LATEST
+[default] 7:20:51 PM 2025-08-05T12:20:51.504Z	d9eb2f0c-ffe9-4836-8a37-40f037825763	INFO	✅ Received ping to keep connection alive
+[default] 7:20:51 PM END RequestId: d9eb2f0c-ffe9-4836-8a37-40f037825763
+[default] 7:20:51 PM REPORT RequestId: d9eb2f0c-ffe9-4836-8a37-40f037825763	Duration: 1.72 ms	Billed Duration: 2 ms	Memory Size: 512 MB	Max Memory Used: 69 MB
+[default] 7:24:51 PM START RequestId: 25148525-013b-4331-90bc-c5ae2149fb91 Version: $LATEST
+[default] 7:24:51 PM 2025-08-05T12:24:51.481Z	25148525-013b-4331-90bc-c5ae2149fb91	INFO	✅ Received ping to keep connection alive
+[default] 7:24:51 PM END RequestId: 25148525-013b-4331-90bc-c5ae2149fb91
+[default] 7:24:51 PM REPORT RequestId: 25148525-013b-4331-90bc-c5ae2149fb91	Duration: 1.54 ms	Billed Duration: 2 ms	Memory Size: 512 MB	Max Memory Used: 69 MB
+[default] 7:28:51 PM START RequestId: da981069-06f7-41a7-acc7-653018d91f2f Version: $LATEST
+[default] 7:28:51 PM 2025-08-05T12:28:51.512Z	da981069-06f7-41a7-acc7-653018d91f2f	INFO	✅ Received ping to keep connection alive
+[default] 7:28:51 PM END RequestId: da981069-06f7-41a7-acc7-653018d91f2f
+[default] 7:28:51 PM REPORT RequestId: da981069-06f7-41a7-acc7-653018d91f2f	Duration: 9.07 ms	Billed Duration: 10 ms	Memory Size: 512 MB	Max Memory Used: 69 MB
+[default] 7:32:51 PM START RequestId: ddca40e5-16c2-411f-813a-508e30a7d30b Version: $LATEST
+[default] 7:32:51 PM 2025-08-05T12:32:51.486Z	ddca40e5-16c2-411f-813a-508e30a7d30b	INFO	✅ Received ping to keep connection alive
+[default] 7:32:51 PM END RequestId: ddca40e5-16c2-411f-813a-508e30a7d30b
+[default] 7:32:51 PM REPORT RequestId: ddca40e5-16c2-411f-813a-508e30a7d30b	Duration: 1.63 ms	Billed Duration: 2 ms	Memory Size: 512 MB	Max Memory Used: 69 MB
+[default] 7:36:51 PM START RequestId: 159cf2ac-9ba4-444d-b36b-679f68bad54b Version: $LATEST
+[default] 7:36:51 PM 2025-08-05T12:36:51.490Z	159cf2ac-9ba4-444d-b36b-679f68bad54b	INFO	✅ Received ping to keep connection alive
+[default] 7:36:51 PM END RequestId: 159cf2ac-9ba4-444d-b36b-679f68bad54b
+[default] 7:36:51 PM REPORT RequestId: 159cf2ac-9ba4-444d-b36b-679f68bad54b	Duration: 11.20 ms	Billed Duration: 12 ms	Memory Size: 512 MB	Max Memory Used: 69 MB
+[default] 7:40:51 PM START RequestId: 0b103ff3-03dc-46c2-9130-d38a4ff3450e Version: $LATEST
+[default] 7:40:51 PM 2025-08-05T12:40:51.482Z	0b103ff3-03dc-46c2-9130-d38a4ff3450e	INFO	✅ Received ping to keep connection alive
+[default] 7:40:51 PM END RequestId: 0b103ff3-03dc-46c2-9130-d38a4ff3450e
+[default] 7:40:51 PM REPORT RequestId: 0b103ff3-03dc-46c2-9130-d38a4ff3450e	Duration: 2.87 ms	Billed Duration: 3 ms	Memory Size: 512 MB	Max Memory Used: 69 MB
+[default] 7:44:51 PM START RequestId: 313effb7-5888-4c31-aad2-61b8cbf43f4e Version: $LATEST
+[default] 7:44:51 PM 2025-08-05T12:44:51.477Z	313effb7-5888-4c31-aad2-61b8cbf43f4e	INFO	✅ Received ping to keep connection alive
+[default] 7:44:51 PM END RequestId: 313effb7-5888-4c31-aad2-61b8cbf43f4e
+[default] 7:44:51 PM REPORT RequestId: 313effb7-5888-4c31-aad2-61b8cbf43f4e	Duration: 1.54 ms	Billed Duration: 2 ms	Memory Size: 512 MB	Max Memory Used: 69 MB
+[default] 7:48:51 PM START RequestId: f996cbbf-bea7-4725-8e0a-a624a6ab67b8 Version: $LATEST
+[default] 7:48:51 PM 2025-08-05T12:48:51.486Z	f996cbbf-bea7-4725-8e0a-a624a6ab67b8	INFO	✅ Received ping to keep connection alive
+[default] 7:48:51 PM END RequestId: f996cbbf-bea7-4725-8e0a-a624a6ab67b8
+[default] 7:48:51 PM REPORT RequestId: f996cbbf-bea7-4725-8e0a-a624a6ab67b8	Duration: 2.05 ms	Billed Duration: 3 ms	Memory Size: 512 MB	Max Memory Used: 69 MB
+[default] 7:52:51 PM START RequestId: f57eb1f0-1b20-44d3-bfb8-204d968ad51e Version: $LATEST
+[default] 7:52:51 PM 2025-08-05T12:52:51.496Z	f57eb1f0-1b20-44d3-bfb8-204d968ad51e	INFO	✅ Received ping to keep connection alive
+[default] 7:52:51 PM END RequestId: f57eb1f0-1b20-44d3-bfb8-204d968ad51e
+[default] 7:52:51 PM REPORT RequestId: f57eb1f0-1b20-44d3-bfb8-204d968ad51e	Duration: 2.78 ms	Billed Duration: 3 ms	Memory Size: 512 MB	Max Memory Used: 69 MB
+[default] 7:56:51 PM START RequestId: cb026723-6bfb-4d7d-9fe1-9403048fbe1c Version: $LATEST
+[default] 7:56:51 PM 2025-08-05T12:56:51.490Z	cb026723-6bfb-4d7d-9fe1-9403048fbe1c	INFO	✅ Received ping to keep connection alive
+[default] 7:56:51 PM END RequestId: cb026723-6bfb-4d7d-9fe1-9403048fbe1c
+[default] 7:56:51 PM REPORT RequestId: cb026723-6bfb-4d7d-9fe1-9403048fbe1c	Duration: 1.87 ms	Billed Duration: 2 ms	Memory Size: 512 MB	Max Memory Used: 69 MB
+[default] 8:00:51 PM 2025-08-05T13:00:51.492Z	9181fb46-1076-40d0-a8c5-227df68c2b6c	INFO	✅ Received ping to keep connection alive
+[default] 8:00:51 PM START RequestId: 9181fb46-1076-40d0-a8c5-227df68c2b6c Version: $LATEST
+[default] 8:00:51 PM END RequestId: 9181fb46-1076-40d0-a8c5-227df68c2b6c
+[default] 8:00:51 PM REPORT RequestId: 9181fb46-1076-40d0-a8c5-227df68c2b6c	Duration: 2.60 ms	Billed Duration: 3 ms	Memory Size: 512 MB	Max Memory Used: 69 MB
+[default] 8:04:51 PM START RequestId: 9360c247-e724-4211-aea7-66a27f1f0e62 Version: $LATEST
+[default] 8:04:51 PM 2025-08-05T13:04:51.494Z	9360c247-e724-4211-aea7-66a27f1f0e62	INFO	✅ Received ping to keep connection alive
+[default] 8:04:51 PM END RequestId: 9360c247-e724-4211-aea7-66a27f1f0e62
+[default] 8:04:51 PM REPORT RequestId: 9360c247-e724-4211-aea7-66a27f1f0e62	Duration: 2.85 ms	Billed Duration: 3 ms	Memory Size: 512 MB	Max Memory Used: 69 MB
+[default] 8:08:51 PM 2025-08-05T13:08:51.518Z	2c0dab42-2f84-43af-a418-963a5fd6d6b7	INFO	✅ Received ping to keep connection alive
+[default] 8:08:51 PM START RequestId: 2c0dab42-2f84-43af-a418-963a5fd6d6b7 Version: $LATEST
+[default] 8:08:51 PM END RequestId: 2c0dab42-2f84-43af-a418-963a5fd6d6b7
+[default] 8:08:51 PM REPORT RequestId: 2c0dab42-2f84-43af-a418-963a5fd6d6b7	Duration: 1.51 ms	Billed Duration: 2 ms	Memory Size: 512 MB	Max Memory Used: 69 MB
+[default] 8:12:51 PM 2025-08-05T13:12:51.524Z	709460e5-6af2-45ee-9935-1dbfe7b50348	INFO	✅ Received ping to keep connection alive
+[default] 8:12:51 PM START RequestId: 709460e5-6af2-45ee-9935-1dbfe7b50348 Version: $LATEST
+[default] 8:12:51 PM END RequestId: 709460e5-6af2-45ee-9935-1dbfe7b50348
+[default] 8:12:51 PM REPORT RequestId: 709460e5-6af2-45ee-9935-1dbfe7b50348	Duration: 1.45 ms	Billed Duration: 2 ms	Memory Size: 512 MB	Max Memory Used: 69 MB
+[default] 8:16:51 PM START RequestId: 150e756c-42a3-47b7-bd8d-bee432bd75d6 Version: $LATEST
+[default] 8:16:51 PM 2025-08-05T13:16:51.486Z	150e756c-42a3-47b7-bd8d-bee432bd75d6	INFO	✅ Received ping to keep connection alive
+[default] 8:16:51 PM END RequestId: 150e756c-42a3-47b7-bd8d-bee432bd75d6
+[default] 8:16:51 PM REPORT RequestId: 150e756c-42a3-47b7-bd8d-bee432bd75d6	Duration: 1.36 ms	Billed Duration: 2 ms	Memory Size: 512 MB	Max Memory Used: 69 MB
+[default] 8:20:51 PM START RequestId: df1127d1-5deb-4646-94aa-380432b3ffb4 Version: $LATEST
+[default] 8:20:51 PM 2025-08-05T13:20:51.512Z	df1127d1-5deb-4646-94aa-380432b3ffb4	INFO	✅ Received ping to keep connection alive
+[default] 8:20:51 PM END RequestId: df1127d1-5deb-4646-94aa-380432b3ffb4
+[default] 8:20:51 PM REPORT RequestId: df1127d1-5deb-4646-94aa-380432b3ffb4	Duration: 2.16 ms	Billed Duration: 3 ms	Memory Size: 512 MB	Max Memory Used: 69 MB
+[default] 8:24:51 PM START RequestId: d7bf8616-bf16-4a88-a218-8d20f5b5523c Version: $LATEST
+[default] 8:24:51 PM 2025-08-05T13:24:51.477Z	d7bf8616-bf16-4a88-a218-8d20f5b5523c	INFO	✅ Received ping to keep connection alive
+[default] 8:24:51 PM END RequestId: d7bf8616-bf16-4a88-a218-8d20f5b5523c
+[default] 8:24:51 PM REPORT RequestId: d7bf8616-bf16-4a88-a218-8d20f5b5523c	Duration: 2.51 ms	Billed Duration: 3 ms	Memory Size: 512 MB	Max Memory Used: 69 MB
+[default] 8:28:51 PM 2025-08-05T13:28:51.498Z	f4c7c717-5547-4088-a956-2e623c8d0fde	INFO	✅ Received ping to keep connection alive
+[default] 8:28:51 PM START RequestId: f4c7c717-5547-4088-a956-2e623c8d0fde Version: $LATEST
+[default] 8:28:51 PM END RequestId: f4c7c717-5547-4088-a956-2e623c8d0fde
+[default] 8:28:51 PM REPORT RequestId: f4c7c717-5547-4088-a956-2e623c8d0fde	Duration: 2.65 ms	Billed Duration: 3 ms	Memory Size: 512 MB	Max Memory Used: 69 MB
+[default] 8:32:51 PM START RequestId: edcd8859-3d1f-40b0-9db6-1737f8b58a0d Version: $LATEST
+[default] 8:32:51 PM 2025-08-05T13:32:51.507Z	edcd8859-3d1f-40b0-9db6-1737f8b58a0d	INFO	✅ Received ping to keep connection alive
+[default] 8:32:51 PM END RequestId: edcd8859-3d1f-40b0-9db6-1737f8b58a0d
+[default] 8:32:51 PM REPORT RequestId: edcd8859-3d1f-40b0-9db6-1737f8b58a0d	Duration: 1.35 ms	Billed Duration: 2 ms	Memory Size: 512 MB	Max Memory Used: 69 MB
+[disconnect] 8:36:50 PM INIT_START Runtime Version: nodejs:18.v76	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:db8a276f0276d75e613561e145383f976a1c35bfcb66258399f0c49e6e24f08b
+[disconnect] 8:36:51 PM 2025-08-05T13:36:51.397Z	undefined	INFO	App DB_TABLES: {
+  USERS: 'users_dev',
+  TOURS: 'tours_dev',
+  WEBSOCKETCONNECTIONS: 'websocketconnections_dev',
+  CONNECTION_HISTORY: 'websocketconnections_history_dev',
+  TOUR_MAX_CONNECTIONS: 'tourmaxconnections_dev'
+}
+[disconnect] 8:36:51 PM 2025-08-05T13:36:51.400Z	undefined	INFO	App DEFAULT_HEADERS: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+[disconnect] 8:36:51 PM START RequestId: 61817323-709a-4f7c-9212-09da4e18854b Version: $LATEST
+[disconnect] 8:36:52 PM 2025-08-05T13:36:52.485Z	61817323-709a-4f7c-9212-09da4e18854b	INFO	✅ Disconnected and deleted connectionId: O1Hw3ebLoAMCL8A=
+[disconnect] 8:36:53 PM END RequestId: 61817323-709a-4f7c-9212-09da4e18854b
+[disconnect] 8:36:53 PM REPORT RequestId: 61817323-709a-4f7c-9212-09da4e18854b	Duration: 2018.44 ms	Billed Duration: 2019 ms	Memory Size: 512 MB	Max Memory Used: 317 MB	Init Duration: 960.38 ms
