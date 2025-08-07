@@ -234,7 +234,7 @@ const TourForm = ({ onSubmit, defaultValues }) => {
             </>
             }
             <div className="text-center mt-5">
-                <Link to={`${Config.pathNames.defaultValues}`} type="submit" className="btn btn-outline-danger" style={{ "marginRight": "50px" }}>戻る</Link>
+                <Link to={`${Config.pathNames.tour}`} type="submit" className="btn btn-outline-danger" style={{ "marginRight": "50px" }}>戻る</Link>
                 <button type="submit" className="btn btn-danger">{(defaultValues && defaultValues.tourId) ? '更新' : '登録'}</button>
             </div>
         </form>
