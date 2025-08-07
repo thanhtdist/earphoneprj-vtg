@@ -7,4 +7,7 @@ export const DEFAULT_HEADERS = {
 export const DB_TABLES = {
   USERS: 'users_clubtourism',
   TOURS: 'tours_clubtourism',
+  WEBSOCKETCONNECTIONS: 'connections_clubtourism',
+  CONNECTION_HISTORY: 'connections_history_clubtourism',
+  TOUR_MAX_CONNECTIONS: "tourmaxconnections_clubtourism"
 };

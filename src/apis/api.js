@@ -1,7 +1,7 @@
 // This file contains the API functions to interact with the backend services
 import { get, post, put } from 'aws-amplify/api';
 import Config from '../utils/config';
-
+import { apiWrapper } from './utils'; // Import the apiWrapper function
 const { v4: uuid } = require('uuid');
 
 /**
@@ -431,4 +431,31 @@ export async function getTourByNumberAndDate(data) {
       error: errorMessage,
     };
   }
+}
+
+export async function loginAndGetCredentials() {
+  return apiWrapper(post({
+    apiName: 'LoginCognitoVTGRestApi',
+    path: 'cognito-login/credentials'
+  }));
+}
+
+export async function uploadPresignedUrl(data) {
+  return apiWrapper(post({
+    apiName: 'UploadS3VTGRestApi',
+    path: 'uploads/upload-presigned-url',
+    options: {
+      body: {
+        fileName: data.name, // Replace with the actual file name
+        fileType: data.type // Replace with the actual file type
+      }
+    }
+  }));
+}
+
+export async function viewPresignedUrl(data) {
+  return apiWrapper(get({
+    apiName: 'UploadS3VTGRestApi',
+    path: 'uploads/view-presigned-url?key=' + encodeURIComponent(data.fileKey),
+  }));
 }

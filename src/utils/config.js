@@ -38,6 +38,9 @@ const Config = {
         tour: '/admin/tour',
         registerTour: '/admin/tour/register',
     },
+
+    // Websocket URL for real-time translate audio
+    webSocketURL: 'wss://xuwvdffmf8.execute-api.us-east-1.amazonaws.com/prod',
     
     /**
      * Storage and Logging Configuration
@@ -53,6 +56,19 @@ const Config = {
     tokenExpirationTime: 60 * 60 * 24, // 1 day in seconds
     // Refresh token expiration time in seconds
     refreshTokenExpirationTime: 60 * 60 * 24 * 7, // 7 days in seconds
+    
+    /**
+     * AWS Cognito Configuration
+     */
+    // User Pool ID
+    userPoolId: process.env.REACT_APP_AWS_USER_POOL_ID,
+    // User Pool Client ID
+    userPoolClientId: process.env.REACT_APP_AWS_USER_POOL_CLIENT_ID,
+    // Identity Pool ID
+    identityPoolId: process.env.REACT_APP_AWS_IDENTITY_POOL_ID,
+
+    cognitoEmail: process.env.REACT_APP_COGNITO_EMAIL,
+    cognitoPassword: process.env.REACT_APP_COGNITO_PASSWORD,
     
     /**
      * Helper methods to construct application URLs

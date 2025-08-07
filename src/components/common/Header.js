@@ -32,7 +32,7 @@ function Header({ tourId, count = null, userType = null }) {
     console.log("Viewer App URL: ", appUrl);
 
     return (
-        <div className={`${count !== null ? 'container-header' : 'container-header-startguide'}`} style={{ 'color': pageColor }} >
+        <div className={`${count !== null ? 'container-header' : 'container-header-startguide'}`} style={{ 'color': pageColor, paddingTop: "10px" }} >
             {count !== null && <Participants count={count}></Participants>}
 
             <div className='rightMenu'>
