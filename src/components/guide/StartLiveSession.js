@@ -38,6 +38,9 @@ import NotFound from '../NotFound';
 import TourTitle from '../common/TourTitle';
 import AudioMicControl from '../common/AudioMicControl';
 import AudioPlayerControl from '../common/AudioPlayerControl';
+import useWakeLock from '../../hooks/useWakeLock';
+import useConnectWebSocket from '../../hooks/useConnectWebSocket';
+import useWebSocketVisibilityHandler from '../../hooks/useWebSocketVisibilityHandler';
 // import { uploadFileToS3 } from '../services/S3Service';
 //import { playAudioFromBase64 } from '../../utils/webAudio'; // Import the utility function to play audio from base64
 
@@ -48,6 +51,8 @@ import AudioPlayerControl from '../common/AudioPlayerControl';
  * The main speaker can also chat with the sub-speaker or listener
  */
 function StartLiveSession() {
+  // Create a WebSocket reference
+  const wsRef = useRef(null);
   // Get the params from the URL
   const { tourId } = useParams(); // Extracts 'tourId' from the URL
   // Use translation
@@ -78,7 +83,7 @@ function StartLiveSession() {
   const [chatRestriction, setChatRestriction] = useState(null);
   const [tour, setTour] = useState(undefined);
   // Replace local variables with refs
-  const transcriptListRef = useRef([]);
+  //const transcriptListRef = useRef([]);
   //get value chatSetting from ChatSetting.js
   /// const location = useLocation();
   // const { state } = location;
@@ -92,20 +97,20 @@ function StartLiveSession() {
   //const audioData = useRef([]); // Ref to store audio data
 
   // Add these references and callback:
-  const wakeLockRef = useRef(null);
-  const requestWakeLock = useCallback(async () => {
-    try {
-      if ('wakeLock' in navigator) {
-        console.log('Requesting Wake Lock...');
-        wakeLockRef.current = await navigator.wakeLock.request('screen');
-        wakeLockRef.current.addEventListener('release', () => {
-          console.log('Wake Lock was released.');
-        });
-      }
-    } catch (error) {
-      console.error('Failed to request Wake Lock:', error);
-    }
-  }, []);
+  // const wakeLockRef = useRef(null);
+  // const requestWakeLock = useCallback(async () => {
+  //   try {
+  //     if ('wakeLock' in navigator) {
+  //       console.log('Requesting Wake Lock...');
+  //       wakeLockRef.current = await navigator.wakeLock.request('screen');
+  //       wakeLockRef.current.addEventListener('release', () => {
+  //         console.log('Wake Lock was released.');
+  //       });
+  //     }
+  //   } catch (error) {
+  //     console.error('Failed to request Wake Lock:', error);
+  //   }
+  // }, []);
 
   const handleMuteUnmute = () => {
     setIsMuted(!isMuted);
@@ -201,6 +206,8 @@ function StartLiveSession() {
     const audioElement = document.getElementById('audioElementMain');
     if (audioElement) {
       await meetingSession.audioVideo.bindAudioElement(audioElement);
+      // Disable autoplay for the audio element
+      audioElement.autoplay = false;
     } else {
       console.error('Audio element not found');
     }
@@ -512,12 +519,141 @@ function StartLiveSession() {
 
   }, [selectedAudioInput]);
 
+  //  Function to connect to WebSocket
+  // const connectWebSocket = useCallback(() => {
+  //   // If a WebSocket connection already exists, skip creating a new one
+  //   if (wsRef.current) {
+  //     console.log('🔁 WebSocket already connected.');
+  //     return;
+  //   }
+
+  //   // Create a new WebSocket instance
+  //   const ws = new WebSocket(Config.webSocketURL);
+
+  //   // Variables to track connection timestamp and ping interval
+  //   let connectTimestamp = null;
+  //   let pingInterval = null;
+
+  //   // When the WebSocket successfully connects
+  //   ws.onopen = () => {
+  //     connectTimestamp = Date.now();
+  //     console.log('✅ WebSocket Connected at:', new Date(connectTimestamp).toLocaleTimeString());
+
+  //     // ✅ Send "connectState" message after connecting
+  //     const connectStatePayload = {
+  //       action: 'connectState',
+  //       tourId: tourId,
+  //       languageCode: 'ja-JP',
+  //       userType: 'Guide',
+  //     };
+  //     ws.send(JSON.stringify(connectStatePayload));
+  //     console.log('📤 WebSocket Sent connectState:', connectStatePayload);
+
+  //     // ✅ Start pinging every 4 minutes to keep the connection alive
+  //     pingInterval = setInterval(() => {
+  //       if (ws.readyState === WebSocket.OPEN) {
+  //         console.log('📡 WebSocket Sending ping...');
+  //         ws.send(JSON.stringify({ action: 'ping' }));
+  //       }
+  //     }, 4 * 60 * 1000); // 4 minutes
+  //   };
+
+  //   // ✅ Handle incoming messages
+  //   ws.onmessage = (event) => {
+  //     try {
+  //       const message = JSON.parse(event.data);
+
+  //       // Handle "connectionUpdate"
+  //       if (message.type === 'connectionUpdate') {
+  //         console.log('🔁 WebSocket Received connectionUpdate connectState:', message);
+  //         console.log('🔁 WebSocket Received message.connectionCount connectState:', message.connectionCount);
+
+  //         // Optional: Update your UI or state here
+  //         //setConnectionCount(message.connectionCount);
+  //         setParticipantsCount(message.connectionCount);
+  //       } else {
+  //         console.log('📨 WebSocket Received message:', message);
+  //       }
+  //     } catch (error) {
+  //       console.error('❌ Error parsing WebSocket message:', error);
+  //     }
+  //   };
+
+  //   // When the WebSocket connection is closed
+  //   ws.onclose = () => {
+  //     const disconnectTimestamp = Date.now();
+  //     const duration = connectTimestamp
+  //       ? ((disconnectTimestamp - connectTimestamp) / 1000).toFixed(1)
+  //       : 'unknown';
+
+  //     console.log('❌ WebSocket Disconnected at:', new Date(disconnectTimestamp).toLocaleTimeString());
+  //     console.log(`🔌 WebSocket Connection lasted: ${duration} seconds`);
+
+  //     // Stop the ping interval if it was running
+  //     if (pingInterval) {
+  //       clearInterval(pingInterval);
+  //     }
+
+  //     // Clear the reference so future reconnects are allowed
+  //     wsRef.current = null;
+  //   };
+
+  //   // Handle WebSocket error events
+  //   ws.onerror = (error) => {
+  //     console.error('⚠️ WebSocket error:', error);
+
+  //     // Stop the ping interval on error
+  //     if (pingInterval) {
+  //       clearInterval(pingInterval);
+  //     }
+
+  //     // Clear the reference
+  //     wsRef.current = null;
+  //   };
+
+  //   // Store the WebSocket instance in a ref so it's accessible globally
+  //   wsRef.current = ws;
+  // }, [tourId]);
+    const connectWebSocket = useConnectWebSocket({
+    wsRef,
+    tourId: tourId,
+    languageCode: 'ja-JP',
+    userType: userType,
+    onConnectionUpdate: setParticipantsCount,
+  });
+
+  useWebSocketVisibilityHandler({
+    tour,
+    connectWebSocket,
+    wsRef,
+  });
+
+  // Handle sending text to the WebSocket server
+  const handleTranslateAudio = useCallback((text) => {
+    console.log('Sending text to WebSocket', wsRef.current?.readyState);
+    if (wsRef.current?.readyState === WebSocket.OPEN) {
+      const payload = {
+        action: 'translateAudio',
+        inputText: text,
+        sourceLanguageCode: 'ja-JP',
+        tourId: tourId
+      };
+      wsRef.current.send(JSON.stringify(payload));
+      console.log('📤 Sent to WebSocket:', payload);
+    } else {
+      console.warn('❌ WebSocket is not open');
+    }
+  }, [tourId, wsRef]);
+
 
   useEffect(() => {
 
     if (!meetingSession) {
       return;
     }
+    // // ✅ Connect WebSocket when host joins
+    // connectWebSocket();
+
     const attendeeSet = new Set(); // List of sub-guides, listeners
     const callback = (presentAttendeeId, present, externalUserId) => {
       console.log(`Attendee ID: ${presentAttendeeId} Present: ${present} externalUserId: ${externalUserId}`);
@@ -528,10 +664,11 @@ function StartLiveSession() {
       }
 
       // Update the attendee count in the states
-      setParticipantsCount(attendeeSet.size);
+      //setParticipantsCount(attendeeSet.size);
     };
 
     meetingSession.audioVideo.realtimeSubscribeToAttendeeIdPresence(callback);
+
     // Subscribe to transcription events
     meetingSession.audioVideo.transcriptionController?.subscribeToTranscriptEvent(
       (transcriptEvent) => {
@@ -548,9 +685,13 @@ function StartLiveSession() {
       !transcripts.results[0].isPartial
     ) {
       const currentText = transcripts.results[0].alternatives[0].transcript;
-      transcriptListRef.current.push(currentText);
+      console.log('Transcript received:', currentText);
+      //transcriptListRef.current.push(currentText);
+
+      // ✅ Send the text to the WebSocket server
+      handleTranslateAudio(currentText);
     }
-  }, [transcripts]);
+  }, [transcripts, handleTranslateAudio]);
 
   // Send the language code to the listener
   useEffect(() => {
@@ -586,16 +727,17 @@ function StartLiveSession() {
     // socket.onmessage = async (event) => {
     //   console.log("WebSocketxxx Message from server:", event.data);
     //   const data = JSON.parse(event.data);
-    //   if (data.type === "speechComplete") {
-    //     console.log("WebSocketxxx Received translatedText:", data.translatedText);
-    //     console.log("WebSocketxxx Received audioData:", data.audioData);
-    //     // You can handle the received message here, e.g., display it in the UI
-    //     // Call it
-    //     //await playAudioFromBase64(data.audioData);
-    //     audioData.current.push(data.audioData); // Store audio data in the ref
-    //   } else {
-    //     console.warn("WebSocketxxx Unknown action:", data.action);
-    //   }
+    //   console.log("WebSocketxxx Received data:", data);
+    //   // if (data.type === "speechComplete") {
+    //   //   console.log("WebSocketxxx Received translatedText:", data.translatedText);
+    //   //   console.log("WebSocketxxx Received audioData:", data.audioData);
+    //   //   // You can handle the received message here, e.g., display it in the UI
+    //   //   // Call it
+    //   //   //await playAudioFromBase64(data.audioData);
+    //   //   audioData.current.push(data.audioData); // Store audio data in the ref
+    //   // } else {
+    //   //   console.warn("WebSocketxxx Unknown action:", data.action);
+    //   // }
     // };
     // socket.onerror = (err) => {
     //   console.error("WebSocketxxx error:", err);
@@ -605,6 +747,30 @@ function StartLiveSession() {
     //   console.warn("WebSocketxxx closed:", event);
     // };
   }, [meetingSession]);
+
+
+  // Connect WebSocket
+  // useEffect(() => {
+  //   console.log('WebSocket Tour connected:', tour);
+  //   if (!tour) return;
+  //   connectWebSocket();
+  // }, [connectWebSocket, tour]);
+
+  // Send the text to the WebSocket server
+  // useEffect(() => {
+  //   console.log('Sending text to WebSocket', wsRef.current?.readyState);
+  //   if (wsRef.current?.readyState === WebSocket.OPEN) {
+  //     const payload = {
+  //       action: 'translateAudio',
+  //       inputText: 'おやすみなさい！またね！',
+  //       sourceLanguageCode: 'ja',
+  //     };
+  //     wsRef.current.send(JSON.stringify(payload));
+  //     console.log('📤 Sent to WebSocket:', payload);
+  //   } else {
+  //     console.warn('❌ WebSocket is not open');
+  //   }
+  // }, [wsRef]);
 
 
   // Meeting exired
@@ -676,11 +842,12 @@ function StartLiveSession() {
   }, [tourId, initializeMeetingSession, startLiveAduioSession, getMeetingAttendeeInfoFromCookies, rejoinLiveAduioSession]);
 
   // Call requestWakeLock once the meeting session is set:
-  useEffect(() => {
-    if (meetingSession) {
-      requestWakeLock();
-    }
-  }, [meetingSession, requestWakeLock]);
+  // useEffect(() => {
+  //   if (meetingSession) {
+  //     requestWakeLock();
+  //   }
+  // }, [meetingSession, requestWakeLock]);
+  useWakeLock(meetingSession);
 
   console.log("chatRestriction", chatRestriction);
   //console.log("audioData", audioData.current);
@@ -711,6 +878,12 @@ function StartLiveSession() {
           </div>
         </div> */}
         <TourTitle tour={tour} />
+        {/* {meetingSession && (
+          <>
+            <button onClick={() => handleTranslateAudio('おやすみなさい')}>Send Transcripts</button>
+            <br />
+          </>
+        )} */}
         <audio id='audioElementMain' ref={audioRef} >
         </audio>
         <AudioPlayerControl

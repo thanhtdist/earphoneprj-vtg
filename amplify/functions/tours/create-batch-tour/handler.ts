@@ -25,7 +25,8 @@ const validateTours = (tours: any[]): { errors: any[], validTours: any[] } => {
       tourNumber,
       courseName,
       departureDate,
-      returnDate
+      returnDate,
+      useTheTranslationFunction
     } = tour;
 
     if (!tourNumber || !courseName || !departureDate || !returnDate) {
@@ -72,10 +73,27 @@ const validateTours = (tours: any[]): { errors: any[], validTours: any[] } => {
 
     seenKeys.add(key);
 
+    // ✅ Validate useTheTranslationFunction only accepts 0 or 1
+    if (
+      useTheTranslationFunction !== undefined &&
+      useTheTranslationFunction !== 0 &&
+      useTheTranslationFunction !== 1 &&
+      useTheTranslationFunction !== '0' &&
+      useTheTranslationFunction !== '1'
+    ) {
+      errors.push({
+        index: i + 2,
+        tourNumber,
+        error: 'Invalid value for useTheTranslationFunction. Only 0 or 1 allowed.'
+      });
+      continue;
+    }
+
     validTours.push({
       ...tour,
       departureDate: normalizedDeparture,
-      returnDate: normalizedReturn
+      returnDate: normalizedReturn,
+      useTheTranslationFunction: tour.useTheTranslationFunction === 1 || tour.useTheTranslationFunction === '1' ? true : false
     });
   }
 
@@ -159,7 +177,8 @@ export const handler: APIGatewayProxyHandler = async (event) => {
           updatedBy: '',
           deleteFlag: 0,
           tourTestStatus: 'test',
-          tourType: 'tour'
+          tourType: 'tour',
+          isMaxConnectionProcessed: false, // default to false
         }
       }
     }));

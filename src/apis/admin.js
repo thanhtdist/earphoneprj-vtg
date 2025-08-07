@@ -172,25 +172,35 @@ export async function getTour(tourId) {
  * @throws {Error} Logs the error details if the POST call fails.
  */
 export async function createUser(data) {
-  try {
-    const restOperation = await postWithAuth({
-      apiName: 'UserVTGRestApi', // The name of the API defined in backend.ts
-      path: 'users', // endpoint defined in backend.ts 
-      options: {
-        body: {
+  // try {
+  //   const restOperation = await postWithAuth({
+  //     apiName: 'UserVTGRestApi', // The name of the API defined in backend.ts
+  //     path: 'users', // endpoint defined in backend.ts 
+  //     options: {
+  //       body: {
+  //         userName: data.userName,
+  //         email: data.email,
+  //         password: data.password,
+  //       }
+  //     }
+  //   });
+
+  //   const { body } = await restOperation.response;
+  //   const response = await body.json();
+  //   return response.data;
+  // } catch (error) {
+  //   console.log('POST call createUser failed: ', JSON.parse(error.response.body));
+  // }
+   return apiWrapper(post({
+    apiName: 'UserVTGRestApi',
+    path: 'users',
+    options: { 
+      body: {
           userName: data.userName,
           email: data.email,
           password: data.password,
-        }
-      }
-    });
-
-    const { body } = await restOperation.response;
-    const response = await body.json();
-    return response.data;
-  } catch (error) {
-    console.log('POST call createUser failed: ', JSON.parse(error.response.body));
-  }
+        } }
+  }));
 }
 
 /**
