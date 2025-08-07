@@ -191,7 +191,7 @@ export async function createUser(data) {
   // } catch (error) {
   //   console.log('POST call createUser failed: ', JSON.parse(error.response.body));
   // }
-   return apiWrapper(post({
+   return apiWrapper(postWithAuth({
     apiName: 'UserVTGRestApi',
     path: 'users',
     options: { 
