@@ -2,10 +2,7 @@
  * Configuration for the AWS Lambda functions
  */
 
-import { viewPresignedS3Upload } from 'functions/uploadFileS3/view/resource';
 import { DB_TABLES, DEFAULT_HEADERS } from './constant';
-import { uploadPresignedS3Upload } from 'functions/uploadFileS3/upload/resource';
-
 console.log('App DB_TABLES:', DB_TABLES);
 console.log('App DEFAULT_HEADERS:', DEFAULT_HEADERS);
 
@@ -37,7 +34,7 @@ export const Config = {
     privateKey: process.env.PRIVATE_KEY || ``,
     cloudFrontKeyPairId: 'KM5PK06K9XZUQ', // CloudFront Key Pair ID
     cloudFrontDomain: 'https://d8d9ccu87krcw.cloudfront.net', // CloudFront domain for signed URLs
-    viewPresignedS3UrlExpiration: 5 * 60 * 1000, // 5 minutes in milliseconds
+    viewPresignedS3UrlExpiration: 3 * 60 * 60 * 1000, // 3 hours in milliseconds
     uploadPresignedS3Expiration: 60 * 5, // 5 minutes in milliseconds
     // .jpg, .jpeg, .png, .gif, .pdf
     allowedFileTypes: ['image/jpeg', 'image/png', 'image/gif', 'application/pdf'], // Allowed file types for upload

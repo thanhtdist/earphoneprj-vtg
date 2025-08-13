@@ -179,7 +179,6 @@ export const handler: APIGatewayProxyHandler = async (event) => {
           tourTestStatus: 'test',
           tourType: 'tour',
           isMaxConnectionProcessed: false, // default to false
-          maxConnection: 0, // default to 0
         }
       }
     }));
