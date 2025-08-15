@@ -614,7 +614,7 @@ function StartLiveSession() {
   //   // Store the WebSocket instance in a ref so it's accessible globally
   //   wsRef.current = ws;
   // }, [tourId]);
-    const connectWebSocket = useConnectWebSocket({
+  const connectWebSocket = useConnectWebSocket({
     wsRef,
     tourId: tourId,
     languageCode: 'ja-JP',
@@ -858,7 +858,7 @@ function StartLiveSession() {
 
   return (
     <>
-      <Header tourId={tourId} count={participantsCount} userType={userType} />
+      {tour && (<Header tourId={tourId} count={participantsCount} userType={userType} subGuideFunctionAvailable={tour.subGuideFunctionAvailable} />)}
       <div className="container">
         {/* {audioData.current.length > 0 &&
           (<><button onClick={async () => {

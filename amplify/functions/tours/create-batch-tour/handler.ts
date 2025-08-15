@@ -26,7 +26,8 @@ const validateTours = (tours: any[]): { errors: any[], validTours: any[] } => {
       courseName,
       departureDate,
       returnDate,
-      useTheTranslationFunction
+      useTheTranslationFunction,
+      subGuideFunctionAvailable
     } = tour;
 
     if (!tourNumber || !courseName || !departureDate || !returnDate) {
@@ -89,11 +90,28 @@ const validateTours = (tours: any[]): { errors: any[], validTours: any[] } => {
       continue;
     }
 
+    // ✅ Validate subGuideFunctionAvailable only accepts 0 or 1
+    if (
+      subGuideFunctionAvailable !== undefined &&
+      subGuideFunctionAvailable !== 0 &&
+      subGuideFunctionAvailable !== 1 &&
+      subGuideFunctionAvailable !== '0' &&
+      subGuideFunctionAvailable !== '1'
+    ) {
+      errors.push({
+        index: i + 2,
+        tourNumber,
+        error: 'Invalid value for subGuideFunctionAvailable. Only 0 or 1 allowed.'
+      });
+      continue;
+    }
+
     validTours.push({
       ...tour,
       departureDate: normalizedDeparture,
       returnDate: normalizedReturn,
-      useTheTranslationFunction: tour.useTheTranslationFunction === 1 || tour.useTheTranslationFunction === '1' ? true : false
+      useTheTranslationFunction: tour.useTheTranslationFunction === 1 || tour.useTheTranslationFunction === '1' ? true : false,
+      subGuideFunctionAvailable: tour.subGuideFunctionAvailable === 1 || tour.subGuideFunctionAvailable === '1' ? true : false
     });
   }
 

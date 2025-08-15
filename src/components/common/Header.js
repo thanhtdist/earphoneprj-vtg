@@ -9,7 +9,7 @@ import Config from '../../utils/config';
 import { getUserStyle } from "../../utils/getUserStyle";
 import { Link } from 'react-router-dom';
 
-function Header({ tourId, count = null, userType = null }) {
+function Header({ tourId, count = null, userType = null, subGuideFunctionAvailable = null }) {
     const { t } = useTranslation();
     const [openQRCode, setOpenQRCode] = useState(false);
     const [selectedQR, setSelectedQR] = useState('listener');
@@ -56,12 +56,15 @@ function Header({ tourId, count = null, userType = null }) {
                         <span className="close-btn" style={{ border: '2px solid #C60226', backgroundColor: '#C60226' }} onClick={closePopup}>&times;</span>
                         <div className='contentQR'>
                             <h3>{t('generateQRCodeLbl')}</h3>
-                            <div className="select-container">
-                                <select className='selectFile' style={{ border: "1px solid #C60226" }} value={selectedQR} onChange={handleQRSelectionChange}>
-                                    <option value="subSpeaker">{t('generateQRCodeOptions.subGuide')}</option>
-                                    <option value="listener">{t('generateQRCodeOptions.listener')}</option>
-                                </select>
-                            </div>
+                            {subGuideFunctionAvailable && (
+                                <div className="select-container">
+                                    <select className='selectFile' style={{ border: "1px solid #C60226" }} value={selectedQR} onChange={handleQRSelectionChange}>
+                                        <option value="subSpeaker">{t('generateQRCodeOptions.subGuide')}</option>
+                                        <option value="listener">{t('generateQRCodeOptions.listener')}</option>
+                                    </select>
+                                </div>
+                            )}
+
                             {selectedQR === 'subSpeaker' ? (
                                 <>
                                     <div className='qrCodeContainer'>
