@@ -100,7 +100,7 @@ function MultiLangAudio() {
     const session = new DefaultMeetingSession(meetingSessionConfig, logger, deviceController);
     setMeetingSession(session);
 
-    await selectSpeaker(session);
+    //await selectSpeaker(session);
     if (selectedVoiceLanguage === 'ja-JP') {
       console.log('Selected voice language is Japanese', selectedVoiceLanguage);
       //const audioElement = document.getElementById('audioElementListener');
@@ -108,6 +108,11 @@ function MultiLangAudio() {
       console.log('Check audioElement:', audioElement);
       if (audioElement) {
         await session.audioVideo.bindAudioElement(audioElement);
+        await selectSpeaker(session);
+        // Keep audio element in sync with current UI state
+        audioElement.muted = isMuted;
+        audioElement.volume = volume / 100;
+        console.log('Default volume set to:', volume + '%');
         // Disable autoplay for the audio element
         audioElement.autoplay = false;
       } else {
