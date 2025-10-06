@@ -88,13 +88,13 @@ function JapaneseAudio() {
     const session = new DefaultMeetingSession(meetingSessionConfig, logger, deviceController);
     setMeetingSession(session);
 
-    //await selectSpeaker(session);
+    await selectSpeaker(session);
     //const audioElement = document.getElementById('audioElementListener');
     const audioElement = audioElementRef.current;
     console.log('Check audioElement:', audioElement);
     if (audioElement) {
       await session.audioVideo.bindAudioElement(audioElement);
-      await selectSpeaker(session);
+      //await selectSpeaker(session);
       // Keep audio element in sync with current UI state
       audioElement.muted = isMuted;
       audioElement.volume = volume / 100;
