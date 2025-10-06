@@ -70,6 +70,7 @@ function MultiLangAudio() {
   const audioElementRef = useRef(null);
   const [isMuted, setIsMuted] = useState(true);
   const [isPlay, setIsPlay] = useState(false);
+  const [volume, setVolume] = useState(100); // Volume state (0-100)
 
   // Add these references and callback:
   // const wakeLockRef = useRef(null);
@@ -300,8 +301,28 @@ function MultiLangAudio() {
       //setParticipantsCount(attendeeSet.size);
     };
 
+    // Device change observer for automatic speaker selection
+    const observer = {
+      audioOutputsChanged: async (freshAudioOutputDeviceList) => {
+        console.log('Audio outputs changed:', freshAudioOutputDeviceList);
+        if (freshAudioOutputDeviceList.length > 0) {
+          try {
+            await meetingSession.audioVideo.chooseAudioOutput(
+              freshAudioOutputDeviceList[0].deviceId
+            );
+            console.log('Automatically switched to:', freshAudioOutputDeviceList[0].label);
+          } catch (error) {
+            console.error('Failed to switch audio output device:', error);
+          }
+        }
+      },
+    };
+
     // Subscribe to attendee presence
     meetingSession.audioVideo.realtimeSubscribeToAttendeeIdPresence(presenceCallback);
+
+    // Subscribe to device changes
+    meetingSession.audioVideo.addDeviceChangeObserver(observer);
 
     // Subscribe to transcription events
     // meetingSession.audioVideo.transcriptionController?.subscribeToTranscriptEvent(
@@ -487,6 +508,7 @@ function MultiLangAudio() {
       console.log('🔊 Playing audio blob muted:', audio.muted);
       // Load and play the audio
       audio.load();
+      audio.volume = volume / 100; // ✅ apply current volume setting
       await audio.play();
       console.log('✅ Audio played');
       audio.onended = () => {
@@ -660,16 +682,36 @@ function MultiLangAudio() {
     setSelectedVoiceLanguage(event.target.value);
   };
 
+  // Event for handling mute/unmute button click
   const handleMuteUnmute = () => {
-    setIsMuted(!isMuted);
-    audioElementRef.current.muted = isMuted;
+    setIsMuted((prevMuted) => {
+      const nextMuted = !prevMuted;
+      if (audioElementRef.current) {
+        audioElementRef.current.muted = nextMuted;
+      }
+      return nextMuted;
+    });
+  };
+
+  // Event for handling volume change
+  const handleVolumeChange = (event) => {
+    const newVolume = parseInt(event.target.value);
+    setVolume(newVolume);
+    if (audioElementRef.current) {
+      audioElementRef.current.volume = newVolume / 100;
+      console.log('Volume changed to:', newVolume + '%');
+    }
   };
 
   // Function to handle play/pause button click
   const handlePlay = () => {
     if (isPlay === false) {
-      setIsPlay(true)
-      audioElementRef.current.play(); // This is for Chime session (ja-JP only)
+      setIsPlay(true);
+      if (audioElementRef.current) {
+        // Ensure volume is set to current setting before playing
+        audioElementRef.current.volume = volume / 100;
+        audioElementRef.current.play(); // This is for Chime session (ja-JP only)
+      }
     } else {
       setIsPlay(false);
       // ⛔ Immediately stop translated audio
@@ -809,6 +851,18 @@ function MultiLangAudio() {
               userType={userType}
               t={t}
             />
+            <div className='volumeControl' style={{ display: 'flex', alignItems: 'center', marginTop: '10px' }}>
+              <span style={{ marginRight: '10px', fontSize: '14px' }}>🔊</span>
+              <input
+                type="range"
+                min="0"
+                max="100"
+                value={volume}
+                onChange={handleVolumeChange}
+                style={{ width: '100px' }}
+              />
+              <span style={{ marginLeft: '10px', fontSize: '12px' }}>{volume}%</span>
+            </div>
             {translatedAudioData.messages?.length > 0 && translatedAudioData.originals?.length > 0 && (
               <>
                 <div className='trans-box'>

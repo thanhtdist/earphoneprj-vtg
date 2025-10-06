@@ -448,7 +448,7 @@ function JapaneseAudio() {
   // Function to handle play/pause button click
   const handlePlay = () => {
     if (isPlay === false) {
-      setIsPlay(true)
+      setIsPlay(true);
       if (audioElementRef.current) {
         // Ensure volume is set to current setting before playing
         audioElementRef.current.volume = volume / 100;
