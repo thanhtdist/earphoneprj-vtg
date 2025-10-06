@@ -1,6 +1,5 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import LiveViewer from './components/viewer/LiveViewer';
-import LiveViewerJa from './components/viewer/LiveViewerJa';
 import LiveSubSpeaker from './components/guide/LiveSubSpeaker';
 import StartLiveSession from './components/guide/StartLiveSession';
 import StartFindTour from './components/guide/StartFindTour';
@@ -37,7 +36,6 @@ function App() {
             <Route path="/guide/:tourId" element={<StartLiveSession />} />
             <Route path="/sub-guide/:tourId" element={<LiveSubSpeaker />} />
             <Route path="/viewer/:tourId" element={<LiveViewer />} />
-            <Route path="/viewer_ja/:tourId" element={<LiveViewerJa />} />
 
             {/* Admin routes - Wrapped by AuthProvider */}
             <Route path="/admin/*" element={
