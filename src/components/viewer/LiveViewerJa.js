@@ -50,6 +50,7 @@ function LiveViewerJa() {
   // const [chatRestriction, setChatRestriction] = useState(null);
   const [isMuted, setIsMuted] = useState(true);
   const [isPlay, setIsPlay] = useState(false);
+  const [volume, setVolume] = useState(100); // Volume state (0-100)
   // const userID = uuidv4();
   const userType = 'User';
   // Ref for the audio element  
@@ -119,6 +120,21 @@ function LiveViewerJa() {
     }
   }, []);
 
+  // Function to select speaker device
+  const selectSpeaker = async (session) => {
+    try {
+      const audioOutputDevices = await session.audioVideo.listAudioOutputDevices();
+      if (audioOutputDevices.length > 0) {
+        await session.audioVideo.chooseAudioOutput(audioOutputDevices[0].deviceId);
+        console.log('Speaker selected:', audioOutputDevices[0].label);
+      } else {
+        console.log('No speaker devices found');
+      }
+    } catch (error) {
+      console.error('Error selecting speaker:', error);
+    }
+  };
+
   // Function intialize Meeting Session
   const initializeMeetingSession = useCallback(async (meetingData, attendeeData) => {
     if (!meetingData || !attendeeData) {
@@ -137,12 +153,17 @@ function LiveViewerJa() {
       console.log('Check audioElement:', audioElement);
       if (audioElement) {
         await session.audioVideo.bindAudioElement(audioElement);
+        await selectSpeaker(session);
+        // Keep audio element in sync with current UI state
+        audioElement.muted = isMuted;
+        audioElement.volume = volume / 100;
+        console.log('Default volume set to:', volume + '%');
       } else {
         console.error('Audio element not found');
       }
     }
     session.audioVideo.start();
-  }, [selectedVoiceLanguage]);
+  }, [selectedVoiceLanguage, volume, isMuted]);
 
   // Event for handling selected voice language change
   const handleSelectedVoiceLanguageChange = (event) => {
@@ -151,19 +172,40 @@ function LiveViewerJa() {
 
   // Event for handling mute/unmute button click
   const handleMuteUnmute = () => {
-    setIsMuted(!isMuted);
-    audioElementRef.current.muted = isMuted;
+    setIsMuted((prevMuted) => {
+      const nextMuted = !prevMuted;
+      if (audioElementRef.current) {
+        audioElementRef.current.muted = nextMuted;
+      }
+      return nextMuted;
+    });
+  };
+
+  // Event for handling volume change
+  const handleVolumeChange = (event) => {
+    const newVolume = parseInt(event.target.value);
+    setVolume(newVolume);
+    if (audioElementRef.current) {
+      audioElementRef.current.volume = newVolume / 100;
+      console.log('Volume changed to:', newVolume + '%');
+    }
   };
 
 // Function to handle play/pause button click
   const handlePlay = () => {
     console.log('xCheck audioElement:', audioElementRef.current);
     if (isPlay === false) {
-      setIsPlay(true)
-      audioElementRef.current.play();
+      setIsPlay(true);
+      if (audioElementRef.current) {
+        // Ensure volume is set to current setting before playing
+        audioElementRef.current.volume = volume / 100;
+        audioElementRef.current.play();
+      }
     } else {
       setIsPlay(false);
-      audioElementRef.current.pause();
+      if (audioElementRef.current) {
+        audioElementRef.current.pause();
+      }
     }
   }
 
@@ -246,12 +288,33 @@ function LiveViewerJa() {
       setParticipantsCount(attendeeSet.size);
     };
 
+    // Device change observer for automatic speaker selection
+    const observer = {
+      audioOutputsChanged: async (freshAudioOutputDeviceList) => {
+        console.log('Audio outputs changed:', freshAudioOutputDeviceList);
+        if (freshAudioOutputDeviceList.length > 0) {
+          try {
+            await meetingSession.audioVideo.chooseAudioOutput(
+              freshAudioOutputDeviceList[0].deviceId
+            );
+            console.log('Automatically switched to:', freshAudioOutputDeviceList[0].label);
+          } catch (error) {
+            console.error('Failed to switch audio output device:', error);
+          }
+        }
+      },
+    };
+
     // Subscribe to attendee presence
     meetingSession.audioVideo.realtimeSubscribeToAttendeeIdPresence(presenceCallback);
+    
+    // Subscribe to device changes
+    meetingSession.audioVideo.addDeviceChangeObserver(observer);
 
     // Cleanup on unmount
     return () => {
       meetingSession.audioVideo.realtimeUnsubscribeFromAttendeeIdPresence(presenceCallback);
+      meetingSession.audioVideo.removeDeviceChangeObserver(observer);
     };
   }, [meetingSession]);
 
@@ -347,6 +410,18 @@ function LiveViewerJa() {
                 <div className='soundButton' onClick={handleMuteUnmute}>
                   {isMuted ? <HiMiniSpeakerWave size={30} /> : <IoVolumeMute size={30} />
                   }
+                </div>
+                <div className='volumeControl' style={{ display: 'flex', alignItems: 'center', marginTop: '10px' }}>
+                  <span style={{ marginRight: '10px', fontSize: '14px' }}>🔊</span>
+                  <input
+                    type="range"
+                    min="0"
+                    max="100"
+                    value={volume}
+                    onChange={handleVolumeChange}
+                    style={{ width: '100px' }}
+                  />
+                  <span style={{ marginLeft: '10px', fontSize: '12px' }}>{volume}%</span>
                 </div>
               </div>
               {/* {chatRestriction !== "nochat" && (<MessageBox userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} userType={userType} statusChat={chatRestriction} />)} */}

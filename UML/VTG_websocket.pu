@@ -1,0 +1,26 @@
+@startuml
+skinparam componentStyle rectangle
+
+actor "Guide (日本語)" as Guide
+actor "User (English)" as EnUser
+
+rectangle "AWS Cloud" {
+  [API Gateway\n(WebSocket API)]
+  [Lambda: $connect/$disconnect]
+  [Lambda: distributor]
+  [DynamoDB\nConnections]
+  [AWS Polly]
+}
+
+Guide --> [AWS Polly] : 音声テキスト送信（EN）
+[AWS Polly] --> [Lambda: distributor] : 音声（Base64）生成完了
+
+EnUser --> [API Gateway\n(WebSocket API)] : 接続 (wss://...)
+[API Gateway\n(WebSocket API)] --> [Lambda: $connect/$disconnect] : connectionId登録
+[Lambda: $connect/$disconnect] --> [DynamoDB\nConnections]
+
+[Lambda: distributor] --> [DynamoDB\nConnections] : 全接続ID取得
+[Lambda: distributor] --> [API Gateway\n(WebSocket API)] : postToConnection\n(音声配信)
+
+[API Gateway\n(WebSocket API)] --> EnUser : 音声データ送信
+@enduml
