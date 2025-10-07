@@ -560,11 +560,12 @@ function LiveSubSpeaker() {
     meetingSession.audioVideo.realtimeSubscribeToAttendeeIdPresence(callback);
   }, [meetingSession]);
 
-
   const handleMuteUnmute = () => {
-    setIsMuted(!isMuted);
-    audioRef.current.muted = isMuted;
+    const newMutedState = !isMuted;
+    setIsMuted(newMutedState);
+    audioRef.current.muted = newMutedState;
   };
+
   const handlePlay = () => {
     if (isPlay === false) {
       setIsPlay(true)

@@ -426,13 +426,9 @@ function JapaneseAudio() {
 
   // Event for handling mute/unmute button click
   const handleMuteUnmute = () => {
-    setIsMuted((prevMuted) => {
-      const nextMuted = !prevMuted;
-      if (audioElementRef.current) {
-        audioElementRef.current.muted = nextMuted;
-      }
-      return nextMuted;
-    });
+    const newMutedState = !isMuted;
+    setIsMuted(newMutedState);
+    audioElementRef.current.muted = newMutedState;
   };
 
   // Event for handling volume change
