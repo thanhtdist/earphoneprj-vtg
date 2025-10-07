@@ -139,35 +139,10 @@ function StartLiveSession() {
     };
   }
 
-  // Function to detect low-end devices that should not use Voice Focus
-  const isLowEndDevice = () => {
-    const userAgent = navigator.userAgent;
-    const isIPhoneSE = /iPhone SE|iPhone 6|iPhone 7|iPhone 8/.test(userAgent);
-    const isOldAndroid = /Android [4-6]/.test(userAgent);
-    const isLowMemoryDevice = navigator.deviceMemory && navigator.deviceMemory < 4;
-    
-    console.log('Device detection:', {
-      userAgent,
-      isIPhoneSE,
-      isOldAndroid,
-      isLowMemoryDevice,
-      deviceMemory: navigator.deviceMemory
-    });
-    
-    return isIPhoneSE || isOldAndroid || isLowMemoryDevice;
-  };
-
   // Function to transform the audio input device to Voice Focus Device/Echo Reduction
   const transformVoiceFocusDevice = async (meeting, attendee, logger) => {
     let transformer = null;
     let isVoiceFocusSupported = false;
-    
-    // Check if device is low-end and should skip Voice Focus
-    if (isLowEndDevice()) {
-      console.log('Low-end device detected, skipping Voice Focus to prevent performance issues');
-      return false;
-    }
-    
     try {
       const spec = {
         name: 'ns_es', // use Voice Focus with Echo Reduction
@@ -227,56 +202,12 @@ function StartLiveSession() {
     console.log('Main Speaker - initializeMeetingSession--> Start');
     metricReport(meetingSession);
     console.log('Main Speaker - initializeMeetingSession--> End');
-    // Function to resume AudioContext if suspended (especially on iOS Safari)
-    const resumeAudioContextIfNeeded = async () => {
-      try {
-        // Check if we're on Safari/iOS
-        const isSafari = /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent);
-        const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
-        
-        if (isSafari || isIOS) {
-          console.log('Safari/iOS detected, checking AudioContext state');
-          
-          // Try to access the AudioContext from the device controller if available
-          if (deviceController && deviceController.audioContext) {
-            const audioContext = deviceController.audioContext;
-            console.log('AudioContext state:', audioContext.state);
-            
-            if (audioContext.state === 'suspended') {
-              console.log('AudioContext is suspended, attempting to resume...');
-              await audioContext.resume();
-              console.log('AudioContext resumed, new state:', audioContext.state);
-            }
-          } else {
-            // Fallback: try to create and resume a new AudioContext
-            const AudioContext = window.AudioContext || window.webkitAudioContext;
-            if (AudioContext) {
-              const audioContext = new AudioContext();
-              console.log('Fallback AudioContext state:', audioContext.state);
-              
-              if (audioContext.state === 'suspended') {
-                console.log('Fallback AudioContext is suspended, attempting to resume...');
-                await audioContext.resume();
-                console.log('Fallback AudioContext resumed, new state:', audioContext.state);
-              }
-              audioContext.close(); // Clean up fallback context
-            }
-          }
-        }
-      } catch (error) {
-        console.error('Error handling AudioContext suspension:', error);
-      }
-    };
-
     // Bind the audio element to the meeting session
     const audioElement = document.getElementById('audioElementMain');
     if (audioElement) {
       await meetingSession.audioVideo.bindAudioElement(audioElement);
       // Disable autoplay for the audio element
       audioElement.autoplay = false;
-      
-      // Resume AudioContext if needed (especially for iOS Safari)
-      await resumeAudioContextIfNeeded();
     } else {
       console.error('Audio element not found');
     }
@@ -541,14 +472,11 @@ function StartLiveSession() {
       if (devices.length === 0 || devices.some(device => !device.label.trim())) {
         // if (devices.length === 0) {
         console.log('No audio input devices found');
-        // Adjust timeout based on device type (iPhone SE and low-end devices need more time)
-        const timeoutDuration = isLowEndDevice() ? 15000 : 5000;
-        console.log('Setting microphone permission timeout to:', timeoutDuration + 'ms');
-        // Display a message after timeout
+        // Display a message after 5 seconds
         setTimeout(() => {
           setMicroChecking(null);
           setNoMicoMsg('noMicroMsg');
-        }, timeoutDuration);
+        }, 5000);
       } else {
         // If devices are available, select the first device as the default
         setSelectedAudioInput(devices[0].deviceId);
