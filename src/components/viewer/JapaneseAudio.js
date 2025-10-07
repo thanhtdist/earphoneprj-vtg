@@ -96,7 +96,7 @@ function JapaneseAudio() {
       await session.audioVideo.bindAudioElement(audioElement);
       await selectSpeaker(session);
       // Keep audio element in sync with current UI state
-      audioElement.muted = !isMuted;
+      audioElement.muted = isMuted;
       audioElement.volume = volume / 100;
       console.log('Default volume set to:', volume + '%');
 
