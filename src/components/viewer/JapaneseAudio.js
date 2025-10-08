@@ -446,6 +446,8 @@ function JapaneseAudio() {
     if (isPlay === false) {
       setIsPlay(true);
       if (audioElementRef.current) {
+        // Automatically unmute if currently muted
+        audioElementRef.current.muted = false;
         // Ensure volume is set to current setting before playing
         audioElementRef.current.volume = volume / 100;
         audioElementRef.current.play(); // This is for Chime session (ja-JP only)
@@ -465,6 +467,7 @@ function JapaneseAudio() {
 
       // ⛔ Stop Chime-bound audio (if needed)
       audioElementRef.current.pause();
+      audioElementRef.current.muted = true;
 
       // 🧹 Clear translated audio queue
       audioQueueRef.current = [];
