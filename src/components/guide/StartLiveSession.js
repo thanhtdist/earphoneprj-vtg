@@ -158,7 +158,7 @@ function StartLiveSession() {
   };
 
   // Function to transform the audio input device to Voice Focus Device/Echo Reduction
-  const transformVoiceFocusDevice = async (meeting, attendee, logger) => {
+  const transformVoiceFocusDevice = useCallback(async (meeting, attendee, logger) => {
     let transformer = null;
     let isVoiceFocusSupported = false;
     
@@ -189,7 +189,7 @@ function StartLiveSession() {
       isVoiceFocusSupported = false;
     }
     return isVoiceFocusSupported;
-  }
+  }, []);
 
   // Function to initialize the meeting session from the meeting that the host has created
   const initializeMeetingSession = useCallback(async (meeting, attendee) => {
@@ -309,7 +309,7 @@ function StartLiveSession() {
     // Start audio video session
     meetingSession.audioVideo.start();
 
-  }, []);
+  }, [transformVoiceFocusDevice]);
 
   // Function to update MeetingId, Channel Id
   const updateMeetingIdAndChannelId = async (data) => {
