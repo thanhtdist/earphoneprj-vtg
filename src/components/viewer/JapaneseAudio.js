@@ -96,7 +96,7 @@ function JapaneseAudio() {
       await session.audioVideo.bindAudioElement(audioElement);
       await selectSpeaker(session);
       // Keep audio element in sync with current UI state
-      // audioElement.muted = isMuted;
+      audioElement.muted = isMuted;
       audioElement.volume = volume / 100;
       console.log('Default volume set to:', volume + '%');
 
@@ -447,11 +447,13 @@ function JapaneseAudio() {
       setIsPlay(true);
       if (audioElementRef.current) {
         // Ensure volume is set to current setting before playing
+        audioElementRef.current.muted = false;
         audioElementRef.current.volume = volume / 100;
         audioElementRef.current.play(); // This is for Chime session (ja-JP only)
       }
     } else {
       setIsPlay(false);
+      audioElementRef.current.muted = true;
       // ⛔ Immediately stop translated audio
       if (currentTranslatedAudioRef.current) {
         // ✅ new Audio() or audioElementRef.current (HTMLAudioElement)
