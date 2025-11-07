@@ -96,7 +96,7 @@ function JapaneseAudio() {
       await session.audioVideo.bindAudioElement(audioElement);
       await selectSpeaker(session);
       // Keep audio element in sync with current UI state
-      audioElement.muted = isMuted;
+      // audioElement.muted = isMuted;
       audioElement.volume = volume / 100;
       console.log('Default volume set to:', volume + '%');
 
@@ -107,7 +107,7 @@ function JapaneseAudio() {
     }
     metricReport(session);
     session.audioVideo.start();
-  }, [volume, isMuted]);
+  }, [volume]);
 
   const selectSpeaker = async (session) => {
     try {
@@ -428,7 +428,7 @@ function JapaneseAudio() {
   const handleMuteUnmute = () => {
     const newMutedState = !isMuted;
     setIsMuted(newMutedState);
-    audioElementRef.current.muted = newMutedState;
+    audioElementRef.current.muted = isMuted;
   };
 
   // Event for handling volume change
@@ -446,8 +446,6 @@ function JapaneseAudio() {
     if (isPlay === false) {
       setIsPlay(true);
       if (audioElementRef.current) {
-        // Automatically unmute if currently muted
-        audioElementRef.current.muted = false;
         // Ensure volume is set to current setting before playing
         audioElementRef.current.volume = volume / 100;
         audioElementRef.current.play(); // This is for Chime session (ja-JP only)
@@ -467,7 +465,6 @@ function JapaneseAudio() {
 
       // ⛔ Stop Chime-bound audio (if needed)
       audioElementRef.current.pause();
-      audioElementRef.current.muted = true;
 
       // 🧹 Clear translated audio queue
       audioQueueRef.current = [];
