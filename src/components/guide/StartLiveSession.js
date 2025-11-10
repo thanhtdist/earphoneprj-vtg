@@ -231,9 +231,11 @@ function StartLiveSession() {
     const resumeAudioContextIfNeeded = async () => {
       try {
         // Check if we're on Safari/iOS
+        console.log('chuaw cccccheck ios');
+        
         const isSafari = /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent);
         const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
-        
+        console.log('cccccheck ios');
         if (isSafari || isIOS) {
           console.log('Safari/iOS detected, checking AudioContext state');
           
