@@ -259,13 +259,13 @@ function StartLiveSession() {
               if (audioContext.state === 'suspended') {
                 console.log('Fallback AudioContext is suspended, attempting to resume...');
                 try {
-                   audioContext.resume();
+                  await audioContext.resume();
                 } catch (error) {
                   console.log('Fallback AudioContext resumed errorrrrrrrrr:',error);                 
                 }
                 console.log('Fallback AudioContext resumed, new state:', audioContext.state);
               }
-              audioContext.close(); // Clean up fallback context
+              // audioContext.close(); // Clean up fallback context
             }
           }
         }
