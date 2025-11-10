@@ -17,7 +17,7 @@ import { AuthProvider } from './components/admin/common/AuthContext';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Config from './utils/config'; // Importing the configuration file
-import DebugConsole from './components/guide/DebugConsole';
+import DebugConsoleAdvanced from './components/guide/DebugConsole';
 //import NotFound from './components/NotFound'; // Importing the NotFound component
 
 function App() {
@@ -30,7 +30,7 @@ function App() {
     <>
       <ToastContainer position="top-right" autoClose={3000} />
       {/* dong nay chi de xem log khi dev, ko hien o prod */}
-      {process.env.NODE_ENV === "development" && <DebugConsole />}
+      <DebugConsoleAdvanced />
       {/* xong la xoa */}
       <Router basename={Config.subPath}>
         <div className="App">
