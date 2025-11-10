@@ -259,7 +259,7 @@ function StartLiveSession() {
               if (audioContext.state === 'suspended') {
                 console.log('Fallback AudioContext is suspended, attempting to resume...');
                 try {
-                  await audioContext.resume();
+                   audioContext.resume();
                 } catch (error) {
                   console.log('Fallback AudioContext resumed errorrrrrrrrr:',error);                 
                 }
