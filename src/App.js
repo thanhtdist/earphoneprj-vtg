@@ -54,11 +54,11 @@ function App() {
               </AuthProvider>
             } />
           </Routes>
-          {/* dong nay chi de xem log khi dev, ko hien o prod */}
-          {process.env.NODE_ENV === "development" && <DebugConsole />}
-          {/* xong la xoa */}
         </div>
       </Router>
+      {/* dong nay chi de xem log khi dev, ko hien o prod */}
+      {process.env.NODE_ENV === "development" && <DebugConsole />}
+      {/* xong la xoa */}
     </>
   );
 };
