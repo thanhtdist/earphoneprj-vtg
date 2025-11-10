@@ -145,7 +145,7 @@ function StartLiveSession() {
     const isIPhoneSE = /iPhone SE|iPhone 6|iPhone 7|iPhone 8/.test(userAgent);
     const isOldAndroid = /Android [4-6]/.test(userAgent);
     const isLowMemoryDevice = navigator.deviceMemory && navigator.deviceMemory < 4;
-
+    
     console.log('Device detection:', {
       userAgent,
       isIPhoneSE,
@@ -153,7 +153,7 @@ function StartLiveSession() {
       isLowMemoryDevice,
       deviceMemory: navigator.deviceMemory
     });
-
+    
     return isIPhoneSE || isOldAndroid || isLowMemoryDevice;
   };
 
@@ -161,13 +161,13 @@ function StartLiveSession() {
   const transformVoiceFocusDevice = useCallback(async (meeting, attendee, logger) => {
     let transformer = null;
     let isVoiceFocusSupported = false;
-
+    
     // Check if device is low-end and should skip Voice Focus
     if (isLowEndDevice()) {
       console.log('Low-end device detected, skipping Voice Focus to prevent performance issues');
       return false;
     }
-
+    
     try {
       const spec = {
         name: 'ns_es', // use Voice Focus with Echo Reduction
@@ -227,113 +227,60 @@ function StartLiveSession() {
     console.log('Main Speaker - initializeMeetingSession--> Start');
     metricReport(meetingSession);
     console.log('Main Speaker - initializeMeetingSession--> End');
-    // Function to resume AudioContext if suspended (especially on iOS Safari)
-    // const resumeAudioContextIfNeeded = async () => {
-    //   try {
-    //     // Check if we're on Safari/iOS
-    //     console.log('chuaw cccccheck ios');
-
-    //     const isSafari = /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent);
-    //     const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
-    //     console.log('chuaw cccccheck ios');
-    //     if (isSafari || isIOS) {
-    //       console.log('Safari/iOS detected, checking AudioContext state');
-
-    //       // Try to access the AudioContext from the device controller if available
-    //       if (deviceController && deviceController.audioContext) {
-    //         const audioContext = deviceController.audioContext;
-    //         console.log('AudioContext state:', audioContext.state);
-
-    //         if (audioContext.state === 'suspended') {
-    //           console.log('AudioContext is suspended, attempting to resume...');
-    //           await audioContext.resume();
-    //           console.log('AudioContext resumed, new state:', audioContext.state);
-    //         }
-    //       } else {
-    //         // Fallback: try to create and resume a new AudioContext
-    //         const AudioContext = window.AudioContext || window.webkitAudioContext;
-    //         if (AudioContext) {
-    //           const audioContext = new AudioContext();
-    //           console.log('Fallback AudioContext state:', audioContext.state);
-
-    //           if (audioContext.state === 'suspended') {
-    //             console.log('Fallback AudioContext is suspended, attempting to resume...');
-    //             await audioContext.resume();
-    //             console.log('Fallback AudioContext resumed, new state:', audioContext.state);
-    //           }
-    //           audioContext.close(); // Clean up fallback context
-    //         }
-    //       }
-    //     }
-    //   } catch (error) {
-    //     console.error('Error handling AudioContext suspension:', error);
-    //   }
-    // };
-
-    // Hàm resume với timeout để tránh treo trên Safari/iOS
-    const resumeWithTimeout = (audioContext, timeout = 1000) => {
-      return Promise.race([
+    function resumeWithTimeout(audioContext, timeout = 1000) {
+    return Promise.race([
         audioContext.resume(),
         new Promise((_, reject) =>
-          setTimeout(() => reject(new Error('AudioContext resume timeout')), timeout)
+            setTimeout(() => reject(new Error('AudioContext resume timeout')), timeout)
         )
-      ]);
-    };
-
-    // Hàm chính
+    ]);
+}
+    // Function to resume AudioContext if suspended (especially on iOS Safari)
     const resumeAudioContextIfNeeded = async () => {
       try {
+        // Check if we're on Safari/iOS
+        console.log('chuaw cccccheck ios');
+        
         const isSafari = /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent);
         const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
-
-        if (!isSafari && !isIOS) {
-          console.log('Not Safari/iOS, no need to resume AudioContext');
-          return;
-        }
-
-        console.log('Safari/iOS detected, checking AudioContext state...');
-
-        let audioContext = deviceController?.audioContext;
-
-        if (!audioContext) {
-          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-          if (!AudioContextClass) {
-            console.warn('No AudioContext available');
-            return;
-          }
-          audioContext = new AudioContextClass();
-          console.log('Created fallback AudioContext:', audioContext.state);
-        } else {
-          console.log('Using existing AudioContext:', audioContext.state);
-        }
-
-        if (audioContext.state === 'suspended') {
-          console.log('AudioContext is suspended, waiting for user interaction to resume...');
-
-          const resumeHandler = async () => {
-            try {
-              await resumeWithTimeout(audioContext);
-              console.log('AudioContext resumed successfully:', audioContext.state);
-            } catch (err) {
-              console.warn('AudioContext resume failed:', err);
-            } finally {
-              // Remove event listeners after resume attempt
-              document.body.removeEventListener('click', resumeHandler);
-              document.body.removeEventListener('touchstart', resumeHandler);
+        console.log('chuaw cccccheck ios');
+        if (isSafari || isIOS) {
+          console.log('Safari/iOS detected, checking AudioContext state');
+          
+          // Try to access the AudioContext from the device controller if available
+          if (deviceController && deviceController.audioContext) {
+            const audioContext = deviceController.audioContext;
+            console.log('AudioContext state:', audioContext.state);
+            
+            if (audioContext.state === 'suspended') {
+              console.log('AudioContext is suspended, attempting to resume...');
+              await audioContext.resume();
+              console.log('AudioContext resumed, new state:', audioContext.state);
             }
-          };
-
-          // Lắng nghe sự kiện do user kích hoạt
-          document.body.addEventListener('click', resumeHandler, { once: true });
-          document.body.addEventListener('touchstart', resumeHandler, { once: true });
-        } else {
-          console.log('AudioContext already running:', audioContext.state);
+          } else {
+            // Fallback: try to create and resume a new AudioContext
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            if (AudioContext) {
+              const audioContext = new AudioContext();
+              console.log('Fallback AudioContext state:', audioContext.state);
+              
+              if (audioContext.state === 'suspended') {
+                console.log('Fallback AudioContext is suspended, attempting to resume...');
+                try {
+                   await resumeWithTimeout(audioContext);
+                } catch (error) {
+                  logger.warn('Fallback AudioContext resume() failed or timed out:', error);
+                }
+                console.log('Fallback AudioContext resumed, new state:', audioContext.state);
+              }
+              audioContext.close(); // Clean up fallback context
+            }
+          }
         }
       } catch (error) {
         console.error('Error handling AudioContext suspension:', error);
       }
     };
-
 
     // Bind the audio element to the meeting session
     const audioElement = document.getElementById('audioElementMain');
@@ -341,7 +288,7 @@ function StartLiveSession() {
       await meetingSession.audioVideo.bindAudioElement(audioElement);
       // Disable autoplay for the audio element
       audioElement.autoplay = false;
-
+      
       // Resume AudioContext if needed (especially for iOS Safari)
       await resumeAudioContextIfNeeded();
     } else {
