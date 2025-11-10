@@ -258,7 +258,10 @@ function StartLiveSession() {
               
               if (audioContext.state === 'suspended') {
                 console.log('Fallback AudioContext is suspended, attempting to resume...');
-                await audioContext.resume();
+                await audioContext.resume().then(
+                  () => console.log('Fallback resumed (async).'),
+                  (e) => console.error('Fallback resume async rejected:', e)
+                );;
                 console.log('Fallback AudioContext resumed, new state:', audioContext.state);
               }
               audioContext.close(); // Clean up fallback context
