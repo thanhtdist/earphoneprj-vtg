@@ -107,8 +107,11 @@ function MultiLangAudio() {
       console.log('Check audioElement:', audioElement);
       if (audioElement) {
         await session.audioVideo.bindAudioElement(audioElement);
-        // Disable autoplay for the audio element
-        audioElement.autoplay = false;
+        // iOS Safari cannot start (nor resume) a MediaStream element that was never
+        // allowed to play, so the meeting stream is started muted instead of being
+        // kept paused. It is unmuted when the user presses the play button
+        audioElement.muted = true;
+        audioElement.autoplay = true;
       } else {
         console.error('Audio element not found');
       }
@@ -466,13 +469,23 @@ function MultiLangAudio() {
       return;
     }
 
+    //const audio = new Audio(nextAudio.blobUrl);
+    // audioElementRef
+    const audio = audioElementRef.current;
+    // When Japanese is selected the audio element is bound to the meeting stream.
+    // Resetting src/currentTime on it stops the live audio of the guide, so the
+    // translated audio must never be played on this element
+    if (!audio || audio.srcObject) {
+      console.log('🔇 Skipped translated audio: the audio element is bound to the meeting stream');
+      audioQueueRef.current.forEach(({ blobUrl }) => URL.revokeObjectURL(blobUrl));
+      audioQueueRef.current = [];
+      return;
+    }
+
     const nextAudio = audioQueueRef.current.shift();
     console.log('🔊 Playing audio in queue nextAudio:', nextAudio);
     if (!nextAudio) return;
 
-    //const audio = new Audio(nextAudio.blobUrl);
-    // audioElementRef
-    const audio = audioElementRef.current;
     // Reset the audio element
     audio.pause();
     audio.currentTime = 0;
@@ -628,6 +641,13 @@ function MultiLangAudio() {
                 return;
               }
 
+              // Japanese listeners hear the guide live through the meeting session,
+              // the translated audio must not be queued on the same audio element
+              if (selectedVoiceLanguage === 'ja-JP') {
+                console.log('🔇 Skipped translated audio: Japanese is played from the meeting session');
+                return;
+              }
+
               console.log('🔊 Playing audio for lang:', parsed.language);
               console.log('🔊 Playing audio for audioQueueRef current:', audioQueueRef.current);
 
@@ -654,22 +674,54 @@ function MultiLangAudio() {
         }
       };
     }
-  }, [isPlay, playNextAudio]);
+  }, [isPlay, playNextAudio, selectedVoiceLanguage]);
 
   const handleSelectedVoiceLanguageChange = (event) => {
     setSelectedVoiceLanguage(event.target.value);
   };
 
+  // Function to play the audio bound to the meeting session (Japanese)
+  // iOS Safari rejects play() while the meeting stream is not attached yet,
+  // so the playback is retried as soon as the element becomes playable
+  const playMeetingAudio = useCallback(async () => {
+    const audio = audioElementRef.current;
+    if (!audio) {
+      console.error('Audio element not found');
+      return;
+    }
+    try {
+      await audio.play();
+      console.log('✅ Meeting audio played');
+    } catch (error) {
+      console.error('🔈 Failed to play the meeting audio, retrying when it is ready:', error);
+      const retry = () => {
+        audio.removeEventListener('loadedmetadata', retry);
+        audio.removeEventListener('canplay', retry);
+        audio.play()
+          .then(() => console.log('✅ Meeting audio played on retry'))
+          .catch(err => console.error('🔈 Failed to play the meeting audio:', err));
+      };
+      audio.addEventListener('loadedmetadata', retry);
+      audio.addEventListener('canplay', retry);
+    }
+  }, []);
+
   const handleMuteUnmute = () => {
     setIsMuted(!isMuted);
-    audioElementRef.current.muted = isMuted;
+    // The meeting stream keeps playing while stopped, so it must stay muted
+    audioElementRef.current.muted = isPlay ? isMuted : true;
   };
 
   // Function to handle play/pause button click
   const handlePlay = () => {
+    const audio = audioElementRef.current;
     if (isPlay === false) {
       setIsPlay(true)
-      audioElementRef.current.play(); // This is for Chime session (ja-JP only)
+      // The meeting stream is started muted, unmute it before playing
+      if (audio) {
+        audio.muted = !isMuted;
+      }
+      playMeetingAudio(); // This is for Chime session (ja-JP only)
     } else {
       setIsPlay(false);
       // ⛔ Immediately stop translated audio
@@ -683,8 +735,13 @@ function MultiLangAudio() {
         currentTranslatedAudioRef.current = null;
       }
 
-      // ⛔ Stop Chime-bound audio (if needed)
-      audioElementRef.current.pause();
+      // ⛔ Stop Chime-bound audio: mute it instead of pausing,
+      // iOS Safari cannot resume a paused MediaStream element
+      if (audio?.srcObject) {
+        audio.muted = true;
+      } else {
+        audio?.pause();
+      }
 
       // 🧹 Clear translated audio queue
       audioQueueRef.current = [];
