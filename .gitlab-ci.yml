@@ -1,0 +1,135 @@
+stages:
+  - lint
+  - build
+  # - backend
+  # - frontend
+
+variables:
+  AWS_BRANCH: $CI_COMMIT_BRANCH # Use current GitLab branch dynamically
+  AWS_REGION: ap-northeast-1 # Aws Region
+  AWS_APP_ID: d27kbx2628eq4q # Amplify App ID d392h4ccc80hkj
+  S3_BUCKET_NAME: amplify-vtg-deploy-gitlab # S3 bucket for artifacts
+
+frontend:lint:
+  stage: lint
+  image: node:20
+  before_script:
+    # Install npm dependencies
+    - npm install --cache .npm --prefer-offline --force
+  script:
+    # Lint the React sources with the CRA (react-app) ESLint config from package.json
+    - npx eslint src --ext .js,.jsx
+  allow_failure: true # Warnings must not block the pipeline yet
+  cache:
+    paths:
+      - .npm/**/*
+
+frontend:build:
+  stage: build
+  image: node:20
+  before_script:
+    # Install aws-cli (Debian-based)
+    - apt-get update
+    - apt-get install -y awscli
+    # Configure AWS
+    - aws configure set region $AWS_REGION
+    - aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+    - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+    - aws configure set default.region $AWS_REGION
+    # Install npm dependencies
+    - npm install --cache .npm --prefer-offline --force
+    # amplify_outputs.json is git-ignored but imported by src/index.js, so it has to be
+    # generated from the Amplify app before building. It only exists for branches whose
+    # backend has already been deployed, so fall back to a placeholder to keep this job
+    # a pure compile check (the artifact is then NOT deployable)
+    - npx ampx generate outputs --branch $AWS_BRANCH --app-id $AWS_APP_ID || echo '{"version":"1.2","custom":{"API":{}}}' > amplify_outputs.json
+    - mkdir -p src/
+    - cp ./amplify_outputs.json ./src/
+  script:
+    # Build React app
+    - npm run build
+  cache:
+    paths:
+      - .npm/**/*
+  artifacts:
+    paths:
+      - build/
+    expire_in: 1 hour
+
+# TODO: re-enable the deployment jobs
+# deploy_backend:
+#   stage: backend
+#   image: node:20
+#   before_script:
+#     # Install aws-cli and zip (Debian-based)
+#     - apt-get update
+#     - apt-get install -y awscli zip
+#     # Configure AWS
+#     - aws configure set region $AWS_REGION
+#     - aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+#     - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+#     - aws configure set default.region $AWS_REGION
+#     # Install npm dependencies
+#     - npm ci --cache .npm --prefer-offline --force
+#     # Check for vulnerabilities
+#     - npm audit || true # Continue even if vulnerabilities are found
+#   script:
+#     - npx ampx pipeline-deploy --branch $AWS_BRANCH --app-id $AWS_APP_ID --debug
+#     - npx ampx generate outputs --branch $AWS_BRANCH --app-id $AWS_APP_ID
+#   artifacts:
+#     paths:
+#       - amplify_outputs.json
+#     expire_in: 1 hour
+#   cache:
+#     paths:
+#       - .npm/**/*
+
+# deploy_frontend:
+#   stage: frontend
+#   image: node:20
+#   dependencies:
+#     - deploy_backend
+#   before_script:
+#     # Install aws-cli and zip (Debian-based)
+#     - apt-get update
+#     - apt-get install -y awscli zip
+#     # Configure AWS
+#     - aws configure set region $AWS_REGION
+#     - aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+#     - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+#     - aws configure set default.region $AWS_REGION
+#     # Debug variables
+#     - echo "AWS_APP_ID=$AWS_APP_ID"
+#     - echo "AWS_BRANCH=$AWS_BRANCH"
+#     - echo "S3_BUCKET_NAME=$S3_BUCKET_NAME"
+#     - echo "CI_COMMIT_SHORT_SHA=$CI_COMMIT_SHORT_SHA"
+#     # Install npm dependencies
+#     - npm install --force
+#     # Check for vulnerabilities
+#     - npm audit || true # Continue even if vulnerabilities are found
+#     # Copy Amplify outputs
+#     - mkdir -p src/
+#     - cp ./amplify_outputs.json ./src/
+#   script:
+#     # Build React app
+#     - npm run build
+#     # Zip build directory
+#     - cd build
+#     - zip -r ../frontend.zip .
+#     - cd ..
+#     # Verify zip file
+#     - ls -la frontend.zip
+#     # Upload to S3 with unique name
+#     - aws s3 cp frontend.zip s3://$S3_BUCKET_NAME/artifacts/frontend-$CI_COMMIT_SHORT_SHA.zip --acl private
+#     # Trigger Amplify deployment (single-line command)
+#     - aws amplify start-deployment --app-id $AWS_APP_ID --branch-name $AWS_BRANCH --source-url s3://$S3_BUCKET_NAME/artifacts/frontend-$CI_COMMIT_SHORT_SHA.zip
+#   after_script:
+#     # Cleanup S3 artifact
+#     - aws s3 rm s3://$S3_BUCKET_NAME/artifacts/frontend-$CI_COMMIT_SHORT_SHA.zip
+#   cache:
+#     paths:
+#       - .npm/**/*
+#   artifacts:
+#     paths:
+#       - build/***
+#     expire_in: 1 hour

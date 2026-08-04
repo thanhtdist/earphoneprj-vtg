@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import LiveViewer from './components/viewer/LiveViewer';
+import LiveViewerJa from './components/viewer/LiveViewerJa';
 import LiveSubSpeaker from './components/guide/LiveSubSpeaker';
 import StartLiveSession from './components/guide/StartLiveSession';
 import StartFindTour from './components/guide/StartFindTour';
@@ -17,7 +18,6 @@ import { AuthProvider } from './components/admin/common/AuthContext';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Config from './utils/config'; // Importing the configuration file
-import DebugConsoleAdvanced from './components/guide/DebugConsole';
 //import NotFound from './components/NotFound'; // Importing the NotFound component
 
 function App() {
@@ -29,9 +29,6 @@ function App() {
   return (
     <>
       <ToastContainer position="top-right" autoClose={3000} />
-      {/* dong nay chi de xem log khi dev, ko hien o prod */}
-      <DebugConsoleAdvanced />
-      {/* xong la xoa */}
       <Router basename={Config.subPath}>
         <div className="App">
           <Routes>
@@ -40,6 +37,7 @@ function App() {
             <Route path="/guide/:tourId" element={<StartLiveSession />} />
             <Route path="/sub-guide/:tourId" element={<LiveSubSpeaker />} />
             <Route path="/viewer/:tourId" element={<LiveViewer />} />
+            <Route path="/viewer_ja/:tourId" element={<LiveViewerJa />} />
 
             {/* Admin routes - Wrapped by AuthProvider */}
             <Route path="/admin/*" element={

@@ -4,6 +4,8 @@
 /node_modules
 /.pnp
 .pnp.js
+# npm cache directory used by the CI jobs (npm install --cache .npm)
+/.npm
 
 # testing
 /coverage

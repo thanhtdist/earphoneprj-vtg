@@ -58,7 +58,6 @@ function JapaneseAudio() {
   const audioElementRef = useRef(null);
   const [isMuted, setIsMuted] = useState(true);
   const [isPlay, setIsPlay] = useState(false);
-  const [volume, setVolume] = useState(100); // Volume state (0-100)
 
   // Add these references and callback:
   // const wakeLockRef = useRef(null);
@@ -88,18 +87,12 @@ function JapaneseAudio() {
     const session = new DefaultMeetingSession(meetingSessionConfig, logger, deviceController);
     setMeetingSession(session);
 
-    //await selectSpeaker(session);
+    await selectSpeaker(session);
     //const audioElement = document.getElementById('audioElementListener');
     const audioElement = audioElementRef.current;
     console.log('Check audioElement:', audioElement);
     if (audioElement) {
       await session.audioVideo.bindAudioElement(audioElement);
-      await selectSpeaker(session);
-      // Keep audio element in sync with current UI state
-      audioElement.muted = isMuted;
-      audioElement.volume = volume / 100;
-      console.log('Default volume set to:', volume + '%');
-
       // Disable autoplay for the audio element
       audioElement.autoplay = false;
     } else {
@@ -107,7 +100,7 @@ function JapaneseAudio() {
     }
     metricReport(session);
     session.audioVideo.start();
-  }, [volume]);
+  }, []);
 
   const selectSpeaker = async (session) => {
     try {
@@ -277,35 +270,9 @@ function JapaneseAudio() {
       }
       //setParticipantsCount(attendeeSet.size);
     };
-    // Device change observer for automatic speaker selection
-    const observer = {
-      audioOutputsChanged: async (freshAudioOutputDeviceList) => {
-        console.log('Audio outputs changed:', freshAudioOutputDeviceList);
-        if (freshAudioOutputDeviceList.length > 0) {
-          try {
-            await meetingSession.audioVideo.chooseAudioOutput(
-              freshAudioOutputDeviceList[0].deviceId
-            );
-            console.log('Automatically switched to:', freshAudioOutputDeviceList[0].label);
-          } catch (error) {
-            console.error('Failed to switch audio output device:', error);
-          }
-        }
-      },
-    };
 
     // Subscribe to attendee presence
     meetingSession.audioVideo.realtimeSubscribeToAttendeeIdPresence(presenceCallback);
-
-    // Subscribe to device changes
-    meetingSession.audioVideo.addDeviceChangeObserver(observer);
-
-    return () => {
-      // Unsubscribe on cleanup
-      meetingSession.audioVideo.realtimeUnsubscribeToAttendeeIdPresence(presenceCallback);
-      meetingSession.audioVideo.removeDeviceChangeObserver(observer);
-    }
-
   }, [meetingSession]);
 
   // Function to connect to WebSocket
@@ -424,36 +391,18 @@ function JapaneseAudio() {
     wsRef,
   });
 
-  // Event for handling mute/unmute button click
   const handleMuteUnmute = () => {
-    const newMutedState = !isMuted;
-    setIsMuted(newMutedState);
+    setIsMuted(!isMuted);
     audioElementRef.current.muted = isMuted;
-  };
-
-  // Event for handling volume change
-  const handleVolumeChange = (event) => {
-    const newVolume = parseInt(event.target.value);
-    setVolume(newVolume);
-    if (audioElementRef.current) {
-      audioElementRef.current.volume = newVolume / 100;
-      console.log('Volume changed to:', newVolume + '%');
-    }
   };
 
   // Function to handle play/pause button click
   const handlePlay = () => {
     if (isPlay === false) {
-      setIsPlay(true);
-      if (audioElementRef.current) {
-        // Ensure volume is set to current setting before playing
-        audioElementRef.current.muted = false;
-        audioElementRef.current.volume = volume / 100;
-        audioElementRef.current.play(); // This is for Chime session (ja-JP only)
-      }
+      setIsPlay(true)
+      audioElementRef.current.play(); // This is for Chime session (ja-JP only)
     } else {
       setIsPlay(false);
-      audioElementRef.current.muted = true;
       // ⛔ Immediately stop translated audio
       if (currentTranslatedAudioRef.current) {
         // ✅ new Audio() or audioElementRef.current (HTMLAudioElement)
@@ -607,19 +556,6 @@ function JapaneseAudio() {
           userType={userType}
           t={t}
         />
-        <div className='volumeControl' style={{ display: 'flex', alignItems: 'center', marginTop: '10px' }}>
-          <span style={{ marginRight: '10px', fontSize: '14px' }}>🔊</span>
-          <input
-            type="range"
-            min="0"
-            max="100"
-            value={volume}
-            onChange={handleVolumeChange}
-            style={{ width: '100px' }}
-          />
-          <span style={{ marginLeft: '10px', fontSize: '12px' }}>{volume}%</span>
-        </div>
-
         {tour && tour.chatRestriction !== "nochat" && (<MessageBox userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} userType={userType} statusChat={tour.chatRestriction} />)}
       </div>
     </>

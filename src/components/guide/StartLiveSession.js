@@ -93,6 +93,10 @@ function StartLiveSession() {
   const [isMuted, setIsMuted] = useState(true);
   const [isPlay, setIsPlay] = useState(false);
   const audioRef = useRef(null);
+  // Keep the Voice Focus device currently in use so the previous microphone can be released
+  const vfDeviceRef = useRef(null);
+  // Keep a stable reference so the device change observer always calls the latest handler
+  const audioInputsChangedRef = useRef(null);
   const userType = `Guide`;
   //const audioData = useRef([]); // Ref to store audio data
 
@@ -139,35 +143,10 @@ function StartLiveSession() {
     };
   }
 
-  // Function to detect low-end devices that should not use Voice Focus
-  const isLowEndDevice = () => {
-    const userAgent = navigator.userAgent;
-    const isIPhoneSE = /iPhone SE|iPhone 6|iPhone 7|iPhone 8/.test(userAgent);
-    const isOldAndroid = /Android [4-6]/.test(userAgent);
-    const isLowMemoryDevice = navigator.deviceMemory && navigator.deviceMemory < 4;
-
-    console.log('Device detection:', {
-      userAgent,
-      isIPhoneSE,
-      isOldAndroid,
-      isLowMemoryDevice,
-      deviceMemory: navigator.deviceMemory
-    });
-
-    return isIPhoneSE || isOldAndroid || isLowMemoryDevice;
-  };
-
   // Function to transform the audio input device to Voice Focus Device/Echo Reduction
-  const transformVoiceFocusDevice = useCallback(async (meeting, attendee, logger) => {
+  const transformVoiceFocusDevice = async (meeting, attendee, logger) => {
     let transformer = null;
     let isVoiceFocusSupported = false;
-
-    // Check if device is low-end and should skip Voice Focus
-    if (isLowEndDevice()) {
-      console.log('Low-end device detected, skipping Voice Focus to prevent performance issues');
-      return false;
-    }
-
     try {
       const spec = {
         name: 'ns_es', // use Voice Focus with Echo Reduction
@@ -189,7 +168,7 @@ function StartLiveSession() {
       isVoiceFocusSupported = false;
     }
     return isVoiceFocusSupported;
-  }, []);
+  }
 
   // Function to initialize the meeting session from the meeting that the host has created
   const initializeMeetingSession = useCallback(async (meeting, attendee) => {
@@ -227,75 +206,12 @@ function StartLiveSession() {
     console.log('Main Speaker - initializeMeetingSession--> Start');
     metricReport(meetingSession);
     console.log('Main Speaker - initializeMeetingSession--> End');
-    function resumeWithTimeout(audioContext, timeout = 1000) {
-      return Promise.race([
-        audioContext.resume(),
-        new Promise((_, reject) =>
-          setTimeout(() => reject(new Error('AudioContext resume timeout')), timeout)
-        )
-      ]);
-    }
-    // Function to resume AudioContext if suspended (especially on iOS Safari)
-    const resumeAudioContextIfNeeded = async () => {
-      try {
-        // Check if we're on Safari/iOS
-        console.log('chuaw cccccheck ios');
-
-        const isSafari = /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent);
-        const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
-        console.log('chuaw cccccheck ios');
-        if (isSafari || isIOS) {
-          console.log('Safari/iOS detected, checking AudioContext state');
-          const resumeWithTimeout = (ctx, ms = 1500) =>
-            Promise.race([
-              ctx.resume(),
-              new Promise((_, reject) => setTimeout(() => reject('resume timeout'), ms))
-            ]);
-          // Try to access the AudioContext from the device controller if available
-          if (deviceController && deviceController.audioContext) {
-            const audioContext = deviceController.audioContext;
-            console.log('AudioContext state:', audioContext.state);
-
-            if (audioContext.state === 'suspended') {
-              console.log('AudioContext is suspended, attempting to resume...');
-              await audioContext.resume();
-              console.log('AudioContext resumed, new state:', audioContext.state);
-            }
-          } else {
-            // Fallback: try to create and resume a new AudioContext
-            const AudioContext = window.AudioContext || window.webkitAudioContext;
-            if (AudioContext) {
-              const audioContext = new AudioContext();
-              console.log('Fallback AudioContext state:', audioContext.state);
-
-              if (audioContext.state === 'suspended') {
-                console.log('Fallback AudioContext is suspended, attempting to resume...');
-                try {
-                  await resumeWithTimeout(audioContext);
-                  console.log('✅ AudioContext resumed successfully:', audioContext.state);
-                } catch (err) {
-                  console.warn('⚠️ Resume failed or timed out:', err);
-                }
-                console.log('Fallback AudioContext resumed, new state:', audioContext.state);
-              }
-              // audioContext.close(); // Clean up fallback context
-            }
-          }
-        }
-      } catch (error) {
-        console.error('Error handling AudioContext suspension:', error);
-      }
-    };
-
     // Bind the audio element to the meeting session
     const audioElement = document.getElementById('audioElementMain');
     if (audioElement) {
       await meetingSession.audioVideo.bindAudioElement(audioElement);
       // Disable autoplay for the audio element
       audioElement.autoplay = false;
-
-      // Resume AudioContext if needed (especially for iOS Safari)
-      await resumeAudioContextIfNeeded();
     } else {
       console.error('Audio element not found');
     }
@@ -306,6 +222,8 @@ function StartLiveSession() {
         freshAudioInputDeviceList.forEach(mediaDeviceInfo => {
           console.log(`Device ID xxx: ${mediaDeviceInfo.deviceId} Microphone: ${mediaDeviceInfo.label}`);
         });
+        // A microphone was plugged in or removed, refresh the list and the device in use
+        audioInputsChangedRef.current?.(freshAudioInputDeviceList);
       },
 
       audioOutputsChanged: freshAudioOutputDeviceList => {
@@ -328,7 +246,7 @@ function StartLiveSession() {
     // Start audio video session
     meetingSession.audioVideo.start();
 
-  }, [transformVoiceFocusDevice]);
+  }, []);
 
   // Function to update MeetingId, Channel Id
   const updateMeetingIdAndChannelId = async (data) => {
@@ -477,6 +395,59 @@ function StartLiveSession() {
   // }, [meeting, channelID, valueChatSetting, navigate]);
 
 
+  // Function to build the Voice Focus device for the given microphone
+  // The Voice Focus node is reused when only the inner microphone changes,
+  // so the audio of the previous microphone is not kept in the meeting
+  const createVoiceFocusDevice = useCallback(async (deviceId) => {
+    if (!transformVFD) {
+      console.log('createVoiceFocusDevice Voice Focus is not supported, use the raw device');
+      return null;
+    }
+    if (vfDeviceRef.current) {
+      return await vfDeviceRef.current.chooseNewInnerDevice(deviceId);
+    }
+    // Create a new transform device if Voice Focus is supported
+    const vfDevice = await transformVFD.createTransformDevice(deviceId);
+    console.log('createVoiceFocusDevice vfDevice', vfDevice);
+    if (vfDevice) {
+      // Enable Echo Reduction on this client
+      const observeMeetingAudio = await vfDevice.observeMeetingAudio(meetingSession.audioVideo);
+      console.log('createVoiceFocusDevice Echo Reduction', observeMeetingAudio);
+    }
+    return vfDevice;
+  }, [transformVFD, meetingSession]);
+
+  // Function to start the audio input with the given microphone
+  // Calling it again with another microphone switches the device,
+  // the stream of the previous microphone is released by the SDK
+  const startAudioInputDevice = useCallback(async (deviceId) => {
+    if (!meetingSession || !deviceId) {
+      return;
+    }
+    const vfDevice = await createVoiceFocusDevice(deviceId);
+    vfDeviceRef.current = vfDevice;
+    const deviceToUse = vfDevice || deviceId;
+    console.log('startAudioInputDevice deviceToUse', deviceToUse);
+    const startAudioInput = await meetingSession.audioVideo.startAudioInput(deviceToUse);
+    console.log('startAudioInputDevice startAudioInput', startAudioInput);
+  }, [meetingSession, createVoiceFocusDevice]);
+
+  // Function to stop the audio input device
+  // The Voice Focus device must be stopped as well, otherwise the microphone
+  // that was in use keeps streaming into the meeting
+  const stopAudioInputDevice = useCallback(async () => {
+    if (!meetingSession) {
+      return;
+    }
+    const stopAudioInput = await meetingSession.audioVideo.stopAudioInput(); // Stops the audio input device
+    console.log('stopAudioInputDevice stopAudioInput', stopAudioInput);
+    if (vfDeviceRef.current) {
+      await vfDeviceRef.current.stop();
+      vfDeviceRef.current = null;
+      console.log('stopAudioInputDevice Voice Focus device stopped');
+    }
+  }, [meetingSession]);
+
   // Function to toggle microphone on/off
   const toggleMicrophone = async () => {
     if (meetingSession) {
@@ -486,31 +457,11 @@ function StartLiveSession() {
           const realtimeMuteLocalAudio = meetingSession.audioVideo.realtimeMuteLocalAudio();
           //logger.info('toggleMicrophone realtimeMuteLocalAudio ' + JSON.stringify(realtimeMuteLocalAudio));
           console.log('toggleMicrophone realtimeMuteLocalAudio', realtimeMuteLocalAudio);
-          const stopAudioInput = await meetingSession.audioVideo.stopAudioInput(); // Stops the audio input device
-          //logger.info('toggleMicrophone stopAudioInput ' + JSON.stringify(stopAudioInput));
-          console.log('toggleMicrophone stopAudioInput', stopAudioInput);
+          await stopAudioInputDevice();
 
         } else {
-          // Start the audio input device
-          // Create a new transform device if Voice Focus is supported
-          const vfDevice = await transformVFD.createTransformDevice(selectedAudioInput);
-          //logger.info('toggleMicrophone vfDevice ' + JSON.stringify(vfDevice));
-          console.log('toggleMicrophone vfDevice', vfDevice);
-          // Enable Echo Reduction on this client
-          const observeMeetingAudio = await vfDevice.observeMeetingAudio(meetingSession.audioVideo);
-          //logger.info('toggleMicrophone Echo Reduction ' + JSON.stringify(observeMeetingAudio));
-          console.log('toggleMicrophone Echo Reduction', observeMeetingAudio);
-          const deviceToUse = vfDevice || selectedAudioInput;
-          //logger.info('toggleMicrophone deviceToUse ' + JSON.stringify(deviceToUse));
-          console.log('toggleMicrophone deviceToUse', deviceToUse);
-          const startAudioInput = await meetingSession.audioVideo.startAudioInput(deviceToUse);
-          //logger.info('toggleMicrophone startAudioInput ' + JSON.stringify(startAudioInput));
-          console.log('toggleMicrophone startAudioInput', startAudioInput);
-
-          if (vfDevice) {
-            // logger.info('Amazon Voice Focus enabled ');
-            console.log('Amazon Voice Focus enabled ');
-          }
+          // Start the audio input device with the selected microphone
+          await startAudioInputDevice(selectedAudioInput);
           // Unmute the microphone
           const realtimeUnmuteLocalAudio = meetingSession.audioVideo.realtimeUnmuteLocalAudio();
           //logger.info('toggleMicrophone realtimeUnmuteLocalAudio ' + JSON.stringify(realtimeUnmuteLocalAudio));
@@ -560,14 +511,11 @@ function StartLiveSession() {
       if (devices.length === 0 || devices.some(device => !device.label.trim())) {
         // if (devices.length === 0) {
         console.log('No audio input devices found');
-        // Adjust timeout based on device type (iPhone SE and low-end devices need more time)
-        const timeoutDuration = isLowEndDevice() ? 15000 : 5000;
-        console.log('Setting microphone permission timeout to:', timeoutDuration + 'ms');
-        // Display a message after timeout
+        // Display a message after 5 seconds
         setTimeout(() => {
           setMicroChecking(null);
           setNoMicoMsg('noMicroMsg');
-        }, timeoutDuration);
+        }, 5000);
       } else {
         // If devices are available, select the first device as the default
         setSelectedAudioInput(devices[0].deviceId);
@@ -575,6 +523,58 @@ function StartLiveSession() {
       }
     }
   }, [meetingSession]);
+
+  // Function to apply the microphone selected in the list
+  // The device must be applied right away, otherwise the previous microphone is still used
+  const handleAudioInputChange = async (deviceId) => {
+    setSelectedAudioInput(deviceId);
+    if (!isMicOn) {
+      return;
+    }
+    try {
+      await startAudioInputDevice(deviceId);
+    } catch (error) {
+      console.error('handleAudioInputChange error', error);
+      alert(error);
+    }
+  };
+
+  // Function to handle a microphone being plugged in or removed
+  const handleAudioInputsChanged = useCallback(async (freshAudioInputDeviceList) => {
+    const devices = freshAudioInputDeviceList || [];
+    console.log('handleAudioInputsChanged devices', devices);
+    setAudioInputDevices(devices);
+    if (devices.length === 0) {
+      return;
+    }
+    // Fall back to the first device when the selected one has been removed
+    const isSelectedAvailable = devices.some(device => device.deviceId === selectedAudioInput);
+    const nextDeviceId = isSelectedAvailable ? selectedAudioInput : devices[0].deviceId;
+    if (nextDeviceId !== selectedAudioInput) {
+      setSelectedAudioInput(nextDeviceId);
+      if (isMicOn) {
+        try {
+          await startAudioInputDevice(nextDeviceId);
+        } catch (error) {
+          console.error('handleAudioInputsChanged error', error);
+        }
+      }
+    }
+  }, [selectedAudioInput, isMicOn, startAudioInputDevice]);
+
+  useEffect(() => {
+    audioInputsChangedRef.current = handleAudioInputsChanged;
+  }, [handleAudioInputsChanged]);
+
+  // Release the microphone when leaving the page
+  useEffect(() => {
+    return () => {
+      if (vfDeviceRef.current) {
+        vfDeviceRef.current.stop().catch(error => console.error('Failed to stop the Voice Focus device:', error));
+        vfDeviceRef.current = null;
+      }
+    };
+  }, []);
 
   // Function to get the meeting and attendee information from the cookies
   const getMeetingAttendeeInfoFromCookies = useCallback(async () => {
@@ -1014,7 +1014,7 @@ function StartLiveSession() {
                   <h3 className='title-box'>{t('microSelectionLbl')}</h3>
                   {(audioInputDevices && audioInputDevices.length > 0) && (
                     <div className="select-container">
-                      <select className='selectFile' style={{ border: "1px solid #C60226" }} value={selectedAudioInput} onChange={(e) => setSelectedAudioInput(e.target.value)}>
+                      <select className='selectFile' style={{ border: "1px solid #C60226" }} value={selectedAudioInput} onChange={(e) => handleAudioInputChange(e.target.value)}>
                         {audioInputDevices.map((device) => (
                           <option key={device.deviceId} value={device.deviceId}>
                             {device.label}
