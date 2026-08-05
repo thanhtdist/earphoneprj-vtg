@@ -20,7 +20,7 @@ import '../../styles/LiveViewer.css';
 //import { checkAvailableMeeting } from '../utils/MeetingUtils';
 // import { v4 as uuidv4 } from 'uuid';
 import { useTranslation } from 'react-i18next';
-import { LISTEN_VOICE_LANGUAGES, JA_LISTEN_VOICE_LANGUAGES } from '../../utils/constant';
+import { getBaseLanguage, getListenVoiceLanguages, getDefaultListenVoiceLanguageKey } from '../../utils/constant';
 import Header from '../common/Header';
 import { HiMiniSpeakerWave } from "react-icons/hi2";
 import { IoVolumeMute } from "react-icons/io5";
@@ -45,7 +45,7 @@ function LiveViewerJa() {
   const [isLoading, setIsLoading] = useState(false);
   const [participantsCount, setParticipantsCount] = useState(0);
   const [selectedVoiceLanguage, setSelectedVoiceLanguage] = useState(
-    LISTEN_VOICE_LANGUAGES.find((lang) => lang.key.startsWith(i18n.language))?.key || 'ja-JP'
+    getDefaultListenVoiceLanguageKey(i18n.language)
   );
   // const [chatRestriction, setChatRestriction] = useState(null);
   const [isMuted, setIsMuted] = useState(true);
@@ -304,14 +304,22 @@ function LiveViewerJa() {
                 <h3 className='title-box'>
                   {t('voiceLanguageLbl.listening')}
                 </h3>
+                {/* The labels are already written in the language of the UI. `translate="no"` keeps
+                    the built-in translator of the browser (Chrome on Android translates a page
+                    automatically) from rewriting the options: its edits collide with the re-render
+                    of React and leave duplicated entries such as 【日本語・日本語・中国語】 behind */}
                 <select
-                  className='selected-language'
+                  className='selected-language notranslate'
                   id="selectedVoiceLanguage"
+                  lang={getBaseLanguage(i18n.language)}
+                  translate="no"
                   value={selectedVoiceLanguage}
                   onChange={handleSelectedVoiceLanguageChange}
                 >
-                  {(i18n.language === 'ja' ? JA_LISTEN_VOICE_LANGUAGES : LISTEN_VOICE_LANGUAGES).map((language) => (
-                    <option key={language.key} value={language.key}>
+                  {getListenVoiceLanguages(i18n.language).map((language) => (
+                    // The UI language is part of the key, so switching the label set remounts the
+                    // option instead of patching a text node the translator may have replaced
+                    <option key={`${getBaseLanguage(i18n.language)}-${language.key}`} value={language.key}>
                       {language.label}
                     </option>
                   ))}

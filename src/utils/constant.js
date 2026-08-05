@@ -16,8 +16,35 @@ export const LISTEN_VOICE_LANGUAGES = [
 export const JA_LISTEN_VOICE_LANGUAGES = [
     { key: "ja-JP", label: "日本語" },
     { key: "en-US", label: "英語" },
-    { key: "cmn-CN", label: "中国" },
+    { key: "cmn-CN", label: "中国語" },
 ]
+
+// UI languages the application ships translations for
+export const SUPPORTED_UI_LANGUAGES = ["en", "ja"]
+export const FALLBACK_UI_LANGUAGE = "en"
+
+// Listening language used when the UI language is not one of the listening languages
+export const DEFAULT_LISTEN_VOICE_LANGUAGE_KEY = "ja-JP"
+
+// The UI language can be reported with a region ("ja-JP", "en-GB", "zh-Hans-CN"),
+// so only the base tag is used whenever it is compared with a fixed language code
+export const getBaseLanguage = (language) =>
+    (language || FALLBACK_UI_LANGUAGE).toLowerCase().split(/[-_]/)[0]
+
+// Options of the listening language selector, labelled in the current UI language
+export const getListenVoiceLanguages = (uiLanguage) =>
+    getBaseLanguage(uiLanguage) === "ja" ? JA_LISTEN_VOICE_LANGUAGES : LISTEN_VOICE_LANGUAGES
+
+// Listening language preselected for a UI language ("ja-JP" -> "ja-JP", "en-GB" -> "en-US")
+export const getDefaultListenVoiceLanguageKey = (uiLanguage) => {
+    // Chinese is "cmn-CN" for Amazon Polly but "zh" for the browser
+    const base = getBaseLanguage(uiLanguage)
+    const voiceBase = base === "zh" ? "cmn" : base
+    return (
+        LISTEN_VOICE_LANGUAGES.find((lang) => getBaseLanguage(lang.key) === voiceBase)?.key ||
+        DEFAULT_LISTEN_VOICE_LANGUAGE_KEY
+    )
+}
 
 //Text To Speech (TTS) engine
 export const TTS_ENGINE = [

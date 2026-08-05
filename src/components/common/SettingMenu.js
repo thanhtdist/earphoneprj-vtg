@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { GrLanguage } from "react-icons/gr";
 import '../../i18n'; // Ensure i18n is initialized
 import '../../styles/SettingMenu.css'; // Import the CSS file
+import { getBaseLanguage, FALLBACK_UI_LANGUAGE } from '../../utils/constant';
 
 function SettingMenu() {
   const { t, i18n } = useTranslation();
@@ -74,10 +75,16 @@ function SettingMenu() {
           {isMenuOpen && (
             <div className="language-selector">
               {/* <label htmlFor="language-select">{t('languagesLbl')}</label> */}
+              {/* `translate="no"`: the two labels are written in their own language on purpose,
+                  the translator of the browser must not rewrite them */}
               <select
                 id="language-select"
+                className="notranslate"
+                translate="no"
                 onChange={handleLanguageChange}
-                value={i18n.language || 'en'} // Ensure fallback if i18n.language is undefined
+                // The base tag is used because a detected language may carry a region ("ja-JP"),
+                // which matches no option and leaves the selector blank
+                value={getBaseLanguage(i18n.language) || FALLBACK_UI_LANGUAGE}
               >
                 <option value="ja">日本語</option>
                 <option value="en">English</option>

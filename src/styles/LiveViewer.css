@@ -100,12 +100,21 @@
   }
 }
 
+/* A <select> is rendered by the browser itself and must keep its native display: Blink honours
+   `display: flex` and lays the <option> children out as boxes inside the control, WebKit ignores
+   it, so the selector did not render the same way on Android and on iPhone — and it was too
+   narrow for its content on both. Sized like `.selectFile`, which renders correctly everywhere */
 .selected-language {
   border-radius: 25px;
   border: 1px solid #16A085;
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
-  align-items: center;
-  display: flex;
+  background-color: #FAFAFA;
+  height: 47px;
+  padding: 12px 15px;
+  font-size: 1rem;
+  text-align: center;
+  min-width: 160px;
+  max-width: 100%;
 }
 
 .box-selected-language {
