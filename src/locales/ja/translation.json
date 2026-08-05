@@ -8,6 +8,24 @@
   "microSelectionLbl": "音声入力(マイク)を選択",
   "startBtn":"スタート",
   "stopBtn":"停止",
+  "broadcastBox": {
+    "title": "お客様へ配信する",
+    "micLabel": "音声入力（マイク）",
+    "startBtn": "配信を開始する",
+    "stopBtn": "配信を停止",
+    "hint": "※ マイクを選んだだけでは配信は始まりません",
+    "liveHint": "お客様に音声が届いています"
+  },
+  "broadcastStatus": {
+    "idle": "配信していません",
+    "live": "配信中"
+  },
+  "listenBox": {
+    "titleGuide": "サブガイドの音声を聞く",
+    "titleSubGuide": "メインガイドの音声を聞く",
+    "on": "オン",
+    "off": "オフ"
+  },
   "chatSettingLbl": "チャットの制限",
   "chatSettingOptions": {
     "allChat": "誰でもチャット可能",
@@ -17,11 +35,11 @@
   "generateQRCodeLbl": "QRコードを共有",
   "generateQRCodeOptions": {
     "subGuide": "サブガイド用QRコード",
-    "listener": "ユーザー用QRコード"
+    "listener": "お客様用QRコード"
   },
   "scanQRCodeTxt": {
     "subGuide": "QRコードをサブガイドのスマートフォンで<br>読み取ってください",
-    "listener": "QRコードをリスナーのスマートフォンで<br>読み取ってください"
+    "listener": "QRコードをお客様のスマートフォンで<br>読み取ってください"
   },
   "messagePlaceholder": "メッセージを入力してください...",
   "userNameDisplay": {
@@ -35,11 +53,13 @@
     "speaking": "話す言語を選択してください",
     "listening": "聴く言語を選択"
   },
-  "playVoiceLbl": "再生する音声ファイル",
+  "playVoiceLbl": "音声ファイルを流す",
   "playVoiceOptions": {
     "instruction": "音声ファイル1",
     "closingSpeech": "音声ファイル2"
   },
+  "playFileBtn": "ファイルを再生",
+  "pauseFileBtn": "一時停止",
   "uploading": "アップロード中...",
   "transcriptionTxt": "で話しています",
   "translationTxt": "で聴いています",
@@ -51,7 +71,8 @@
   },
   "captureTranslations": "キャプチャー",
   "headerSettings": {
-    "qrCode": "お客様用<br>QRコードを表示",
+    "qrCodeListener": "お客様用<br>QRコード",
+    "qrCodeSubGuide": "サブガイド用<br>QRコード",
     "language": "言語設定"
   },
   "pageTitles": {

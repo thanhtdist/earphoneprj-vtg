@@ -34,6 +34,8 @@
   right: 0;
   width: 200px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  /* Opens over the broadcast status bar, which is pinned under the header */
+  z-index: 20;
 }
 
 .menu-content.open {

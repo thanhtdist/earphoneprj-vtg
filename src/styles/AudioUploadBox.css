@@ -1,3 +1,23 @@
+/* Same inner spacing and widths as the broadcast box, so the items of the
+   two boxes line up on the same edges */
+.box-start-live-session-container {
+    padding: 12px 15px;
+}
+
+.box-start-live-session-container .title-box {
+    margin: 0 0 10px 0;
+}
+
+.box-start-live-session-container .select-container {
+    width: 100%;
+}
+
+.box-start-live-session-container .selectFile {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+}
+
 /* Container Style */
 .audio-upload-container {
     display: flex;
@@ -5,11 +25,11 @@
     align-items: center;
     /* height: 100px; */
     /* width: 100px; */
-    
+
     border-radius: 10px;
     position: relative;
     overflow: hidden;
-    margin:10px;
+    margin: 10px 0;
   }
   
   /* Upload Box (when file is not uploaded) */
@@ -47,13 +67,28 @@
     height: 100%;
 }
 
-.play-pause-icon {
-    position: absolute;
-    top: 56%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 10; /* Ensure it is above the FaFile icon */
-    color: #007bff;
+/* Labelled play control, it replaces the bare icon over the file */
+.play-file-control {
+    display: flex;
+    justify-content: center;
+}
+
+.play-file-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 0 10px 0;
+    padding: 9px 18px;
+    border: 1px solid #C60226;
+    border-radius: 25px;
+    background-color: #FFFFFF;
+    color: #C60226;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.play-file-text {
+    margin-left: 8px;
 }
 
 .audio-icon {
@@ -77,18 +112,22 @@
 }
 .box-start-live-session{
     width: 100%;
+    /* The border and the padding stay inside the width, otherwise the box
+       runs past the screen on a phone */
+    box-sizing: border-box;
     border: 1px solid outset;
     box-shadow: 0 6px 5px rgba(0, 0, 0, 0.2);
     border-radius: 15px;
-    margin-bottom: 10px;  
+    margin-bottom: 10px;
     background-color:#FAFAFA;
 }
 .selectFile{
+  box-sizing: border-box;
   border-radius: 25px;
   /* border: 1px solid #C60226; */
   box-shadow: 0 0 4px rgba(0, 0, 0, 0);
   height:47px;
   background-color: #FAFAFA;
   padding: 12px 15px;
-  
+
 }

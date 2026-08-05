@@ -8,6 +8,24 @@
   "microSelectionLbl": "Select Input Microphone",
   "startBtn":"Start",
   "stopBtn":"Stop",
+  "broadcastBox": {
+    "title": "Broadcast to users",
+    "micLabel": "Audio input (microphone)",
+    "startBtn": "Start broadcasting",
+    "stopBtn": "Stop broadcasting",
+    "hint": "* Selecting a microphone does not start the broadcast",
+    "liveHint": "Audio is reaching your users"
+  },
+  "broadcastStatus": {
+    "idle": "Not broadcasting",
+    "live": "Broadcasting"
+  },
+  "listenBox": {
+    "titleGuide": "Listen to the sub-guide",
+    "titleSubGuide": "Listen to the main guide",
+    "on": "On",
+    "off": "Off"
+  },
   "chatSettingLbl": "Chat usage restrictions",
   "chatSettingOptions": {
     "allChat": "Everyone can chat",
@@ -16,12 +34,12 @@
   },
   "generateQRCodeLbl": "Share QR Code",
   "generateQRCodeOptions": {
-    "subGuide": "Sub-Guide",
-    "listener": "User"
+    "subGuide": "Sub-guide QR code",
+    "listener": "User QR code"
   },
   "scanQRCodeTxt": {
-    "subGuide": "Scan me to join as Sub-Guide",
-    "listener": "Scan me to join as User"
+    "subGuide": "Ask the sub-guide to scan this<br>with their smartphone",
+    "listener": "Ask the user to scan this<br>with their smartphone"
   },
   "messagePlaceholder": "Type a message...",
   "userNameDisplay": {
@@ -35,11 +53,13 @@
     "speaking": "Select a language to speak",
     "listening": "Select a language to listen"
   },
-  "playVoiceLbl": "Play the voice file for",
+  "playVoiceLbl": "Play an audio file",
   "playVoiceOptions": {
     "instruction": "Voice File 1",
     "closingSpeech": "Voice File 2"
   },
+  "playFileBtn": "Play file",
+  "pauseFileBtn": "Pause",
   "uploading": "Uploading...",
   "transcriptionTxt": "The host is speaking in ",
   "translationTxt": "I am listening in",
@@ -51,7 +71,8 @@
   },
   "captureTranslations": "Capture",
   "headerSettings": {
-    "qrCode": "QR Code",
+    "qrCodeListener": "User<br>QR code",
+    "qrCodeSubGuide": "Sub-guide<br>QR code",
     "language": "Language Setting"
   },
   "pageTitles": {

@@ -7,15 +7,21 @@ export default function AudioMicControl({ isMicOn, toggleMicrophone, userType, t
   const pageColor = getUserStyle(userType);
 
   return (
-    <div className="controls">
-      <div className={`mic-button ${isMicOn ? 'mic-button-off' : 'mic-button-on'}`}  style={{ '--page-color': pageColor }} onClick={toggleMicrophone}>
-        {isMicOn ? (
-          <IoMicOffCircleSharp size={30} />
-        ) : (
-          <IoMicCircle size={30} />
-        )}
-        <span className="mic-text">{isMicOn ? t('stopBtn') : t('startBtn')}</span>
+    <>
+      <div className="controls">
+        <div className={`mic-button ${isMicOn ? 'mic-button-off' : 'mic-button-on'}`}  style={{ '--page-color': pageColor }} onClick={toggleMicrophone}>
+          {isMicOn ? (
+            <IoMicOffCircleSharp size={30} />
+          ) : (
+            <IoMicCircle size={30} />
+          )}
+          <span className="mic-text">{isMicOn ? t('broadcastBox.stopBtn') : t('broadcastBox.startBtn')}</span>
+        </div>
       </div>
-    </div>
+      {/* Tells the guide that picking a microphone is not enough to go on air */}
+      <p className="broadcast-hint" style={{ color: isMicOn ? '#1B8A5A' : pageColor }}>
+        {isMicOn ? t('broadcastBox.liveHint') : t('broadcastBox.hint')}
+      </p>
+    </>
   );
 }

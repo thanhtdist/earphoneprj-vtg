@@ -30,7 +30,9 @@ import { useParams } from "react-router-dom";
 import NotFound from '../NotFound';
 import TourTitle from '../common/TourTitle';
 import AudioMicControl from '../common/AudioMicControl';
-import AudioPlayerControl from '../common/AudioPlayerControl';
+import AudioListenToggle from '../common/AudioListenToggle';
+import BroadcastStatusBar from '../common/BroadcastStatusBar';
+import { getUserStyle } from '../../utils/getUserStyle';
 import useWakeLock from '../../hooks/useWakeLock';
 import useConnectWebSocket from '../../hooks/useConnectWebSocket';
 import useWebSocketVisibilityHandler from '../../hooks/useWebSocketVisibilityHandler';
@@ -68,8 +70,9 @@ function LiveSubSpeaker() {
   //const [logger, setLogger] = useState(null);
   const [participantsCount, setParticipantsCount] = useState(0);
   const audioRef = useRef(null);
-  const [isMuted, setIsMuted] = useState(true);
-  const [isPlay, setIsPlay] = useState(false);
+  // Single state for the audio coming from the main guide, it replaces the
+  // play and mute pair that both acted on the same audio element
+  const [isListening, setIsListening] = useState(false);
   // Keep the Voice Focus device currently in use so the previous microphone can be released
   const vfDeviceRef = useRef(null);
   // Keep a stable reference so the device change observer always calls the latest handler
@@ -154,6 +157,8 @@ function LiveSubSpeaker() {
       await meetingSession.audioVideo.bindAudioElement(audioElement);
       // Disable autoplay for the audio element
       audioElement.autoplay = false;
+      // Start muted so the element matches the listening toggle, which is off
+      audioElement.muted = true;
     } else {
       console.error('Audio element not found');
     }
@@ -593,17 +598,21 @@ function LiveSubSpeaker() {
   }, [meetingSession]);
 
 
-  const handleMuteUnmute = () => {
-    setIsMuted(!isMuted);
-    audioRef.current.muted = isMuted;
-  };
-  const handlePlay = () => {
-    if (isPlay === false) {
-      setIsPlay(true)
-      audioRef.current.play();
+  // Start or stop listening to the audio of the meeting.
+  // The element is updated with the new value, reading the state here would
+  // apply the previous one and leave the button one step behind.
+  const toggleListening = () => {
+    const audioElement = audioRef.current;
+    if (!audioElement) {
+      return;
+    }
+    const nextIsListening = !isListening;
+    setIsListening(nextIsListening);
+    audioElement.muted = !nextIsListening;
+    if (nextIsListening) {
+      audioElement.play().catch(error => console.error('Failed to play the meeting audio:', error));
     } else {
-      setIsPlay(false);
-      audioRef.current.pause();
+      audioElement.pause();
     }
   }
 
@@ -737,10 +746,13 @@ function LiveSubSpeaker() {
     return <NotFound />;
   }
 
+  const pageColor = getUserStyle(userType);
+
   return (
     <>
       {/* <Participants count={participantsCount} /> */}
       <Header count={participantsCount} tourId={tourId} userType={userType} />
+      <BroadcastStatusBar isMicOn={isMicOn} userType={userType} t={t} />
       <div className="live-sub-container">
         <p className='titleSubLive'>
           {t('pageTitles.subGuide')}
@@ -754,14 +766,6 @@ function LiveSubSpeaker() {
         <TourTitle tour={tour} />
         <audio id='audioElementSub' ref={audioRef} >
         </audio>
-        <AudioPlayerControl
-          isPlay={isPlay}
-          handlePlay={handlePlay}
-          isMuted={isMuted}
-          handleMuteUnmute={handleMuteUnmute}
-          userType={userType}
-          t={t}
-        />
         {(isLoading) ? (
           <div className="loading">
             <div className="spinner"></div>
@@ -782,8 +786,9 @@ function LiveSubSpeaker() {
               </>
             ) : (
               <>
-                <div className='box-start-live-session'>
-                  <h3 className='title-box'>{t('microSelectionLbl')}</h3>
+                <div className='box-start-live-session box-broadcast' style={{ '--page-color': pageColor }}>
+                  <h3 className='title-box'>{t('broadcastBox.title')}</h3>
+                  <p className='box-sub-label'>{t('broadcastBox.micLabel')}</p>
                   {(audioInputDevices && audioInputDevices.length > 0) && (
                     <div className="select-container">
                       <select className='selectFile' style={{ border: "1px solid #E57A00" }} value={selectedAudioInput} onChange={(e) => handleAudioInputChange(e.target.value)}>
@@ -804,6 +809,12 @@ function LiveSubSpeaker() {
                 </div>
               </>
             )}
+            <AudioListenToggle
+              isListening={isListening}
+              toggleListening={toggleListening}
+              userType={userType}
+              t={t}
+            />
             <br />
 
             {(chatRestriction !== "nochat" && channelArn) && (<>

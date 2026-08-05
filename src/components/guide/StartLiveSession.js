@@ -37,7 +37,9 @@ import { useParams } from "react-router-dom";
 import NotFound from '../NotFound';
 import TourTitle from '../common/TourTitle';
 import AudioMicControl from '../common/AudioMicControl';
-import AudioPlayerControl from '../common/AudioPlayerControl';
+import AudioListenToggle from '../common/AudioListenToggle';
+import BroadcastStatusBar from '../common/BroadcastStatusBar';
+import { getUserStyle } from '../../utils/getUserStyle';
 import useWakeLock from '../../hooks/useWakeLock';
 import useConnectWebSocket from '../../hooks/useConnectWebSocket';
 import useWebSocketVisibilityHandler from '../../hooks/useWebSocketVisibilityHandler';
@@ -90,8 +92,9 @@ function StartLiveSession() {
   // const valueChatSetting = state?.chatSetting
   //const queryParams = new URLSearchParams(location.search);
   // const valueChatSetting = queryParams.get('chatSetting');
-  const [isMuted, setIsMuted] = useState(true);
-  const [isPlay, setIsPlay] = useState(false);
+  // Single state for the audio coming from the sub-guides, it replaces the
+  // play and mute pair that both acted on the same audio element
+  const [isListening, setIsListening] = useState(false);
   const audioRef = useRef(null);
   // Keep the Voice Focus device currently in use so the previous microphone can be released
   const vfDeviceRef = useRef(null);
@@ -116,17 +119,21 @@ function StartLiveSession() {
   //   }
   // }, []);
 
-  const handleMuteUnmute = () => {
-    setIsMuted(!isMuted);
-    audioRef.current.muted = isMuted;
-  };
-  const handlePlay = () => {
-    if (isPlay === false) {
-      setIsPlay(true)
-      audioRef.current.play();
+  // Start or stop listening to the audio of the meeting.
+  // The element is updated with the new value, reading the state here would
+  // apply the previous one and leave the button one step behind.
+  const toggleListening = () => {
+    const audioElement = audioRef.current;
+    if (!audioElement) {
+      return;
+    }
+    const nextIsListening = !isListening;
+    setIsListening(nextIsListening);
+    audioElement.muted = !nextIsListening;
+    if (nextIsListening) {
+      audioElement.play().catch(error => console.error('Failed to play the meeting audio:', error));
     } else {
-      setIsPlay(false);
-      audioRef.current.pause();
+      audioElement.pause();
     }
   }
 
@@ -212,6 +219,8 @@ function StartLiveSession() {
       await meetingSession.audioVideo.bindAudioElement(audioElement);
       // Disable autoplay for the audio element
       audioElement.autoplay = false;
+      // Start muted so the element matches the listening toggle, which is off
+      audioElement.muted = true;
     } else {
       console.error('Audio element not found');
     }
@@ -947,9 +956,12 @@ function StartLiveSession() {
     return <NotFound />;
   }
 
+  const pageColor = getUserStyle(userType);
+
   return (
     <>
       {tour && (<Header tourId={tourId} count={participantsCount} userType={userType} subGuideFunctionAvailable={tour.subGuideFunctionAvailable} />)}
+      <BroadcastStatusBar isMicOn={isMicOn} userType={userType} t={t} />
       <div className="container">
         {/* {audioData.current.length > 0 &&
           (<><button onClick={async () => {
@@ -977,14 +989,6 @@ function StartLiveSession() {
         )} */}
         <audio id='audioElementMain' ref={audioRef} >
         </audio>
-        <AudioPlayerControl
-          isPlay={isPlay}
-          handlePlay={handlePlay}
-          isMuted={isMuted}
-          handleMuteUnmute={handleMuteUnmute}
-          userType={userType}
-          t={t}
-        />
         {(!meeting && !attendee) ? (
           <>
             {isLoading === true && (
@@ -996,7 +1000,7 @@ function StartLiveSession() {
           </>
         ) : (
           <>
-            {meetingSession && (<AudioUploadBox meetingSession={meetingSession} logger={logger} />)}
+            {/* Broadcasting comes first, it is the reason the guide opens this page */}
             {(noMicroMsg) ? (
               <>
                 {!microChecking ? (
@@ -1010,8 +1014,9 @@ function StartLiveSession() {
               </>
             ) : (
               <>
-                <div className='box-start-live-session'>
-                  <h3 className='title-box'>{t('microSelectionLbl')}</h3>
+                <div className='box-start-live-session box-broadcast' style={{ '--page-color': pageColor }}>
+                  <h3 className='title-box'>{t('broadcastBox.title')}</h3>
+                  <p className='box-sub-label'>{t('broadcastBox.micLabel')}</p>
                   {(audioInputDevices && audioInputDevices.length > 0) && (
                     <div className="select-container">
                       <select className='selectFile' style={{ border: "1px solid #C60226" }} value={selectedAudioInput} onChange={(e) => handleAudioInputChange(e.target.value)}>
@@ -1032,6 +1037,13 @@ function StartLiveSession() {
                 </div>
               </>
             )}
+            {meetingSession && (<AudioUploadBox meetingSession={meetingSession} logger={logger} />)}
+            <AudioListenToggle
+              isListening={isListening}
+              toggleListening={toggleListening}
+              userType={userType}
+              t={t}
+            />
           </>
         )}
         {chatRestriction !== "nochat" && (

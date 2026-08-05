@@ -1,0 +1,58 @@
+/* BroadcastStatusBar.css */
+
+/* Stays visible while the guide scrolls through the rest of the page.
+   It sits above the page content but under everything that opens on top of
+   the page: the language menu (20) and the QR and chat popups (50). */
+.broadcast-status {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  padding: 8px 14px;
+  background-color: #F2F2F2;
+  border-bottom: 1px solid #DDDDDD;
+  color: #777777;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.broadcast-status-live {
+  background-color: var(--page-color);
+  border-bottom-color: var(--page-color);
+  color: #FFFFFF;
+}
+
+.broadcast-status-dot {
+  width: 11px;
+  height: 11px;
+  margin-right: 10px;
+  border-radius: 50%;
+  background-color: #AAAAAA;
+}
+
+.broadcast-status-live .broadcast-status-dot {
+  background-color: #FFFFFF;
+  animation: broadcast-pulse 1.6s ease-in-out infinite;
+}
+
+.broadcast-status-time {
+  margin-left: auto;
+  font-variant-numeric: tabular-nums;
+}
+
+@keyframes broadcast-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+@media (max-width: 480px) {
+  .broadcast-status {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+}

@@ -1,0 +1,64 @@
+/* AudioListenToggle.css */
+
+.box-listen {
+  padding: 14px 15px;
+}
+
+.listen-icon {
+  flex: none;
+  margin-right: 8px;
+  color: #444444;
+}
+
+.listen-row {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background-color: transparent;
+  color: #333333;
+  cursor: pointer;
+}
+
+/* Reads as the title of the box, the switch sits on the same line */
+.listen-label {
+  flex: 1;
+  text-align: left;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.listen-state {
+  margin-right: 10px;
+  font-size: 13px;
+}
+
+.listen-switch {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  width: 50px;
+  height: 26px;
+  padding: 3px;
+  border-radius: 13px;
+  background-color: #DDDDDD;
+  transition: background-color 0.2s ease;
+}
+
+.listen-switch-on {
+  background-color: var(--page-color);
+}
+
+.listen-knob {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #FFFFFF;
+  transition: transform 0.2s ease;
+}
+
+.listen-switch-on .listen-knob {
+  transform: translateX(24px);
+}

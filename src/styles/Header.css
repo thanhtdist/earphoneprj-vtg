@@ -19,6 +19,12 @@
 
 .rightMenu {
     display: flex;
+    /* The guide header can hold two QR buttons, they wrap instead of overflowing */
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 8px;
+    padding-right: 6px;
 }
 
 .selectLanguage{
@@ -26,25 +32,39 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-right: 10px;
 }
+/* The background color is set per button, it matches the page of the person
+   who scans the code */
 .qrCode {
     display: flex;
-    /* flex-direction: column;
-    justify-content: center; */
     align-items: center;
-    margin-right: 10px;
-    border: 1px solid #C60226;
     color: white;
-    background-color: #C60226;
-    padding:8px 29px;
+    padding: 6px 14px;
+    border: 1px solid transparent;
     border-radius: 25px;
-    height: 55px;
+    height: 50px;
+    cursor: pointer;
 }
 .qrText {
     display: grid;
     justify-items: center;
-    margin-left: 10px;
+    margin-left: 8px;
+    font-size: 12px;
+    line-height: 1.3;
+    text-align: center;
+}
+
+@media (max-width: 480px) {
+    .qrCode {
+        padding: 6px 10px;
+        height: 46px;
+    }
+    .qrText {
+        font-size: 10px;
+    }
+    .selectLanguage span {
+        font-size: 10px;
+    }
 }
 .popup {
     position: fixed;
@@ -56,7 +76,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 1;
+    /* Covers the whole page, including the pinned broadcast status bar */
+    z-index: 50;
 }
 
 .popup-content {

@@ -8,6 +8,8 @@
   margin: 20px;
   margin-left: 20px;
   margin-right: 20px;
+  /* Room for the chat button, which is fixed over the bottom right corner */
+  padding-bottom: 90px;
 }
 
 button {
@@ -149,29 +151,78 @@ select {
 }
 
 .mic-button{
+  display: flex;
   align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
   border-radius: 25px;
   padding:11px 20px;
   font-size: 20px;
-  margin: 10px 0 10px 0;
-  width: 50%;
+  margin: 10px 0 6px 0;
+  width: 88%;
+  cursor: pointer;
 }
 .mic-button-off {
-  border: 1px solid var(--page-color);
-  color: var(--page-color);  
+  border: 2px solid var(--page-color);
+  color: var(--page-color);
 }
 .mic-button-on {
   align-items: center;
   background-color: var(--page-color);
-  color: white; 
+  color: white;
 }
 .controls{
   display: flex;
-  justify-content: space-evenly;
+  justify-content: center;
 }
 .mic-text{
-  font-size: 20px;
+  font-size: 18px;
   margin-left: 10px;
+}
+
+/* Note under the broadcast button, it is the reminder that the microphone
+   has to be started and the confirmation once it is on air */
+.broadcast-hint {
+  margin: 0;
+  text-align: center;
+  font-size: 12px;
+}
+
+/* The broadcast box is the primary action of the page, it stands out from
+   the other boxes */
+.box-start-live-session.box-broadcast {
+  border: 2px solid var(--page-color);
+  background-color: #FFFFFF;
+  padding: 12px 15px;
+}
+
+.box-broadcast .title-box {
+  margin: 0 0 10px 0;
+}
+
+.box-sub-label {
+  margin: 0 0 4px 0;
+  font-size: 12px;
+  color: #888888;
+  text-align: center;
+}
+
+/* The microphone list and the broadcast button share the width of the box,
+   so every item inside it lines up */
+.box-broadcast .select-container,
+.box-broadcast .controls {
+  width: 100%;
+}
+
+.box-broadcast .selectFile {
+  width: 100%;
+  max-width: none;
+  margin: 0 0 10px 0;
+}
+
+.box-broadcast .mic-button {
+  width: 100%;
+  margin: 0 0 8px 0;
 }
 .nameTour {
   font-size: 22px;

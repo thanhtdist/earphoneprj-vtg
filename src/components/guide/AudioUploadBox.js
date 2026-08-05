@@ -260,13 +260,6 @@ const AudioUploadBox = ({ meetingSession, logger }) => {
                             </div>
                             <div className="audio-content">
                                 <FaFile size={30} className="audio-icon" />
-                                <div
-                                    className="play-pause-icon"
-                                    onClick={handlePlayPause}
-                                    style={{ zIndex: 10 }} // Ensure play/pause icon is above the file icon
-                                >
-                                    {isPlaying ? <FaPause size={24} /> : <FaPlay size={24} />}
-                                </div>
                             </div>
                         </div>
                     ) : (
@@ -282,6 +275,15 @@ const AudioUploadBox = ({ meetingSession, logger }) => {
                         </label>
                     )}
                 </div>
+                {/* The play control carries a label, the bare icon did not say what it does */}
+                {currentAudioFile && (
+                    <div className="play-file-control">
+                        <button type="button" className="play-file-button" onClick={handlePlayPause}>
+                            {isPlaying ? <FaPause size={14} /> : <FaPlay size={14} />}
+                            <span className="play-file-text">{isPlaying ? t('pauseFileBtn') : t('playFileBtn')}</span>
+                        </button>
+                    </div>
+                )}
                 {errorMessage && <p className="error-message">{errorMessage}</p>}
                 {currentAudioFile && (<p><a target="_blank" rel="noopener noreferrer" href={currentAudioFile.url} style={{ color: "green" }}>{currentAudioFile.name}</a></p>)}
             </div>
