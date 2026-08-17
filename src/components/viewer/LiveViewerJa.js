@@ -30,6 +30,10 @@ import NotFound from '../NotFound';
 import TourTitle from '../common/TourTitle';
 import { FaPause, FaPlay } from "react-icons/fa";
 import { GUIDE_NOT_START } from '../../utils/messages';
+import { logBrowserSupport } from '../../utils/browserSupport';
+import { countBindAudioElement } from '../../utils/audioDiagnostics';
+import { watchIncomingAudio } from '../../utils/audioFlow';
+import DebugLogPanel from '../common/DebugLogPanel';
 
 function LiveViewerJa() {
   // Get the params from the URL
@@ -136,11 +140,20 @@ function LiveViewerJa() {
       const audioElement = audioElementRef.current;
       console.log('Check audioElement:', audioElement);
       if (audioElement) {
-        await session.audioVideo.bindAudioElement(audioElement);
+        try {
+          countBindAudioElement(audioElement);
+          await session.audioVideo.bindAudioElement(audioElement);
+          console.log('Meeting audio element bound');
+        } catch (error) {
+          // Must not abort this function: the session still has to be started
+          console.error('Failed to bind the meeting audio element:', error);
+        }
       } else {
         console.error('Audio element not found');
       }
     }
+    // Subscribed before start(), so the very first stats tick is counted
+    watchIncomingAudio(session, () => audioElementRef.current);
     session.audioVideo.start();
   }, [selectedVoiceLanguage]);
 
@@ -198,6 +211,12 @@ function LiveViewerJa() {
     }
   }, [initializeMeetingSession]);
   // Process the tour when it changes
+  // What the SDK makes of this browser. No capture counter here: a listener never opens a
+  // microphone, so the only count that can go wrong on this side is the element binding
+  useEffect(() => {
+    logBrowserSupport();
+  }, []);
+
   useEffect(() => {
     // Skip if tour is undefined
     if (!tour) return;
@@ -363,7 +382,7 @@ function LiveViewerJa() {
           </>
         )}
       </div>
-
+      <DebugLogPanel />
     </>
   );
 }

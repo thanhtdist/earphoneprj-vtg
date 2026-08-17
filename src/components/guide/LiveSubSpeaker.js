@@ -33,6 +33,16 @@ import AudioMicControl from '../common/AudioMicControl';
 import AudioListenToggle from '../common/AudioListenToggle';
 import BroadcastStatusBar from '../common/BroadcastStatusBar';
 import { getUserStyle } from '../../utils/getUserStyle';
+import { audioInputFingerprint, audioInputIds, listAudioInputs, pickPreferredAudioInput } from '../../utils/audioInput';
+import { logBrowserSupport } from '../../utils/browserSupport';
+import {
+  countBindAudioElement,
+  countStartAudioInput,
+  countStopAudioInput,
+  watchAudioInputStreams,
+} from '../../utils/audioDiagnostics';
+import { isVoiceFocusDisabled, watchOutgoingAudio } from '../../utils/audioFlow';
+import DebugLogPanel from '../common/DebugLogPanel';
 import useWakeLock from '../../hooks/useWakeLock';
 import useConnectWebSocket from '../../hooks/useConnectWebSocket';
 import useWebSocketVisibilityHandler from '../../hooks/useWebSocketVisibilityHandler';
@@ -77,6 +87,13 @@ function LiveSubSpeaker() {
   const vfDeviceRef = useRef(null);
   // Keep a stable reference so the device change observer always calls the latest handler
   const audioInputsChangedRef = useRef(null);
+  // Identity of the microphones seen at the previous check, and a guard so two signals
+  // arriving together cannot restart the input twice
+  const audioInputFingerprintRef = useRef('');
+  const isSwitchingAudioInputRef = useRef(false);
+  // Microphones already known, so a headset that has just been plugged back in can be told
+  // apart from the ones that were there all along. Null until the first list is read
+  const knownAudioInputIdsRef = useRef(null);
 
   // Add these references and callback:
   // const wakeLockRef = useRef(null);
@@ -98,9 +115,21 @@ function LiveSubSpeaker() {
   const transformVoiceFocusDevice = async (meeting, attendee, logger) => {
     let transformer = null;
     let isVoiceFocusSupported = false;
+    // Returning false here also switches off Web Audio for the whole session, because the
+    // caller passes this straight into `enableWebAudio` — so ?vf=0 gives a genuinely raw
+    // microphone, not a raw microphone still routed through an audio graph
+    if (isVoiceFocusDisabled()) {
+      console.log('[VoiceFocus] 1. disabled by ?vf=0, using the raw microphone');
+      return false;
+    }
     try {
       const spec = {
-        name: 'ns_es', // use Voice Focus with Echo Reduction
+        // Noise suppression with Echo Reduction, as before. `es` is what makes
+        // observeMeetingAudio below do anything: without it that call returns early.
+        // 'default' and 'ns_es' are the only names the library accepts
+        // (libs/voicefocus/voicefocus.js:153) — anything else throws and falls back to raw.
+        // ?vf=0 remains the way to compare against a raw microphone on the same device
+        name: 'ns_es',
       };
       const options = {
         preload: false,
@@ -147,18 +176,34 @@ function LiveSubSpeaker() {
     logger.info('Sub-Guide deviceController' + JSON.stringify(deviceController));
     const meetingSession = new DefaultMeetingSession(meetingSessionConfiguration, logger, deviceController);
     setMeetingSession(meetingSession);
-    selectSpeaker(meetingSession);
+    // EXPERIMENT: audio output is left to the OS — see the commented-out selectSpeaker below.
+    // Was awaited because it acts on the same audio element as bindAudioElement further down,
+    // and running the two in parallel made the outcome depend on which finished first
+    // await selectSpeaker(meetingSession);
+    console.log('Sub-Guide audio output left to the OS (selectSpeaker disabled)');
     console.log('Sub Speaker - initializeMeetingSession--> Start');
     metricReport(meetingSession);
+    // The other end of the listener's step 7: whether the microphone carries signal at all
+    watchOutgoingAudio(meetingSession);
     console.log('Sub Speaker - initializeMeetingSession--> End');
     // Bind the audio element to the meeting session
     const audioElement = document.getElementById('audioElementSub');
     if (audioElement) {
-      await meetingSession.audioVideo.bindAudioElement(audioElement);
-      // Disable autoplay for the audio element
-      audioElement.autoplay = false;
-      // Start muted so the element matches the listening toggle, which is off
+      try {
+        countBindAudioElement(audioElement);
+        await meetingSession.audioVideo.bindAudioElement(audioElement);
+        console.log('Meeting audio element bound');
+      } catch (error) {
+        // Must not abort this function: the session still has to be started, otherwise
+        // the microphone is never broadcast
+        console.error('Failed to bind the meeting audio element:', error);
+      }
+      // iOS Safari cannot start (nor resume) a MediaStream element that was never
+      // allowed to play, and tearing it down takes the microphone capture with it,
+      // so the element is started muted instead of being kept paused. It is unmuted
+      // by the listen toggle, inside the user gesture
       audioElement.muted = true;
+      audioElement.autoplay = true;
     } else {
       console.error('Audio element not found');
     }
@@ -177,16 +222,36 @@ function LiveSubSpeaker() {
     meetingSession.audioVideo.start();
   }, []);
 
+  // EXPERIMENT: audio output selection is switched off, here and at the call site.
+  // It only ever picked audioOutputDevices[0], which is the default the OS gives us anyway,
+  // and there is no UI for choosing a speaker — while the cost is that the SDK then keeps an
+  // output device and retries setSinkId on the playing element at every bindAudioMix.
+  // Uncomment both this and the call in initializeMeetingSession to restore it.
+  //
   // Async function to select audio output device
-  const selectSpeaker = async (meetingSession) => {
-    const audioOutputDevices = await meetingSession.audioVideo.listAudioOutputDevices();
-
-    if (audioOutputDevices.length > 0) {
-      await meetingSession.audioVideo.chooseAudioOutput(audioOutputDevices[0].deviceId);
-    } else {
-      console.log('No speaker devices found');
-    }
-  };
+  // const selectSpeaker = async (meetingSession) => {
+  //   try {
+  //     const audioOutputDevices = await meetingSession.audioVideo.listAudioOutputDevices();
+  //
+  //     if (audioOutputDevices.length > 0) {
+  //       await meetingSession.audioVideo.chooseAudioOutput(audioOutputDevices[0].deviceId);
+  //     } else {
+  //       console.log('No speaker devices found');
+  //     }
+  //   } catch (error) {
+  //     // iOS exposes setSinkId but refuses it outside a user gesture ("A user gesture is
+  //     // required"). The SDK stores the device before that failure, so every later
+  //     // bindAudioElement() retries setSinkId and throws again — which would abort the
+  //     // session before it is started. Clearing the selection falls back to the default
+  //     // speaker, which is the one this code was asking for anyway
+  //     console.error('Error selecting speaker:', error);
+  //     try {
+  //       await meetingSession.audioVideo.chooseAudioOutput(null);
+  //     } catch (resetError) {
+  //       console.error('Failed to fall back to the default speaker:', resetError);
+  //     }
+  //   }
+  // };
 
   // Function to create a new user and channel
   const createAppUserAndJoinChannel = useCallback(async (meetingId, attendeeId, userID, userType, channelId) => {
@@ -309,9 +374,16 @@ function LiveSubSpeaker() {
     const vfDevice = await transformVFD.createTransformDevice(deviceId);
     console.log('Sub-Guide createVoiceFocusDevice vfDevice', vfDevice);
     if (vfDevice) {
-      // Enable Echo Reduction on this client
-      const observeMeetingAudio = await vfDevice.observeMeetingAudio(meetingSession.audioVideo);
-      console.log('Sub-Guide createVoiceFocusDevice Echo Reduction', observeMeetingAudio);
+      // Enable Echo Reduction on this client.
+      // Contained on purpose: this is an enhancement on top of a transform device that
+      // already works without it, so a failure here must not reach toggleMicrophone —
+      // there it would land in the catch that alerts, and the microphone would never start
+      try {
+        await vfDevice.observeMeetingAudio(meetingSession.audioVideo);
+        console.log('[VoiceFocus] echo reduction: ON');
+      } catch (error) {
+        console.error('[VoiceFocus] echo reduction could not be enabled:', error);
+      }
     }
     return vfDevice;
   }, [transformVFD, meetingSession]);
@@ -327,6 +399,7 @@ function LiveSubSpeaker() {
     vfDeviceRef.current = vfDevice;
     const deviceToUse = vfDevice || deviceId;
     console.log('Sub-Guide startAudioInputDevice deviceToUse', deviceToUse);
+    countStartAudioInput(deviceToUse);
     const startAudioInput = await meetingSession.audioVideo.startAudioInput(deviceToUse);
     console.log('Sub-Guide startAudioInputDevice startAudioInput', startAudioInput);
   }, [meetingSession, createVoiceFocusDevice]);
@@ -338,6 +411,7 @@ function LiveSubSpeaker() {
     if (!meetingSession) {
       return;
     }
+    countStopAudioInput();
     const stopAudioInput = await meetingSession.audioVideo.stopAudioInput(); // Stops the audio input device
     console.log('Sub-Guide stopAudioInputDevice stopAudioInput', stopAudioInput);
     if (vfDeviceRef.current) {
@@ -395,6 +469,7 @@ function LiveSubSpeaker() {
       console.log('List Audio Input Devices:', devices);
       setAudioInputDevices(null);
       setAudioInputDevices(devices);
+      knownAudioInputIdsRef.current = audioInputIds(devices);
       setMicroChecking('microChecking');
 
       // Check if there are no devices or if any device label is empty
@@ -435,26 +510,82 @@ function LiveSubSpeaker() {
     console.log('Sub-Guide handleAudioInputsChanged devices', devices);
     setAudioInputDevices(devices);
     if (devices.length === 0) {
+      knownAudioInputIdsRef.current = audioInputIds(devices);
       return;
     }
-    // Fall back to the first device when the selected one has been removed
-    const isSelectedAvailable = devices.some(device => device.deviceId === selectedAudioInput);
-    const nextDeviceId = isSelectedAvailable ? selectedAudioInput : devices[0].deviceId;
+    // A headset that has just been plugged back in takes over the capture, otherwise the
+    // current selection is kept — see pickPreferredAudioInput for what iOS does here
+    const nextDeviceId = pickPreferredAudioInput(devices, selectedAudioInput, knownAudioInputIdsRef.current);
+    knownAudioInputIdsRef.current = audioInputIds(devices);
     if (nextDeviceId !== selectedAudioInput) {
       setSelectedAudioInput(nextDeviceId);
-      if (isMicOn) {
-        try {
-          await startAudioInputDevice(nextDeviceId);
-        } catch (error) {
-          console.error('Sub-Guide handleAudioInputsChanged error', error);
-        }
-      }
+    }
+    // The input is restarted even when the identifier has not changed: on iOS the entry
+    // keeps its deviceId across a headset being plugged in or out, and the SDK switches
+    // the meeting to a null device when the previous track ends. Only a restart reopens
+    // the route that is now in use
+    if (!isMicOn || isSwitchingAudioInputRef.current) {
+      return;
+    }
+    isSwitchingAudioInputRef.current = true;
+    try {
+      await startAudioInputDevice(nextDeviceId);
+    } catch (error) {
+      console.error('Sub-Guide handleAudioInputsChanged error', error);
+    } finally {
+      isSwitchingAudioInputRef.current = false;
     }
   }, [selectedAudioInput, isMicOn, startAudioInputDevice]);
+
+  // Watch the microphones while broadcasting.
+  // iOS never reports a headset being plugged in or out — the device list keeps the same
+  // entry and only its label moves — so `audioInputsChanged` never fires and the capture
+  // stays on the previous route until the page is reloaded. The labels are polled here,
+  // and only while the microphone is on, so nothing runs when it is off
+  useEffect(() => {
+    if (!isMicOn) {
+      return;
+    }
+    let cancelled = false;
+    const checkAudioInputs = async () => {
+      try {
+        const devices = await listAudioInputs();
+        // Labels are empty until the permission is granted, they carry no information yet
+        if (cancelled || devices.length === 0 || devices.every(device => !device.label)) {
+          return;
+        }
+        const fingerprint = audioInputFingerprint(devices);
+        const previous = audioInputFingerprintRef.current;
+        audioInputFingerprintRef.current = fingerprint;
+        // The first read only records the baseline, it is not a change
+        if (!previous || previous === fingerprint) {
+          knownAudioInputIdsRef.current = audioInputIds(devices);
+          return;
+        }
+        console.log('Sub-Guide audio input route changed:', previous, '->', fingerprint);
+        await audioInputsChangedRef.current?.(devices);
+      } catch (error) {
+        console.error('Failed to read the audio inputs:', error);
+      }
+    };
+    checkAudioInputs();
+    const timer = setInterval(checkAudioInputs, 2000);
+    return () => {
+      cancelled = true;
+      clearInterval(timer);
+    };
+  }, [isMicOn]);
 
   useEffect(() => {
     audioInputsChangedRef.current = handleAudioInputsChanged;
   }, [handleAudioInputsChanged]);
+
+  // What the SDK makes of this browser, and the capture counters — both have to be in place
+  // before the session is created
+  useEffect(() => {
+    logBrowserSupport();
+    watchAudioInputStreams();
+  }, []);
 
   // Release the microphone when leaving the page
   useEffect(() => {
@@ -608,11 +739,11 @@ function LiveSubSpeaker() {
     }
     const nextIsListening = !isListening;
     setIsListening(nextIsListening);
+    // Stopping mutes instead of pausing: on iOS a paused MediaStream element cannot be
+    // resumed, and tearing it down drops the microphone capture of the broadcast
     audioElement.muted = !nextIsListening;
     if (nextIsListening) {
       audioElement.play().catch(error => console.error('Failed to play the meeting audio:', error));
-    } else {
-      audioElement.pause();
     }
   }
 
@@ -826,6 +957,7 @@ function LiveSubSpeaker() {
           </>
         )}
       </div>
+      <DebugLogPanel />
     </>
   );
 }

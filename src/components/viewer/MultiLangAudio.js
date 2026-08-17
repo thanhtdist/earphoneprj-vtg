@@ -32,6 +32,10 @@ import AudioPlayerControl from '../common/AudioPlayerControl';
 import useWakeLock from '../../hooks/useWakeLock';
 import useConnectWebSocket from '../../hooks/useConnectWebSocket';
 import useWebSocketVisibilityHandler from '../../hooks/useWebSocketVisibilityHandler';
+import { logBrowserSupport } from '../../utils/browserSupport';
+import { countBindAudioElement } from '../../utils/audioDiagnostics';
+import { watchIncomingAudio } from '../../utils/audioFlow';
+import DebugLogPanel from '../common/DebugLogPanel';
 
 function MultiLangAudio() {
   // const [connectionCount, setConnectionCount] = useState(0);
@@ -99,14 +103,25 @@ function MultiLangAudio() {
     const session = new DefaultMeetingSession(meetingSessionConfig, logger, deviceController);
     setMeetingSession(session);
 
-    await selectSpeaker(session);
+    // EXPERIMENT: audio output is left to the OS — see the commented-out selectSpeaker below
+    // await selectSpeaker(session);
+    console.log('Audio output left to the OS (selectSpeaker disabled)');
     if (selectedVoiceLanguage === 'ja-JP') {
       console.log('Selected voice language is Japanese', selectedVoiceLanguage);
       //const audioElement = document.getElementById('audioElementListener');
       const audioElement = audioElementRef.current;
       console.log('Check audioElement:', audioElement);
       if (audioElement) {
-        await session.audioVideo.bindAudioElement(audioElement);
+        try {
+          countBindAudioElement(audioElement);
+          await session.audioVideo.bindAudioElement(audioElement);
+          console.log('Meeting audio element bound');
+        } catch (error) {
+          // Binding can fail on iOS when the SDK retries setSinkId outside a user
+          // gesture. It must not abort this function: the session still has to be
+          // started, otherwise no audio is received at all
+          console.error('Failed to bind the meeting audio element:', error);
+        }
         // iOS Safari cannot start (nor resume) a MediaStream element that was never
         // allowed to play, so the meeting stream is started muted instead of being
         // kept paused. It is unmuted when the user presses the play button
@@ -117,21 +132,39 @@ function MultiLangAudio() {
       }
     }
     metricReport(session);
+    // Subscribed before start(), so the very first stats tick is counted
+    watchIncomingAudio(session, () => audioElementRef.current);
     session.audioVideo.start();
   }, [selectedVoiceLanguage]);
 
-  const selectSpeaker = async (session) => {
-    try {
-      const audioOutputDevices = await session.audioVideo.listAudioOutputDevices();
-      if (audioOutputDevices.length > 0) {
-        await session.audioVideo.chooseAudioOutput(audioOutputDevices[0].deviceId);
-      } else {
-        console.log('No speaker devices found');
-      }
-    } catch (error) {
-      console.error('Error selecting speaker:', error);
-    }
-  };
+  // EXPERIMENT: audio output selection is switched off, here and at the call site.
+  // It only ever picked audioOutputDevices[0], which is the default the OS gives us anyway,
+  // and there is no UI for choosing a speaker — while the cost is that the SDK then keeps an
+  // output device and retries setSinkId on the playing element at every bindAudioMix.
+  // Uncomment both this and the call in initializeMeetingSession to restore it.
+  //
+  // const selectSpeaker = async (session) => {
+  //   try {
+  //     const audioOutputDevices = await session.audioVideo.listAudioOutputDevices();
+  //     if (audioOutputDevices.length > 0) {
+  //       await session.audioVideo.chooseAudioOutput(audioOutputDevices[0].deviceId);
+  //     } else {
+  //       console.log('No speaker devices found');
+  //     }
+  //   } catch (error) {
+  //     // iOS exposes setSinkId but refuses it outside a user gesture ("A user gesture is
+  //     // required"). The SDK stores the device before that failure, so every later
+  //     // bindAudioElement() retries setSinkId and throws again — which would abort the
+  //     // session before it is started. Clearing the selection falls back to the default
+  //     // speaker, which is the one this code was asking for anyway
+  //     console.error('Error selecting speaker:', error);
+  //     try {
+  //       await session.audioVideo.chooseAudioOutput(null);
+  //     } catch (resetError) {
+  //       console.error('Failed to fall back to the default speaker:', resetError);
+  //     }
+  //   }
+  // };
 
   const createAppUserAndJoinChannel = useCallback(
     async (meetingId, attendeeId, userID, userType, channelId) => {
@@ -606,6 +639,12 @@ function MultiLangAudio() {
   // }, [connectWebSocket, tour, isActive]);
 
 
+  // What the SDK makes of this browser. No capture counter here: a listener never opens a
+  // microphone, so the only count that can go wrong on this side is the element binding
+  useEffect(() => {
+    logBrowserSupport();
+  }, []);
+
   useEffect(() => {
     const ws = wsRef.current;
     console.log('WebSocket current in useEffect:', ws);
@@ -912,7 +951,7 @@ function MultiLangAudio() {
           </>
         )}
       </div>
-
+      <DebugLogPanel />
     </>
   );
 }
