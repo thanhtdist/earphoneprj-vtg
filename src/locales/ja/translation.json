@@ -9,12 +9,12 @@
   "startBtn":"スタート",
   "stopBtn":"停止",
   "broadcastBox": {
-    "title": "お客様へ配信する",
+    "title": "マイクで配信する",
     "micLabel": "音声入力（マイク）",
     "startBtn": "配信を開始する",
     "stopBtn": "配信を停止",
-    "hint": "※ マイクを選んだだけでは配信は始まりません",
-    "liveHint": "お客様に音声が届いています"
+    "hint": "音声は配信されていません",
+    "liveHint": "音声を配信しています"
   },
   "broadcastStatus": {
     "idle": "配信していません",
@@ -53,7 +53,7 @@
     "speaking": "話す言語を選択してください",
     "listening": "聴く言語を選択"
   },
-  "playVoiceLbl": "音声ファイルを流す",
+  "playVoiceLbl": "音声ファイルを配信する",
   "playVoiceOptions": {
     "instruction": "音声ファイル1",
     "closingSpeech": "音声ファイル2"

@@ -9,12 +9,12 @@
   "startBtn":"Start",
   "stopBtn":"Stop",
   "broadcastBox": {
-    "title": "Broadcast to users",
+    "title": "Broadcast with microphone",
     "micLabel": "Audio input (microphone)",
     "startBtn": "Start broadcasting",
     "stopBtn": "Stop broadcasting",
-    "hint": "* Selecting a microphone does not start the broadcast",
-    "liveHint": "Audio is reaching your users"
+    "hint": "Audio is not being broadcast",
+    "liveHint": "Audio is being broadcast"
   },
   "broadcastStatus": {
     "idle": "Not broadcasting",
@@ -53,7 +53,7 @@
     "speaking": "Select a language to speak",
     "listening": "Select a language to listen"
   },
-  "playVoiceLbl": "Play an audio file",
+  "playVoiceLbl": "Broadcast an audio file",
   "playVoiceOptions": {
     "instruction": "Voice File 1",
     "closingSpeech": "Voice File 2"
