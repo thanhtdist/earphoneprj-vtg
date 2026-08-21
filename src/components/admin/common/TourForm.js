@@ -230,7 +230,11 @@ const TourForm = ({ onSubmit, defaultValues }) => {
                 </div>
             </div>
             {defaultValues && <>
-                <GenerateQRCode tourId={defaultValues.tourId} />
+                <GenerateQRCode
+                    tourId={defaultValues.tourId}
+                    tourNumber={defaultValues.tourNumber}
+                    courseName={defaultValues.courseName}
+                />
             </>
             }
             <div className="text-center mt-5">

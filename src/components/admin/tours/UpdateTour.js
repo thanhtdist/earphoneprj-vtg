@@ -20,7 +20,7 @@ const UpdateTour = () => {
     const { tourId } = useParams(); // Extracts 'tourId' from the URL
     console.log('Tour ID:', tourId);
     const [isLoading, setIsLoading] = useState(false);
-    const [tour, setTour] = useState([]);
+    const [tour, setTour] = useState(null);
 
     //   const {
     //     register,

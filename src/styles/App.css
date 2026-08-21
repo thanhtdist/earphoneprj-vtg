@@ -85,3 +85,78 @@ select {
   justify-content: center;
   align-items: center;
 }
+
+/* "保存" dropdown menu on the admin tour QR code, styled to match the native
+   <select> dropdowns elsewhere on this page: square-ish corners, blue hover. */
+.qr-save-dropdown .dropdown-menu {
+  border-radius: 4px;
+}
+
+.qr-save-dropdown .dropdown-item:hover,
+.qr-save-dropdown .dropdown-item:focus {
+  background-color: #0d6efd;
+  color: #ffffff;
+}
+
+.qr-print-section {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  width: 400px;
+  padding: 24px;
+  background: #ffffff;
+  text-align: center;
+  font-family: sans-serif;
+}
+
+.qr-print-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+
+.qr-print-tour-number {
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.qr-print-caption {
+  font-size: 14px;
+  margin-bottom: 12px;
+  color: #555555;
+}
+
+.qr-print-code {
+  width: 160px;
+  height: 160px;
+  margin: 0 auto 16px;
+}
+
+.qr-print-url {
+  font-size: 12px;
+  word-break: break-all;
+}
+
+@media print {
+  /* Chrome only omits its default header/footer (date, page title, URL, page
+     number) when the page margin is exactly 0 — this is a browser print
+     setting, not something the page content controls otherwise. */
+  @page {
+    margin: 0;
+  }
+
+  body.printing-qr > *:not(.qr-print-section) {
+    display: none !important;
+  }
+
+  body.printing-qr .qr-print-section {
+    position: static;
+    left: auto;
+    width: 100%;
+  }
+
+  body.printing-qr .qr-print-code {
+    width: 40mm;
+    height: 40mm;
+  }
+}
