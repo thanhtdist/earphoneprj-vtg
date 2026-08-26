@@ -53,7 +53,9 @@ const useConnectWebSocket = ({
         if (message.type === 'connectionUpdate') {
           console.log('🔁 WebSocket Received connectionUpdate:', message);
           if (onConnectionUpdate) {
-            onConnectionUpdate(message.connectionCount);
+            // Pass the whole message: older backends only carry connectionCount,
+            // newer ones also carry the per-role breakdown — let each caller pick what it needs.
+            onConnectionUpdate(message);
           }
         } else {
           console.log('📨 WebSocket Received:', message);

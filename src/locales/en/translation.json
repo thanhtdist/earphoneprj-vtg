@@ -21,6 +21,9 @@
     "idle": "Not broadcasting",
     "live": "Broadcasting"
   },
+  "participants": {
+    "total": "Total: {{count}}"
+  },
   "listenBox": {
     "titleGuide": "Listen to the sub-guide",
     "titleSubGuide": "Listen to the main guide",

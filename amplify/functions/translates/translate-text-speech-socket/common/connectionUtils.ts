@@ -52,6 +52,9 @@ export async function updateConnectionHistoryAndBroadcast(
     type: 'connectionUpdate',
     tourId,
     connectionCount,
+    guideCount,
+    subGuideCount,
+    userCount,
   };
 
   await Promise.all(

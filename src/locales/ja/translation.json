@@ -21,6 +21,9 @@
     "idle": "配信していません",
     "live": "配信中"
   },
+  "participants": {
+    "total": "合計: {{count}}人"
+  },
   "listenBox": {
     "titleGuide": "サブガイドの音声を聞く",
     "titleSubGuide": "メインガイドの音声を聞く",

@@ -481,7 +481,12 @@ function MultiLangAudio() {
     tourId: tourId,
     languageCode: targetLanguageCode,
     userType: userType,
-    onConnectionUpdate: setParticipantsCount,
+    onConnectionUpdate: (message) => setParticipantsCount({
+      total: message.connectionCount,
+      guide: message.guideCount,
+      subGuide: message.subGuideCount,
+      user: message.userCount,
+    }),
     // additionalInit: (ws) => {
     //   ws.send(JSON.stringify({
     //     action: 'selectLanguage',

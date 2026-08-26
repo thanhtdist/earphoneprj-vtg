@@ -41,9 +41,15 @@ function Header({ tourId, count = null, userType = null, subGuideFunctionAvailab
     const qrColor = isSubGuideQR ? QR_COLORS.subSpeaker : QR_COLORS.listener;
     const qrValue = isSubGuideQR ? `${appUrl.subGuide}/${tourId}` : `${appUrl.viewer}/${tourId}`;
 
+    // Most screens pass the per-role breakdown as an object; LiveViewerJa still
+    // passes a plain number (it counts Chime attendees, not the WebSocket), so
+    // keep both shapes working.
+    const isBreakdown = count !== null && typeof count === 'object';
+    const total = isBreakdown ? count.total : count;
+
     return (
         <div className={`${count !== null ? 'container-header' : 'container-header-startguide'}`} style={{ 'color': pageColor, paddingTop: "10px" }} >
-            {count !== null && <Participants count={count}></Participants>}
+            {count !== null && <Participants count={total} breakdown={isBreakdown ? count : null}></Participants>}
 
             <div className='rightMenu'>
                 {userType === "Guide" && (

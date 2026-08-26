@@ -992,7 +992,12 @@ function StartLiveSession() {
     tourId: tourId,
     languageCode: 'ja-JP',
     userType: userType,
-    onConnectionUpdate: setParticipantsCount,
+    onConnectionUpdate: (message) => setParticipantsCount({
+      total: message.connectionCount,
+      guide: message.guideCount,
+      subGuide: message.subGuideCount,
+      user: message.userCount,
+    }),
   });
 
   useWebSocketVisibilityHandler({
