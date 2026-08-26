@@ -35,6 +35,12 @@ import useWebSocketVisibilityHandler from '../../hooks/useWebSocketVisibilityHan
 import { logBrowserSupport } from '../../utils/browserSupport';
 import { countBindAudioElement } from '../../utils/audioDiagnostics';
 import { watchIncomingAudio } from '../../utils/audioFlow';
+import {
+  noteTourMeetingId,
+  logMeetingIdentity,
+  watchMeetingConnection,
+  watchMeetingAttendees,
+} from '../../utils/meetingHealth';
 import DebugLogPanel from '../common/DebugLogPanel';
 //import Loading from '../Loading';
 
@@ -79,11 +85,15 @@ function JapaneseAudio() {
   //   }
   // }, []);
 
-  const initializeMeetingSession = useCallback(async (meetingData, attendeeData) => {
+  // `source` says where the meeting id came from ('api' or 'cookie'). It is only used by the
+  // debug panel, which compares it against the meeting the tour points at
+  const initializeMeetingSession = useCallback(async (meetingData, attendeeData, source) => {
     if (!meetingData || !attendeeData) {
       console.error('Invalid meeting or attendee information');
       return;
     }
+
+    logMeetingIdentity(meetingData.MeetingId, source);
 
     const logger = new ConsoleLogger('ChimeMeetingLogs', LogLevel.INFO);
     const deviceController = new DefaultDeviceController(logger);
@@ -98,25 +108,20 @@ function JapaneseAudio() {
     const audioElement = audioElementRef.current;
     console.log('Check audioElement:', audioElement);
     if (audioElement) {
-      try {
-        countBindAudioElement(audioElement);
-        await session.audioVideo.bindAudioElement(audioElement);
-        console.log('Meeting audio element bound');
-      } catch (error) {
-        // Binding can fail on iOS when the SDK retries setSinkId outside a user
-        // gesture. It must not abort this function: the session still has to be
-        // started, otherwise no audio is received at all
-        console.error('Failed to bind the meeting audio element:', error);
-      }
-      // iOS Safari cannot start (nor resume) a MediaStream element that was never
-      // allowed to play, so the meeting stream is started muted instead of being
-      // kept paused. It is unmuted when the user presses the play button
-      audioElement.muted = true;
-      audioElement.autoplay = true;
+      countBindAudioElement(audioElement);
+      await session.audioVideo.bindAudioElement(audioElement);
+      // Disable autoplay for the audio element
+      audioElement.autoplay = false;
     } else {
       console.error('Audio element not found');
     }
     metricReport(session);
+    // Whether this session is connected to a meeting that exists, and who else is in it.
+    // Subscribed before start(), otherwise a session that fails immediately - a stale
+    // meeting id is rejected within milliseconds - would stop before anything is watching
+    watchMeetingConnection(session);
+    watchMeetingAttendees(session);
+
     // Subscribed before start(), so the very first stats tick is counted
     watchIncomingAudio(session, () => audioElementRef.current);
     session.audioVideo.start();
@@ -184,7 +189,7 @@ function JapaneseAudio() {
   const getMeetingAttendeeInfoFromCookies = useCallback(
     (retrievedUser) => {
       //setIsLoading(true);
-      initializeMeetingSession(retrievedUser.meeting, retrievedUser.attendee);
+      initializeMeetingSession(retrievedUser.meeting, retrievedUser.attendee, 'cookie');
       //setMeeting(retrievedUser.meeting);
       //setAttendee(retrievedUser.attendee);
       setUserArn(retrievedUser.userArn);
@@ -214,7 +219,7 @@ function JapaneseAudio() {
           meetingData.MeetingId,
           `${userType}|${Date.now()}`
         );
-        await initializeMeetingSession(meetingData, attendeeData);
+        await initializeMeetingSession(meetingData, attendeeData, 'api');
 
         const { channelArn, userArn } = await createAppUserAndJoinChannel(
           meetingData.MeetingId,
@@ -427,48 +432,16 @@ function JapaneseAudio() {
     wsRef,
   });
 
-  // Function to play the audio bound to the meeting session
-  // iOS Safari rejects play() while the meeting stream is not attached yet,
-  // so the playback is retried as soon as the element becomes playable
-  const playMeetingAudio = useCallback(async () => {
-    const audio = audioElementRef.current;
-    if (!audio) {
-      console.error('Audio element not found');
-      return;
-    }
-    try {
-      await audio.play();
-      console.log('✅ Meeting audio played');
-    } catch (error) {
-      console.error('🔈 Failed to play the meeting audio, retrying when it is ready:', error);
-      const retry = () => {
-        audio.removeEventListener('loadedmetadata', retry);
-        audio.removeEventListener('canplay', retry);
-        audio.play()
-          .then(() => console.log('✅ Meeting audio played on retry'))
-          .catch(err => console.error('🔈 Failed to play the meeting audio:', err));
-      };
-      audio.addEventListener('loadedmetadata', retry);
-      audio.addEventListener('canplay', retry);
-    }
-  }, []);
-
   const handleMuteUnmute = () => {
     setIsMuted(!isMuted);
-    // The meeting stream keeps playing while stopped, so it must stay muted
-    audioElementRef.current.muted = isPlay ? isMuted : true;
+    audioElementRef.current.muted = isMuted;
   };
 
   // Function to handle play/pause button click
   const handlePlay = () => {
-    const audio = audioElementRef.current;
     if (isPlay === false) {
       setIsPlay(true)
-      // The meeting stream is started muted, unmute it before playing
-      if (audio) {
-        audio.muted = !isMuted;
-      }
-      playMeetingAudio(); // This is for Chime session (ja-JP only)
+      audioElementRef.current.play(); // This is for Chime session (ja-JP only)
     } else {
       setIsPlay(false);
       // ⛔ Immediately stop translated audio
@@ -482,13 +455,8 @@ function JapaneseAudio() {
         currentTranslatedAudioRef.current = null;
       }
 
-      // ⛔ Stop Chime-bound audio: mute it instead of pausing,
-      // iOS Safari cannot resume a paused MediaStream element
-      if (audio?.srcObject) {
-        audio.muted = true;
-      } else {
-        audio?.pause();
-      }
+      // ⛔ Stop Chime-bound audio (if needed)
+      audioElementRef.current.pause();
 
       // 🧹 Clear translated audio queue
       audioQueueRef.current = [];
@@ -535,6 +503,8 @@ function JapaneseAudio() {
     console.log("Processing Tour:", tour);
     try {
       if (tour.meetingId) {
+        // What the tour points at right now - step 10 compares the cookie against it
+        noteTourMeetingId(tour.meetingId);
         console.log("Meeting Exists in Tour");
 
         // Check if the meeting is available in Chime Meeting

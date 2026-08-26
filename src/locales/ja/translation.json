@@ -14,7 +14,8 @@
     "startBtn": "配信を開始する",
     "stopBtn": "配信を停止",
     "hint": "音声は配信されていません",
-    "liveHint": "音声を配信しています"
+    "liveHint": "音声を配信しています",
+    "otherDeviceLive": "別の端末が配信中です"
   },
   "broadcastStatus": {
     "idle": "配信していません",

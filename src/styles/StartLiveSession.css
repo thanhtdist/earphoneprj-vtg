@@ -188,6 +188,26 @@ select {
   font-size: 12px;
 }
 
+/* Greyed start button, kept in case a caller ever needs to disable AudioMicControl again */
+.mic-button-disabled,
+.mic-button-disabled.mic-button-on,
+.mic-button-disabled.mic-button-off {
+  border: 2px solid #C7C7C7;
+  background-color: #F2F2F2;
+  color: #8A8A8A;
+  cursor: not-allowed;
+}
+
+/* Heads-up that another guide device is already broadcasting - informational only, starting
+   this device's own microphone anyway is allowed */
+.broadcast-claim-notice {
+  margin: 6px 0 0 0;
+  text-align: center;
+  font-size: 12px;
+  font-weight: bold;
+  color: #C60226;
+}
+
 /* The broadcast box is the primary action of the page, it stands out from
    the other boxes */
 .box-start-live-session.box-broadcast {

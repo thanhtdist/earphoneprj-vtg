@@ -49,6 +49,20 @@ import {
   watchAudioInputStreams,
 } from '../../utils/audioDiagnostics';
 import { isVoiceFocusDisabled, watchOutgoingAudio } from '../../utils/audioFlow';
+import {
+  noteTourMeetingId,
+  logMeetingIdentity,
+  watchMeetingConnection,
+  watchMeetingAttendees,
+} from '../../utils/meetingHealth';
+import {
+  CLAIM_BLOCKED,
+  CLAIM_CHECKING,
+  CLAIM_GRANTED,
+  CLAIM_SETTLE_FALLBACK_MS,
+  CLAIM_SETTLE_MS,
+  isMainGuide,
+} from '../../utils/broadcastClaim';
 import DebugLogPanel from '../common/DebugLogPanel';
 import useWakeLock from '../../hooks/useWakeLock';
 import useConnectWebSocket from '../../hooks/useConnectWebSocket';
@@ -86,6 +100,11 @@ function StartLiveSession() {
   const [isLoading, setIsLoading] = useState(true);
   //const [userId, setUserId] = useState('');
   const [isMicOn, setIsMicOn] = useState(false); // State for microphone status
+  // Whether another Main-Guide device is already in the meeting. Every guide device joins
+  // with the microphone off; this only drives the "another device is broadcasting" notice
+  // - it never blocks starting the mic - see utils/broadcastClaim for why the roster alone
+  // decides it
+  const [broadcastClaim, setBroadcastClaim] = useState(CLAIM_CHECKING);
   const [transformVFD, setTransformVFD] = useState(null);
   const [microChecking, setMicroChecking] = useState(t('microChecking'));
   const [noMicroMsg, setNoMicoMsg] = useState(t('noMicroMsg'));
@@ -106,6 +125,12 @@ function StartLiveSession() {
   // play and mute pair that both acted on the same audio element
   const [isListening, setIsListening] = useState(false);
   const audioRef = useRef(null);
+  // Latest isMicOn, for the device-change observer below - that observer is registered once
+  // and would otherwise only ever see the isMicOn value from the render it was created in
+  const isMicOnRef = useRef(false);
+  // Whether startAudioInputDevice (and so getUserMedia) has already run once on this page
+  // load, purely for the [getUserMedia] debug log below to say "first" vs "again"
+  const getUserMediaCalledRef = useRef(false);
   // Keep the Voice Focus device currently in use so the previous microphone can be released
   const vfDeviceRef = useRef(null);
   // Keep a stable reference so the device change observer always calls the latest handler
@@ -119,6 +144,10 @@ function StartLiveSession() {
   const knownAudioInputIdsRef = useRef(null);
   const userType = `Guide`;
   //const audioData = useRef([]); // Ref to store audio data
+
+  useEffect(() => {
+    isMicOnRef.current = isMicOn;
+  }, [isMicOn]);
 
   // Add these references and callback:
   // const wakeLockRef = useRef(null);
@@ -215,12 +244,15 @@ function StartLiveSession() {
   }
 
   // Function to initialize the meeting session from the meeting that the host has created
-  const initializeMeetingSession = useCallback(async (meeting, attendee) => {
+  // `source` says where the meeting id came from ('created', 'api' or 'cookie'). It is only
+  // used by the debug panel, which compares it against the meeting the tour points at
+  const initializeMeetingSession = useCallback(async (meeting, attendee, source) => {
     if (!meeting || !attendee) {
       console.error('Invalid meeting or attendee information');
       return;
     }
 
+    logMeetingIdentity(meeting.MeetingId, source);
     console.log('Main Speaker - initializeMeetingSession--> Start');
     console.log('Meeting:', meeting);
     console.log('Attendee:', attendee);
@@ -255,6 +287,11 @@ function StartLiveSession() {
     metricReport(meetingSession);
     // The other end of the listener's step 7: whether the microphone carries signal at all
     watchOutgoingAudio(meetingSession);
+    // Whether this session is connected to a meeting that exists, and who else is in it.
+    // Subscribed before start(), otherwise a session that fails immediately - a stale
+    // meeting id is rejected within milliseconds - would stop before anything is watching
+    watchMeetingConnection(meetingSession);
+    watchMeetingAttendees(meetingSession);
     console.log('Main Speaker - initializeMeetingSession--> End');
     // Bind the audio element to the meeting session
     const audioElement = document.getElementById('audioElementMain');
@@ -297,9 +334,15 @@ function StartLiveSession() {
       },
 
       audioInputMuteStateChanged: (device, muted) => {
-        // console.log('Device xxx', device, muted ? 'is muted in hardware' : 'is not muted');
-        console.log('Device yyy:', device);
-        console.log('Status yyy:', muted ? 'is muted in hardware' : 'is not muted');
+        // Fired by the SDK when the OS/hardware mutes or frees the mic - a second browser or
+        // app taking it while this one is backgrounded, for example. This is independent of
+        // point #3 (broadcastClaim): point #3 never calls stopAudioInputDevice or otherwise
+        // touches the track, so a mute logged here while isMicOnRef.current is true means the
+        // OS did it, not our claim logic
+        console.log(
+          '[OS-mic] device', device, muted ? 'MUTED at hardware/OS level' : 'active again',
+          '- our own mic-on state:', isMicOnRef.current,
+        );
       },
     };
 
@@ -340,7 +383,7 @@ function StartLiveSession() {
       console.log('Attendee created:', attendee);
 
       // Initialize the meeting session such as meeting session
-      initializeMeetingSession(meeting, attendee);
+      initializeMeetingSession(meeting, attendee, 'created');
       const createAppUserAndChannelResponse = await createAppUserAndChannel(userID, userName);
       console.log('ChannelID created:', createAppUserAndChannelResponse.channelID);
       // Update table tour with the meetingId and channelId
@@ -377,8 +420,50 @@ function StartLiveSession() {
     }
   }, [initializeMeetingSession, userType, tourId]);
 
+  // Function to join the meeting and the channel the tour already points at.
+  // Used when this browser has no usable cookie but the tour has a live session: another
+  // device is broadcasting, so this one has to join it rather than open a second one.
+  // Deliberately never calls updateMeetingIdAndChannelId - repointing the tour here is what
+  // orphaned every listener already connected, and createChannel is not called either, which
+  // is what used to strand the chat history in an abandoned channel.
+  const joinExistingSession = useCallback(async (meeting, channelId) => {
+    setIsLoading(true);
+    try {
+      const attendee = await createAttendee(meeting.MeetingId, `${userType}|${Date.now()}`);
+      console.log('Attendee created for the existing meeting:', attendee);
+      initializeMeetingSession(meeting, attendee, 'api');
+
+      // The channel comes from the tour record. This screen must not create a second one
+      const channelArn = `${Config.appInstanceArn}/channel/${channelId}`;
+      // The name stays 'Guide', as createAppUserAndChannel sets it. Going through
+      // createAppUserAndJoinChannel instead would number it from the listAttendee index and
+      // start producing Guide2, Guide3 on every extra device
+      const userArn = await createAppInstanceUsers(uuidv4(), userType);
+      console.log('Guide created for the existing channel:', userArn);
+      await addChannelMembership(channelArn, userArn);
+
+      setMetting(meeting);
+      setAttendee(attendee);
+      setUserArn(userArn);
+      setChannelArn(channelArn);
+
+      const mainGuide = {
+        meeting: meeting,
+        attendee: attendee,
+        userArn: userArn,
+        channelArn: channelArn,
+      };
+      JSONCookieUtils.setJSONCookie("Main-Guide" + tourId, mainGuide, 1);
+      console.log("joinExistingSession Cookie set Main-Guide for 1 day!");
+    } catch (error) {
+      console.error('Error joining the existing session:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [initializeMeetingSession, userType, tourId]);
+
   // Function to rejoin a live audio session after the meeting has expired
-  const rejoinLiveAduioSession = useCallback(async () => {
+  const rejoinLiveAduioSession = useCallback(async (channelId) => {
     console.log('rejoinLiveAduioSession tourId:', tourId);
     setIsLoading(true);
     // // Delete the cookie
@@ -392,11 +477,15 @@ function StartLiveSession() {
       const retrievedMainGuide = JSONCookieUtils.getJSONCookie("Main-Guide" + tourId);
       console.log("Retrieved cookie:", retrievedMainGuide);
 
-      if (!retrievedMainGuide) {
-        console.log("No cookie found, creating a new meeting...");
+      // The channel belongs to the tour, not to this browser. Reading it out of the cookie is
+      // what sent a device without one into startLiveAduioSession, which opened a second
+      // channel and left the chat history behind in the old one
+      if (!channelId) {
+        console.log("The tour has no channel yet, starting a fresh session...");
         startLiveAduioSession();
         return;
       }
+      const channelArn = `${Config.appInstanceArn}/channel/${channelId}`;
       //const userID = retrievedMainGuide.userArn.split('/').pop();
       //const userName = `Guide`;
       const meeting = await createMeeting();
@@ -407,32 +496,42 @@ function StartLiveSession() {
       console.log('Attendee created:', attendee);
 
       // Initialize the meeting session such as meeting session
-      initializeMeetingSession(meeting, attendee);
+      initializeMeetingSession(meeting, attendee, 'created');
       // const createAppUserAndChannelResponse = await createAppUserAndChannel(userID, userName);
       // console.log('ChannelID created:', createAppUserAndChannelResponse.channelID);
       // Update table tour with the meetingId and channelId
-      console.log('rejoinLiveAduioSession.ChannelId', retrievedMainGuide.channelArn.split('/').pop());
+      console.log('rejoinLiveAduioSession.ChannelId', channelId);
       console.log('rejoinLiveAduioSession.MeetingId', meeting.MeetingId);
+      // A new meeting, the same channel - the chat history survives the meeting expiring
       const data = {
         tourId: tourId,
         meetingId: meeting.MeetingId,
-        channelId: retrievedMainGuide.channelArn.split('/').pop(),
+        channelId: channelId,
       };
       await updateMeetingIdAndChannelId(data);
+
+      // Reuse the chat identity when this browser has one, so the guide stays the same person
+      // in the channel across meetings. A browser arriving without a cookie needs a new one
+      let userArn = retrievedMainGuide?.userArn;
+      if (!userArn) {
+        userArn = await createAppInstanceUsers(uuidv4(), userType);
+        console.log('Guide created for the existing channel:', userArn);
+        await addChannelMembership(channelArn, userArn);
+      }
+
       // setUserId(userID);
       setMetting(meeting);
       setAttendee(attendee);
-      setUserArn(retrievedMainGuide.userArn);
-      setChannelArn(retrievedMainGuide.channelArn);
-      //setChannelID(retrievedMainGuide.channelArn.split('/').pop());
+      setUserArn(userArn);
+      setChannelArn(channelArn);
 
       // Storage the Guide information in the cookies
       // Define your data
       const mainGuide = {
         meeting: meeting,
         attendee: attendee,
-        userArn: retrievedMainGuide.userArn,
-        channelArn: retrievedMainGuide.channelArn,
+        userArn: userArn,
+        channelArn: channelArn,
       };
 
       // Delete the cookie
@@ -501,8 +600,18 @@ function StartLiveSession() {
     const deviceToUse = vfDevice || deviceId;
     console.log('startAudioInputDevice deviceToUse', deviceToUse);
     countStartAudioInput(deviceToUse);
+    // audioVideo.startAudioInput is what calls getUserMedia internally (the SDK does it, this
+    // code never calls it directly) - logged so a popup or its absence can be matched to this
+    // exact call, and to tell a first-ever request on this page apart from a later restart
+    // that just reuses the permission already granted
+    console.log(
+      getUserMediaCalledRef.current
+        ? '[getUserMedia] requesting again (permission already asked for on this page load)'
+        : '[getUserMedia] requesting for the FIRST time on this page load',
+    );
+    getUserMediaCalledRef.current = true;
     const startAudioInput = await meetingSession.audioVideo.startAudioInput(deviceToUse);
-    console.log('startAudioInputDevice startAudioInput', startAudioInput);
+    console.log('[getUserMedia] startAudioInput resolved - permission was granted', startAudioInput);
   }, [meetingSession, createVoiceFocusDevice]);
 
   // Function to stop the audio input device
@@ -534,6 +643,10 @@ function StartLiveSession() {
           await stopAudioInputDevice();
 
         } else {
+          // Point #3 never blocks starting - this just states its value at the moment the
+          // guide started, so a log that reads "OS/hardware mute" right after this one is
+          // known to not be point #3's doing
+          console.log('[Point3 claim] starting mic, broadcastClaim =', broadcastClaim, '(never blocks)');
           // Start the audio input device with the selected microphone
           await startAudioInputDevice(selectedAudioInput);
           // Unmute the microphone
@@ -729,25 +842,42 @@ function StartLiveSession() {
   }, []);
 
   // Function to get the meeting and attendee information from the cookies
-  const getMeetingAttendeeInfoFromCookies = useCallback(async () => {
+  const getMeetingAttendeeInfoFromCookies = useCallback(async (liveMeeting, channelId) => {
     const retrievedMainGuide = JSONCookieUtils.getJSONCookie("Main-Guide" + tourId);
     console.log("Retrieved cookie:", retrievedMainGuide);
+
+    // No cookie means "this browser has not been here", not "this tour has no session".
+    // The caller has just confirmed the tour's meeting is alive, so join that one
     if (!retrievedMainGuide) {
-      startLiveAduioSession();
+      await joinExistingSession(liveMeeting, channelId);
+      return;
+    }
+
+    // The cookie lives a day; the meeting it names can be gone five minutes after the last
+    // audio connection left, and another device may have moved the tour on since. Compare
+    // before trusting it. No network call is needed - the caller already fetched the meeting.
+    // Tested this way rather than by re-enabling the commented-out checkAvailableMeeting
+    // below: getMeeting resolves with { statusCode: 404 } instead of throwing, and that
+    // object is truthy, so `if (!meeting) return` could never have fired
+    if (retrievedMainGuide?.meeting?.MeetingId !== liveMeeting.MeetingId) {
+      console.log('The cookie names a stale meeting, joining the tour one instead:', retrievedMainGuide?.meeting?.MeetingId);
+      JSONCookieUtils.deleteCookie("Main-Guide" + tourId);
+      await joinExistingSession(liveMeeting, channelId);
       return;
     }
     // const meeting = await checkAvailableMeeting(retrievedMainGuide.meeting.MeetingId, "Main-Guide");
     // console.log('getMeetingResponse:', meeting);
     // if (!meeting) return;
-    initializeMeetingSession(retrievedMainGuide.meeting, retrievedMainGuide.attendee);
+    initializeMeetingSession(retrievedMainGuide.meeting, retrievedMainGuide.attendee, 'cookie');
     setMetting(retrievedMainGuide.meeting);
     setAttendee(retrievedMainGuide.attendee);
     setUserArn(retrievedMainGuide.userArn);
     //setUserId(retrievedMainGuide.userArn.split('/').pop());
-    setChannelArn(retrievedMainGuide.channelArn);
+    // Derived from the tour rather than read back from the cookie, so the two can never drift
+    setChannelArn(`${Config.appInstanceArn}/channel/${channelId}`);
     //setChannelID(retrievedMainGuide.channelArn.split('/').pop());
     setIsLoading(false);
-  }, [initializeMeetingSession, startLiveAduioSession, tourId]);
+  }, [initializeMeetingSession, joinExistingSession, tourId]);
 
   useEffect(() => {
     getAudioInputDevices();
@@ -898,6 +1028,55 @@ function StartLiveSession() {
     // connectWebSocket();
 
     const attendeeSet = new Set(); // List of sub-guides, listeners
+
+    // Our own attendee id, read from the session rather than from the state, so the roster
+    // below can tell this device apart from the other guides without waiting for a render
+    const ownAttendeeId = meetingSession.configuration.credentials?.attendeeId;
+    // The other Main-Guide devices in the meeting right now
+    const otherGuides = new Set();
+    // The ones that were already in it when we arrived. Null until the roster has been read,
+    // and emptied for good once the microphone is ours - the claim is not handed back
+    let incumbentGuides = null;
+    let settleTimer = null;
+
+    const decideClaim = () => {
+      if (!incumbentGuides) {
+        setBroadcastClaim(CLAIM_CHECKING);
+        return;
+      }
+      // Only the guides that were already here hold us back. One that arrives later is the
+      // one that has to stand down, and it sees us in its own roster and does
+      const stillHere = Array.from(incumbentGuides).filter(id => otherGuides.has(id));
+      if (stillHere.length > 0) {
+        // This only sets the notice text - it does not touch the mic. If a start also fails
+        // around the same time, check the [OS-mic] log instead, not this one
+        console.log('[Point3 claim] another Main-Guide is in the meeting (notice only, mic still startable):', stillHere);
+        setBroadcastClaim(CLAIM_BLOCKED);
+        return;
+      }
+      // Taken for the rest of this session: an incumbent that leaves and comes back must not
+      // pull the microphone out of a broadcast that has already started
+      incumbentGuides = new Set();
+      console.log('[Point3 claim] no other Main-Guide in the meeting, no notice');
+      setBroadcastClaim(CLAIM_GRANTED);
+    };
+
+    const settleClaim = () => {
+      settleTimer = null;
+      incumbentGuides = new Set(otherGuides);
+      console.log('Main guides already in the meeting:', Array.from(incumbentGuides));
+      decideClaim();
+    };
+
+    const armSettle = (delay) => {
+      clearTimeout(settleTimer);
+      settleTimer = setTimeout(settleClaim, delay);
+    };
+
+    // Presence may never report anything if the signaling connection does not come up.
+    // Decide late in that case rather than leaving the guide with a dead start button
+    armSettle(CLAIM_SETTLE_FALLBACK_MS);
+
     const callback = (presentAttendeeId, present, externalUserId) => {
       console.log(`Attendee ID: ${presentAttendeeId} Present: ${present} externalUserId: ${externalUserId}`);
       if (present) {
@@ -908,6 +1087,25 @@ function StartLiveSession() {
 
       // Update the attendee count in the states
       //setParticipantsCount(attendeeSet.size);
+
+      if (presentAttendeeId === ownAttendeeId) {
+        // Seeing ourselves is the proof the server has sent us the roster. Everyone already
+        // in the meeting comes in the same burst, so a short margin is all that is needed
+        if (present && incumbentGuides === null) {
+          armSettle(CLAIM_SETTLE_MS);
+        }
+        return;
+      }
+      // Sub-guides and listeners share the meeting and never take the guide microphone
+      if (!isMainGuide(externalUserId)) {
+        return;
+      }
+      if (present) {
+        otherGuides.add(presentAttendeeId);
+      } else {
+        otherGuides.delete(presentAttendeeId);
+      }
+      decideClaim();
     };
 
     meetingSession.audioVideo.realtimeSubscribeToAttendeeIdPresence(callback);
@@ -919,6 +1117,12 @@ function StartLiveSession() {
         setTranscriptions(transcriptEvent);
       }
     );
+
+    return () => {
+      clearTimeout(settleTimer);
+      meetingSession.audioVideo.realtimeUnsubscribeFromAttendeeIdPresence(callback);
+      setBroadcastClaim(CLAIM_CHECKING);
+    };
 
   }, [meetingSession]);
 
@@ -1038,6 +1242,8 @@ function StartLiveSession() {
           setChatRestriction(getMeetingByTourIdResponse.data.chatRestriction);
           setTour(getMeetingByTourIdResponse.data);
           console.log('Meeting ID response:', getMeetingByTourIdResponse.data.meetingId);
+          // What the tour points at right now - step 10 compares the cookie against it
+          noteTourMeetingId(getMeetingByTourIdResponse.data.meetingId);
           if (getMeetingByTourIdResponse.data.meetingId) {
             // const meeting = await checkAvailableMeeting(getMeetingByTourIdResponse.data.meetingId, "Main-Guide");
             // console.log('checkAvailableMeeting:', meeting);
@@ -1054,7 +1260,7 @@ function StartLiveSession() {
             if (checkAvailableMeetingResponse.statusCode === 404) {
               console.log("Meeting expired in AWS Chime, creating a new meeting, attendee and use same channel...");
               //startLiveAduioSession();
-              rejoinLiveAduioSession();
+              rejoinLiveAduioSession(getMeetingByTourIdResponse.data.channelId);
             } else if (checkAvailableMeetingResponse.statusCode === 200) {
               // Join the meeting again and set the meeting session in the state
               // const attendee = await createAttendee(getMeetingByTourIdResponse.data.meetingId, `${userType}|${Date.now()}`)
@@ -1062,7 +1268,10 @@ function StartLiveSession() {
               // console.log('State Attendee:', attendee);
               // console.log('State Meeting:', meeting);
               // initializeMeetingSession(meeting, attendee);
-              getMeetingAttendeeInfoFromCookies();
+              getMeetingAttendeeInfoFromCookies(
+                checkAvailableMeetingResponse.data,
+                getMeetingByTourIdResponse.data.channelId,
+              );
             } else {
               console.log('Meeting error:', checkAvailableMeetingResponse);
             }
@@ -1100,6 +1309,9 @@ function StartLiveSession() {
   }
 
   const pageColor = getUserStyle(userType);
+  // Purely informational now - every guide device is free to start its own microphone, this
+  // only tells a device whose mic is still off that another guide is already on air
+  const otherGuideBroadcasting = !isMicOn && broadcastClaim === CLAIM_BLOCKED;
 
   return (
     <>
@@ -1177,6 +1389,11 @@ function StartLiveSession() {
                     userType={userType}
                     t={t}
                   />
+                  {/* Lets a guide know another device is already live before they start their
+                      own - starting anyway is allowed, both devices then broadcast at once */}
+                  {otherGuideBroadcasting && (
+                    <p className='broadcast-claim-notice'>{t('broadcastBox.otherDeviceLive')}</p>
+                  )}
                 </div>
               </>
             )}

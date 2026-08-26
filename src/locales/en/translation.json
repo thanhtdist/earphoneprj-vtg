@@ -14,7 +14,8 @@
     "startBtn": "Start broadcasting",
     "stopBtn": "Stop broadcasting",
     "hint": "Audio is not being broadcast",
-    "liveHint": "Audio is being broadcast"
+    "liveHint": "Audio is being broadcast",
+    "otherDeviceLive": "Another device is broadcasting"
   },
   "broadcastStatus": {
     "idle": "Not broadcasting",
