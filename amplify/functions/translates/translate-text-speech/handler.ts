@@ -48,7 +48,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       };
     }
 
-    const voiceId = targetLanguageCode === 'ja-JP' ? 'Mizuki' : targetLanguageCode === 'en-US' ? 'Joanna' : targetLanguageCode === 'ko-KR' ? 'Seoyeon' : (targetLanguageCode === 'zh' || targetLanguageCode === 'zh-TW') ? 'Zhiyu' : 'Joanna'
+    const voiceId = targetLanguageCode === 'ja-JP' ? 'Mizuki' : targetLanguageCode === 'en-US' ? 'Joanna' : targetLanguageCode === 'ko-KR' ? 'Seoyeon' : targetLanguageCode === 'es-ES' ? 'Lucia' : targetLanguageCode === 'fr-FR' ? 'Lea' : (targetLanguageCode === 'zh' || targetLanguageCode === 'zh-TW') ? 'Zhiyu' : 'Joanna'
     console.log('Translate VoiceId: ', voiceId);
     let params = {
       Engine: engine,

@@ -367,6 +367,14 @@ function MultiLangAudio() {
     switch (lang) {
       case 'cmn-CN':
         return 'zh'; // Simplified Chinese
+      case 'ko-KR':
+        return 'ko'; // Korean
+      case 'es-ES':
+        return 'es'; // Spanish
+      case 'fr-FR':
+        return 'fr'; // French
+      case 'th-TH':
+        return 'th'; // Thai
       default:
         return lang;
     }
@@ -487,12 +495,6 @@ function MultiLangAudio() {
       subGuide: message.subGuideCount,
       user: message.userCount,
     }),
-    // additionalInit: (ws) => {
-    //   ws.send(JSON.stringify({
-    //     action: 'selectLanguage',
-    //     languageCode: targetLanguageCode,
-    //   }));
-    // }
   });
 
   useWebSocketVisibilityHandler({
@@ -500,6 +502,24 @@ function MultiLangAudio() {
     connectWebSocket,
     wsRef,
   });
+
+  // The socket only sends languageCode once, in connectState on open (useConnectWebSocket.js)
+  // - connectWebSocket() itself no-ops while a socket is already open, so switching languages
+  // after joining would otherwise never reach the server. Skip the first run: connectState
+  // already carried this same value when the socket opened
+  const isFirstLanguageSelectionRef = useRef(true);
+  useEffect(() => {
+    if (isFirstLanguageSelectionRef.current) {
+      isFirstLanguageSelectionRef.current = false;
+      return;
+    }
+    const ws = wsRef.current;
+    if (ws && ws.readyState === WebSocket.OPEN) {
+      const selectLanguagePayload = { action: 'selectLanguage', languageCode: targetLanguageCode };
+      ws.send(JSON.stringify(selectLanguagePayload));
+      console.log('📤 WebSocket Sent selectLanguage:', selectLanguagePayload);
+    }
+  }, [targetLanguageCode]);
 
 
   // Function to play the next translated audio in the queue

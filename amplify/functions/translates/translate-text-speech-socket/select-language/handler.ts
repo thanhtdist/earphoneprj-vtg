@@ -21,14 +21,16 @@ export const handler: APIGatewayProxyWebsocketHandlerV2 = async (event) => {
       };
     }
 
+    // update, not put - a put here would overwrite tourId/userType on the row, dropping this
+    // connection out of the tourId-index the fan-out queries and out of the role counts
     await dynamoDB
-      .put({
+      .update({
         TableName: Config.dbTables.WEBSOCKETCONNECTIONS,
-        Item: {
-          connectionId,
-          languageCode,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
+        Key: { connectionId },
+        UpdateExpression: 'SET languageCode = :languageCode, updatedAt = :updatedAt',
+        ExpressionAttributeValues: {
+          ':languageCode': languageCode,
+          ':updatedAt': new Date().toISOString(),
         },
       })
       .promise();

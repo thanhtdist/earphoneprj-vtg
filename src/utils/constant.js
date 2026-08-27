@@ -10,6 +10,10 @@ export const LISTEN_VOICE_LANGUAGES = [
     { key: "ja-JP", label: "Japanese" },
     { key: "en-US", label: "English" },
     { key: "cmn-CN", label: "Chinese" },
+    { key: "ko-KR", label: "Korean" },
+    { key: "es-ES", label: "Spanish" },
+    { key: "fr-FR", label: "French" },
+    { key: "th-TH", label: "Thai" },
 ]
 
 // Voice languages in Japanese
@@ -17,6 +21,10 @@ export const JA_LISTEN_VOICE_LANGUAGES = [
     { key: "ja-JP", label: "日本語" },
     { key: "en-US", label: "英語" },
     { key: "cmn-CN", label: "中国語" },
+    { key: "ko-KR", label: "韓国語" },
+    { key: "es-ES", label: "スペイン語" },
+    { key: "fr-FR", label: "フランス語" },
+    { key: "th-TH", label: "タイ語" },
 ]
 
 // UI languages the application ships translations for
