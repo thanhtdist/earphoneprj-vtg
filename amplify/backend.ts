@@ -23,7 +23,7 @@ import { listAttendee } from './functions/meetings/list-attendee/resource';
 // import { listAppInstanceUser } from './functions/list-app-instance-user/resource';
 import { addCloudWatchLogs } from './functions/cloudwatchlogs/add-cloud-watch-logs/resource';
 import { startMeetingTranscription } from './functions/meetings/start-meeting-transcription/resource';
-import { translateTextSpeech } from './functions/translates/translate-text-speech/resource';
+import { translateText } from './functions/translates/translate-text/resource';
 import { createTour } from './functions/tours/create-tour/resource';
 import { createAdmin } from './functions/users/create-admin/resource';
 import { getTour } from './functions/tours/get-tour/resource';
@@ -70,7 +70,7 @@ const backend = defineBackend({
   //listAppInstanceUser, // list app instance user for chat by the participants
   addCloudWatchLogs, // send logs to cloud watch
   startMeetingTranscription, // start meeting transcription
-  translateTextSpeech, // translate text to speech
+  translateText, // translate text only, no speech (chat message translation)
   createTour, // create tour by the admin
   getTour, // get tour by tourID
   listTour, // list all tours
@@ -317,16 +317,10 @@ const translateRestApi = new RestApi(apiStack, "TranslateVTGRestApi", {
   },
 });
 
-// create a new resource path(endpoint) for /app-instance-users
-const translatePath = translateRestApi.root.addResource("translate-text-speech");
-
-// // add GET method to create /app-instance-users?appInstanceArn=appInstanceArn with listAppInstanceUser Lambda integration
-// appInstanceUserPath.addMethod("GET", new LambdaIntegration(
-//   backend.listAppInstanceUser.resources.lambda
-// ));
-// add POST method to create /app-instance-users with createAppInstanceUser Lambda integration
-translatePath.addMethod("POST", new LambdaIntegration(
-  backend.translateTextSpeech.resources.lambda
+// text-only translation for chat message translation (task #13) - no Polly, no MP3
+const translateTextPath = translateRestApi.root.addResource("translate-text");
+translateTextPath.addMethod("POST", new LambdaIntegration(
+  backend.translateText.resources.lambda
 ));
 
 // =============33. API Getway, Lambda function for Tour ===============

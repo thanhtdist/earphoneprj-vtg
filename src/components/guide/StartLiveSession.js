@@ -1412,7 +1412,7 @@ function StartLiveSession() {
           </>
         )}
         {chatRestriction !== "nochat" && (
-          <MessageBox userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} userType={userType} statusChat={chatRestriction} />
+          <MessageBox userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} userType={userType} statusChat={chatRestriction} chatLanguage="ja" />
         )}
       </div>
       {/* Reads the console on the device itself, `npm start` only */}

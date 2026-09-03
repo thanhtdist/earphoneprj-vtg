@@ -73,6 +73,10 @@
     "title": "Chat",
     "statuslbl": "Status"
   },
+  "chat": {
+    "showOriginal": "Show original",
+    "hideOriginal": "Hide original"
+  },
   "captureTranslations": "Capture",
   "headerSettings": {
     "qrCodeListener": "User<br>QR code",

@@ -4,7 +4,6 @@ import {
   createAppInstanceUsers,
   addChannelMembership,
   listAttendee,
-  //translateTextSpeech,
   getMeetingByTourId,
   getMeeting,
 } from '../../apis/api';
@@ -22,7 +21,7 @@ import JSONCookieUtils from '../../utils/JSONCookieUtils';
 import { checkAvailableMeeting } from '../../utils/MeetingUtils';
 import { v4 as uuidv4 } from 'uuid';
 import { useTranslation } from 'react-i18next';
-import { getBaseLanguage, getListenVoiceLanguages, getDefaultListenVoiceLanguageKey } from '../../utils/constant';
+import { getBaseLanguage, getListenVoiceLanguages, getDefaultListenVoiceLanguageKey, getChatLanguageCode } from '../../utils/constant';
 import Header from '../common/Header';
 import MessageBox from '../chat/MessageBox';
 import { useParams } from "react-router-dom";
@@ -942,7 +941,7 @@ function MultiLangAudio() {
                 </div>
               </>
             )}
-            {chatRestriction !== "nochat" && (<MessageBox userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} userType={userType} statusChat={chatRestriction} />)}
+            {chatRestriction !== "nochat" && (<MessageBox userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} userType={userType} statusChat={chatRestriction} chatLanguage={getChatLanguageCode(selectedVoiceLanguage)} />)}
           </>
         )}
       </div>

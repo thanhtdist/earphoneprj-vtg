@@ -309,26 +309,39 @@ export async function startMeetingTranscription(meetingId, languageCode) {
   }
 }
 
-export async function translateTextSpeech(inputText, sourceLanguageCode, targetLanguageCode, engine) {
+/**
+ * Translate text only, no speech synthesis. Used by chat message translation (task #13).
+ * Hits the dedicated `translate-text` endpoint (a copy of `translate-text-speech` without the
+ * Polly step), returning `{ translatedText, sourceLanguageCode }`.
+ * @param {string} inputText - The text to be translated.
+ * @param {string} sourceLanguageCode - Amazon Translate source code (e.g. "ja", "en"), or "auto"
+ *   to have Amazon Translate detect it (requires the lambda role to have comprehend:DetectDominantLanguage).
+ * @param {string} targetLanguageCode - Amazon Translate target code (e.g. "ja", "en").
+ * @returns {Promise<{translatedText: string, sourceLanguageCode: string}|null>} null if the call failed.
+ */
+export async function translateText(inputText, sourceLanguageCode, targetLanguageCode) {
   try {
     const restOperation = post({
       apiName: 'TranslateVTGRestApi', // The name of the API defined in backend.ts
-      path: 'translate-text-speech', // endpoint defined in backend.ts, meetingId is dynamically passed
+      path: 'translate-text', // endpoint defined in backend.ts
       options: {
         body: {
           inputText: inputText, // The text to be translated
-          sourceLanguageCode: sourceLanguageCode, // the source language code
+          sourceLanguageCode: sourceLanguageCode, // the source language code, or "auto"
           targetLanguageCode: targetLanguageCode, // the target language code
-          engine: engine, // the engine to be used for translation
         }
       }
     });
 
     const { body } = await restOperation.response;
     const response = await body.json();
-    return response.data;
+    const data = response?.data;
+    return data?.translatedText
+      ? { translatedText: data.translatedText, sourceLanguageCode: data.sourceLanguageCode }
+      : null;
   } catch (error) {
-    console.log('POST call translateTextSpeech failed: ', JSON.parse(error.response.body));
+    console.log('POST call translateText failed: ', error);
+    return null;
   }
 }
 

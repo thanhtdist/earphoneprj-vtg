@@ -4,7 +4,6 @@ import {
   createAppInstanceUsers,
   addChannelMembership,
   listAttendee,
-  //translateTextSpeech,
   getMeetingByTourId,
   getMeeting,
 } from '../../apis/api';
@@ -583,7 +582,7 @@ function JapaneseAudio() {
               userType={userType}
               t={t}
             />
-            {tour && tour.chatRestriction !== "nochat" && (<MessageBox userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} userType={userType} statusChat={tour.chatRestriction} />)}
+            {tour && tour.chatRestriction !== "nochat" && (<MessageBox userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} userType={userType} statusChat={tour.chatRestriction} chatLanguage="ja" />)}
           </div>
         </>) : (<>
           {isLoading && (
@@ -610,7 +609,7 @@ function JapaneseAudio() {
           userType={userType}
           t={t}
         />
-        {tour && tour.chatRestriction !== "nochat" && (<MessageBox userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} userType={userType} statusChat={tour.chatRestriction} />)}
+        {tour && tour.chatRestriction !== "nochat" && (<MessageBox userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} userType={userType} statusChat={tour.chatRestriction} chatLanguage="ja" />)}
       </div>
       <DebugLogPanel />
     </>

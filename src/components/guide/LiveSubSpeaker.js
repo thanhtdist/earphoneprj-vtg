@@ -954,7 +954,7 @@ function LiveSubSpeaker() {
             <br />
 
             {(chatRestriction !== "nochat" && channelArn) && (<>
-              <MessageBox userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} userType={userType} statusChat={chatRestriction} />
+              <MessageBox userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} userType={userType} statusChat={chatRestriction} chatLanguage="ja" />
               {/* <ChatMessage userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} chatSetting={chatSetting} /> */}
             </>)}
             {/* {channelArn && <ChatMessage userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} chatSetting={chatSetting} />} */}

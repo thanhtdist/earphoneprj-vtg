@@ -5,7 +5,7 @@ import '../../styles/MessageBox.css';
 import ChatMessage from './ChatMessage';
 import { useTranslation } from 'react-i18next';
 
-const MessageBox = ({ userArn, sessionId, channelArn, userType, statusChat }) => {
+const MessageBox = ({ userArn, sessionId, channelArn, userType, statusChat, chatLanguage }) => {
     const { t } = useTranslation();
     const [openChatBox, setOpenChatBox] = useState(false);
     // const [titleChat, setTitleChat] = useState('');
@@ -80,7 +80,7 @@ const MessageBox = ({ userArn, sessionId, channelArn, userType, statusChat }) =>
                                 <div className='status-chat'>
                                     <span>{t('chatPopup.statuslbl')} : {setStatusChat()}</span>
                                 </div>
-                                <ChatMessage userArn={userArn} sessionId={sessionId} channelArn={channelArn}  userType={userType} chatSetting={statusChat}></ChatMessage>
+                                <ChatMessage userArn={userArn} sessionId={sessionId} channelArn={channelArn}  userType={userType} chatSetting={statusChat} chatLanguage={chatLanguage}></ChatMessage>
                             </div>
                         </div>
                     </div>

@@ -222,3 +222,19 @@
 .text-message{
     text-align: left;
 }
+
+/* "Show original / Hide original" toggle under a translated message (task #13) */
+.toggle-original{
+    display: block;
+    margin-top: 4px;
+    padding: 0;
+    border: none;
+    background: none;
+    color: #1565c0;
+    font-size: 0.75em;
+    text-decoration: underline;
+    cursor: pointer;
+}
+.my-message .toggle-original{
+    margin-left: auto;
+}

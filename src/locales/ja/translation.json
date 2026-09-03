@@ -73,6 +73,10 @@
     "title": "チャット",
     "statuslbl": "ステータス"
   },
+  "chat": {
+    "showOriginal": "原文を表示",
+    "hideOriginal": "原文を隠す"
+  },
   "captureTranslations": "キャプチャー",
   "headerSettings": {
     "qrCodeListener": "お客様用<br>QRコード",

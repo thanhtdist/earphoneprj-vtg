@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { ChimeSDKMessagingClient } from '@aws-sdk/client-chime-sdk-messaging';
 import useAutoRefreshCredentials from '../../hooks/useAutoRefreshCredentials';
-import { sendMessage, loginAndGetCredentials } from '../../apis/api';
+import { sendMessage, loginAndGetCredentials, translateText } from '../../apis/api';
+import { getBaseLanguage, CHAT_TRANSLATION_LANGUAGES } from '../../utils/constant';
 import {
   generatePresignedUrl,
   //uploadFileToS3
@@ -23,13 +24,78 @@ import { useTranslation } from 'react-i18next';
 import { MdAttachFile } from "react-icons/md";
 // import { loginCognito } from "../../utils/cognitoAuth";
 // import { fromCognitoIdentityPool } from "@aws-sdk/credential-providers";
+// Chat message Metadata carries attachments and, since task #13, per-language translations of the
+// text: { attachments: [...], translations: { en: "...", ja: "..." }, sourceLang: "ja" }.
+// The field was already free-form JSON, so old messages (attachments only, or no metadata) parse
+// fine and simply have no translations.
+const parseChatMetadata = (raw) => {
+  if (!raw) return { attachments: null, translations: null, sourceLang: null };
+  try {
+    const meta = JSON.parse(raw);
+    return {
+      attachments: meta.attachments ?? null,
+      translations: meta.translations ?? null,
+      sourceLang: meta.sourceLang ?? null,
+    };
+  } catch (error) {
+    console.log('Failed to parse chat metadata:', error, raw);
+    return { attachments: null, translations: null, sourceLang: null };
+  }
+};
+
+// Build the Metadata string for a message, or null when there is nothing to store (keeps parity
+// with the previous behaviour of passing no metadata).
+const buildChatMetadata = ({ attachments, translations, sourceLang }) => {
+  const meta = {};
+  if (attachments?.length) meta.attachments = attachments;
+  if (translations && Object.keys(translations).length) {
+    meta.translations = translations;
+    if (sourceLang) meta.sourceLang = sourceLang;
+  }
+  return Object.keys(meta).length ? JSON.stringify(meta) : null;
+};
+
+/**
+ * Renders one message's text: the translation for the reader's chat language when there is one,
+ * with a toggle to reveal the original. A reader's own messages are always shown as typed.
+ * `chatLanguage` is an Amazon Translate code ("th", "ja", "en"...) - the listening language for
+ * a viewer, the UI language for a guide / sub-guide.
+ */
+function MessageContent({ message, isMine, chatLanguage, t }) {
+  const [showOriginal, setShowOriginal] = useState(false);
+  const original = message.content;
+  const myLang = chatLanguage;
+  // Don't translate my own messages, and skip when the message was written in my language.
+  const translated =
+    !isMine && message.translations && message.sourceLang !== myLang
+      ? message.translations[myLang]
+      : null;
+  const hasTranslation = !!translated && translated !== original;
+  const display = hasTranslation && !showOriginal ? translated : original;
+
+  return (
+    <>
+      <span className="text-message">{display}</span>
+      {hasTranslation && (
+        <button
+          type="button"
+          className="toggle-original"
+          onClick={() => setShowOriginal((prev) => !prev)}
+        >
+          {showOriginal ? t('chat.hideOriginal') : t('chat.showOriginal')}
+        </button>
+      )}
+    </>
+  );
+}
+
 /**
  * Component to display chat messages and send messages to a channel
  * @param {string} userArn - The ARN of the user
  * @param {string} channelArn - The ARN of the channel
- * @param {string} sessionId - The session ID for the messaging session 
+ * @param {string} sessionId - The session ID for the messaging session
  */
-function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null, userType }) {
+function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null, userType, chatLanguage }) {
   const [credentialsExpiration, setCredentialsExpiration] = useState(null);
   const subGuideCount = localStorage.getItem('subGuideJoinCount') || 0;
   console.log('subGuideJoinCount:', subGuideCount);
@@ -47,6 +113,9 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null, userT
   const { t, i18n } = useTranslation();
   console.log('i18n', i18n);
   console.log('t', t);
+  // The language this participant reads and writes chat in (Amazon Translate code): the listening
+  // language for a viewer, the UI language for a guide / sub-guide. Falls back to the UI language.
+  const myChatLanguage = chatLanguage || getBaseLanguage(i18n.language);
 
   // Function to format the timestamp from UTC to Tokyo timezone
   const formatTimestamp = (timestamp) => {
@@ -106,26 +175,34 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null, userT
 
           // when participants join the channel and show the message history
           if (messageData.ChannelMessages?.length) {
-            const newMessages = messageData.ChannelMessages.reverse().map((msg) => ({
-              type: msg.Type,
-              content: msg.Content,
-              senderArn: msg?.Sender?.Arn,
-              senderName: msg?.Sender?.Name,
-              timestamp: msg.CreatedTimestamp,
-              attachments: msg?.Metadata ? JSON.parse(msg.Metadata).attachments : null
-            }));
+            const newMessages = messageData.ChannelMessages.reverse().map((msg) => {
+              const meta = parseChatMetadata(msg?.Metadata);
+              return {
+                type: msg.Type,
+                content: msg.Content,
+                senderArn: msg?.Sender?.Arn,
+                senderName: msg?.Sender?.Name,
+                timestamp: msg.CreatedTimestamp,
+                attachments: meta.attachments,
+                translations: meta.translations,
+                sourceLang: meta.sourceLang,
+              };
+            });
             setMessages((prevMessages) => [...prevMessages, ...newMessages]);
           }
 
           // when participants start the input message
           if (messageData.Content) {
+            const meta = parseChatMetadata(messageData?.Metadata);
             const newMessage = {
               type: message.type,
               content: messageData.Content,
               senderArn: messageData?.Sender?.Arn,
               senderName: messageData?.Sender?.Name,
               timestamp: new Date().toISOString(),
-              attachments: messageData?.Metadata ? JSON.parse(messageData.Metadata).attachments : null
+              attachments: meta.attachments,
+              translations: meta.translations,
+              sourceLang: meta.sourceLang,
             };
             setMessages((prevMessages) => [...prevMessages, newMessage]);
           }
@@ -150,36 +227,52 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null, userT
       // Disable the button by setting sending to true
       setSending(true);
 
-      let options = null;
-
-      // Store the attachment file in S3 and send the message with the attachment
+      // Store the attachment file in S3 first, if any
+      let attachments = null;
       if (selectedFile) {
-
-        // store attachment into S3
         // const uploadFileToS3Response = await uploadFileToS3(selectedFile);
         // console.log('File uploaded successfully:', uploadFileToS3Response);
         const uploadFileToS3Response = await generatePresignedUrl(selectedFile);
         console.log('File uploaded successfully:', uploadFileToS3Response);
-
-        // Metadata for the attachment file to be sent with the message
-        options = JSON.stringify({
-          attachments: [
-            {
-              fileKey: uploadFileToS3Response.key,
-              name: selectedFile.name,
-              size: selectedFile.size,
-              type: selectedFile.type,
-            },
-          ],
-        });
-        const sendMessageResponse = await sendMessage(channelArn, userArn, inputMessage || ' ', options);
-        console.log('Message sent successfully:', sendMessageResponse);
-
-      } else {
-        // Send the message without the attachment
-        const sendMessageResponse = await sendMessage(channelArn, userArn, inputMessage, options);
-        console.log('Message sent successfully:', sendMessageResponse);
+        attachments = [
+          {
+            fileKey: uploadFileToS3Response.key,
+            name: selectedFile.name,
+            size: selectedFile.size,
+            type: selectedFile.type,
+          },
+        ];
       }
+
+      // A message sent with only an attachment carries ' ' as its content (never rendered,
+      // never translated). Everything else is translated once, now, into the other chat
+      // languages so every reader - including late joiners and readers who switch language -
+      // gets the translation from the stored Metadata without re-calling Translate (task #13).
+      const contentToSend = attachments ? (inputMessage || ' ') : inputMessage;
+      const textToTranslate = (inputMessage || '').trim();
+
+      let translations = null;
+      let sourceLang = null;
+      if (textToTranslate) {
+        // Source language is auto-detected rather than assumed from the sender's chat language -
+        // a listener can type in a different language than the one they picked to listen in.
+        // Every chat language is requested; which target ends up equal to the detected source
+        // isn't known until the responses come back, so it's dropped afterwards instead of
+        // skipped upfront.
+        const results = await Promise.all(
+          CHAT_TRANSLATION_LANGUAGES.map(async (lang) => [lang, await translateText(textToTranslate, 'auto', lang)])
+        );
+        sourceLang = results.find(([, result]) => result?.sourceLanguageCode)?.[1].sourceLanguageCode || myChatLanguage;
+        const entries = results
+          .filter(([lang, result]) => lang !== sourceLang && !!result?.translatedText)
+          .map(([lang, result]) => [lang, result.translatedText]);
+        // If Translate failed, send anyway with no translations - readers fall back to the original.
+        if (entries.length) translations = Object.fromEntries(entries);
+      }
+
+      const options = buildChatMetadata({ attachments, translations, sourceLang });
+      const sendMessageResponse = await sendMessage(channelArn, userArn, contentToSend, options);
+      console.log('Message sent successfully:', sendMessageResponse);
 
     } catch (error) {
       console.error('Error sending message:', error);
@@ -188,7 +281,7 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null, userT
       setSelectedFile(null);
       setSending(false);
     }
-  }, [inputMessage, channelArn, userArn, selectedFile]);
+  }, [inputMessage, channelArn, userArn, selectedFile, myChatLanguage]);
 
   // Function to handle input change
   const handleInputChange = (e) => {
@@ -325,7 +418,12 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null, userT
 
               {message.content !== ' ' && (
                 <div className={`message-content ${message.senderArn === userArn ? 'my-message' : 'other-message'}`}>
-                  <span className='text-message'>{message.content}</span>
+                  <MessageContent
+                    message={message}
+                    isMine={message.senderArn === userArn}
+                    chatLanguage={myChatLanguage}
+                    t={t}
+                  />
                 </div>
               )}
               {message.attachments?.length > 0 &&
