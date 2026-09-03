@@ -2,12 +2,16 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
     padding-left: 10px;
     gap: 4px;
 }
 
 .participantsTotal {
-    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 16px;
     font-weight: bold;
 }
 
@@ -21,13 +25,19 @@
     display: flex;
     align-items: center;
     gap: 2px;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: bold;
 }
 
 @media (max-width: 480px) {
+    .participantsCount {
+        padding-left: 6px;
+    }
     .participantsTotal,
     .participantsRole {
-        font-size: 12px;
+        font-size: 14px;
+    }
+    .participantsBreakdown {
+        gap: 6px;
     }
 }

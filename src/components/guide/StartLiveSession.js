@@ -28,7 +28,11 @@ import metricReport from '../../utils/MetricReport';
 import JSONCookieUtils from '../../utils/JSONCookieUtils';
 import { v4 as uuidv4 } from 'uuid';
 import { useTranslation } from 'react-i18next';
-import { SPEAK_VOICE_LANGUAGES_KEY } from '../../utils/constant';
+import {
+  SPEAK_VOICE_LANGUAGES_KEY,
+  getSpeakVoiceLanguages,
+  getBaseLanguage,
+} from '../../utils/constant';
 import Header from '../common/Header';
 import MessageBox from '../chat/MessageBox';
 //import { useLocation } from 'react-router-dom';
@@ -54,7 +58,10 @@ import {
   logMeetingIdentity,
   watchMeetingConnection,
   watchMeetingAttendees,
+  logMicStartTiming,
+  logMeetingTransition,
 } from '../../utils/meetingHealth';
+import { logChannelTransition } from '../../utils/chatHealth';
 import {
   CLAIM_BLOCKED,
   CLAIM_CHECKING,
@@ -97,7 +104,8 @@ function StartLiveSession() {
   const [selectedAudioInput, setSelectedAudioInput] = useState('');
   const [audioInputDevices, setAudioInputDevices] = useState([]);
   const [userArn, setUserArn] = useState('');
-  const [isLoading, setIsLoading] = useState(true);
+  // Nothing loads until the guide picks a language and clicks Join - see joinLiveSession
+  const [isLoading, setIsLoading] = useState(false);
   //const [userId, setUserId] = useState('');
   const [isMicOn, setIsMicOn] = useState(false); // State for microphone status
   // Whether another Main-Guide device is already in the meeting. Every guide device joins
@@ -143,6 +151,8 @@ function StartLiveSession() {
   // apart from the ones that were there all along. Null until the first list is read
   const knownAudioInputIdsRef = useRef(null);
   const userType = `Guide`;
+  // UI-only for now: not wired into transcription/translation yet, just the selector itself
+  const [selectedSpeakLanguage, setSelectedSpeakLanguage] = useState(SPEAK_VOICE_LANGUAGES_KEY);
   //const audioData = useRef([]); // Ref to store audio data
 
   useEffect(() => {
@@ -379,6 +389,7 @@ function StartLiveSession() {
       const userName = `Guide`;
       const meeting = await createMeeting();
       console.log('Meeting created:', meeting);
+      logMeetingTransition(null, meeting.MeetingId, 'tour had no meeting yet, created new');
       const attendee = await createAttendee(meeting.MeetingId, `${userType}|${Date.now()}`);
       console.log('Attendee created:', attendee);
 
@@ -386,6 +397,7 @@ function StartLiveSession() {
       initializeMeetingSession(meeting, attendee, 'created');
       const createAppUserAndChannelResponse = await createAppUserAndChannel(userID, userName);
       console.log('ChannelID created:', createAppUserAndChannelResponse.channelID);
+      logChannelTransition(null, createAppUserAndChannelResponse.channelArn, 'tour had no channel yet, created new');
       // Update table tour with the meetingId and channelId
       const data = {
         tourId: tourId,
@@ -490,6 +502,16 @@ function StartLiveSession() {
       //const userName = `Guide`;
       const meeting = await createMeeting();
       console.log('Meeting created:', meeting);
+      logMeetingTransition(
+        retrievedMainGuide?.meeting?.MeetingId ?? null,
+        meeting.MeetingId,
+        'previous meeting expired in Chime, created a new one'
+      );
+      logChannelTransition(
+        retrievedMainGuide?.channelArn ?? null,
+        channelArn,
+        'channel is tied to the tour, not the meeting - reused across the expiry'
+      );
       const attendee = await createAttendee(meeting.MeetingId, `${userType}|${Date.now()}`);
       console.log('attendee', attendee);
       //const attendee = retrievedMainGuide.attendee;
@@ -595,6 +617,7 @@ function StartLiveSession() {
     if (!meetingSession || !deviceId) {
       return;
     }
+    logMicStartTiming(meetingSession);
     const vfDevice = await createVoiceFocusDevice(deviceId);
     vfDeviceRef.current = vfDevice;
     const deviceToUse = vfDevice || deviceId;
@@ -849,6 +872,8 @@ function StartLiveSession() {
     // No cookie means "this browser has not been here", not "this tour has no session".
     // The caller has just confirmed the tour's meeting is alive, so join that one
     if (!retrievedMainGuide) {
+      logMeetingTransition(null, liveMeeting.MeetingId, "no cookie on this browser, joining the tour's live meeting");
+      logChannelTransition(null, `${Config.appInstanceArn}/channel/${channelId}`, "no cookie on this browser, using the tour's channel");
       await joinExistingSession(liveMeeting, channelId);
       return;
     }
@@ -861,6 +886,8 @@ function StartLiveSession() {
     // object is truthy, so `if (!meeting) return` could never have fired
     if (retrievedMainGuide?.meeting?.MeetingId !== liveMeeting.MeetingId) {
       console.log('The cookie names a stale meeting, joining the tour one instead:', retrievedMainGuide?.meeting?.MeetingId);
+      logMeetingTransition(retrievedMainGuide?.meeting?.MeetingId ?? null, liveMeeting.MeetingId, 'cookie names a stale meeting, joining the tour\'s live meeting instead');
+      logChannelTransition(retrievedMainGuide?.channelArn ?? null, `${Config.appInstanceArn}/channel/${channelId}`, "cookie's meeting was stale, using the tour's channel");
       JSONCookieUtils.deleteCookie("Main-Guide" + tourId);
       await joinExistingSession(liveMeeting, channelId);
       return;
@@ -868,6 +895,8 @@ function StartLiveSession() {
     // const meeting = await checkAvailableMeeting(retrievedMainGuide.meeting.MeetingId, "Main-Guide");
     // console.log('getMeetingResponse:', meeting);
     // if (!meeting) return;
+    logMeetingTransition(retrievedMainGuide.meeting.MeetingId, retrievedMainGuide.meeting.MeetingId, 'cookie meeting matches the tour, reusing it');
+    logChannelTransition(retrievedMainGuide.channelArn, `${Config.appInstanceArn}/channel/${channelId}`, 'cookie meeting matches; channel is always taken from the tour, not the cookie');
     initializeMeetingSession(retrievedMainGuide.meeting, retrievedMainGuide.attendee, 'cookie');
     setMetting(retrievedMainGuide.meeting);
     setAttendee(retrievedMainGuide.attendee);
@@ -1226,7 +1255,9 @@ function StartLiveSession() {
 
 
   // Meeting exired
-  useEffect(() => {
+  // Triggered by the guide clicking Join (after picking a language) instead of running
+  // automatically on mount, so there is a chance to pick a language first - see the render
+  const joinLiveSession = useCallback(() => {
 
     // Step 1: Check if the meeting is existed in tour
     // call getMeetingByTourId API to check if the meeting is existed in tour
@@ -1296,7 +1327,7 @@ function StartLiveSession() {
       console.error('Error checking meeting:', error);
     }
 
-  }, [tourId, initializeMeetingSession, startLiveAduioSession, getMeetingAttendeeInfoFromCookies, rejoinLiveAduioSession]);
+  }, [tourId, startLiveAduioSession, getMeetingAttendeeInfoFromCookies, rejoinLiveAduioSession]);
 
   // Call requestWakeLock once the meeting session is set:
   // useEffect(() => {
@@ -1320,18 +1351,38 @@ function StartLiveSession() {
 
   return (
     <>
-      {tour && (<Header tourId={tourId} count={participantsCount} userType={userType} subGuideFunctionAvailable={tour.subGuideFunctionAvailable} />)}
-      <BroadcastStatusBar isMicOn={isMicOn} userType={userType} t={t} />
-      <div className="container">
+      {/* Shown regardless of join state, like the listener's own header - it doesn't need
+          `tour` to be loaded yet, `subGuideFunctionAvailable` just stays undefined until it is.
+          The QR-code buttons only make sense once actually broadcasting, so they stay hidden
+          until then */}
+      <Header
+        tourId={tourId}
+        count={participantsCount}
+        userType={userType}
+        subGuideFunctionAvailable={tour?.subGuideFunctionAvailable}
+        showQrCodes={Boolean(meeting && attendee)}
+      />
+      {/* Broadcast status is meaningless before the guide has even joined - the listener has
+          no equivalent bar on its own pre-join screen either */}
+      {(meeting && attendee) && (<BroadcastStatusBar isMicOn={isMicOn} userType={userType} t={t} />)}
+      {/* Pre-join: only live-viewer-container-center, exactly like the listener's own
+          pre-join screen - combining it with .container was overriding its margin-top
+          (.container's margin: 20px comes later in the stylesheet and won) */}
+      <div
+        className={(meeting && attendee) ? 'container' : 'live-viewer-container-center'}
+        style={{ '--page-color': pageColor }}
+      >
         {/* {audioData.current.length > 0 &&
           (<><button onClick={async () => {
             await playAudioFromBase64(audioData.current[0]);
           }}>
             Play Audio
           </button></>)} */}
-        <p className='titleLiveSession'>
-          {t('pageTitles.guide')}
-        </p>
+        {(meeting && attendee) && (
+          <p className='titleLiveSession'>
+            {t('pageTitles.guide')}
+          </p>
+        )}
         {/* <div className='titleFileUpload'>
           <div className='time'>
             <span>{tour?.departureDate}</span>
@@ -1351,10 +1402,37 @@ function StartLiveSession() {
         </audio>
         {(!meeting && !attendee) ? (
           <>
-            {isLoading === true && (
+            {/* Same box/select markup as the listener's own selector (MultiLangAudio.js),
+                just colored with the guide's page color instead of the listener's teal
+                (.guide-box-selected-language / .guide-selected-language in
+                StartLiveSession.css). UI-only for now - the picked language is not wired
+                into transcription or translation yet, see joinLiveSession / getSpeakVoiceLanguages */}
+            <div className="guide-box-selected-language">
+              <h3 className='title-box'>{t('voiceLanguageLbl.speaking')}</h3>
+              <div className="select-container">
+                <select
+                  className='guide-selected-language notranslate'
+                  lang={getBaseLanguage(i18n.language)}
+                  translate="no"
+                  value={selectedSpeakLanguage}
+                  onChange={(e) => setSelectedSpeakLanguage(e.target.value)}
+                >
+                  {getSpeakVoiceLanguages(i18n.language).map((language) => (
+                    <option key={`${getBaseLanguage(i18n.language)}-${language.key}`} value={language.key}>
+                      {language.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            {isLoading === true ? (
               <div className="loading">
                 <div className="spinner"></div>
                 <p>{t('loading')}</p>
+              </div>
+            ) : (
+              <div className='btn' onClick={() => { setIsLoading(true); joinLiveSession(); }}>
+                <button className='guide-btn-join'>{t('joinBtn')}</button>
               </div>
             )}
           </>
@@ -1411,7 +1489,9 @@ function StartLiveSession() {
             />
           </>
         )}
-        {chatRestriction !== "nochat" && (
+        {/* Chatting before the guide has even joined doesn't make sense - there is no channel
+            (channelArn) to send to yet anyway */}
+        {(meeting && attendee) && chatRestriction !== "nochat" && (
           <MessageBox userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} userType={userType} statusChat={chatRestriction} chatLanguage="ja" />
         )}
       </div>

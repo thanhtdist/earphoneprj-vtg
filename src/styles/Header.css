@@ -10,12 +10,8 @@
     color: #C60226;
 }
 
-.participantsCount {
-    display: flex;
-    padding-left: 10px;
-    align-content: center;
-    align-items: center;
-}
+/* Layout for .participantsCount itself lives in Participants.css, next to the
+   component that owns it — this file only positions it within the header. */
 
 .rightMenu {
     display: flex;
@@ -55,15 +51,23 @@
 }
 
 @media (max-width: 480px) {
+    .rightMenu {
+        gap: 4px;
+    }
     .qrCode {
-        padding: 6px 10px;
-        height: 46px;
+        padding: 4px 8px;
+        height: 42px;
+    }
+    .qrCode .icon {
+        width: 20px;
+        height: 20px;
     }
     .qrText {
-        font-size: 10px;
+        margin-left: 4px;
+        font-size: 9px;
     }
     .selectLanguage span {
-        font-size: 10px;
+        font-size: 9px;
     }
 }
 .popup {

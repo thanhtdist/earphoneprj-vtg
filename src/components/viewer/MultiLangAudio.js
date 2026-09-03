@@ -39,7 +39,10 @@ import {
   logMeetingIdentity,
   watchMeetingConnection,
   watchMeetingAttendees,
+  logListenStartTiming,
+  logMeetingTransition,
 } from '../../utils/meetingHealth';
+import { logChannelTransition } from '../../utils/chatHealth';
 import DebugLogPanel from '../common/DebugLogPanel';
 
 function MultiLangAudio() {
@@ -284,11 +287,12 @@ function MultiLangAudio() {
         console.log('Check retrievedUser meetingId:', retrievedUser?.meeting.MeetingId);
         console.log('Check retrievedUser channelId:', retrievedUser?.channelArn.split('/').pop());
         console.log('Check retrievedUser channelId:', `${Config.appInstanceArn}/channel/${channelId}`);
+        const channelArn = `${Config.appInstanceArn}/channel/${channelId}`;
         if (retrievedUser) {
           const isMeetingMatched =
             retrievedUser.meeting.MeetingId === meeting.MeetingId;
           const isChannelMatched =
-            retrievedUser.channelArn === `${Config.appInstanceArn}/channel/${channelId}`;
+            retrievedUser.channelArn === channelArn;
 
           if (isMeetingMatched && isChannelMatched) {
             const meetingData = await checkAvailableMeeting(
@@ -296,10 +300,23 @@ function MultiLangAudio() {
               'User'
             );
             if (meetingData) {
+              logMeetingTransition(retrievedUser.meeting.MeetingId, meeting.MeetingId, 'cookie meeting+channel match the tour, reusing it');
+              logChannelTransition(retrievedUser.channelArn, channelArn, 'cookie meeting+channel match the tour, reusing it');
               getMeetingAttendeeInfoFromCookies(retrievedUser);
               return;
             }
+            logMeetingTransition(retrievedUser.meeting.MeetingId, meeting.MeetingId, 'cookie matched, but that meeting is no longer available - joining the tour\'s instead');
+            logChannelTransition(retrievedUser.channelArn, channelArn, 'cookie\'s meeting is no longer available, using the tour\'s channel');
+          } else if (!isMeetingMatched) {
+            logMeetingTransition(retrievedUser.meeting.MeetingId, meeting.MeetingId, "cookie's meeting differs from the tour's, joining the tour's instead");
+            logChannelTransition(retrievedUser.channelArn, channelArn, "cookie's meeting was wrong, using the tour's channel");
+          } else {
+            logMeetingTransition(retrievedUser.meeting.MeetingId, meeting.MeetingId, 'cookie meeting matches, but its channel does not - joining the tour\'s channel instead');
+            logChannelTransition(retrievedUser.channelArn, channelArn, "cookie's channel differs from the tour's");
           }
+        } else {
+          logMeetingTransition(null, meeting.MeetingId, "no cookie on this browser, joining the tour's live meeting");
+          logChannelTransition(null, channelArn, "no cookie on this browser, using the tour's channel");
         }
         joinMeeting(meeting, channelId);
       } catch (error) {
@@ -373,7 +390,7 @@ function MultiLangAudio() {
       case 'fr-FR':
         return 'fr'; // French
       case 'th-TH':
-        return 'th'; // Thai
+        return 'th'; // Thailand
       default:
         return lang;
     }
@@ -757,6 +774,7 @@ function MultiLangAudio() {
   const handlePlay = () => {
     if (isPlay === false) {
       setIsPlay(true)
+      logListenStartTiming(meetingSession);
       audioElementRef.current.play(); // This is for Chime session (ja-JP only)
     } else {
       setIsPlay(false);

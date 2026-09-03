@@ -33,6 +33,7 @@ import AudioMicControl from '../common/AudioMicControl';
 import AudioListenToggle from '../common/AudioListenToggle';
 import BroadcastStatusBar from '../common/BroadcastStatusBar';
 import { getUserStyle } from '../../utils/getUserStyle';
+import { SPEAK_VOICE_LANGUAGES_KEY, getSpeakVoiceLanguages, getBaseLanguage } from '../../utils/constant';
 import { audioInputFingerprint, audioInputIds, listAudioInputs, pickPreferredAudioInput } from '../../utils/audioInput';
 import { logBrowserSupport } from '../../utils/browserSupport';
 import {
@@ -42,6 +43,8 @@ import {
   watchAudioInputStreams,
 } from '../../utils/audioDiagnostics';
 import { isVoiceFocusDisabled, watchOutgoingAudio } from '../../utils/audioFlow';
+import { noteTourMeetingId, logMeetingIdentity, watchMeetingConnection, watchMeetingAttendees, logMicStartTiming, logListenStartTiming, logMeetingTransition } from '../../utils/meetingHealth';
+import { logChannelTransition } from '../../utils/chatHealth';
 import DebugLogPanel from '../common/DebugLogPanel';
 import useWakeLock from '../../hooks/useWakeLock';
 import useConnectWebSocket from '../../hooks/useConnectWebSocket';
@@ -79,6 +82,11 @@ function LiveSubSpeaker() {
   const [noMicroMsg, setNoMicoMsg] = useState(t('noMicroMsg'));
   //const [logger, setLogger] = useState(null);
   const [participantsCount, setParticipantsCount] = useState(0);
+  // Gates the join flow behind a language pick, mirroring the guide's own
+  // pre-join screen (StartLiveSession.js). UI-only for now: not wired into
+  // transcription/translation yet, the picked value is not sent anywhere
+  const [selectedSpeakLanguage, setSelectedSpeakLanguage] = useState(SPEAK_VOICE_LANGUAGES_KEY);
+  const [hasJoined, setHasJoined] = useState(false);
   const audioRef = useRef(null);
   // Single state for the audio coming from the main guide, it replaces the
   // play and mute pair that both acted on the same audio element
@@ -151,12 +159,15 @@ function LiveSubSpeaker() {
   }
 
   // Function to initialize the meeting session from the meeting that the host has created
-  const initializeMeetingSession = useCallback(async (meeting, attendee) => {
+  // `source` says where the meeting id came from ('api' or 'cookie'). It is only used by the
+  // debug panel, which compares it against the meeting the tour points at
+  const initializeMeetingSession = useCallback(async (meeting, attendee, source) => {
     if (!meeting || !attendee) {
       console.error('Invalid meeting or attendee information');
       return;
     }
 
+    logMeetingIdentity(meeting.MeetingId, source);
     const consoleLogger = new ConsoleLogger('ChimeMeetingLogs', LogLevel.INFO);
 
     const meetingSessionConfiguration = new MeetingSessionConfiguration(meeting, attendee);
@@ -185,6 +196,11 @@ function LiveSubSpeaker() {
     metricReport(meetingSession);
     // The other end of the listener's step 7: whether the microphone carries signal at all
     watchOutgoingAudio(meetingSession);
+    // Whether this session is connected to a meeting that exists, and who else is in it.
+    // Subscribed before start(), otherwise a session that fails immediately - a stale
+    // meeting id is rejected within milliseconds - would stop before anything is watching
+    watchMeetingConnection(meetingSession);
+    watchMeetingAttendees(meetingSession);
     console.log('Sub Speaker - initializeMeetingSession--> End');
     // Bind the audio element to the meeting session
     const audioElement = document.getElementById('audioElementSub');
@@ -330,7 +346,7 @@ function LiveSubSpeaker() {
       // console.log('Meeting:', meeting);
       const attendee = await createAttendee(meetingData.MeetingId, `${userType}|${Date.now()}`);
       console.log('Attendee created:', attendee);
-      initializeMeetingSession(meetingData, attendee);
+      initializeMeetingSession(meetingData, attendee, 'api');
       const createAppUserAndJoinChannelResponse = await createAppUserAndJoinChannel(meetingData.MeetingId, attendee.AttendeeId, userID, userType, channelId);
       console.log('createAppUserAndJoinChannelResponse:', createAppUserAndJoinChannelResponse);
       // setMetting(meeting);
@@ -395,6 +411,7 @@ function LiveSubSpeaker() {
     if (!meetingSession || !deviceId) {
       return;
     }
+    logMicStartTiming(meetingSession);
     const vfDevice = await createVoiceFocusDevice(deviceId);
     vfDeviceRef.current = vfDevice;
     const deviceToUse = vfDevice || deviceId;
@@ -601,7 +618,7 @@ function LiveSubSpeaker() {
   const getMeetingAttendeeInfoFromCookies = useCallback((retrievedSubGuide) => {
     setIsLoading(true);
     console.log("Retrieved cookie:", retrievedSubGuide);
-    initializeMeetingSession(retrievedSubGuide.meeting, retrievedSubGuide.attendee);
+    initializeMeetingSession(retrievedSubGuide.meeting, retrievedSubGuide.attendee, 'cookie');
     // setMetting(retrievedSubGuide.meeting);
     // setAttendee(retrievedSubGuide.attendee);
     setUserArn(retrievedSubGuide.userArn);
@@ -630,10 +647,11 @@ function LiveSubSpeaker() {
         // Retrieve and parse the "Sub-Guide" cookie
         const retrievedSubGuide = JSONCookieUtils.getJSONCookie("Sub-Guide" + tourId);
         console.log("Retrieved cookie:", retrievedSubGuide);
+        const channelArn = `${Config.appInstanceArn}/channel/${channelId}`;
         if (retrievedSubGuide) {
           // Validate the retrieved cookie structure
           const isMeetingMatched = retrievedSubGuide.meeting.MeetingId === meeting.MeetingId;
-          const isChannelMatched = retrievedSubGuide.channelArn === `${Config.appInstanceArn}/channel/${channelId}`;
+          const isChannelMatched = retrievedSubGuide.channelArn === channelArn;
           const isMatched = isMeetingMatched && isChannelMatched;
           if (isMatched) {
             console.log("Sub-Guide cookie matched the current meeting and channel");
@@ -641,10 +659,23 @@ function LiveSubSpeaker() {
             const meetingData = await checkAvailableMeeting(retrievedSubGuide.meeting.MeetingId, "Sub-Guide");
             console.log('getMeetingResponse:', meetingData);
             if (meetingData) {
+              logMeetingTransition(retrievedSubGuide.meeting.MeetingId, meeting.MeetingId, 'cookie meeting+channel match the tour, reusing it');
+              logChannelTransition(retrievedSubGuide.channelArn, channelArn, 'cookie meeting+channel match the tour, reusing it');
               getMeetingAttendeeInfoFromCookies(retrievedSubGuide);
               return;
             }
+            logMeetingTransition(retrievedSubGuide.meeting.MeetingId, meeting.MeetingId, 'cookie matched, but that meeting is no longer available - joining the tour\'s instead');
+            logChannelTransition(retrievedSubGuide.channelArn, channelArn, 'cookie\'s meeting is no longer available, using the tour\'s channel');
+          } else if (!isMeetingMatched) {
+            logMeetingTransition(retrievedSubGuide.meeting.MeetingId, meeting.MeetingId, "cookie's meeting differs from the tour's, joining the tour's instead");
+            logChannelTransition(retrievedSubGuide.channelArn, channelArn, "cookie's meeting was wrong, using the tour's channel");
+          } else {
+            logMeetingTransition(retrievedSubGuide.meeting.MeetingId, meeting.MeetingId, 'cookie meeting matches, but its channel does not - joining the tour\'s channel instead');
+            logChannelTransition(retrievedSubGuide.channelArn, channelArn, "cookie's channel differs from the tour's");
           }
+        } else {
+          logMeetingTransition(null, meeting.MeetingId, "no cookie on this browser, joining the tour's live meeting");
+          logChannelTransition(null, channelArn, "no cookie on this browser, using the tour's channel");
         }
         joinMeeting(meeting, channelId);
 
@@ -667,6 +698,7 @@ function LiveSubSpeaker() {
     if (getMeetingByTourIdResponse?.statusCode === 200) {
       setChatRestriction(getMeetingByTourIdResponse.data.chatRestriction);
       setTour(getMeetingByTourIdResponse.data);
+      noteTourMeetingId(getMeetingByTourIdResponse.data.meetingId);
       console.log('Meeting found:', getMeetingByTourIdResponse.data.meetingId);
 
       if (getMeetingByTourIdResponse.data.meetingId) {
@@ -697,11 +729,14 @@ function LiveSubSpeaker() {
     }
   }, [joinAudioSession2, tourId]);
 
-  // Get the tour ID from the URL query parameters
-  useEffect(() => {
-    joinAudioSession(); // Call the async function
-    // Execute the async function
-  }, [joinMeeting, getMeetingAttendeeInfoFromCookies, joinAudioSession, tourId]);
+  // Join is gated behind the language selector below (see the pre-join render
+  // block) instead of running automatically on mount - same gesture as the
+  // guide's own screen (StartLiveSession.js)
+  const handleJoinClick = () => {
+    setHasJoined(true);
+    setIsLoading(true);
+    joinAudioSession();
+  };
 
   useEffect(() => {
     getAudioInputDevices();
@@ -743,6 +778,7 @@ function LiveSubSpeaker() {
     // resumed, and tearing it down drops the microphone capture of the broadcast
     audioElement.muted = !nextIsListening;
     if (nextIsListening) {
+      logListenStartTiming(meetingSession);
       audioElement.play().catch(error => console.error('Failed to play the meeting audio:', error));
     }
   }
@@ -888,11 +924,18 @@ function LiveSubSpeaker() {
     <>
       {/* <Participants count={participantsCount} /> */}
       <Header count={participantsCount} tourId={tourId} userType={userType} />
-      <BroadcastStatusBar isMicOn={isMicOn} userType={userType} t={t} />
-      <div className="live-sub-container">
-        <p className='titleSubLive'>
-          {t('pageTitles.subGuide')}
-        </p>
+      {/* Broadcast status is meaningless before the sub-guide has even joined,
+          same as the guide's own pre-join screen (StartLiveSession.js) */}
+      {hasJoined && (<BroadcastStatusBar isMicOn={isMicOn} userType={userType} t={t} />)}
+      <div
+        className={hasJoined ? "live-sub-container" : "live-viewer-container-center"}
+        style={{ '--page-color': pageColor }}
+      >
+        {hasJoined && (
+          <p className='titleSubLive'>
+            {t('pageTitles.subGuide')}
+          </p>
+        )}
         {/* <div className='title-sub-live-upload'>
           <div className='time'>
             <p >2025/01/01</p>
@@ -902,7 +945,42 @@ function LiveSubSpeaker() {
         <TourTitle tour={tour} />
         <audio id='audioElementSub' ref={audioRef} >
         </audio>
-        {(isLoading) ? (
+        {!hasJoined ? (
+          <>
+            {/* Same pre-join language selector as the guide (StartLiveSession.js),
+                reusing its classes - they're already colored via --page-color,
+                which is orange here instead of the guide's red. UI-only for now,
+                see selectedSpeakLanguage */}
+            <div className="guide-box-selected-language">
+              <h3 className='title-box'>{t('voiceLanguageLbl.speaking')}</h3>
+              <div className="select-container">
+                <select
+                  className='guide-selected-language notranslate'
+                  lang={getBaseLanguage(i18n.language)}
+                  translate="no"
+                  value={selectedSpeakLanguage}
+                  onChange={(e) => setSelectedSpeakLanguage(e.target.value)}
+                >
+                  {getSpeakVoiceLanguages(i18n.language).map((language) => (
+                    <option key={`${getBaseLanguage(i18n.language)}-${language.key}`} value={language.key}>
+                      {language.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            {isLoading ? (
+              <div className="loading">
+                <div className="spinner"></div>
+                <p>{t('loading')}</p>
+              </div>
+            ) : (
+              <div className='btn' onClick={handleJoinClick}>
+                <button className='guide-btn-join'>{t('joinBtn')}</button>
+              </div>
+            )}
+          </>
+        ) : (isLoading) ? (
           <div className="loading">
             <div className="spinner"></div>
             <p>{t('loading')}</p>

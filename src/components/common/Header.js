@@ -16,7 +16,7 @@ const QR_COLORS = {
     subSpeaker: getUserStyle('Sub-Guide'),
 };
 
-function Header({ tourId, count = null, userType = null, subGuideFunctionAvailable = null }) {
+function Header({ tourId, count = null, userType = null, subGuideFunctionAvailable = null, showQrCodes = true }) {
     const { t } = useTranslation();
     const [openQRCode, setOpenQRCode] = useState(false);
     const [selectedQR, setSelectedQR] = useState('listener');
@@ -52,7 +52,7 @@ function Header({ tourId, count = null, userType = null, subGuideFunctionAvailab
             {count !== null && <Participants count={total} breakdown={isBreakdown ? count : null}></Participants>}
 
             <div className='rightMenu'>
-                {userType === "Guide" && (
+                {userType === "Guide" && showQrCodes && (
                     <>
                         <div
                             className='qrCode'

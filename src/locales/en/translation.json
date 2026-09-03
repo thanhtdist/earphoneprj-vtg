@@ -21,9 +21,6 @@
     "idle": "Not broadcasting",
     "live": "Broadcasting"
   },
-  "participants": {
-    "total": "Total: {{count}}"
-  },
   "listenBox": {
     "titleGuide": "Listen to the sub-guide",
     "titleSubGuide": "Listen to the main guide",
@@ -54,7 +51,7 @@
   },
   "languagesLbl": "Language",
   "voiceLanguageLbl": {
-    "speaking": "Select a language to speak",
+    "speaking": "Select a language",
     "listening": "Select a language to listen"
   },
   "playVoiceLbl": "Broadcast an audio file",

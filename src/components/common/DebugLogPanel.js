@@ -13,10 +13,12 @@ const MAX_ENTRIES = 300;
 // Lines worth reading at a glance are kept out of the scrolling list: the SDK logs at
 // INFO and would push them past MAX_ENTRIES long before the panel is opened.
 // The capture group is the step number, so each step keeps only its latest result. The steps
-// are numbered across all three tags — [Browser] is 0, the [VoiceFocus] ones follow — so they
-// stay in the order they happen once sorted. A step may carry a letter ("0a"): sorted as text
-// it lands right after its own number and before the next one.
-const PINNED_PATTERN = /^\[(?:Browser|VoiceFocus|Audio)\]\s*(\d+[a-z]?)\./;
+// are numbered across all five tags — [Browser] is 0, then [VoiceFocus], [Audio], [Meeting]
+// and [Chat] each continue the same sequence — so they stay in the order they happen once
+// sorted, and (this is what makes the shared numbering matter) two tags never reuse the same
+// step number, or one would silently overwrite the other's entry below. A step may carry a
+// letter ("0a"): sorted as text it lands right after its own number and before the next one.
+const PINNED_PATTERN = /^\[(?:Browser|VoiceFocus|Audio|Meeting|Chat)\]\s*(\d+[a-z]?)\./;
 
 // Turn console arguments into one readable line without ever throwing on a cyclic object
 const formatArgument = (value) => {

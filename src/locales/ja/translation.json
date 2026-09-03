@@ -21,9 +21,6 @@
     "idle": "配信していません",
     "live": "配信中"
   },
-  "participants": {
-    "total": "合計: {{count}}人"
-  },
   "listenBox": {
     "titleGuide": "サブガイドの音声を聞く",
     "titleSubGuide": "メインガイドの音声を聞く",
@@ -54,7 +51,7 @@
   },
   "languagesLbl": "言語選択",
   "voiceLanguageLbl": {
-    "speaking": "話す言語を選択してください",
+    "speaking": "言語を選択してください",
     "listening": "聴く言語を選択"
   },
   "playVoiceLbl": "音声ファイルを配信する",

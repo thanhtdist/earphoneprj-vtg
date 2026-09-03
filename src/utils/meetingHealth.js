@@ -97,6 +97,13 @@ const statusName = (code) => {
   }
 };
 
+// Whether each session has actually connected, per step 11 above - kept here rather than read
+// back off the SDK because there is no public getter for it. Populated by watchMeetingConnection
+// alone, and read by logMicStartTiming (step 15) to catch the microphone starting on a session
+// nothing has confirmed is live yet. WeakMap so a stale session from a previous join is never
+// mistaken for the current one, and nothing needs to clean this up when a session is discarded
+const connected = new WeakMap();
+
 /**
  * Follow the session through connecting, started and stopped.
  *
@@ -107,15 +114,21 @@ export const watchMeetingConnection = (session) => {
   if (!isDebugLogEnabled() || !session?.audioVideo) {
     return;
   }
-  pinned(11, 'not started yet', false);
+  // Read once and carried in every line below, so each one names its meeting on its own -
+  // no need to scroll back to step 10 to know which meeting "connected" refers to
+  const meetingId = short(session.configuration?.meetingId);
+  connected.set(session, false);
+  pinned(11, `meeting ${meetingId} · not started yet`, false);
   session.audioVideo.addObserver({
     audioVideoDidStartConnecting: (reconnecting) => {
-      pinned(11, reconnecting ? 'reconnecting…' : 'connecting…', false);
+      pinned(11, `meeting ${meetingId} · ${reconnecting ? 'reconnecting…' : 'connecting…'}`, false);
     },
     audioVideoDidStart: () => {
-      pinned(11, 'connected', true);
+      connected.set(session, true);
+      pinned(11, `meeting ${meetingId} · connected`, true);
     },
     audioVideoDidStop: (sessionStatus) => {
+      connected.set(session, false);
       const code = sessionStatus?.statusCode?.();
       const name = statusName(code);
       // MeetingEnded means the id was accepted but the meeting behind it is gone — the
@@ -123,9 +136,88 @@ export const watchMeetingConnection = (session) => {
       const hint = code === MeetingSessionStatusCode.MeetingEnded
         ? ' — the meeting id is stale, clear the cookie'
         : '';
-      pinned(11, `stopped: ${name} (${code})${hint}`, false);
+      pinned(11, `meeting ${meetingId} · stopped: ${name} (${code})${hint}`, false);
     },
   });
+};
+
+/* ------------------------------------------------------------------ *
+ * 15. Is the microphone being started before the session is connected?
+ * ------------------------------------------------------------------ */
+
+/**
+ * Call this at the top of startAudioInputDevice, before startAudioInput() requests the
+ * microphone. The mic button is never disabled while the session connects (see
+ * AudioMicControl.js), and toggleMicrophone only checks that `meetingSession` exists - which is
+ * true from the moment `new DefaultMeetingSession()` returns, well before `audioVideo.start()`
+ * finishes signaling. So the microphone can open, and Voice Focus attach to it, on a session
+ * nobody has confirmed is live - the same "looks healthy, isn't" gap step 11 exists for, just
+ * caught here at the moment it would happen instead of after the fact.
+ */
+export const logMicStartTiming = (session) => {
+  if (!isDebugLogEnabled()) {
+    return;
+  }
+  const isConnected = connected.get(session) === true;
+  pinned(
+    15,
+    isConnected
+      ? 'starting the microphone · meeting session already connected'
+      : 'starting the microphone · meeting session NOT connected yet',
+    isConnected
+  );
+};
+
+/* ------------------------------------------------------------------ *
+ * 16. Is playback being started before the session is connected?
+ * ------------------------------------------------------------------ */
+
+/**
+ * Call this at the top of the ▶ (listen) button handler, before play() runs on the audio
+ * element bound to the meeting stream. Mirrors logMicStartTiming (step 15) on the listener
+ * side: the ▶ button is never disabled while the session connects (see AudioPlayerControl.js),
+ * and it is gated only on `meeting && attendee` existing - set well before `audioVideo.start()`
+ * finishes signaling. So play() can run before this page's session has confirmed it is live.
+ */
+export const logListenStartTiming = (session) => {
+  if (!isDebugLogEnabled()) {
+    return;
+  }
+  const isConnected = connected.get(session) === true;
+  pinned(
+    16,
+    isConnected
+      ? 'starting playback · meeting session already connected'
+      : 'starting playback · meeting session NOT connected yet',
+    isConnected
+  );
+};
+
+/* ------------------------------------------------------------------ *
+ * 17. Did the meeting id change since this page last had one, and why?
+ * ------------------------------------------------------------------ */
+
+/**
+ * Call this at every point a page decides which meeting id to use next, whenever there is a
+ * "before" to compare against - a cookie, or the tour's previous one. Unlike step 10 (which
+ * only says where the chosen id came from), this pairs the old and new id with the reason the
+ * code took that branch, so a device landing in the wrong meeting shows *why*: a fresh join
+ * with nothing before it, a stale cookie overridden by the tour, or a meeting that expired in
+ * Chime and was replaced. Always logged as "ok" - a change is often the correct outcome, not a
+ * fault; step 10/11/12 are what judge whether the result is actually healthy.
+ */
+export const logMeetingTransition = (before, after, reason) => {
+  if (!isDebugLogEnabled()) {
+    return;
+  }
+  const changed = before !== after;
+  pinned(
+    17,
+    changed
+      ? `meeting ${short(before)} → ${short(after)} · ${reason}`
+      : `meeting ${short(after)} unchanged · ${reason}`,
+    true
+  );
 };
 
 /* ------------------------------------------------------------------ *

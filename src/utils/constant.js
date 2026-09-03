@@ -1,7 +1,25 @@
 // Desc: Define constant variables
-// Voice languages
+// Voice languages the guide can speak in, in english(default) - same set the backend
+// currently supports for transcription + translation (mirrors LISTEN_VOICE_LANGUAGES below)
 export const SPEAK_VOICE_LANGUAGES = [
+    { key: "ja-JP", label: "Japanese" },
+    { key: "en-US", label: "English" },
+    { key: "cmn-CN", label: "Chinese" },
+    { key: "ko-KR", label: "Korean" },
+    { key: "es-ES", label: "Spanish" },
+    { key: "fr-FR", label: "French" },
+    { key: "th-TH", label: "Thailand" },
+]
+
+// Voice languages the guide can speak in, in Japanese
+export const JA_SPEAK_VOICE_LANGUAGES = [
     { key: "ja-JP", label: "日本語" },
+    { key: "en-US", label: "英語" },
+    { key: "cmn-CN", label: "中国語" },
+    { key: "ko-KR", label: "韓国語" },
+    { key: "es-ES", label: "スペイン語" },
+    { key: "fr-FR", label: "フランス語" },
+    { key: "th-TH", label: "タイ語" },
 ]
 export const SPEAK_VOICE_LANGUAGES_KEY = "ja-JP"
 
@@ -42,6 +60,10 @@ export const getBaseLanguage = (language) =>
 // Options of the listening language selector, labelled in the current UI language
 export const getListenVoiceLanguages = (uiLanguage) =>
     getBaseLanguage(uiLanguage) === "ja" ? JA_LISTEN_VOICE_LANGUAGES : LISTEN_VOICE_LANGUAGES
+
+// Options of the guide's speaking-language selector, labelled in the current UI language
+export const getSpeakVoiceLanguages = (uiLanguage) =>
+    getBaseLanguage(uiLanguage) === "ja" ? JA_SPEAK_VOICE_LANGUAGES : SPEAK_VOICE_LANGUAGES
 
 // Listening language preselected for a UI language ("ja-JP" -> "ja-JP", "en-GB" -> "en-US")
 export const getDefaultListenVoiceLanguageKey = (uiLanguage) => {

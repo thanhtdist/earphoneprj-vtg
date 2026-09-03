@@ -219,6 +219,13 @@
 .sender-chat .timestamp{
     order: 3;
 }
+/* Sole flex child of .message-content (row, space-between) - min-width: 0 lets the text
+   wrap/shrink inside the bubble's max-width instead of the default flex-item min-width
+   pushing it wider */
+.message-text-wrap{
+    flex: 1 1 auto;
+    min-width: 0;
+}
 .text-message{
     text-align: left;
 }

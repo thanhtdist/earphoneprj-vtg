@@ -3,6 +3,7 @@ import { ChimeSDKMessagingClient } from '@aws-sdk/client-chime-sdk-messaging';
 import useAutoRefreshCredentials from '../../hooks/useAutoRefreshCredentials';
 import { sendMessage, loginAndGetCredentials, translateText } from '../../apis/api';
 import { getBaseLanguage, CHAT_TRANSLATION_LANGUAGES } from '../../utils/constant';
+import { logChannelExpectation, logChannelIdentity, watchChatConnection } from '../../utils/chatHealth';
 import {
   generatePresignedUrl,
   //uploadFileToS3
@@ -74,7 +75,10 @@ function MessageContent({ message, isMine, chatLanguage, t }) {
   const display = hasTranslation && !showOriginal ? translated : original;
 
   return (
-    <>
+    // A single block-level wrapper, not a fragment: `.message-content` is a row flex
+    // container (space-between, for the bubble layout), so a fragment's two children would
+    // be laid out as separate flex items side by side instead of stacking - see ChatMessage.css
+    <div className="message-text-wrap">
       <span className="text-message">{display}</span>
       {hasTranslation && (
         <button
@@ -85,7 +89,7 @@ function MessageContent({ message, isMine, chatLanguage, t }) {
           {showOriginal ? t('chat.hideOriginal') : t('chat.showOriginal')}
         </button>
       )}
-    </>
+    </div>
   );
 }
 
@@ -129,6 +133,7 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null, userT
 
   // Function to initialize the messaging session
   const initializeMessagingSession = useCallback(async () => {
+    logChannelExpectation(channelArn);
     const logger = new ConsoleLogger('SDK', LogLevel.INFO);
     try {
       const credentials = await loginAndGetCredentials();
@@ -172,6 +177,9 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null, userT
           if (!message.payload) return;
           const messageData = JSON.parse(message.payload);
           console.log('Received messageData:', messageData);
+          // Every ChannelMessage the server sends - history or live - carries the channel it
+          // actually belongs to; compare it against what this page expected to join
+          logChannelIdentity(channelArn, messageData.ChannelMessages?.[0]?.ChannelArn ?? messageData.ChannelArn);
 
           // when participants join the channel and show the message history
           if (messageData.ChannelMessages?.length) {
@@ -210,12 +218,15 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null, userT
       };
 
       messagingSession.addObserver(observer);
+      // Whether this session is actually connected, and to the channel it was given -
+      // separate from `observer` above so it keeps working if that observer changes
+      watchChatConnection(messagingSession, channelArn);
       // Start the messaging session
       await messagingSession.start();
     } catch (error) {
       console.log('Error starting session:', error);
     }
-  }, [userArn, sessionId]);
+  }, [userArn, sessionId, channelArn]);
 
   // Function to send a message to the channel
   const sendMessageClick = useCallback(async () => {

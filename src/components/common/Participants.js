@@ -1,25 +1,26 @@
 import '../../styles/Participants.css';
-import { HiUser } from "react-icons/hi2";
-import { useTranslation } from 'react-i18next';
+import { HiUser, HiUserGroup } from "react-icons/hi2";
 import { getUserStyle } from '../../utils/getUserStyle';
 
 /**
  * Component to display the number of participants.
- * Row 1 is the total; row 2 breaks it down by role (guide/sub-guide/user) when
- * that data is available. Older backends only send the total, so the
- * breakdown row is simply left out in that case.
+ * Row 1 is the total (the original group icon + number); row 2 breaks it
+ * down by role (guide/sub-guide/user) when that data is available. Older
+ * backends only send the total, so the breakdown row is simply left out.
  * @param {number} count - the total number of participants
  * @param {{guide: number, subGuide: number, user: number}} [breakdown]
  * @returns
  */
 export const Participants = ({ count, breakdown }) => {
-    const { t } = useTranslation();
     const hasBreakdown = breakdown != null
         && [breakdown.guide, breakdown.subGuide, breakdown.user].every((n) => typeof n === 'number');
 
     return (
         <div className='participantsCount'>
-            <div className='participantsTotal'>{t('participants.total', { count })}</div>
+            <div className='participantsTotal' style={{ color: '#6F6f6f' }}>
+                <HiUserGroup size={26} />
+                <span>{count}</span>
+            </div>
             {hasBreakdown && (
                 <div className='participantsBreakdown'>
                     <span className='participantsRole' style={{ color: getUserStyle('Guide') }}>

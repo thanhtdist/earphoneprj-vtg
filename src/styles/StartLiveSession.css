@@ -1,5 +1,25 @@
 /* StartLiveSession.css */
 
+/* Basic styles */
+.live-viewer-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 20px 0 20px;
+  font-family: Arial, sans-serif;
+}
+
+.live-viewer-container-center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 20px 0 20px;
+  font-family: Arial, sans-serif;
+  height: 500px;
+  margin-top: 40px;
+}
 /* General layout styling */
 .container {
   display: flex;
@@ -10,6 +30,40 @@
   margin-right: 20px;
   /* Room for the chat button, which is fixed over the bottom right corner */
   padding-bottom: 90px;
+}
+
+/* Guide's own copies of the listener's pre-join language-selector look
+   (LiveViewer.css: .box-selected-language / .selected-language / .btn-join),
+   colored with --page-color instead of the listener's fixed teal. Positioning
+   (the 40px top margin) comes from .live-viewer-container-center, same as the
+   listener - no extra margin here so the two end up in the same spot */
+.guide-box-selected-language {
+  width: 100%;
+  border: 1px solid outset;
+  box-shadow: 0 6px 5px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  margin-bottom: 10px;
+  padding: 20px;
+}
+
+.guide-selected-language {
+  border-radius: 25px;
+  border: 1px solid var(--page-color);
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+  background-color: #FAFAFA;
+  height: 47px;
+  padding: 12px 15px;
+  font-size: 1rem;
+  text-align: center;
+  min-width: 160px;
+  max-width: 100%;
+}
+
+.guide-btn-join {
+  background-color: var(--page-color);
+  border: var(--page-color);
+  border-radius: 25px;
+  color: white;
 }
 
 button {
