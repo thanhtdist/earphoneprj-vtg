@@ -219,29 +219,26 @@
 .sender-chat .timestamp{
     order: 3;
 }
-/* Sole flex child of .message-content (row, space-between) - min-width: 0 lets the text
-   wrap/shrink inside the bubble's max-width instead of the default flex-item min-width
-   pushing it wider */
-.message-text-wrap{
-    flex: 1 1 auto;
-    min-width: 0;
-}
 .text-message{
     text-align: left;
 }
 
-/* "Show original / Hide original" toggle under a translated message (task #13) */
+/* "Show original / Hide original" toggle under a translated message (task #13). A sibling of
+   the .message-content bubble (not nested inside it), so it renders below the pink/blue box
+   instead of taking on its background/padding. Both are flex items of .message
+   (flex-direction: column), so this needs its own align-self to sit on the right side of the
+   guide's own messages, matching .my-message's alignment */
 .toggle-original{
     display: block;
+    align-self: flex-start;
     margin-top: 4px;
     padding: 0;
     border: none;
     background: none;
     color: #1565c0;
     font-size: 0.75em;
-    text-decoration: underline;
     cursor: pointer;
 }
-.my-message .toggle-original{
-    margin-left: auto;
+.toggle-original-mine{
+    align-self: flex-end;
 }

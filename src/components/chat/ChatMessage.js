@@ -75,21 +75,22 @@ function MessageContent({ message, isMine, chatLanguage, t }) {
   const display = hasTranslation && !showOriginal ? translated : original;
 
   return (
-    // A single block-level wrapper, not a fragment: `.message-content` is a row flex
-    // container (space-between, for the bubble layout), so a fragment's two children would
-    // be laid out as separate flex items side by side instead of stacking - see ChatMessage.css
-    <div className="message-text-wrap">
-      <span className="text-message">{display}</span>
+    // The bubble (background/padding) wraps only the text - the toggle is a sibling outside
+    // it, so it never inherits the pink/blue message-box styling
+    <>
+      <div className={`message-content ${isMine ? 'my-message' : 'other-message'}`}>
+        <span className="text-message">{display}</span>
+      </div>
       {hasTranslation && (
         <button
           type="button"
-          className="toggle-original"
+          className={`toggle-original ${isMine ? 'toggle-original-mine' : ''}`}
           onClick={() => setShowOriginal((prev) => !prev)}
         >
           {showOriginal ? t('chat.hideOriginal') : t('chat.showOriginal')}
         </button>
       )}
-    </div>
+    </>
   );
 }
 
@@ -428,14 +429,12 @@ function ChatMessage({ userArn, channelArn, sessionId, chatSetting = null, userT
               </div>
 
               {message.content !== ' ' && (
-                <div className={`message-content ${message.senderArn === userArn ? 'my-message' : 'other-message'}`}>
-                  <MessageContent
-                    message={message}
-                    isMine={message.senderArn === userArn}
-                    chatLanguage={myChatLanguage}
-                    t={t}
-                  />
-                </div>
+                <MessageContent
+                  message={message}
+                  isMine={message.senderArn === userArn}
+                  chatLanguage={myChatLanguage}
+                  t={t}
+                />
               )}
               {message.attachments?.length > 0 &&
                 (<div className={`${message.senderArn === userArn ? 'my-message' : 'other-message'}`}>
