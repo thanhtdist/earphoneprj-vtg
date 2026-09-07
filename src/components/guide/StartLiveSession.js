@@ -99,8 +99,12 @@ function StartLiveSession() {
   const [channelArn, setChannelArn] = useState('');
   //const [channelID, setChannelID] = useState('');
   const [meetingSession, setMeetingSession] = useState(null);
-  const [meeting, setMetting] = useState(null);
-  const [attendee, setAttendee] = useState(null);
+  // Set only once initializeMeetingSession's bind + audioVideo.start() have both actually
+  // finished, not the instant meetingSession itself is created - see MultiLangAudio.js /
+  // JapaneseAudio.js's isSessionReady for why gating the mic control on meetingSession (or on
+  // meeting/attendee state set before initializeMeetingSession is awaited) would leave it
+  // visible before there is a session to control
+  const [isSessionReady, setIsSessionReady] = useState(false);
   const [selectedAudioInput, setSelectedAudioInput] = useState('');
   const [audioInputDevices, setAudioInputDevices] = useState([]);
   const [userArn, setUserArn] = useState('');
@@ -360,6 +364,8 @@ function StartLiveSession() {
 
     // Start audio video session
     meetingSession.audioVideo.start();
+    // Only now is the session actually usable - see isSessionReady's declaration
+    setIsSessionReady(true);
 
   }, []);
 
@@ -393,8 +399,10 @@ function StartLiveSession() {
       const attendee = await createAttendee(meeting.MeetingId, `${userType}|${Date.now()}`);
       console.log('Attendee created:', attendee);
 
-      // Initialize the meeting session such as meeting session
-      initializeMeetingSession(meeting, attendee, 'created');
+      // Initialize the meeting session such as meeting session - awaited so isSessionReady
+      // (set inside, once bind + start() actually finish) is not left stale behind the
+      // channel/tour setup below, which would otherwise show the mic control too early
+      await initializeMeetingSession(meeting, attendee, 'created');
       const createAppUserAndChannelResponse = await createAppUserAndChannel(userID, userName);
       console.log('ChannelID created:', createAppUserAndChannelResponse.channelID);
       logChannelTransition(null, createAppUserAndChannelResponse.channelArn, 'tour had no channel yet, created new');
@@ -406,8 +414,6 @@ function StartLiveSession() {
       };
       await updateMeetingIdAndChannelId(data);
       //setUserId(userID);
-      setMetting(meeting);
-      setAttendee(attendee);
       setUserArn(createAppUserAndChannelResponse.userArn);
       setChannelArn(createAppUserAndChannelResponse.channelArn);
       //setChannelID(createAppUserAndChannelResponse.channelID);
@@ -443,7 +449,7 @@ function StartLiveSession() {
     try {
       const attendee = await createAttendee(meeting.MeetingId, `${userType}|${Date.now()}`);
       console.log('Attendee created for the existing meeting:', attendee);
-      initializeMeetingSession(meeting, attendee, 'api');
+      await initializeMeetingSession(meeting, attendee, 'api');
 
       // The channel comes from the tour record. This screen must not create a second one
       const channelArn = `${Config.appInstanceArn}/channel/${channelId}`;
@@ -454,8 +460,6 @@ function StartLiveSession() {
       console.log('Guide created for the existing channel:', userArn);
       await addChannelMembership(channelArn, userArn);
 
-      setMetting(meeting);
-      setAttendee(attendee);
       setUserArn(userArn);
       setChannelArn(channelArn);
 
@@ -518,7 +522,7 @@ function StartLiveSession() {
       console.log('Attendee created:', attendee);
 
       // Initialize the meeting session such as meeting session
-      initializeMeetingSession(meeting, attendee, 'created');
+      await initializeMeetingSession(meeting, attendee, 'created');
       // const createAppUserAndChannelResponse = await createAppUserAndChannel(userID, userName);
       // console.log('ChannelID created:', createAppUserAndChannelResponse.channelID);
       // Update table tour with the meetingId and channelId
@@ -542,8 +546,6 @@ function StartLiveSession() {
       }
 
       // setUserId(userID);
-      setMetting(meeting);
-      setAttendee(attendee);
       setUserArn(userArn);
       setChannelArn(channelArn);
 
@@ -897,9 +899,7 @@ function StartLiveSession() {
     // if (!meeting) return;
     logMeetingTransition(retrievedMainGuide.meeting.MeetingId, retrievedMainGuide.meeting.MeetingId, 'cookie meeting matches the tour, reusing it');
     logChannelTransition(retrievedMainGuide.channelArn, `${Config.appInstanceArn}/channel/${channelId}`, 'cookie meeting matches; channel is always taken from the tour, not the cookie');
-    initializeMeetingSession(retrievedMainGuide.meeting, retrievedMainGuide.attendee, 'cookie');
-    setMetting(retrievedMainGuide.meeting);
-    setAttendee(retrievedMainGuide.attendee);
+    await initializeMeetingSession(retrievedMainGuide.meeting, retrievedMainGuide.attendee, 'cookie');
     setUserArn(retrievedMainGuide.userArn);
     //setUserId(retrievedMainGuide.userArn.split('/').pop());
     // Derived from the tour rather than read back from the cookie, so the two can never drift
@@ -1360,16 +1360,16 @@ function StartLiveSession() {
         count={participantsCount}
         userType={userType}
         subGuideFunctionAvailable={tour?.subGuideFunctionAvailable}
-        showQrCodes={Boolean(meeting && attendee)}
+        showQrCodes={isSessionReady}
       />
       {/* Broadcast status is meaningless before the guide has even joined - the listener has
           no equivalent bar on its own pre-join screen either */}
-      {(meeting && attendee) && (<BroadcastStatusBar isMicOn={isMicOn} userType={userType} t={t} />)}
+      {(isSessionReady) && (<BroadcastStatusBar isMicOn={isMicOn} userType={userType} t={t} />)}
       {/* Pre-join: only live-viewer-container-center, exactly like the listener's own
           pre-join screen - combining it with .container was overriding its margin-top
           (.container's margin: 20px comes later in the stylesheet and won) */}
       <div
-        className={(meeting && attendee) ? 'container' : 'live-viewer-container-center'}
+        className={(isSessionReady) ? 'container' : 'live-viewer-container-center'}
         style={{ '--page-color': pageColor }}
       >
         {/* {audioData.current.length > 0 &&
@@ -1378,7 +1378,7 @@ function StartLiveSession() {
           }}>
             Play Audio
           </button></>)} */}
-        {(meeting && attendee) && (
+        {(isSessionReady) && (
           <p className='titleLiveSession'>
             {t('pageTitles.guide')}
           </p>
@@ -1400,7 +1400,7 @@ function StartLiveSession() {
         )} */}
         <audio id='audioElementMain' ref={audioRef} >
         </audio>
-        {(!meeting && !attendee) ? (
+        {!isSessionReady ? (
           <>
             {/* Same box/select markup as the listener's own selector (MultiLangAudio.js),
                 just colored with the guide's page color instead of the listener's teal
@@ -1491,7 +1491,7 @@ function StartLiveSession() {
         )}
         {/* Chatting before the guide has even joined doesn't make sense - there is no channel
             (channelArn) to send to yet anyway */}
-        {(meeting && attendee) && chatRestriction !== "nochat" && (
+        {(isSessionReady) && chatRestriction !== "nochat" && (
           <MessageBox userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} userType={userType} statusChat={chatRestriction} chatLanguage="ja" />
         )}
       </div>

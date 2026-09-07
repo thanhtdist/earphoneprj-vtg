@@ -87,6 +87,17 @@ function LiveSubSpeaker() {
   // transcription/translation yet, the picked value is not sent anywhere
   const [selectedSpeakLanguage, setSelectedSpeakLanguage] = useState(SPEAK_VOICE_LANGUAGES_KEY);
   const [hasJoined, setHasJoined] = useState(false);
+  // Set only once initializeMeetingSession's bind + audioVideo.start() have both actually
+  // finished - see MultiLangAudio.js/JapaneseAudio.js's isSessionReady for why gating the mic
+  // control on hasJoined alone (set the instant Join is clicked, before any readiness check
+  // has even run) would leave it visible before there is a session to control
+  const [isSessionReady, setIsSessionReady] = useState(false);
+  // Non-blocking replacement for alert('Guide does not start...') - see the same viewer files
+  // for the pattern. The old alert() here left the Sub-Guide stuck on a loading spinner
+  // forever afterwards (isLoading was never reset in that branch), with no retry short of a
+  // reload - this overlay plus the poll below is also what recovers automatically once the
+  // Guide actually starts
+  const [showWaitingForGuide, setShowWaitingForGuide] = useState(false);
   const audioRef = useRef(null);
   // Single state for the audio coming from the main guide, it replaces the
   // play and mute pair that both acted on the same audio element
@@ -236,6 +247,8 @@ function LiveSubSpeaker() {
 
     // Start audio video session
     meetingSession.audioVideo.start();
+    // Only now is the session actually usable - see isSessionReady's declaration
+    setIsSessionReady(true);
   }, []);
 
   // EXPERIMENT: audio output selection is switched off, here and at the call site.
@@ -615,16 +628,49 @@ function LiveSubSpeaker() {
   }, []);
 
   // Function to get the meeting and attendee information from the cookies
-  const getMeetingAttendeeInfoFromCookies = useCallback((retrievedSubGuide) => {
+  const getMeetingAttendeeInfoFromCookies = useCallback(async (retrievedSubGuide) => {
     setIsLoading(true);
     console.log("Retrieved cookie:", retrievedSubGuide);
-    initializeMeetingSession(retrievedSubGuide.meeting, retrievedSubGuide.attendee, 'cookie');
-    // setMetting(retrievedSubGuide.meeting);
-    // setAttendee(retrievedSubGuide.attendee);
+    // Awaited - isSessionReady is set inside initializeMeetingSession itself, once bind +
+    // start() actually finish, not the instant this call is fired off
+    await initializeMeetingSession(retrievedSubGuide.meeting, retrievedSubGuide.attendee, 'cookie');
     setUserArn(retrievedSubGuide.userArn);
     setChannelArn(retrievedSubGuide.channelArn);
     setIsLoading(false);
   }, [initializeMeetingSession]);
+
+  // Sheet 3 of "VTG - investigation report - no-japansese-audio.xlsx" (Solution 2): same
+  // poll-and-overlay pattern as the Viewer screens, replacing the alert() below.
+  // guidePollTimerRef makes sure only one retry loop ever runs
+  const guidePollTimerRef = useRef(null);
+  const joinAudioSessionRef = useRef(null);
+  // Guards against two joinAudioSession calls running at once - the 7s poll tick fires on a
+  // timer regardless of whether the previous tick's awaited getMeetingByTourId/getMeeting calls
+  // have resolved yet, so a slow request can otherwise let two ticks both observe statusCode
+  // 200 right as the Guide goes live and both rejoin, creating two attendees/sessions
+  const isJoiningRef = useRef(false);
+
+  const stopWaitingForGuide = useCallback(() => {
+    setShowWaitingForGuide(false);
+    if (guidePollTimerRef.current) {
+      clearInterval(guidePollTimerRef.current);
+      guidePollTimerRef.current = null;
+    }
+  }, []);
+
+  const startWaitingForGuide = useCallback(() => {
+    setShowWaitingForGuide(true);
+    if (guidePollTimerRef.current) {
+      return; // already polling
+    }
+    console.log('[Auto-join] Guide not live yet - polling in the background every 7s');
+    guidePollTimerRef.current = setInterval(() => {
+      joinAudioSessionRef.current?.();
+    }, 7000);
+  }, []);
+
+  // Stop polling if the Sub-Guide navigates away mid-wait
+  useEffect(() => stopWaitingForGuide, [stopWaitingForGuide]);
 
   // Use effect to join the meeting
   // useEffect(() => {
@@ -692,42 +738,51 @@ function LiveSubSpeaker() {
   // Function to join the audio session
   // This function is called when the component mounts and when the tourId changes
   const joinAudioSession = useCallback(async () => {
+    if (isJoiningRef.current) {
+      return; // a previous click or poll tick is still in flight - see isJoiningRef
+    }
+    isJoiningRef.current = true;
+    try {
+      const getMeetingByTourIdResponse = await getMeetingByTourId(tourId);
+      console.log('getMeetingByTourIdResponse', getMeetingByTourIdResponse);
+      if (getMeetingByTourIdResponse?.statusCode === 200) {
+        setChatRestriction(getMeetingByTourIdResponse.data.chatRestriction);
+        setTour(getMeetingByTourIdResponse.data);
+        noteTourMeetingId(getMeetingByTourIdResponse.data.meetingId);
+        console.log('Meeting found:', getMeetingByTourIdResponse.data.meetingId);
 
-    const getMeetingByTourIdResponse = await getMeetingByTourId(tourId);
-    console.log('getMeetingByTourIdResponse', getMeetingByTourIdResponse);
-    if (getMeetingByTourIdResponse?.statusCode === 200) {
-      setChatRestriction(getMeetingByTourIdResponse.data.chatRestriction);
-      setTour(getMeetingByTourIdResponse.data);
-      noteTourMeetingId(getMeetingByTourIdResponse.data.meetingId);
-      console.log('Meeting found:', getMeetingByTourIdResponse.data.meetingId);
+        if (getMeetingByTourIdResponse.data.meetingId) {
+          console.log("Meeting Existed in Tour");
+          const checkAvailableMeetingResponse = await getMeeting(getMeetingByTourIdResponse.data.meetingId);
+          console.log('checkAvailableMeeting:', checkAvailableMeetingResponse);
+          console.log('checkAvailableMeeting statusCode:', checkAvailableMeetingResponse.statusCode);
+          if (checkAvailableMeetingResponse.statusCode === 404) {
+            startWaitingForGuide();
+          } else if (checkAvailableMeetingResponse.statusCode === 200) {
+            // Join the meeting again and set the meeting session in the state
+            console.log('Meeting not expired:', checkAvailableMeetingResponse);
+            console.log('Check checkAvailableMeetingResponse:', checkAvailableMeetingResponse.data);
+            stopWaitingForGuide();
+            await joinAudioSession2(checkAvailableMeetingResponse.data, getMeetingByTourIdResponse.data.channelId);
 
-      if (getMeetingByTourIdResponse.data.meetingId) {
-        console.log("Meeting Existed in Tour");
-        const checkAvailableMeetingResponse = await getMeeting(getMeetingByTourIdResponse.data.meetingId);
-        console.log('checkAvailableMeeting:', checkAvailableMeetingResponse);
-        console.log('checkAvailableMeeting statusCode:', checkAvailableMeetingResponse.statusCode);
-        if (checkAvailableMeetingResponse.statusCode === 404) {
-          //toast.info('Guide does not start, please wait...');
-          alert('Guide does not start, please wait...');
-        } else if (checkAvailableMeetingResponse.statusCode === 200) {
-          // Join the meeting again and set the meeting session in the state
-          console.log('Meeting not expired:', checkAvailableMeetingResponse);
-          console.log('Check checkAvailableMeetingResponse:', checkAvailableMeetingResponse.data);
-          joinAudioSession2(checkAvailableMeetingResponse.data, getMeetingByTourIdResponse.data.channelId);
-
+          } else {
+            console.log('Meeting error:', checkAvailableMeetingResponse);
+          }
         } else {
-          console.log('Meeting error:', checkAvailableMeetingResponse);
+          startWaitingForGuide();
         }
       } else {
-        alert('Guide does not start, please wait...');
+        console.log('Tour not found, please check the tour ID.');
+        setTour(null);
       }
-    } else {
-      // alert('Tour not found, please check the tour ID.');
-      console.log('Tour not found, please check the tour ID.');
-      //toast.error('Tour not found, please check the tour ID.');
-      setTour(null);
+    } finally {
+      isJoiningRef.current = false;
     }
-  }, [joinAudioSession2, tourId]);
+  }, [joinAudioSession2, tourId, startWaitingForGuide, stopWaitingForGuide]);
+
+  useEffect(() => {
+    joinAudioSessionRef.current = joinAudioSession;
+  }, [joinAudioSession]);
 
   // Join is gated behind the language selector below (see the pre-join render
   // block) instead of running automatically on mount - same gesture as the
@@ -922,6 +977,14 @@ function LiveSubSpeaker() {
 
   return (
     <>
+      {showWaitingForGuide && (
+        <div className="waiting-for-guide-overlay">
+          <div className="waiting-for-guide-card">
+            <p>{t('guideNotStarted')}</p>
+            <div className="spinner"></div>
+          </div>
+        </div>
+      )}
       {/* <Participants count={participantsCount} /> */}
       <Header count={participantsCount} tourId={tourId} userType={userType} />
       {/* Broadcast status is meaningless before the sub-guide has even joined,
@@ -980,12 +1043,7 @@ function LiveSubSpeaker() {
               </div>
             )}
           </>
-        ) : (isLoading) ? (
-          <div className="loading">
-            <div className="spinner"></div>
-            <p>{t('loading')}</p>
-          </div>
-        ) : (
+        ) : isSessionReady ? (
           <>
             {(noMicroMsg) ? (
               <>
@@ -1038,6 +1096,15 @@ function LiveSubSpeaker() {
             {/* {channelArn && <ChatMessage userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} chatSetting={chatSetting} />} */}
 
           </>
+        ) : (
+          // Between Join being clicked and isSessionReady - either still checking, or the
+          // overlay above is already covering the screen instead
+          !showWaitingForGuide && (
+            <div className="loading">
+              <div className="spinner"></div>
+              <p>{t('loading')}</p>
+            </div>
+          )
         )}
       </div>
       <DebugLogPanel />

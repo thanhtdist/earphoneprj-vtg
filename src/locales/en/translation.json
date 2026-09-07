@@ -3,6 +3,7 @@
   "startLiveBtn": "Start a Live Audio Session",
   "joinBtn": "Join",
   "loading": "Please wait...",
+  "guideNotStarted": "Guide does not start, please wait...",
   "microChecking": "Checking your microphone... Please wait.",
   "noMicroMsg": "Your microphone is currently blocked. Please enable microphone access in your browser settings or on this site to proceed.",
   "microSelectionLbl": "Select Input Microphone",

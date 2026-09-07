@@ -27,7 +27,6 @@ import { useParams } from "react-router-dom";
 import NotFound from '../NotFound';
 import TourTitle from '../common/TourTitle';
 import AudioPlayerControl from '../common/AudioPlayerControl';
-import { messages } from '../../messages';
 import useWakeLock from '../../hooks/useWakeLock';
 import useConnectWebSocket from '../../hooks/useConnectWebSocket';
 import useWebSocketVisibilityHandler from '../../hooks/useWebSocketVisibilityHandler';
@@ -43,6 +42,7 @@ import {
   logMeetingTransition,
 } from '../../utils/meetingHealth';
 import { logChannelTransition } from '../../utils/chatHealth';
+import { watchGuidePresence } from '../../utils/guidePresence';
 import DebugLogPanel from '../common/DebugLogPanel';
 //import Loading from '../Loading';
 
@@ -55,9 +55,14 @@ function JapaneseAudio() {
   const { tourId } = useParams(); // Extracts 'tourId' from the URL
   console.log('tourId:', tourId);
   const { t } = useTranslation();
-  const [isJoinAudio, setIsJoinAudio] = useState(true)
   const [tour, setTour] = useState(undefined);
   const [meetingSession, setMeetingSession] = useState(null);
+  // Distinct from meetingSession, which is set the instant the session object is constructed -
+  // before bindAudioElement/start() below have actually run. Gating the Play control on that
+  // instead of this would reopen the same gap MultiLangAudio.js never had: there, the
+  // equivalent gate (meeting && attendee) is only set after initializeMeetingSession's await
+  // fully resolves
+  const [isSessionReady, setIsSessionReady] = useState(false);
   // const [meeting, setMeeting] = useState(null);
   // const [attendee, setAttendee] = useState(null);
   const [channelArn, setChannelArn] = useState('');
@@ -70,6 +75,36 @@ function JapaneseAudio() {
   const audioElementRef = useRef(null);
   const [isMuted, setIsMuted] = useState(true);
   const [isPlay, setIsPlay] = useState(false);
+  // Non-blocking replacement for alert(messages.guide.notStart) - see the overlay rendered
+  // near the bottom of this component and the waiting-for-guide poll below
+  const [showWaitingForGuide, setShowWaitingForGuide] = useState(false);
+
+  // Sheet 3, extended: even once the meeting itself is confirmed live (the case the poll
+  // below handles), the Guide meant to be broadcasting into it may not actually be there yet -
+  // see guidePresence.js. A short grace period avoids flashing the overlay for the sub-second
+  // gap between this page joining and the Guide's already-live attendee being reported, and
+  // for a brief Guide reconnect blip
+  const guideAbsentTimeoutRef = useRef(null);
+  const handleGuidePresenceChange = useCallback((isGuidePresent) => {
+    if (guideAbsentTimeoutRef.current) {
+      clearTimeout(guideAbsentTimeoutRef.current);
+      guideAbsentTimeoutRef.current = null;
+    }
+    if (isGuidePresent) {
+      setShowWaitingForGuide(false);
+      return;
+    }
+    guideAbsentTimeoutRef.current = setTimeout(() => {
+      guideAbsentTimeoutRef.current = null;
+      setShowWaitingForGuide(true);
+    }, 3000);
+  }, []);
+
+  useEffect(() => () => {
+    if (guideAbsentTimeoutRef.current) {
+      clearTimeout(guideAbsentTimeoutRef.current);
+    }
+  }, []);
 
   // Add these references and callback:
   // const wakeLockRef = useRef(null);
@@ -127,7 +162,11 @@ function JapaneseAudio() {
     // Subscribed before start(), so the very first stats tick is counted
     watchIncomingAudio(session, () => audioElementRef.current);
     session.audioVideo.start();
-  }, []);
+    watchGuidePresence(session, handleGuidePresenceChange);
+    // Only now is the audio element actually bound and the session started - see the note by
+    // isSessionReady's declaration for why this isn't just setMeetingSession(session) again
+    setIsSessionReady(true);
+  }, [handleGuidePresenceChange]);
 
   // EXPERIMENT: audio output selection is switched off, here and at the call site.
   // It only ever picked audioOutputDevices[0], which is the default the OS gives us anyway,
@@ -463,7 +502,17 @@ function JapaneseAudio() {
     if (isPlay === false) {
       setIsPlay(true)
       logListenStartTiming(meetingSession);
-      audioElementRef.current.play(); // This is for Chime session (ja-JP only)
+      // play() returns a promise; left unawaited/uncaught it throws "Uncaught (in promise)
+      // AbortError: the operation was aborted" whenever a pause()/reload() lands before it
+      // resolves (e.g. tapping stop right after start, or a rebind of the same element) - see
+      // docs/report/issue-14-japanese-audio-not-audible.md root cause #3
+      audioElementRef.current.play()?.catch((error) => {
+        if (error?.name === 'AbortError') {
+          console.log('[Listen] play() aborted by a later pause/reload - ignoring', error);
+          return;
+        }
+        console.error('[Listen] Failed to start playback:', error);
+      });
     } else {
       setIsPlay(false);
       // ⛔ Immediately stop translated audio
@@ -499,70 +548,108 @@ function JapaneseAudio() {
   useWakeLock(meetingSession);
 
 
-  // Function to join the tour
-  const joinTour = useCallback(async () => {
-    const tourResponse = await getMeetingByTourId(tourId);
-    console.log('tourResponse', tourResponse);
-    if (tourResponse?.statusCode === 200) {
-      setTour(tourResponse.data);
-    } else {
-      setTour(null);
-    }
-  }, [tourId]);
-
-  // Call joinAudioSession when the component mounts
-  useEffect(() => {
-    joinTour();
-  }, [joinTour]);
-
   // What the SDK makes of this browser. No capture counter here: a listener never opens a
   // microphone, so the only count that can go wrong on this side is the element binding
   useEffect(() => {
     logBrowserSupport();
   }, []);
 
-  const processTour = useCallback(async () => {
-    console.log("Processing Tour:", tour);
+  // Sheet 3 of "VTG - investigation report - no-japansese-audio.xlsx" (Solution 2, recommended):
+  // the old joinTour/processTour/isJoinAudio split fetched the tour once, tried it once, then
+  // set isJoinAudio to false forever - a Listener who arrived before the Guide started was
+  // stuck on a blocking alert() with no way to recover short of a full reload, since processTour
+  // could never run again. attemptJoin replaces all three: it re-fetches the tour fresh every
+  // call (not just re-checking a stale tour.meetingId), so it also picks up a meetingId that did
+  // not exist yet on an earlier attempt. The overlay rendered near the bottom of this component
+  // replaces the old alert() - being non-blocking, it lets the poll below run immediately and
+  // close itself the moment the Guide goes live, with no click required. guidePollTimerRef makes
+  // sure only one retry loop ever runs. Deliberately not dismissible: closing it early would
+  // leave the Listener with no status at all while the poll keeps running silently, which is
+  // worse than the overlay just sitting there
+  const guidePollTimerRef = useRef(null);
+  const attemptJoinRef = useRef(null);
+  // Guards against two attemptJoin calls running at once - the 7s poll tick fires on a timer
+  // regardless of whether the previous tick's awaited getMeetingByTourId/getMeeting calls have
+  // resolved yet, so a slow request can otherwise let two ticks both observe statusCode 200
+  // right as the Guide goes live and both rejoin, creating two attendees/sessions
+  const isJoiningRef = useRef(false);
+
+  const stopWaitingForGuide = useCallback(() => {
+    setShowWaitingForGuide(false);
+    if (guidePollTimerRef.current) {
+      clearInterval(guidePollTimerRef.current);
+      guidePollTimerRef.current = null;
+    }
+  }, []);
+
+  const startWaitingForGuide = useCallback(() => {
+    setShowWaitingForGuide(true);
+    if (guidePollTimerRef.current) {
+      return; // already polling
+    }
+    console.log('[Auto-join] Guide not live yet - polling in the background every 7s');
+    guidePollTimerRef.current = setInterval(() => {
+      attemptJoinRef.current?.();
+    }, 7000);
+  }, []);
+
+  // Stop polling if the Listener navigates away mid-wait
+  useEffect(() => stopWaitingForGuide, [stopWaitingForGuide]);
+
+  const attemptJoin = useCallback(async () => {
+    if (isJoiningRef.current) {
+      return; // a previous click or poll tick is still in flight - see isJoiningRef
+    }
+    isJoiningRef.current = true;
     try {
-      if (tour.meetingId) {
+      const tourResponse = await getMeetingByTourId(tourId);
+      console.log('tourResponse', tourResponse);
+      if (tourResponse?.statusCode !== 200) {
+        setTour(null);
+        return;
+      }
+      setTour(tourResponse.data);
+      const currentTour = tourResponse.data;
+      if (currentTour.meetingId) {
         // What the tour points at right now - step 10 compares the cookie against it
-        noteTourMeetingId(tour.meetingId);
+        noteTourMeetingId(currentTour.meetingId);
         console.log("Meeting Exists in Tour");
 
         // Check if the meeting is available in Chime Meeting
-        const meetingResponse = await getMeeting(tour.meetingId);
+        const meetingResponse = await getMeeting(currentTour.meetingId);
         console.log('Meeting response:', meetingResponse);
 
         if (meetingResponse.statusCode === 404) {
-          // Using console.error instead of alert for server-side issues
-          alert(messages.guide.notStart);
-          // Consider using a toast notification library or setting an error state
+          startWaitingForGuide();
         } else if (meetingResponse.statusCode === 200) {
           // Join the meeting again and set the meeting session in the state
           console.log('Meeting available:', meetingResponse.data);
-          rejoinAudioSession(meetingResponse.data, tour.channelId);
+          stopWaitingForGuide();
+          await rejoinAudioSession(meetingResponse.data, currentTour.channelId);
         } else {
           console.error('Meeting error:', meetingResponse);
         }
       } else {
-        alert(messages.guide.notStart);
+        startWaitingForGuide();
       }
     } catch (error) {
       console.error('Error processing tour:', error);
+    } finally {
+      isJoiningRef.current = false;
     }
-  }, [tour, rejoinAudioSession]);
+  }, [tourId, rejoinAudioSession, startWaitingForGuide, stopWaitingForGuide]);
 
-  // Process the tour when it changes
   useEffect(() => {
-    // Skip if tour is undefined
-    if (!tour) return;
-    if (isJoinAudio) {
-      processTour();
-      setIsJoinAudio(false);
-    }
-    //setIsLoading(true);
+    attemptJoinRef.current = attemptJoin;
+  }, [attemptJoin]);
 
-  }, [tour, processTour, isJoinAudio]);
+  // Call attemptJoin once when the component mounts (and again if tourId itself changes) -
+  // deliberately not depending on attemptJoin's own identity, which also shifts whenever
+  // rejoinAudioSession does, otherwise this would re-fire on every such change instead of once
+  useEffect(() => {
+    attemptJoin();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tourId]);
 
   // if (tour === undefined) {
   //   return (
@@ -610,6 +697,14 @@ function JapaneseAudio() {
             </div>
           )}
         </>)} */}
+      {showWaitingForGuide && (
+        <div className="waiting-for-guide-overlay">
+          <div className="waiting-for-guide-card">
+            <p>{t('guideNotStarted')}</p>
+            <div className="spinner"></div>
+          </div>
+        </div>
+      )}
       <Header count={participantsCount} tourId={tourId} userType={userType} />
       <div className='live-viewer-container'>
         {/* <p>Connection Count: {connectionCount}</p> */}
@@ -619,14 +714,29 @@ function JapaneseAudio() {
           style={{ display: 'none' }}
         />
         <TourTitle tour={tour} />
-        <AudioPlayerControl
-          isPlay={isPlay}
-          handlePlay={handlePlay}
-          isMuted={isMuted}
-          handleMuteUnmute={handleMuteUnmute}
-          userType={userType}
-          t={t}
-        />
+        {isSessionReady ? (
+          <AudioPlayerControl
+            isPlay={isPlay}
+            handlePlay={handlePlay}
+            isMuted={isMuted}
+            handleMuteUnmute={handleMuteUnmute}
+            userType={userType}
+            t={t}
+          />
+        ) : (
+          // Before this, audioElementRef is not bound to anything yet - a tap on Play here
+          // would silently play nothing, with no feedback and no popup up yet either (the
+          // overlay above only appears once attemptJoin's first check comes back). Rendering
+          // this instead of the controls closes that gap regardless of which way that check
+          // resolves - it is replaced by either the controls (meeting was already live) or the
+          // overlay (meeting was not), never left showing alongside a working Play button
+          !showWaitingForGuide && (
+            <div className="loading">
+              <div className="spinner"></div>
+              <p>{t('loading')}</p>
+            </div>
+          )
+        )}
         {tour && tour.chatRestriction !== "nochat" && (<MessageBox userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} userType={userType} statusChat={tour.chatRestriction} chatLanguage="ja" />)}
       </div>
       <DebugLogPanel />
