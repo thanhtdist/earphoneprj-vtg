@@ -1,14 +1,12 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import {
   getMeeting,
-  createMeeting,
   createAttendee,
   createAppInstanceUsers,
-  createChannel,
   addChannelMembership,
   startMeetingTranscription,
   getMeetingByTourId,
-  updateMeetingByTourId,
+  startOrJoinLiveSession,
 } from '../../apis/api';
 import {
   DefaultDeviceController,
@@ -197,19 +195,6 @@ function StartLiveSession() {
     }
   }
 
-  const createAppUserAndChannel = async (userID, userName) => {
-    const userArn = await createAppInstanceUsers(userID, userName);
-    console.log('Guide created:', userArn);
-    const channelArn = await createChannel(userArn);
-    const channelID = channelArn.split('/').pop();
-    await addChannelMembership(channelArn, userArn);
-    return {
-      userArn,
-      channelArn,
-      channelID,
-    };
-  }
-
   // Function to transform the audio input device to Voice Focus Device/Echo Reduction
   const transformVoiceFocusDevice = async (meeting, attendee, logger) => {
     let transformer = null;
@@ -369,209 +354,103 @@ function StartLiveSession() {
 
   }, []);
 
-  // Function to update MeetingId, Channel Id
-  const updateMeetingIdAndChannelId = async (data) => {
-    try {
-      const response = await updateMeetingByTourId(data);
-      console.log('updateMeetingByTourId response:', response);
-      if (response.statusCode === 200) {
-        console.log('Meeting updated successfully:', response.data);
-      } else {
-        console.error('Error updating meeting:', response.statusCode, response.data);
-      }
-    } catch (error) {
-      console.error('Error updating meeting:', error);
-    }
-  };
-
-  // Function to start a live audio session
-  const startLiveAduioSession = useCallback(async () => {
-    setIsLoading(true);
-    // Delete the cookie
-    JSONCookieUtils.deleteCookie("Main-Guide" + tourId);
-    console.log("Cookie deleted successfully!");
-    try {
-      const userID = uuidv4();
-      const userName = `Guide`;
-      const meeting = await createMeeting();
-      console.log('Meeting created:', meeting);
-      logMeetingTransition(null, meeting.MeetingId, 'tour had no meeting yet, created new');
-      const attendee = await createAttendee(meeting.MeetingId, `${userType}|${Date.now()}`);
-      console.log('Attendee created:', attendee);
-
-      // Initialize the meeting session such as meeting session - awaited so isSessionReady
-      // (set inside, once bind + start() actually finish) is not left stale behind the
-      // channel/tour setup below, which would otherwise show the mic control too early
-      await initializeMeetingSession(meeting, attendee, 'created');
-      const createAppUserAndChannelResponse = await createAppUserAndChannel(userID, userName);
-      console.log('ChannelID created:', createAppUserAndChannelResponse.channelID);
-      logChannelTransition(null, createAppUserAndChannelResponse.channelArn, 'tour had no channel yet, created new');
-      // Update table tour with the meetingId and channelId
-      const data = {
-        tourId: tourId,
-        meetingId: meeting.MeetingId,
-        channelId: createAppUserAndChannelResponse.channelID,
-      };
-      await updateMeetingIdAndChannelId(data);
-      //setUserId(userID);
-      setUserArn(createAppUserAndChannelResponse.userArn);
-      setChannelArn(createAppUserAndChannelResponse.channelArn);
-      //setChannelID(createAppUserAndChannelResponse.channelID);
-
-      // Storage the Guide information in the cookies
-      // Define your data
-      const mainGuide = {
-        meeting: meeting,
-        attendee: attendee,
-        userArn: createAppUserAndChannelResponse.userArn,
-        channelArn: createAppUserAndChannelResponse.channelArn,
-      };
-
-      // Set the JSON cookie for 1 day
-      JSONCookieUtils.setJSONCookie("Main-Guide" + tourId, mainGuide, 1);
-      console.log("Cookie set Main-Guide for 1 day!");
-
-    } catch (error) {
-      console.error('Error starting meeting:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [initializeMeetingSession, userType, tourId]);
-
-  // Function to join the meeting and the channel the tour already points at.
-  // Used when this browser has no usable cookie but the tour has a live session: another
-  // device is broadcasting, so this one has to join it rather than open a second one.
-  // Deliberately never calls updateMeetingIdAndChannelId - repointing the tour here is what
-  // orphaned every listener already connected, and createChannel is not called either, which
-  // is what used to strand the chat history in an abandoned channel.
-  const joinExistingSession = useCallback(async (meeting, channelId) => {
+  // Join a meeting + the tour's channel, given a Chime meeting object. Shared by every Guide
+  // entry path. Never repoints the tour and never creates a channel - the backend owns both
+  // (see startOrJoinLiveSession), so two Guide devices starting at once can no longer orphan
+  // each other (Issue 3). `reuseUserArn` keeps this browser's chat identity across a meeting
+  // expiry when it has one; otherwise a fresh 'Guide' identity is minted and joined to the channel.
+  const attachToMeeting = useCallback(async (meeting, channelId, reuseUserArn) => {
     setIsLoading(true);
     try {
       const attendee = await createAttendee(meeting.MeetingId, `${userType}|${Date.now()}`);
-      console.log('Attendee created for the existing meeting:', attendee);
+      console.log('Attendee created for the meeting:', attendee);
       await initializeMeetingSession(meeting, attendee, 'api');
 
-      // The channel comes from the tour record. This screen must not create a second one
+      // The channel always comes from the tour record; this screen must not create one.
       const channelArn = `${Config.appInstanceArn}/channel/${channelId}`;
-      // The name stays 'Guide', as createAppUserAndChannel sets it. Going through
-      // createAppUserAndJoinChannel instead would number it from the listAttendee index and
-      // start producing Guide2, Guide3 on every extra device
-      const userArn = await createAppInstanceUsers(uuidv4(), userType);
-      console.log('Guide created for the existing channel:', userArn);
-      await addChannelMembership(channelArn, userArn);
-
-      setUserArn(userArn);
-      setChannelArn(channelArn);
-
-      const mainGuide = {
-        meeting: meeting,
-        attendee: attendee,
-        userArn: userArn,
-        channelArn: channelArn,
-      };
-      JSONCookieUtils.setJSONCookie("Main-Guide" + tourId, mainGuide, 1);
-      console.log("joinExistingSession Cookie set Main-Guide for 1 day!");
-    } catch (error) {
-      console.error('Error joining the existing session:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [initializeMeetingSession, userType, tourId]);
-
-  // Function to rejoin a live audio session after the meeting has expired
-  const rejoinLiveAduioSession = useCallback(async (channelId) => {
-    console.log('rejoinLiveAduioSession tourId:', tourId);
-    setIsLoading(true);
-    // // Delete the cookie
-    // JSONCookieUtils.deleteCookie("Main-Guide");
-    //console.log("Cookie deleted successfully!");
-    // get the meeting and attendee information from the cookies
-    // const retrievedMainGuide = JSONCookieUtils.getJSONCookie("Main-Guide");
-    // console.log("Retrieved cookie:", retrievedMainGuide);
-    // if (!retrievedMainGuide) {
-    try {
-      const retrievedMainGuide = JSONCookieUtils.getJSONCookie("Main-Guide" + tourId);
-      console.log("Retrieved cookie:", retrievedMainGuide);
-
-      // The channel belongs to the tour, not to this browser. Reading it out of the cookie is
-      // what sent a device without one into startLiveAduioSession, which opened a second
-      // channel and left the chat history behind in the old one
-      if (!channelId) {
-        console.log("The tour has no channel yet, starting a fresh session...");
-        startLiveAduioSession();
-        return;
-      }
-      const channelArn = `${Config.appInstanceArn}/channel/${channelId}`;
-      //const userID = retrievedMainGuide.userArn.split('/').pop();
-      //const userName = `Guide`;
-      const meeting = await createMeeting();
-      console.log('Meeting created:', meeting);
-      logMeetingTransition(
-        retrievedMainGuide?.meeting?.MeetingId ?? null,
-        meeting.MeetingId,
-        'previous meeting expired in Chime, created a new one'
-      );
-      logChannelTransition(
-        retrievedMainGuide?.channelArn ?? null,
-        channelArn,
-        'channel is tied to the tour, not the meeting - reused across the expiry'
-      );
-      const attendee = await createAttendee(meeting.MeetingId, `${userType}|${Date.now()}`);
-      console.log('attendee', attendee);
-      //const attendee = retrievedMainGuide.attendee;
-      console.log('Attendee created:', attendee);
-
-      // Initialize the meeting session such as meeting session
-      await initializeMeetingSession(meeting, attendee, 'created');
-      // const createAppUserAndChannelResponse = await createAppUserAndChannel(userID, userName);
-      // console.log('ChannelID created:', createAppUserAndChannelResponse.channelID);
-      // Update table tour with the meetingId and channelId
-      console.log('rejoinLiveAduioSession.ChannelId', channelId);
-      console.log('rejoinLiveAduioSession.MeetingId', meeting.MeetingId);
-      // A new meeting, the same channel - the chat history survives the meeting expiring
-      const data = {
-        tourId: tourId,
-        meetingId: meeting.MeetingId,
-        channelId: channelId,
-      };
-      await updateMeetingIdAndChannelId(data);
-
-      // Reuse the chat identity when this browser has one, so the guide stays the same person
-      // in the channel across meetings. A browser arriving without a cookie needs a new one
-      let userArn = retrievedMainGuide?.userArn;
+      let userArn = reuseUserArn;
       if (!userArn) {
+        // Name stays 'Guide' so extra devices are not numbered Guide2/Guide3.
         userArn = await createAppInstanceUsers(uuidv4(), userType);
-        console.log('Guide created for the existing channel:', userArn);
+        console.log('Guide chat identity created for the channel:', userArn);
         await addChannelMembership(channelArn, userArn);
       }
 
-      // setUserId(userID);
       setUserArn(userArn);
       setChannelArn(channelArn);
 
-      // Storage the Guide information in the cookies
-      // Define your data
       const mainGuide = {
         meeting: meeting,
         attendee: attendee,
         userArn: userArn,
         channelArn: channelArn,
       };
-
-      // Delete the cookie
-      JSONCookieUtils.deleteCookie("Main-Guide" + tourId);
-      console.log("rejoinLiveAduioSession Cookie deleted successfully!");
-
-      // Set the JSON cookie for 1 day
       JSONCookieUtils.setJSONCookie("Main-Guide" + tourId, mainGuide, 1);
-      console.log("rejoinLiveAduioSession Cookie set Main-Guide for 1 day!");
-
+      console.log("attachToMeeting Cookie set Main-Guide for 1 day!");
     } catch (error) {
-      console.error('Error starting meeting:', error);
+      console.error('Error attaching to the meeting:', error);
     } finally {
       setIsLoading(false);
     }
-  }, [initializeMeetingSession, startLiveAduioSession, userType, tourId]);
+  }, [initializeMeetingSession, userType, tourId]);
+
+  // Ask the backend to atomically create-or-return the tour's meeting, then join it.
+  // `expectedMeetingId` is what this browser believes the tour points at: '' = no meeting yet
+  // (first start), or the id that just came back 404 from Chime (rejoin after expiry). The
+  // backend guarantees exactly one meeting is ever attached to the tour, even under simultaneous
+  // Guide starts (Issue 3): the loser is handed the winner's meeting to join.
+  const enterServerLiveSession = useCallback(async (expectedMeetingId, reuseUserArn) => {
+    setIsLoading(true);
+    try {
+      const resp = await startOrJoinLiveSession(tourId, expectedMeetingId);
+      if (resp?.statusCode !== 200 || !resp.data?.meetingId) {
+        console.error('startOrJoinLiveSession failed:', resp);
+        setIsLoading(false);
+        return;
+      }
+      const { meetingId, channelId, created } = resp.data;
+      logMeetingTransition(
+        expectedMeetingId || null,
+        meetingId,
+        created ? 'backend created the tour meeting' : "backend returned the tour's live meeting",
+      );
+      logChannelTransition(
+        null,
+        `${Config.appInstanceArn}/channel/${channelId}`,
+        'channel belongs to the tour and is owned by the backend',
+      );
+      const meetingResp = await getMeeting(meetingId);
+      if (meetingResp?.statusCode !== 200 || !meetingResp.data) {
+        console.error('getMeeting after startOrJoinLiveSession failed:', meetingResp);
+        setIsLoading(false);
+        return;
+      }
+      await attachToMeeting(meetingResp.data, channelId, reuseUserArn);
+    } catch (error) {
+      console.error('Error starting meeting:', error);
+      setIsLoading(false);
+    }
+  }, [tourId, attachToMeeting]);
+
+  // Start a live audio session - this browser knows of no live meeting for the tour.
+  const startLiveAduioSession = useCallback(() => {
+    JSONCookieUtils.deleteCookie("Main-Guide" + tourId);
+    return enterServerLiveSession('');
+  }, [tourId, enterServerLiveSession]);
+
+  // Join the meeting + channel the tour already points at (its meeting is confirmed alive).
+  const joinExistingSession = useCallback((meeting, channelId) => {
+    return attachToMeeting(meeting, channelId);
+  }, [attachToMeeting]);
+
+  // Rejoin after the tour's meeting has expired in Chime. `channelId` is kept for call-site
+  // compatibility but no longer used - the backend returns the tour's channel. The cookie's
+  // chat identity is reused so the guide stays the same person in the channel across the expiry.
+  const rejoinLiveAduioSession = useCallback((channelId, expiredMeetingId) => {
+    const retrievedMainGuide = JSONCookieUtils.getJSONCookie("Main-Guide" + tourId);
+    JSONCookieUtils.deleteCookie("Main-Guide" + tourId);
+    return enterServerLiveSession(expiredMeetingId || '', retrievedMainGuide?.userArn);
+  }, [tourId, enterServerLiveSession]);
 
   // useEffect(() => {
   //   if (meeting && channelID) {
@@ -1294,9 +1173,14 @@ function StartLiveSession() {
             console.log('checkAvailableMeeting:', checkAvailableMeetingResponse);
             console.log('checkAvailableMeeting statusCode:', checkAvailableMeetingResponse.statusCode);
             if (checkAvailableMeetingResponse.statusCode === 404) {
-              console.log("Meeting expired in AWS Chime, creating a new meeting, attendee and use same channel...");
+              console.log("Meeting expired in AWS Chime, asking the backend to recreate it for the tour...");
               //startLiveAduioSession();
-              rejoinLiveAduioSession(getMeetingByTourIdResponse.data.channelId);
+              // Pass the id that just came back 404 so the backend only recreates if the tour
+              // still points there (loses the race -> it hands back the winner's meeting instead).
+              rejoinLiveAduioSession(
+                getMeetingByTourIdResponse.data.channelId,
+                getMeetingByTourIdResponse.data.meetingId,
+              );
             } else if (checkAvailableMeetingResponse.statusCode === 200) {
               // Join the meeting again and set the meeting session in the state
               // const attendee = await createAttendee(getMeetingByTourIdResponse.data.meetingId, `${userType}|${Date.now()}`)

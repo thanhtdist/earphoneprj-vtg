@@ -408,6 +408,41 @@ export async function updateMeetingByTourId(data) {
 }
 
 /**
+ * Atomically attach a live meeting to a tour and get it back to join.
+ *
+ * The backend (update-meeting-by-tourid) does the get-or-create under a claim lock, so when
+ * several Guide devices call this at once only one creates the Chime meeting + channel and the
+ * others are handed that same meeting - fixing the "two Guides start simultaneously" race.
+ *
+ * @param {string} tourId
+ * @param {string} expectedMeetingId - '' when the tour should have no meeting yet (first start),
+ *   or the id that just came back 404 from Chime (rejoin after expiry).
+ * @returns {Promise<{statusCode:number, data?:{meetingId:string, channelId:string, created:boolean}}>}
+ */
+export async function startOrJoinLiveSession(tourId, expectedMeetingId = '') {
+  try {
+    const restOperation = put({
+      apiName: 'TourVTGRestApi',
+      path: `tours/${encodeURIComponent(tourId)}/meeting`, // endpoint defined in backend.ts
+      options: {
+        body: {
+          expectedMeetingId, // '' = expect no meeting; <id> = expect this now-expired id
+        },
+      },
+    });
+    const { body, statusCode } = await restOperation.response;
+    const response = await body.json();
+    return {
+      statusCode,
+      data: response.data,
+    };
+  } catch (error) {
+    console.log('PUT call startOrJoinLiveSession failed: ', error);
+    return { statusCode: error?.response?.statusCode ?? 500 };
+  }
+}
+
+/**
  * Get a meetingId by tourNumber and departureDate
  * @param {string} tourId - The ID of the tour.
  * @returns {Promise<any>} The response data from the API call.

@@ -1,80 +1,274 @@
 import type { APIGatewayProxyHandler } from 'aws-lambda';
 import AWS from 'aws-sdk';
+import { v4 as uuid } from 'uuid';
 import { Config } from '@configs/config';
 
 /**
- * This function updates an existing tour in AWS DynamoDB.
- * @param event - Contains the request body with tour details.
- * @returns Response with success message or error.
+ * Attach a live meeting to a tour, atomically.
+ *
+ * Two request shapes on the same route (PUT /tours/{TourID}/meeting):
+ *
+ *  1. Legacy setter  - body { meetingId, channelId, previousMeetingId? }
+ *     Kept for any out-of-band caller. Now a guarded (conditional) write, not a blind overwrite.
+ *
+ *  2. Get-or-create  - body { expectedMeetingId }
+ *     expectedMeetingId === ''    -> the tour should have no meeting yet (first Guide start)
+ *     expectedMeetingId === <id>  -> the tour should still point at this now-expired id (rejoin)
+ *
+ *     Only ONE concurrent caller creates the Chime meeting + channel: it takes a claim lock on
+ *     the tour item (meetingCreating / meetingCreatingAt), creates the resources, then commits
+ *     them. Every other caller polls the tour row and is handed the winner's meeting to join.
+ *     This is what closes the "two Guides start simultaneously" race (Issue 3).
  */
+
+const STALE_LOCK_MS = 20_000;   // a claim older than this is treated as abandoned
+const POLL_ATTEMPTS = 20;       // a losing caller waits POLL_ATTEMPTS * POLL_INTERVAL_MS for the winner
+const POLL_INTERVAL_MS = 500;
+
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+const respond = (statusCode: number, body: Record<string, unknown>) => ({
+  statusCode,
+  body: JSON.stringify(body),
+  headers: Config.headers,
+});
+
+// getMeeting resolves for a live meeting; Chime throws NotFoundException once it has expired.
+async function isMeetingAlive(chimeMeetings: AWS.ChimeSDKMeetings, meetingId: string): Promise<boolean> {
+  try {
+    await chimeMeetings.getMeeting({ MeetingId: meetingId }).promise();
+    return true;
+  } catch (err: any) {
+    if (err.code === 'NotFoundException' || err.name === 'NotFoundException' || err.statusCode === 404) {
+      return false;
+    }
+    throw err;
+  }
+}
+
 export const handler: APIGatewayProxyHandler = async (event) => {
-  // Initialize DynamoDB client
   const dynamoDB = new AWS.DynamoDB.DocumentClient({ region: Config.region });
+  const chimeMeetings = new AWS.ChimeSDKMeetings({ region: Config.region });
+  const chimeIdentity = new AWS.ChimeSDKIdentity({ region: Config.messageRegion });
+  const chimeMessaging = new AWS.ChimeSDKMessaging({ region: Config.messageRegion });
+
+  const TABLE = Config.dbTables.TOURS;
 
   try {
-
-    // Authenticate the user
-    // const authHeader = event.headers?.Authorization || '';
-    // console.log('Auth Header: ', authHeader);
-    // const user = await verifyAuth(authHeader);
-    // console.log('Authenticated User:', user);
     const tourId = event.pathParameters ? event.pathParameters.TourID : null;
-    // Parse body from API Gateway event
+    const body = JSON.parse(event.body || '{}');
     const {
       meetingId,
-      channelId
+      channelId,
+      previousMeetingId = '',
+      expectedMeetingId = '',
+    } = body;
 
-    } = JSON.parse(event.body || '{}');
+    console.log('update-meeting-by-tourid:', { tourId, meetingId, channelId, previousMeetingId, expectedMeetingId });
 
-    console.log('Updating tour with tourId: ', tourId, 'meetingId: ', meetingId, 'channelId: ', channelId);
-
-    // Input validation
-    if (!tourId || !meetingId || !channelId ) {
-      console.error('Invalid input: Missing required fields.', { tourId, meetingId, channelId });
-      return {
-        statusCode: 400,
-        body: JSON.stringify({ error: 'Invalid input: tourId, tourNumber, tourName, departureDate, returnDate are required.' }),
-        headers: Config.headers,
-      };
+    if (!tourId) {
+      return respond(400, { error: 'Invalid input: tourId is required.' });
     }
 
-    // Update the tour item in DynamoDB
-    const updateExpression = `
-      set meetingId = :meetingId,
-          channelId = :channelId
-    `;
+    // ---------- 1. Legacy setter branch ----------
+    if (meetingId && channelId) {
+      try {
+        await dynamoDB.update({
+          TableName: TABLE,
+          Key: { tourId },
+          UpdateExpression:
+            'set meetingId = :meetingId, channelId = :channelId remove meetingCreating, meetingCreatingAt',
+          ConditionExpression:
+            'attribute_not_exists(meetingId) OR meetingId = :previousMeetingId OR meetingId = :meetingId',
+          ExpressionAttributeValues: {
+            ':meetingId': meetingId,
+            ':channelId': channelId,
+            ':previousMeetingId': previousMeetingId,
+          },
+        }).promise();
+      } catch (err: any) {
+        if (err.code === 'ConditionalCheckFailedException') {
+          const current = await dynamoDB.get({
+            TableName: TABLE,
+            Key: { tourId },
+            ProjectionExpression: 'meetingId, channelId',
+          }).promise();
+          return respond(409, {
+            error: 'Tour meeting already set by another device',
+            data: {
+              meetingId: current.Item?.meetingId ?? null,
+              channelId: current.Item?.channelId ?? null,
+            },
+          });
+        }
+        throw err;
+      }
+      return respond(200, {
+        message: 'Tour updated successfully',
+        data: { tourId, meetingId, channelId },
+      });
+    }
 
-    const expressionAttributeValues = {
-      ':meetingId': meetingId,
-      ':channelId': channelId
-    };
+    // ---------- 2. Get-or-create branch ----------
+    const tourRes = await dynamoDB.get({ TableName: TABLE, Key: { tourId } }).promise();
+    if (!tourRes.Item) {
+      return respond(404, { error: 'Tour not found.' });
+    }
 
-    await dynamoDB.update({
-      TableName: Config.dbTables.TOURS,
-      Key: { tourId },
-      UpdateExpression: updateExpression,
-      ExpressionAttributeValues: expressionAttributeValues,
-    }).promise();
+    // What the caller believes the tour currently points at.
+    let expected: string = expectedMeetingId || '';
 
-    console.log('Tour successfully updated: ', { tourId, ...expressionAttributeValues });
+    // If the tour already names a meeting, is it still alive in Chime?
+    const currentMeetingId: string | undefined = tourRes.Item.meetingId;
+    if (currentMeetingId) {
+      if (await isMeetingAlive(chimeMeetings, currentMeetingId)) {
+        return respond(200, {
+          message: 'Tour meeting already live',
+          data: {
+            meetingId: currentMeetingId,
+            channelId: tourRes.Item.channelId ?? null,
+            created: false,
+          },
+        });
+      }
+      // Expired: we may replace it, but only if nobody has moved it since.
+      expected = currentMeetingId;
+    }
 
-    // Return success response
-    return {
-      statusCode: 200,
-      body: JSON.stringify({
-        message: "Tour updated successfully",
-        data: { tourId, ...expressionAttributeValues },
-      }),
-      headers: Config.headers,
-    };
+    // ---------- 2a. Claim the lock ----------
+    const reqId = uuid();
+    const now = Date.now();
+    try {
+      await dynamoDB.update({
+        TableName: TABLE,
+        Key: { tourId },
+        UpdateExpression: 'set meetingCreating = :reqId, meetingCreatingAt = :now',
+        ConditionExpression:
+          '(attribute_not_exists(meetingId) OR meetingId = :expected) AND ' +
+          '(attribute_not_exists(meetingCreating) OR meetingCreatingAt < :staleCutoff)',
+        ExpressionAttributeValues: {
+          ':reqId': reqId,
+          ':now': now,
+          ':expected': expected,
+          ':staleCutoff': now - STALE_LOCK_MS,
+        },
+      }).promise();
+    } catch (err: any) {
+      if (err.code !== 'ConditionalCheckFailedException') throw err;
+
+      // Lost the claim: another caller is creating (or just created) the meeting. Wait for it.
+      for (let i = 0; i < POLL_ATTEMPTS; i++) {
+        await sleep(POLL_INTERVAL_MS);
+        const poll = await dynamoDB.get({
+          TableName: TABLE,
+          Key: { tourId },
+          ProjectionExpression: 'meetingId, channelId',
+        }).promise();
+        const winnerMeetingId: string | undefined = poll.Item?.meetingId;
+        if (winnerMeetingId && winnerMeetingId !== expected) {
+          return respond(200, {
+            message: 'Joined the meeting created by another device',
+            data: {
+              meetingId: winnerMeetingId,
+              channelId: poll.Item?.channelId ?? null,
+              created: false,
+            },
+          });
+        }
+      }
+      return respond(409, { error: 'Timed out waiting for another device to create the meeting.' });
+    }
+
+    // ---------- 2b. Won the claim: create Chime resources, then commit ----------
+    try {
+      const meetingResp = await chimeMeetings.createMeeting({
+        ClientRequestToken: uuid(),
+        ExternalMeetingId: uuid(),
+        MediaRegion: Config.region,
+        MeetingFeatures: {
+          Audio: { EchoReduction: 'AVAILABLE' },
+          Video: { MaxResolution: 'None' },
+          Content: { MaxResolution: 'None' },
+        },
+      }).promise();
+      const newMeetingId = meetingResp.Meeting?.MeetingId;
+      if (!newMeetingId) throw new Error('Chime createMeeting returned no MeetingId');
+
+      const userResp = await chimeIdentity.createAppInstanceUser({
+        AppInstanceArn: Config.appInstanceArn,
+        AppInstanceUserId: uuid(),
+        ClientRequestToken: uuid(),
+        Name: 'Guide',
+        ExpirationSettings: {
+          ExpirationCriterion: 'CREATED_TIMESTAMP',
+          ExpirationDays: Config.appInstanceUserExpirationDays,
+        },
+      }).promise();
+      const ownerArn = userResp.AppInstanceUserArn;
+      if (!ownerArn) throw new Error('Chime createAppInstanceUser returned no ARN');
+
+      const channelResp = await chimeMessaging.createChannel({
+        AppInstanceArn: Config.appInstanceArn,
+        Name: 'LiveSession',
+        Mode: 'UNRESTRICTED',
+        Privacy: 'PUBLIC',
+        ClientRequestToken: uuid(),
+        ChimeBearer: ownerArn,
+        ExpirationSettings: {
+          ExpirationCriterion: 'LAST_MESSAGE_TIMESTAMP',
+          ExpirationDays: Config.channelExpirationDays,
+        },
+      }).promise();
+      const newChannelArn = channelResp.ChannelArn;
+      if (!newChannelArn) throw new Error('Chime createChannel returned no ChannelArn');
+      const newChannelId = newChannelArn.split('/').pop();
+
+      // Commit - only if we still hold the lock we took above.
+      try {
+        await dynamoDB.update({
+          TableName: TABLE,
+          Key: { tourId },
+          UpdateExpression:
+            'set meetingId = :m, channelId = :c remove meetingCreating, meetingCreatingAt',
+          ConditionExpression: 'meetingCreating = :reqId',
+          ExpressionAttributeValues: { ':m': newMeetingId, ':c': newChannelId, ':reqId': reqId },
+        }).promise();
+      } catch (err: any) {
+        if (err.code !== 'ConditionalCheckFailedException') throw err;
+        // Our lock was stolen on the stale-timeout and another caller committed first. Hand back
+        // their result; the meeting we just made is a harmless orphan (auto-expires when empty).
+        const current = await dynamoDB.get({
+          TableName: TABLE,
+          Key: { tourId },
+          ProjectionExpression: 'meetingId, channelId',
+        }).promise();
+        return respond(200, {
+          message: 'Another device committed first; joining its meeting',
+          data: {
+            meetingId: current.Item?.meetingId ?? null,
+            channelId: current.Item?.channelId ?? null,
+            created: false,
+          },
+        });
+      }
+
+      return respond(200, {
+        message: 'Tour meeting created',
+        data: { meetingId: newMeetingId, channelId: newChannelId, created: true },
+      });
+    } catch (err) {
+      // Creation failed after we took the lock - release it so the next caller can retry at once.
+      await dynamoDB.update({
+        TableName: TABLE,
+        Key: { tourId },
+        UpdateExpression: 'remove meetingCreating, meetingCreatingAt',
+        ConditionExpression: 'meetingCreating = :reqId',
+        ExpressionAttributeValues: { ':reqId': reqId },
+      }).promise().catch(() => { /* best effort */ });
+      throw err;
+    }
   } catch (error: any) {
-    console.error('Failed to update tour: ', { error, event });
-
-    // Return error response
-    return {
-      statusCode: error?.statusCode || 500,
-      body: JSON.stringify({ error: error.message || 'Internal Server Error' }),
-      headers: Config.headers,
-    };
+    console.error('Failed to update tour meeting: ', { error, event });
+    return respond(error?.statusCode || 500, { error: error.message || 'Internal Server Error' });
   }
 };
