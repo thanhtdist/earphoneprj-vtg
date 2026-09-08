@@ -45,6 +45,7 @@ import {
 import { isVoiceFocusDisabled, watchOutgoingAudio } from '../../utils/audioFlow';
 import { noteTourMeetingId, logMeetingIdentity, watchMeetingConnection, watchMeetingAttendees, logMicStartTiming, logListenStartTiming, logMeetingTransition } from '../../utils/meetingHealth';
 import { logChannelTransition } from '../../utils/chatHealth';
+import { watchGuidePresence } from '../../utils/guidePresence';
 import DebugLogPanel from '../common/DebugLogPanel';
 import useWakeLock from '../../hooks/useWakeLock';
 import useConnectWebSocket from '../../hooks/useConnectWebSocket';
@@ -98,6 +99,37 @@ function LiveSubSpeaker() {
   // reload - this overlay plus the poll below is also what recovers automatically once the
   // Guide actually starts
   const [showWaitingForGuide, setShowWaitingForGuide] = useState(false);
+
+  // Sheet 3, extended (same as the Listener screens): even once the meeting itself is
+  // confirmed live - getMeeting returns 200, the case the poll below handles - the main Guide
+  // meant to be broadcasting into it may not actually have joined yet (meetingId just written
+  // to the tour under the claim lock, but the Guide's own mic negotiation / attendee join
+  // still in flight), or may have dropped after this Sub-Guide joined. getMeeting cannot see
+  // that - see guidePresence.js. A short grace period avoids flashing the overlay for the
+  // sub-second gap between joining and the Guide's already-live attendee being reported, and
+  // for a brief Guide reconnect blip
+  const guideAbsentTimeoutRef = useRef(null);
+  const handleGuidePresenceChange = useCallback((isGuidePresent) => {
+    if (guideAbsentTimeoutRef.current) {
+      clearTimeout(guideAbsentTimeoutRef.current);
+      guideAbsentTimeoutRef.current = null;
+    }
+    if (isGuidePresent) {
+      setShowWaitingForGuide(false);
+      return;
+    }
+    guideAbsentTimeoutRef.current = setTimeout(() => {
+      guideAbsentTimeoutRef.current = null;
+      setShowWaitingForGuide(true);
+    }, 3000);
+  }, []);
+
+  useEffect(() => () => {
+    if (guideAbsentTimeoutRef.current) {
+      clearTimeout(guideAbsentTimeoutRef.current);
+    }
+  }, []);
+
   const audioRef = useRef(null);
   // Single state for the audio coming from the main guide, it replaces the
   // play and mute pair that both acted on the same audio element
@@ -247,9 +279,14 @@ function LiveSubSpeaker() {
 
     // Start audio video session
     meetingSession.audioVideo.start();
+    // Even with the meeting record live (getMeeting 200), the main Guide may not have joined
+    // the meeting yet - re-raises the waiting overlay until a Guide attendee is actually on
+    // the roster, same as the Listener screens. Sub-Guide's own presence is ignored: it is
+    // only the main Guide this waits for
+    watchGuidePresence(meetingSession, handleGuidePresenceChange);
     // Only now is the session actually usable - see isSessionReady's declaration
     setIsSessionReady(true);
-  }, []);
+  }, [handleGuidePresenceChange]);
 
   // EXPERIMENT: audio output selection is switched off, here and at the call site.
   // It only ever picked audioOutputDevices[0], which is the default the OS gives us anyway,
