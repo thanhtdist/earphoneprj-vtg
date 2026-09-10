@@ -1365,12 +1365,16 @@ function StartLiveSession() {
               </>
             )}
             {meetingSession && (<AudioUploadBox meetingSession={meetingSession} logger={logger} />)}
-            <AudioListenToggle
-              isListening={isListening}
-              toggleListening={toggleListening}
-              userType={userType}
-              t={t}
-            />
+            {/* "Listen to the sub-guide" - only useful when the tour actually runs a
+                sub-guide, so it is gated on the same flag as the sub-guide QR in Header */}
+            {tour?.subGuideFunctionAvailable && (
+              <AudioListenToggle
+                isListening={isListening}
+                toggleListening={toggleListening}
+                userType={userType}
+                t={t}
+              />
+            )}
           </>
         )}
         {/* Chatting before the guide has even joined doesn't make sense - there is no channel
