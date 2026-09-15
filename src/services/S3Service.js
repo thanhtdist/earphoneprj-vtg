@@ -61,6 +61,7 @@ export const generatePresignedUrl = async (file) => {
   } catch (error) {
     // Step 4: Handle errors
     console.error('Upload error:', error);
+    throw error;
   }
 };
 

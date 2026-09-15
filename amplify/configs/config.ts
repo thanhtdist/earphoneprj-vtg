@@ -41,6 +41,9 @@ export const Config = {
     cloudFrontDomain: 'https://d8d9ccu87krcw.cloudfront.net', // CloudFront domain for signed URLs
     viewPresignedS3UrlExpiration: 3 * 60 * 60 * 1000, // 3 hours in milliseconds
     uploadPresignedS3Expiration: 60 * 5, // 5 minutes in milliseconds
-    // .jpg, .jpeg, .png, .gif, .pdf
-    allowedFileTypes: ['image/jpeg', 'image/png', 'image/gif', 'application/pdf'], // Allowed file types for upload
+    // .jpg, .jpeg, .png, .gif, .pdf, .mp3, .mp4 (audio), .m4a, .aac, .wav
+    allowedFileTypes: [
+        'image/jpeg', 'image/png', 'image/gif', 'application/pdf',
+        'audio/mpeg', 'audio/mp4', 'audio/x-m4a', 'audio/aac', 'audio/wav', 'audio/x-wav',
+    ], // Allowed file types for upload (shared by chat attachments and the guide "Play voice" upload)
 };

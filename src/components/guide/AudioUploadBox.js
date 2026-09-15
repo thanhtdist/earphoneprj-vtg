@@ -1,8 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
 import { FaUpload, FaPlay, FaPause, FaTimes, FaFile } from "react-icons/fa";
 import "../../styles/AudioUploadBox.css";
-import { uploadFileToS3 } from '../../services/S3Service';
+import { generatePresignedUrl } from '../../services/S3Service';
+import { viewPresignedUrl } from '../../apis/api';
 import { useTranslation } from 'react-i18next';
+import { countStartAudioInput } from '../../utils/audioDiagnostics';
 
 const AudioUploadBox = ({ meetingSession, logger }) => {
     console.log('meetingSession zzzyyy:', meetingSession);
@@ -57,6 +59,14 @@ const AudioUploadBox = ({ meetingSession, logger }) => {
         };
     }, []);
 
+    // The bucket is private, so an uploaded file is only readable through a signed URL, and
+    // that URL expires. What is kept in state is the object key; the URL is asked for again
+    // whenever it is actually needed — the same contract ChatAttachment works under
+    const resolvePlayableUrl = async (fileKey) => {
+        const viewPresignedUrlResponse = await viewPresignedUrl({ fileKey });
+        return viewPresignedUrlResponse.data.url; // CloudFront signed URL
+    };
+
     const handleVoiceFileTypeChange = (e) => {
         setVoiceFileType(e.target.value);
         if (audioElementRef.current) {
@@ -83,13 +93,16 @@ const AudioUploadBox = ({ meetingSession, logger }) => {
             setUploading(true); // Start uploading
             // const fileURL = URL.createObjectURL(file);
             try {
-                // store attachment into S3
-                const uploadFileToS3Response = await uploadFileToS3(file);
-                console.log('Voice file uploaded successfully:', uploadFileToS3Response);
-                //const fileUrl = uploadFileToS3Response.Location;
+                // Store the voice file in S3 through a pre-signed URL: the browser PUTs it
+                // straight to the bucket and no AWS credential has to be shipped to it. The
+                // key comes from the backend, so two tours uploading the same file name no
+                // longer overwrite each other
+                const { key } = await generatePresignedUrl(file);
+                console.log('Voice file uploaded successfully, key:', key);
+                const url = await resolvePlayableUrl(key);
                 setAudioFiles((prevState) => ({
                     ...prevState,
-                    [voiceFileType]: { name: file.name, url: uploadFileToS3Response.Location },
+                    [voiceFileType]: { name: file.name, key, url },
                 }));
             } catch (error) {
                 console.error('An error occurred during the upload: ' + JSON.stringify(error));
@@ -119,9 +132,12 @@ const AudioUploadBox = ({ meetingSession, logger }) => {
     //   return gainNode;
     // };
 
-    const playVoiceAudio = async (fileUrl) => {
+    const playVoiceAudio = async (fileKey) => {
         try {
             if (!audioElementRef.current) {
+                // A fresh signed URL, not the one from the upload: a file uploaded at the
+                // start of a tour is played much later, by which time that one has expired
+                const fileUrl = await resolvePlayableUrl(fileKey);
                 // Create and configure the audio element
                 const audioElement = new Audio(fileUrl);
                 audioElement.crossOrigin = "anonymous";
@@ -170,7 +186,10 @@ const AudioUploadBox = ({ meetingSession, logger }) => {
                     console.log("MP3 stream: ", mp3Stream);
                     logger.info(`MP3 stream ID: ${mp3Stream.id}, Active: ${mp3Stream.active}`);
 
-                    // Start broadcasting the MP3 file to the Chime meeting
+                    // Start broadcasting the MP3 file to the Chime meeting.
+                    // Counted with the microphone starts on purpose: a meeting has one audio
+                    // input, so this replaces whatever the mic was sending
+                    countStartAudioInput(mp3Stream);
                     const startAudioInputResponse = await meetingSession.audioVideo.startAudioInput(mp3Stream);
                     console.log("MP3 startAudioInputResponse:", startAudioInputResponse);
                     logger.info(`MP3 startAudioInputResponse ID: ${startAudioInputResponse.id}, Active: ${startAudioInputResponse.active}`);
@@ -180,9 +199,11 @@ const AudioUploadBox = ({ meetingSession, logger }) => {
 
             // Play the audio for the users to hear
             await audioElementRef.current.play();
+            return true;
         } catch (error) {
             console.error("Error playing voice audio:", error);
             logger.error("Error playing voice audio:" + JSON.stringify(error));
+            return false;
         }
     };
 
@@ -199,8 +220,10 @@ const AudioUploadBox = ({ meetingSession, logger }) => {
                 console.log('MP3 audioElementRef:', audioElementRef.current);
                 console.log('MP3 audioContextRef:', audioContextRef.current);
                 console.log('MP3 mediaElementSourceRef:', mediaElementSourceRef.current);
-                await playVoiceAudio(currentAudioFile.url);
-                setIsPlaying(true);
+                // Only report playing when it started: signing the URL can fail, and a
+                // Pause button on an element that never played says the wrong thing
+                const started = await playVoiceAudio(currentAudioFile.key);
+                setIsPlaying(started);
             }
         }
     };
