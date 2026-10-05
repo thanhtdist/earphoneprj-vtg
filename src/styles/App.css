@@ -132,11 +132,6 @@ select {
   margin: 0 auto 16px;
 }
 
-.qr-print-url {
-  font-size: 12px;
-  word-break: break-all;
-}
-
 @media print {
   /* Chrome only omits its default header/footer (date, page title, URL, page
      number) when the page margin is exactly 0 — this is a browser print

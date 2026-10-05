@@ -142,7 +142,6 @@ const GenerateQRCode = ({ tourId, tourNumber = null, courseName = null, channelI
                         {templateQrImage && (
                             <img src={templateQrImage} alt="QR code" className="qr-print-code" />
                         )}
-                        <div className="qr-print-url">{urlToCopy}</div>
                     </div>,
                     document.body
                 )}
