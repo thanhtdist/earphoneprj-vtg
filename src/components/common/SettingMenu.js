@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { GrLanguage } from "react-icons/gr";
 import '../../i18n'; // Ensure i18n is initialized
 import '../../styles/SettingMenu.css'; // Import the CSS file
-import { getBaseLanguage, FALLBACK_UI_LANGUAGE } from '../../utils/constant';
+import { FALLBACK_UI_LANGUAGE } from '../../utils/constant';
 
 function SettingMenu() {
   const { t, i18n } = useTranslation();
@@ -82,12 +82,18 @@ function SettingMenu() {
                 className="notranslate"
                 translate="no"
                 onChange={handleLanguageChange}
-                // The base tag is used because a detected language may carry a region ("ja-JP"),
-                // which matches no option and leaves the selector blank
-                value={getBaseLanguage(i18n.language) || FALLBACK_UI_LANGUAGE}
+                // resolvedLanguage is the supported tag ("ja", "zh-TW"), while `language` may still
+                // carry a region ("ja-JP"), which matches no option and leaves the selector blank
+                value={i18n.resolvedLanguage || FALLBACK_UI_LANGUAGE}
               >
                 <option value="ja">日本語</option>
                 <option value="en">English</option>
+                <option value="ko">한국어</option>
+                <option value="es">Español</option>
+                <option value="fr">Français</option>
+                <option value="th">ไทย</option>
+                <option value="zh-CN">简体中文</option>
+                <option value="zh-TW">繁體中文</option>
               </select>
             </div>
           )}

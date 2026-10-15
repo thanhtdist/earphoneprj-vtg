@@ -28,7 +28,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { useTranslation } from 'react-i18next';
 import {
   SPEAK_VOICE_LANGUAGES_KEY,
-  getSpeakVoiceLanguages,
+  getVoiceLanguages,
   getBaseLanguage,
 } from '../../utils/constant';
 import Header from '../common/Header';
@@ -1290,7 +1290,7 @@ function StartLiveSession() {
                 just colored with the guide's page color instead of the listener's teal
                 (.guide-box-selected-language / .guide-selected-language in
                 StartLiveSession.css). UI-only for now - the picked language is not wired
-                into transcription or translation yet, see joinLiveSession / getSpeakVoiceLanguages */}
+                into transcription or translation yet, see joinLiveSession / getVoiceLanguages */}
             <div className="guide-box-selected-language">
               <h3 className='title-box'>{t('voiceLanguageLbl.speaking')}</h3>
               <div className="select-container">
@@ -1301,7 +1301,7 @@ function StartLiveSession() {
                   value={selectedSpeakLanguage}
                   onChange={(e) => setSelectedSpeakLanguage(e.target.value)}
                 >
-                  {getSpeakVoiceLanguages(i18n.language).map((language) => (
+                  {getVoiceLanguages(i18n.language).map((language) => (
                     <option key={`${getBaseLanguage(i18n.language)}-${language.key}`} value={language.key}>
                       {language.label}
                     </option>

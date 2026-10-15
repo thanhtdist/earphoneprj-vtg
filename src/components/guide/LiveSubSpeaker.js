@@ -33,7 +33,7 @@ import AudioMicControl from '../common/AudioMicControl';
 import AudioListenToggle from '../common/AudioListenToggle';
 import BroadcastStatusBar from '../common/BroadcastStatusBar';
 import { getUserStyle } from '../../utils/getUserStyle';
-import { SPEAK_VOICE_LANGUAGES_KEY, getSpeakVoiceLanguages, getBaseLanguage } from '../../utils/constant';
+import { SPEAK_VOICE_LANGUAGES_KEY, getVoiceLanguages, getBaseLanguage } from '../../utils/constant';
 import { audioInputFingerprint, audioInputIds, listAudioInputs, pickPreferredAudioInput } from '../../utils/audioInput';
 import { logBrowserSupport } from '../../utils/browserSupport';
 import {
@@ -1061,7 +1061,7 @@ function LiveSubSpeaker() {
                   value={selectedSpeakLanguage}
                   onChange={(e) => setSelectedSpeakLanguage(e.target.value)}
                 >
-                  {getSpeakVoiceLanguages(i18n.language).map((language) => (
+                  {getVoiceLanguages(i18n.language).map((language) => (
                     <option key={`${getBaseLanguage(i18n.language)}-${language.key}`} value={language.key}>
                       {language.label}
                     </option>

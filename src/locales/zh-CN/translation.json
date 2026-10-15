@@ -1,0 +1,102 @@
+{
+  "webTitle": "语音导游",
+  "startLiveBtn": "开始实时语音会话",
+  "joinBtn": "加入",
+  "loading": "请稍候...",
+  "guideNotStarted": "导游尚未开始，请稍候...",
+  "microChecking": "正在检查麦克风... 请稍候。",
+  "noMicroMsg": "您的麦克风目前被阻止。请在浏览器设置或本网站中启用麦克风权限后继续。",
+  "microSelectionLbl": "选择输入麦克风",
+  "startBtn": "开始",
+  "stopBtn": "停止",
+  "broadcastBox": {
+    "title": "使用麦克风广播",
+    "micLabel": "音频输入（麦克风）",
+    "startBtn": "开始广播",
+    "stopBtn": "停止广播",
+    "hint": "未在广播音频",
+    "liveHint": "正在广播音频",
+    "otherDeviceLive": "另一台设备正在广播"
+  },
+  "broadcastStatus": {
+    "idle": "未广播",
+    "live": "广播中"
+  },
+  "listenBox": {
+    "titleGuide": "收听副导游",
+    "titleSubGuide": "收听主导游",
+    "on": "开",
+    "off": "关"
+  },
+  "chatSettingLbl": "聊天使用限制",
+  "chatSettingOptions": {
+    "allChat": "所有人都可以聊天",
+    "onlyGuideChat": "仅导游可以聊天",
+    "noChat": "禁止聊天"
+  },
+  "generateQRCodeLbl": "分享二维码",
+  "generateQRCodeOptions": {
+    "subGuide": "副导游二维码",
+    "listener": "用户二维码"
+  },
+  "scanQRCodeTxt": {
+    "subGuide": "请让副导游使用智能手机<br>扫描此二维码",
+    "listener": "请让用户使用智能手机<br>扫描此二维码"
+  },
+  "messagePlaceholder": "输入消息...",
+  "userNameDisplay": {
+    "mainGuide": "导游",
+    "subGuide": "副导游",
+    "listener": "用户",
+    "myself": "我"
+  },
+  "languagesLbl": "语言",
+  "voiceLanguageLbl": {
+    "speaking": "选择语言",
+    "listening": "选择收听语言"
+  },
+  "playVoiceLbl": "广播音频文件",
+  "playVoiceOptions": {
+    "instruction": "语音文件 1",
+    "closingSpeech": "语音文件 2"
+  },
+  "playFileBtn": "播放文件",
+  "pauseFileBtn": "暂停",
+  "uploading": "上传中...",
+  "transcriptionTxt": "主持人说话的语言：",
+  "translationTxt": "我正在收听的语言：",
+  "transcriptions": "语音识别结果",
+  "translations": "翻译",
+  "chatPopup": {
+    "title": "聊天",
+    "statuslbl": "状态"
+  },
+  "chat": {
+    "showOriginal": "显示原文",
+    "hideOriginal": "隐藏原文"
+  },
+  "captureTranslations": "截取",
+  "headerSettings": {
+    "qrCodeListener": "用户<br>二维码",
+    "qrCodeSubGuide": "副导游<br>二维码",
+    "language": "语言设置"
+  },
+  "pageTitles": {
+    "guide": "导游",
+    "subGuide": "副导游"
+  },
+  "startGuidePage": {
+    "tourNumber": "旅行团编号",
+    "startDate": "开始日期",
+    "endDate": "结束日期",
+    "nextBtn": "下一步",
+    "courseName": "行程名称",
+    "tourConfirm": {
+      "isTourSetting": "1. 旅行团设置是否正确？",
+      "customerScanQRCode": "2. 请让客户在下一页扫描二维码",
+      "iUnderstand": "我已了解"
+    },
+    "startBtn": "开始导览",
+    "joinedGuide": "已有导游加入"
+  }
+}

@@ -1,0 +1,102 @@
+{
+  "webTitle": "음성 투어 가이드",
+  "startLiveBtn": "라이브 오디오 세션 시작",
+  "joinBtn": "참여",
+  "loading": "잠시만 기다려 주세요...",
+  "guideNotStarted": "가이드가 아직 시작하지 않았습니다. 잠시만 기다려 주세요...",
+  "microChecking": "마이크를 확인하는 중입니다... 잠시만 기다려 주세요.",
+  "noMicroMsg": "현재 마이크가 차단되어 있습니다. 계속하려면 브라우저 설정 또는 이 사이트에서 마이크 접근을 허용해 주세요.",
+  "microSelectionLbl": "입력 마이크 선택",
+  "startBtn": "시작",
+  "stopBtn": "중지",
+  "broadcastBox": {
+    "title": "마이크로 방송",
+    "micLabel": "오디오 입력(마이크)",
+    "startBtn": "방송 시작",
+    "stopBtn": "방송 중지",
+    "hint": "오디오가 방송되고 있지 않습니다",
+    "liveHint": "오디오가 방송 중입니다",
+    "otherDeviceLive": "다른 기기에서 방송 중입니다"
+  },
+  "broadcastStatus": {
+    "idle": "방송 안 함",
+    "live": "방송 중"
+  },
+  "listenBox": {
+    "titleGuide": "서브 가이드 듣기",
+    "titleSubGuide": "메인 가이드 듣기",
+    "on": "켜짐",
+    "off": "꺼짐"
+  },
+  "chatSettingLbl": "채팅 사용 제한",
+  "chatSettingOptions": {
+    "allChat": "모두 채팅 가능",
+    "onlyGuideChat": "가이드만 채팅 가능",
+    "noChat": "채팅 불가"
+  },
+  "generateQRCodeLbl": "QR 코드 공유",
+  "generateQRCodeOptions": {
+    "subGuide": "서브 가이드 QR 코드",
+    "listener": "사용자 QR 코드"
+  },
+  "scanQRCodeTxt": {
+    "subGuide": "서브 가이드에게 스마트폰으로<br>스캔하도록 요청하세요",
+    "listener": "사용자에게 스마트폰으로<br>스캔하도록 요청하세요"
+  },
+  "messagePlaceholder": "메시지를 입력하세요...",
+  "userNameDisplay": {
+    "mainGuide": "가이드",
+    "subGuide": "서브 가이드",
+    "listener": "사용자",
+    "myself": "나"
+  },
+  "languagesLbl": "언어",
+  "voiceLanguageLbl": {
+    "speaking": "언어 선택",
+    "listening": "듣기 언어 선택"
+  },
+  "playVoiceLbl": "오디오 파일 방송",
+  "playVoiceOptions": {
+    "instruction": "음성 파일 1",
+    "closingSpeech": "음성 파일 2"
+  },
+  "playFileBtn": "파일 재생",
+  "pauseFileBtn": "일시정지",
+  "uploading": "업로드 중...",
+  "transcriptionTxt": "호스트가 말하는 언어: ",
+  "translationTxt": "내가 듣는 언어:",
+  "transcriptions": "음성 인식 결과",
+  "translations": "번역",
+  "chatPopup": {
+    "title": "채팅",
+    "statuslbl": "상태"
+  },
+  "chat": {
+    "showOriginal": "원문 보기",
+    "hideOriginal": "원문 숨기기"
+  },
+  "captureTranslations": "캡처",
+  "headerSettings": {
+    "qrCodeListener": "사용자<br>QR 코드",
+    "qrCodeSubGuide": "서브 가이드<br>QR 코드",
+    "language": "언어 설정"
+  },
+  "pageTitles": {
+    "guide": "가이드",
+    "subGuide": "서브 가이드"
+  },
+  "startGuidePage": {
+    "tourNumber": "투어 번호",
+    "startDate": "시작일",
+    "endDate": "종료일",
+    "nextBtn": "다음 ",
+    "courseName": "코스 이름",
+    "tourConfirm": {
+      "isTourSetting": "1. 투어 설정이 올바른가요?",
+      "customerScanQRCode": "2. 다음 페이지에서 고객에게 QR 코드를 스캔하도록 안내해 주세요",
+      "iUnderstand": "이해했습니다"
+    },
+    "startBtn": "가이드 시작",
+    "joinedGuide": "이미 참여한 가이드가 있습니다"
+  }
+}

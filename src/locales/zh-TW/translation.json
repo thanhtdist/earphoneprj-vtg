@@ -1,0 +1,102 @@
+{
+  "webTitle": "語音導覽",
+  "startLiveBtn": "開始即時語音連線",
+  "joinBtn": "加入",
+  "loading": "請稍候...",
+  "guideNotStarted": "導遊尚未開始，請稍候...",
+  "microChecking": "正在檢查麥克風... 請稍候。",
+  "noMicroMsg": "您的麥克風目前遭到封鎖。請在瀏覽器設定或本網站中啟用麥克風存取權限後再繼續。",
+  "microSelectionLbl": "選擇輸入麥克風",
+  "startBtn": "開始",
+  "stopBtn": "停止",
+  "broadcastBox": {
+    "title": "使用麥克風廣播",
+    "micLabel": "音訊輸入（麥克風）",
+    "startBtn": "開始廣播",
+    "stopBtn": "停止廣播",
+    "hint": "未在廣播音訊",
+    "liveHint": "正在廣播音訊",
+    "otherDeviceLive": "另一台裝置正在廣播"
+  },
+  "broadcastStatus": {
+    "idle": "未廣播",
+    "live": "廣播中"
+  },
+  "listenBox": {
+    "titleGuide": "收聽副導遊",
+    "titleSubGuide": "收聽主導遊",
+    "on": "開",
+    "off": "關"
+  },
+  "chatSettingLbl": "聊天使用限制",
+  "chatSettingOptions": {
+    "allChat": "所有人皆可聊天",
+    "onlyGuideChat": "僅導遊可聊天",
+    "noChat": "禁止聊天"
+  },
+  "generateQRCodeLbl": "分享 QR 碼",
+  "generateQRCodeOptions": {
+    "subGuide": "副導遊 QR 碼",
+    "listener": "使用者 QR 碼"
+  },
+  "scanQRCodeTxt": {
+    "subGuide": "請副導遊使用智慧型手機<br>掃描此 QR 碼",
+    "listener": "請使用者使用智慧型手機<br>掃描此 QR 碼"
+  },
+  "messagePlaceholder": "輸入訊息...",
+  "userNameDisplay": {
+    "mainGuide": "導遊",
+    "subGuide": "副導遊",
+    "listener": "使用者",
+    "myself": "我"
+  },
+  "languagesLbl": "語言",
+  "voiceLanguageLbl": {
+    "speaking": "選擇語言",
+    "listening": "選擇收聽語言"
+  },
+  "playVoiceLbl": "廣播音訊檔案",
+  "playVoiceOptions": {
+    "instruction": "語音檔案 1",
+    "closingSpeech": "語音檔案 2"
+  },
+  "playFileBtn": "播放檔案",
+  "pauseFileBtn": "暫停",
+  "uploading": "上傳中...",
+  "transcriptionTxt": "主持人使用的語言：",
+  "translationTxt": "我正在收聽的語言：",
+  "transcriptions": "語音辨識結果",
+  "translations": "翻譯",
+  "chatPopup": {
+    "title": "聊天",
+    "statuslbl": "狀態"
+  },
+  "chat": {
+    "showOriginal": "顯示原文",
+    "hideOriginal": "隱藏原文"
+  },
+  "captureTranslations": "擷取",
+  "headerSettings": {
+    "qrCodeListener": "使用者<br>QR 碼",
+    "qrCodeSubGuide": "副導遊<br>QR 碼",
+    "language": "語言設定"
+  },
+  "pageTitles": {
+    "guide": "導遊",
+    "subGuide": "副導遊"
+  },
+  "startGuidePage": {
+    "tourNumber": "旅遊團編號",
+    "startDate": "開始日期",
+    "endDate": "結束日期",
+    "nextBtn": "下一步",
+    "courseName": "行程名稱",
+    "tourConfirm": {
+      "isTourSetting": "1. 旅遊團設定是否正確？",
+      "customerScanQRCode": "2. 請讓客戶在下一頁掃描 QR 碼",
+      "iUnderstand": "我已了解"
+    },
+    "startBtn": "開始導覽",
+    "joinedGuide": "已有導遊加入"
+  }
+}

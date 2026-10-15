@@ -1,0 +1,102 @@
+{
+  "webTitle": "ไกด์นำเที่ยวด้วยเสียง",
+  "startLiveBtn": "เริ่มเซสชันเสียงสด",
+  "joinBtn": "เข้าร่วม",
+  "loading": "กรุณารอสักครู่...",
+  "guideNotStarted": "ไกด์ยังไม่เริ่ม กรุณารอสักครู่...",
+  "microChecking": "กำลังตรวจสอบไมโครโฟน... กรุณารอสักครู่",
+  "noMicroMsg": "ไมโครโฟนของคุณถูกบล็อกอยู่ในขณะนี้ กรุณาเปิดการเข้าถึงไมโครโฟนในการตั้งค่าเบราว์เซอร์หรือในเว็บไซต์นี้เพื่อดำเนินการต่อ",
+  "microSelectionLbl": "เลือกไมโครโฟนที่ใช้รับเสียง",
+  "startBtn": "เริ่ม",
+  "stopBtn": "หยุด",
+  "broadcastBox": {
+    "title": "ถ่ายทอดเสียงด้วยไมโครโฟน",
+    "micLabel": "อินพุตเสียง (ไมโครโฟน)",
+    "startBtn": "เริ่มถ่ายทอดเสียง",
+    "stopBtn": "หยุดถ่ายทอดเสียง",
+    "hint": "ไม่ได้กำลังถ่ายทอดเสียง",
+    "liveHint": "กำลังถ่ายทอดเสียง",
+    "otherDeviceLive": "อุปกรณ์อื่นกำลังถ่ายทอดเสียงอยู่"
+  },
+  "broadcastStatus": {
+    "idle": "ไม่ได้ถ่ายทอดเสียง",
+    "live": "กำลังถ่ายทอดเสียง"
+  },
+  "listenBox": {
+    "titleGuide": "ฟังไกด์ย่อย",
+    "titleSubGuide": "ฟังไกด์หลัก",
+    "on": "เปิด",
+    "off": "ปิด"
+  },
+  "chatSettingLbl": "ข้อจำกัดการใช้แชท",
+  "chatSettingOptions": {
+    "allChat": "ทุกคนแชทได้",
+    "onlyGuideChat": "เฉพาะไกด์เท่านั้นที่แชทได้",
+    "noChat": "ปิดแชท"
+  },
+  "generateQRCodeLbl": "แชร์คิวอาร์โค้ด",
+  "generateQRCodeOptions": {
+    "subGuide": "คิวอาร์โค้ดไกด์ย่อย",
+    "listener": "คิวอาร์โค้ดผู้ใช้"
+  },
+  "scanQRCodeTxt": {
+    "subGuide": "ขอให้ไกด์ย่อยสแกนคิวอาร์โค้ดนี้<br>ด้วยสมาร์ทโฟนของตน",
+    "listener": "ขอให้ผู้ใช้สแกนคิวอาร์โค้ดนี้<br>ด้วยสมาร์ทโฟนของตน"
+  },
+  "messagePlaceholder": "พิมพ์ข้อความ...",
+  "userNameDisplay": {
+    "mainGuide": "ไกด์",
+    "subGuide": "ไกด์ย่อย",
+    "listener": "ผู้ใช้",
+    "myself": "คุณ"
+  },
+  "languagesLbl": "ภาษา",
+  "voiceLanguageLbl": {
+    "speaking": "เลือกภาษา",
+    "listening": "เลือกภาษาที่ต้องการฟัง"
+  },
+  "playVoiceLbl": "ถ่ายทอดไฟล์เสียง",
+  "playVoiceOptions": {
+    "instruction": "ไฟล์เสียง 1",
+    "closingSpeech": "ไฟล์เสียง 2"
+  },
+  "playFileBtn": "เล่นไฟล์",
+  "pauseFileBtn": "หยุดชั่วคราว",
+  "uploading": "กำลังอัปโหลด...",
+  "transcriptionTxt": "โฮสต์กำลังพูดภาษา ",
+  "translationTxt": "ฉันกำลังฟังภาษา",
+  "transcriptions": "การถอดเสียง",
+  "translations": "การแปล",
+  "chatPopup": {
+    "title": "แชท",
+    "statuslbl": "สถานะ"
+  },
+  "chat": {
+    "showOriginal": "แสดงต้นฉบับ",
+    "hideOriginal": "ซ่อนต้นฉบับ"
+  },
+  "captureTranslations": "บันทึกภาพ",
+  "headerSettings": {
+    "qrCodeListener": "คิวอาร์โค้ด<br>ผู้ใช้",
+    "qrCodeSubGuide": "คิวอาร์โค้ด<br>ไกด์ย่อย",
+    "language": "ตั้งค่าภาษา"
+  },
+  "pageTitles": {
+    "guide": "ไกด์",
+    "subGuide": "ไกด์ย่อย"
+  },
+  "startGuidePage": {
+    "tourNumber": "หมายเลขทัวร์",
+    "startDate": "วันที่เริ่ม",
+    "endDate": "วันที่สิ้นสุด",
+    "nextBtn": "ถัดไป ",
+    "courseName": "ชื่อคอร์ส",
+    "tourConfirm": {
+      "isTourSetting": "1. การตั้งค่าทัวร์ถูกต้องหรือไม่?",
+      "customerScanQRCode": "2. กรุณาให้ลูกค้าสแกนคิวอาร์โค้ดในหน้าถัดไป",
+      "iUnderstand": "เข้าใจแล้ว"
+    },
+    "startBtn": "เริ่มไกด์",
+    "joinedGuide": "มีไกด์ที่เข้าร่วมแล้ว"
+  }
+}

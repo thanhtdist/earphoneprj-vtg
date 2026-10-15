@@ -21,7 +21,7 @@ import JSONCookieUtils from '../../utils/JSONCookieUtils';
 import { checkAvailableMeeting } from '../../utils/MeetingUtils';
 import { v4 as uuidv4 } from 'uuid';
 import { useTranslation } from 'react-i18next';
-import { getBaseLanguage, getListenVoiceLanguages, getDefaultListenVoiceLanguageKey, getChatLanguageCode } from '../../utils/constant';
+import { getBaseLanguage, getVoiceLanguages, getDefaultListenVoiceLanguageKey, getChatLanguageCode } from '../../utils/constant';
 import Header from '../common/Header';
 import MessageBox from '../chat/MessageBox';
 import { useParams } from "react-router-dom";
@@ -418,6 +418,8 @@ function MultiLangAudio() {
     switch (lang) {
       case 'cmn-CN':
         return 'zh'; // Simplified Chinese
+      case 'cmn-TW':
+        return 'zh-TW'; // Traditional Chinese
       case 'ko-KR':
         return 'ko'; // Korean
       case 'es-ES':
@@ -983,7 +985,7 @@ function MultiLangAudio() {
                 value={selectedVoiceLanguage}
                 onChange={handleSelectedVoiceLanguageChange}
               >
-                {getListenVoiceLanguages(i18n.language).map((language) => (
+                {getVoiceLanguages(i18n.language).map((language) => (
                   // The UI language is part of the key, so switching the label set remounts the
                   // option instead of patching a text node the translator may have replaced
                   <option key={`${getBaseLanguage(i18n.language)}-${language.key}`} value={language.key}>

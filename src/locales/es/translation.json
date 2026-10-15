@@ -1,0 +1,102 @@
+{
+  "webTitle": "Guía de Tour por Voz",
+  "startLiveBtn": "Iniciar una sesión de audio en vivo",
+  "joinBtn": "Unirse",
+  "loading": "Espere, por favor...",
+  "guideNotStarted": "El guía aún no ha comenzado, espere por favor...",
+  "microChecking": "Comprobando el micrófono... Espere, por favor.",
+  "noMicroMsg": "El micrófono está bloqueado actualmente. Para continuar, habilite el acceso al micrófono en la configuración del navegador o en este sitio.",
+  "microSelectionLbl": "Seleccionar micrófono de entrada",
+  "startBtn": "Iniciar",
+  "stopBtn": "Detener",
+  "broadcastBox": {
+    "title": "Transmitir con el micrófono",
+    "micLabel": "Entrada de audio (micrófono)",
+    "startBtn": "Iniciar transmisión",
+    "stopBtn": "Detener transmisión",
+    "hint": "El audio no se está transmitiendo",
+    "liveHint": "El audio se está transmitiendo",
+    "otherDeviceLive": "Otro dispositivo está transmitiendo"
+  },
+  "broadcastStatus": {
+    "idle": "Sin transmitir",
+    "live": "Transmitiendo"
+  },
+  "listenBox": {
+    "titleGuide": "Escuchar al subguía",
+    "titleSubGuide": "Escuchar al guía principal",
+    "on": "Activado",
+    "off": "Desactivado"
+  },
+  "chatSettingLbl": "Restricciones de uso del chat",
+  "chatSettingOptions": {
+    "allChat": "Todos pueden chatear",
+    "onlyGuideChat": "Solo el guía puede chatear",
+    "noChat": "Sin chat"
+  },
+  "generateQRCodeLbl": "Compartir código QR",
+  "generateQRCodeOptions": {
+    "subGuide": "Código QR del subguía",
+    "listener": "Código QR del usuario"
+  },
+  "scanQRCodeTxt": {
+    "subGuide": "Pida al subguía que escanee esto<br>con su teléfono",
+    "listener": "Pida al usuario que escanee esto<br>con su teléfono"
+  },
+  "messagePlaceholder": "Escriba un mensaje...",
+  "userNameDisplay": {
+    "mainGuide": "Guía",
+    "subGuide": "Subguía",
+    "listener": "Usuario",
+    "myself": "Tú"
+  },
+  "languagesLbl": "Idioma",
+  "voiceLanguageLbl": {
+    "speaking": "Seleccione un idioma",
+    "listening": "Seleccione un idioma para escuchar"
+  },
+  "playVoiceLbl": "Transmitir un archivo de audio",
+  "playVoiceOptions": {
+    "instruction": "Archivo de voz 1",
+    "closingSpeech": "Archivo de voz 2"
+  },
+  "playFileBtn": "Reproducir archivo",
+  "pauseFileBtn": "Pausa",
+  "uploading": "Subiendo...",
+  "transcriptionTxt": "El anfitrión habla en ",
+  "translationTxt": "Estoy escuchando en",
+  "transcriptions": "Transcripciones",
+  "translations": "Traducciones",
+  "chatPopup": {
+    "title": "Chat",
+    "statuslbl": "Estado"
+  },
+  "chat": {
+    "showOriginal": "Mostrar original",
+    "hideOriginal": "Ocultar original"
+  },
+  "captureTranslations": "Capturar",
+  "headerSettings": {
+    "qrCodeListener": "Código QR<br>del usuario",
+    "qrCodeSubGuide": "Código QR<br>del subguía",
+    "language": "Configuración de idioma"
+  },
+  "pageTitles": {
+    "guide": "Guía",
+    "subGuide": "Subguía"
+  },
+  "startGuidePage": {
+    "tourNumber": "Número de tour",
+    "startDate": "Fecha de inicio",
+    "endDate": "Fecha de fin",
+    "nextBtn": "Siguiente ",
+    "courseName": "Nombre del curso",
+    "tourConfirm": {
+      "isTourSetting": "1. ¿Es correcta la configuración del tour?",
+      "customerScanQRCode": "2. Pida al cliente que escanee el código QR en la página siguiente",
+      "iUnderstand": "Entendido"
+    },
+    "startBtn": "Iniciar la guía",
+    "joinedGuide": "Ya se han unido guías"
+  }
+}
