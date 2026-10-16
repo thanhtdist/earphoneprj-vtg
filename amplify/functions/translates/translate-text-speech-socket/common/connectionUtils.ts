@@ -28,6 +28,13 @@ export async function updateConnectionHistoryAndBroadcast(
   const subGuideCount = connections.filter(c => c.userType === 'Sub-Guide').length;
   const userCount = connections.filter(c => c.userType === 'User').length;
 
+  // The language the Guide speaks now, so that the Sub-Guide and the listeners know what is spoken.
+  // With several Guide devices connected, the one connected last wins. null while no Guide is connected
+  const guideConnection = connections
+    .filter(c => c.userType === 'Guide')
+    .sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt)))[0];
+  const guideLanguage = guideConnection?.languageCode ?? null;
+
   await dynamoDB
     .put({
       TableName: Config.dbTables.CONNECTION_HISTORY,
@@ -55,6 +62,7 @@ export async function updateConnectionHistoryAndBroadcast(
     guideCount,
     subGuideCount,
     userCount,
+    guideLanguage,
   };
 
   await Promise.all(

@@ -23,6 +23,7 @@ import { listAttendee } from './functions/meetings/list-attendee/resource';
 // import { listAppInstanceUser } from './functions/list-app-instance-user/resource';
 import { addCloudWatchLogs } from './functions/cloudwatchlogs/add-cloud-watch-logs/resource';
 import { startMeetingTranscription } from './functions/meetings/start-meeting-transcription/resource';
+import { stopMeetingTranscription } from './functions/meetings/stop-meeting-transcription/resource';
 import { translateText } from './functions/translates/translate-text/resource';
 import { createTour } from './functions/tours/create-tour/resource';
 import { createAdmin } from './functions/users/create-admin/resource';
@@ -70,6 +71,7 @@ const backend = defineBackend({
   //listAppInstanceUser, // list app instance user for chat by the participants
   addCloudWatchLogs, // send logs to cloud watch
   startMeetingTranscription, // start meeting transcription
+  stopMeetingTranscription, // stop meeting transcription (before starting it again with another language)
   translateText, // translate text only, no speech (chat message translation)
   createTour, // create tour by the admin
   getTour, // get tour by tourID
@@ -148,8 +150,14 @@ attendeesPath.addMethod("GET", new LambdaIntegration(
 ));
 
 // add POST method to /meeting/{MeetingID}/transcription with startMeetingTranscription Lambda integration
-meetingIdPath.addResource("transcription").addMethod("POST", new LambdaIntegration(
+const transcriptionPath = meetingIdPath.addResource("transcription");
+transcriptionPath.addMethod("POST", new LambdaIntegration(
   backend.startMeetingTranscription.resources.lambda
+));
+
+// add POST method to /meeting/{MeetingID}/transcription/stop with stopMeetingTranscription Lambda integration
+transcriptionPath.addResource("stop").addMethod("POST", new LambdaIntegration(
+  backend.stopMeetingTranscription.resources.lambda
 ));
 
 // =============2. API Getway, Lambda function for CHAT ===============
