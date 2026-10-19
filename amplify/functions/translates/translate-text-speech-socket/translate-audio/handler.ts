@@ -16,7 +16,9 @@ const GOOGLE_TTS_LANGUAGES: Record<string, { languageCode: string; name: string 
 
 const getVoiceId = (lang: string): string => {
   switch (lang) {
-    case 'ja-JP': return 'Mizuki';
+    // Amazon Translate code ('ja-JP' is not one): now that the Guide can speak any language, Japanese
+    // listeners can also be a translation target and must not fall back to the English voice
+    case 'ja': return 'Mizuki';
     case 'en-US': return 'Joanna';
     case 'ko': return 'Seoyeon';
     case 'es': return 'Lucia';

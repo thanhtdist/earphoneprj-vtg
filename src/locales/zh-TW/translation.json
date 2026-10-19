@@ -4,6 +4,7 @@
   "joinBtn": "加入",
   "loading": "請稍候...",
   "guideNotStarted": "導遊尚未開始，請稍候...",
+  "notFoundPage": "404 - 找不到頁面",
   "microChecking": "正在檢查麥克風... 請稍候。",
   "noMicroMsg": "您的麥克風目前遭到封鎖。請在瀏覽器設定或本網站中啟用麥克風存取權限後再繼續。",
   "microSelectionLbl": "選擇輸入麥克風",
@@ -63,6 +64,11 @@
   "playFileBtn": "播放檔案",
   "pauseFileBtn": "暫停",
   "uploading": "上傳中...",
+  "audioUpload": {
+    "unsupportedType": "不支援的檔案類型 {{type}}。請上傳音訊檔案。",
+    "fileTooLarge": "檔案大小超過 {{size}} MB。請上傳較小的檔案。",
+    "uploadFailed": "上傳時發生錯誤。請再試一次。"
+  },
   "transcriptionTxt": "主持人使用的語言：",
   "translationTxt": "我正在收聽的語言：",
   "transcriptions": "語音辨識結果",
@@ -97,6 +103,9 @@
       "iUnderstand": "我已了解"
     },
     "startBtn": "開始導覽",
-    "joinedGuide": "已有導遊加入"
+    "joinedGuide": "已有導遊加入",
+    "tourNotFound": "找不到旅遊團",
+    "tourNumberRequired": "請輸入旅遊團編號。",
+    "startDateRequired": "請輸入開始日期。"
   }
 }

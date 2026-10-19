@@ -60,10 +60,9 @@ export const getDefaultListenVoiceLanguageKey = (uiLanguage) => {
 // message Metadata so late joiners and readers who switch language get them without re-calling
 // Translate.
 
-// Voice-language selector key ("th-TH", "cmn-CN", "ja-JP"...) -> Amazon Translate code.
-// Mirrors getNormalizedLanguageCode in MultiLangAudio.js but also folds "ja-JP"/"en-US" to the
-// bare tag Amazon Translate expects.
-export const CHAT_LANGUAGE_BY_VOICE_KEY = {
+// Voice-language selector key ("th-TH", "cmn-CN", "ja-JP"...) -> Amazon Translate code
+// ("ja-JP"/"en-US" are folded to the bare tag Amazon Translate expects).
+export const LANGUAGE_BY_VOICE_KEY = {
     "ja-JP": "ja",
     "en-US": "en",
     "cmn-CN": "zh",
@@ -75,8 +74,22 @@ export const CHAT_LANGUAGE_BY_VOICE_KEY = {
 }
 
 // Amazon Translate code for a reader given their voice-language key (falls back to the base tag).
-export const getChatLanguageCode = (voiceLanguageKey) =>
-    CHAT_LANGUAGE_BY_VOICE_KEY[voiceLanguageKey] || getBaseLanguage(voiceLanguageKey)
+// Also the code of the Guide's source language, to compare it with the one of a listener
+export const getLanguageCode = (voiceLanguageKey) =>
+    LANGUAGE_BY_VOICE_KEY[voiceLanguageKey] || getBaseLanguage(voiceLanguageKey)
+
+// Language the Guide is taken to speak until the server says otherwise, as an Amazon Translate code
+export const DEFAULT_GUIDE_LANGUAGE_CODE = getLanguageCode(SPEAK_VOICE_LANGUAGES_KEY)
+
+// Amazon Transcribe code of a voice-language key, among the ones Chime accepts ("zh-TW" and "es-ES" are not:
+// both Chinese keys are the same spoken Mandarin)
+const TRANSCRIBE_CODE_BY_VOICE_KEY = {
+    "cmn-CN": "zh-CN",
+    "cmn-TW": "zh-CN",
+    "es-ES": "es-US",
+}
+export const getTranscribeLanguageCode = (voiceLanguageKey) =>
+    TRANSCRIBE_CODE_BY_VOICE_KEY[voiceLanguageKey] || voiceLanguageKey
 
 // Every language chat can be read in - the voice languages, as Amazon Translate codes.
 // The source language is auto-detected rather than assumed from the sender's chat language (a
@@ -84,7 +97,7 @@ export const getChatLanguageCode = (voiceLanguageKey) =>
 // message costs one Translate call per entry here - the entry matching the detected source is
 // dropped from the stored translations afterwards.
 export const CHAT_TRANSLATION_LANGUAGES = [
-    ...new Set(VOICE_LANGUAGE_KEYS.map((key) => getChatLanguageCode(key))),
+    ...new Set(VOICE_LANGUAGE_KEYS.map((key) => getLanguageCode(key))),
 ]
 
 //Text To Speech (TTS) engine

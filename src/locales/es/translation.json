@@ -4,6 +4,7 @@
   "joinBtn": "Unirse",
   "loading": "Espere, por favor...",
   "guideNotStarted": "El guía aún no ha comenzado, espere por favor...",
+  "notFoundPage": "404 - Página no encontrada",
   "microChecking": "Comprobando el micrófono... Espere, por favor.",
   "noMicroMsg": "El micrófono está bloqueado actualmente. Para continuar, habilite el acceso al micrófono en la configuración del navegador o en este sitio.",
   "microSelectionLbl": "Seleccionar micrófono de entrada",
@@ -63,6 +64,11 @@
   "playFileBtn": "Reproducir archivo",
   "pauseFileBtn": "Pausa",
   "uploading": "Subiendo...",
+  "audioUpload": {
+    "unsupportedType": "Tipo de archivo no compatible: {{type}}. Suba un archivo de audio.",
+    "fileTooLarge": "El tamaño del archivo supera los {{size}} MB. Suba un archivo más pequeño.",
+    "uploadFailed": "Se produjo un error durante la subida. Inténtelo de nuevo."
+  },
   "transcriptionTxt": "El anfitrión habla en ",
   "translationTxt": "Estoy escuchando en",
   "transcriptions": "Transcripciones",
@@ -97,6 +103,9 @@
       "iUnderstand": "Entendido"
     },
     "startBtn": "Iniciar la guía",
-    "joinedGuide": "Ya se han unido guías"
+    "joinedGuide": "Ya se han unido guías",
+    "tourNotFound": "No se encontró el tour",
+    "tourNumberRequired": "Introduzca el número de tour.",
+    "startDateRequired": "Introduzca la fecha de inicio."
   }
 }

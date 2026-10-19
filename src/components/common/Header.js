@@ -41,9 +41,8 @@ function Header({ tourId, count = null, userType = null, subGuideFunctionAvailab
     const qrColor = isSubGuideQR ? QR_COLORS.subSpeaker : QR_COLORS.listener;
     const qrValue = isSubGuideQR ? `${appUrl.subGuide}/${tourId}` : `${appUrl.viewer}/${tourId}`;
 
-    // Most screens pass the per-role breakdown as an object; LiveViewerJa still
-    // passes a plain number (it counts Chime attendees, not the WebSocket), so
-    // keep both shapes working.
+    // Screens pass the per-role breakdown as an object once the WebSocket reports it,
+    // but start from a plain 0 before that, so keep both shapes working.
     const isBreakdown = count !== null && typeof count === 'object';
     const total = isBreakdown ? count.total : count;
 

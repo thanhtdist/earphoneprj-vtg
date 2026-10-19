@@ -21,7 +21,7 @@ import JSONCookieUtils from '../../utils/JSONCookieUtils';
 import { checkAvailableMeeting } from '../../utils/MeetingUtils';
 import { v4 as uuidv4 } from 'uuid';
 import { useTranslation } from 'react-i18next';
-import { getBaseLanguage, getVoiceLanguages, getDefaultListenVoiceLanguageKey, getChatLanguageCode } from '../../utils/constant';
+import { getBaseLanguage, getVoiceLanguages, getDefaultListenVoiceLanguageKey, getLanguageCode, DEFAULT_GUIDE_LANGUAGE_CODE } from '../../utils/constant';
 import Header from '../common/Header';
 import MessageBox from '../chat/MessageBox';
 import { useParams } from "react-router-dom";
@@ -84,6 +84,10 @@ function MultiLangAudio() {
   const [selectedVoiceLanguage, setSelectedVoiceLanguage] = useState(
     getDefaultListenVoiceLanguageKey(i18n.language)
   );
+  // The language the Guide speaks (guideLanguage from the server), Japanese until the server says otherwise
+  const [guideLanguage, setGuideLanguage] = useState(DEFAULT_GUIDE_LANGUAGE_CODE);
+  // Read by initializeMeetingSession, which must not be recreated when it changes
+  const isLiveAudioRef = useRef(true);
   const [chatRestriction, setChatRestriction] = useState(null);
   const userID = uuidv4();
   const userType = 'User';
@@ -157,8 +161,8 @@ function MultiLangAudio() {
     // EXPERIMENT: audio output is left to the OS — see the commented-out selectSpeaker below
     // await selectSpeaker(session);
     console.log('Audio output left to the OS (selectSpeaker disabled)');
-    if (selectedVoiceLanguage === 'ja-JP') {
-      console.log('Selected voice language is Japanese', selectedVoiceLanguage);
+    if (isLiveAudioRef.current) {
+      console.log('The listener language is the one the Guide speaks, live audio:', selectedVoiceLanguage);
       //const audioElement = document.getElementById('audioElementListener');
       const audioElement = audioElementRef.current;
       console.log('Check audioElement:', audioElement);
@@ -413,26 +417,6 @@ function MultiLangAudio() {
     // };
   }, [meetingSession]);
 
-  // Normalize language code for translation if needed
-  const getNormalizedLanguageCode = (lang) => {
-    switch (lang) {
-      case 'cmn-CN':
-        return 'zh'; // Simplified Chinese
-      case 'cmn-TW':
-        return 'zh-TW'; // Traditional Chinese
-      case 'ko-KR':
-        return 'ko'; // Korean
-      case 'es-ES':
-        return 'es'; // Spanish
-      case 'fr-FR':
-        return 'fr'; // French
-      case 'th-TH':
-        return 'th'; // Thailand
-      default:
-        return lang;
-    }
-  };
-
   // Function to connect to WebSocket
   // const connectWebSocket = useCallback(() => {
   //   // If a WebSocket connection already exists, skip creating a new one
@@ -535,19 +519,31 @@ function MultiLangAudio() {
   //   // Store the WebSocket instance in a ref so it's accessible globally
   //   wsRef.current = ws;
   // }, [tourId, selectedVoiceLanguage]);
-  const targetLanguageCode = getNormalizedLanguageCode(selectedVoiceLanguage);
+  // Amazon Translate code of the listener language. The Guide registers and sends its source language
+  // with the same codes, so they can be compared
+  const targetLanguageCode = getLanguageCode(selectedVoiceLanguage);
   console.log("targetLanguageCode", targetLanguageCode);
+  // A listener of the Guide's language hears the Guide live (nothing is translated into it), the others the translation
+  const isLiveAudio = targetLanguageCode === guideLanguage;
+  isLiveAudioRef.current = isLiveAudio;
+  const handleConnectionUpdate = useCallback((message) => {
+    setParticipantsCount({
+      total: message.connectionCount,
+      guide: message.guideCount,
+      subGuide: message.subGuideCount,
+      user: message.userCount,
+    });
+    // Kept while no Guide is connected (null), e.g. while the Guide reloads the page
+    if (message.guideLanguage) {
+      setGuideLanguage(message.guideLanguage);
+    }
+  }, []);
   const connectWebSocket = useConnectWebSocket({
     wsRef,
     tourId: tourId,
     languageCode: targetLanguageCode,
     userType: userType,
-    onConnectionUpdate: (message) => setParticipantsCount({
-      total: message.connectionCount,
-      guide: message.guideCount,
-      subGuide: message.subGuideCount,
-      user: message.userCount,
-    }),
+    onConnectionUpdate: handleConnectionUpdate,
   });
 
   useWebSocketVisibilityHandler({
@@ -743,6 +739,12 @@ function MultiLangAudio() {
             const parsed = JSON.parse(data);
             console.log('📥 Parsed WebSocket message:', parsed);
 
+            // This handler replaces the one of useConnectWebSocket, so it reads this message too
+            if (parsed.type === 'connectionUpdate') {
+              handleConnectionUpdate(parsed);
+              return;
+            }
+
             if (parsed.type === 'translationWithAudio') {
               console.log('📝 Translation:', parsed.translatedText);
               // setMessages((prevMessages) => [...prevMessages, parsed.translatedText]);
@@ -763,10 +765,10 @@ function MultiLangAudio() {
                 return;
               }
 
-              // Japanese listeners hear the guide live through the meeting session,
+              // Listeners of the Guide's language hear the Guide live through the meeting session,
               // the translated audio must not be queued on the same audio element
-              if (selectedVoiceLanguage === 'ja-JP') {
-                console.log('🔇 Skipped translated audio: Japanese is played from the meeting session');
+              if (isLiveAudio) {
+                console.log('🔇 Skipped translated audio: the Guide is heard live from the meeting session');
                 return;
               }
 
@@ -796,7 +798,35 @@ function MultiLangAudio() {
         }
       };
     }
-  }, [isPlay, playNextAudio, selectedVoiceLanguage]);
+  }, [isPlay, playNextAudio, isLiveAudio, handleConnectionUpdate]);
+
+  // Switch between the live audio and the translated audio when the Guide or the listener changes language
+  // (the first bind is done when the session is initialized)
+  useEffect(() => {
+    const audioElement = audioElementRef.current;
+    if (!meetingSession || !isSessionReady || !audioElement) {
+      return;
+    }
+    const isBound = Boolean(audioElement.srcObject);
+    if (isLiveAudio && !isBound) {
+      // The translated audio uses the same element: stop it and drop what is queued first
+      audioElement.pause();
+      audioElement.src = '';
+      currentTranslatedAudioRef.current = null;
+      audioQueueRef.current.forEach(({ blobUrl }) => URL.revokeObjectURL(blobUrl));
+      audioQueueRef.current = [];
+      meetingSession.audioVideo.bindAudioElement(audioElement)
+        .then(() => {
+          audioElement.autoplay = false;
+          if (isPlay) {
+            audioElement.play()?.catch((error) => console.error('[Listen] Failed to resume the live audio:', error));
+          }
+        })
+        .catch((error) => console.error('[Listen] Failed to bind the live audio:', error));
+    } else if (!isLiveAudio && isBound) {
+      meetingSession.audioVideo.unbindAudioElement();
+    }
+  }, [meetingSession, isSessionReady, isLiveAudio, isPlay]);
 
   const handleSelectedVoiceLanguageChange = (event) => {
     setSelectedVoiceLanguage(event.target.value);
@@ -1071,7 +1101,7 @@ function MultiLangAudio() {
                 </div>
               </>
             )}
-            {chatRestriction !== "nochat" && (<MessageBox userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} userType={userType} statusChat={chatRestriction} chatLanguage={getChatLanguageCode(selectedVoiceLanguage)} />)}
+            {chatRestriction !== "nochat" && (<MessageBox userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} userType={userType} statusChat={chatRestriction} chatLanguage={getLanguageCode(selectedVoiceLanguage)} />)}
           </>
         )}
       </div>

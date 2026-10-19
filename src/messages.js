@@ -6,10 +6,6 @@ export const messages = {
         emailRequired: "メールアドレスを入力してください。",
         passwordRequired: "パスワードを入力してください。",
     },
-    tour: {
-        // Error message for tour not found
-        notFound: "ツアーが見つかりません",
-    },
     admin: {
        user:{
         errorEmail:"メールの形式が正しくありません。",

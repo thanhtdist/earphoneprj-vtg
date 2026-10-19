@@ -476,7 +476,8 @@ function JapaneseAudio() {
   const connectWebSocket = useConnectWebSocket({
     wsRef,
     tourId: tourId,
-    languageCode: 'ja-JP',
+    // Same code as the Guide's source language, so that the server skips the translation into it
+    languageCode: 'ja',
     userType: userType,
     onConnectionUpdate: (message) => setParticipantsCount({
       total: message.connectionCount,

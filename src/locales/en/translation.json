@@ -4,6 +4,7 @@
   "joinBtn": "Join",
   "loading": "Please wait...",
   "guideNotStarted": "Guide does not start, please wait...",
+  "notFoundPage": "404 - Page Not Found",
   "microChecking": "Checking your microphone... Please wait.",
   "noMicroMsg": "Your microphone is currently blocked. Please enable microphone access in your browser settings or on this site to proceed.",
   "microSelectionLbl": "Select Input Microphone",
@@ -63,6 +64,11 @@
   "playFileBtn": "Play file",
   "pauseFileBtn": "Pause",
   "uploading": "Uploading...",
+  "audioUpload": {
+    "unsupportedType": "Unsupported file type {{type}}. Please upload an audio file.",
+    "fileTooLarge": "File size exceeds {{size}} MB. Please upload a smaller file.",
+    "uploadFailed": "An error occurred during the upload. Please try again."
+  },
   "transcriptionTxt": "The host is speaking in ",
   "translationTxt": "I am listening in",
   "transcriptions": "Transcriptions",
@@ -97,6 +103,9 @@
       "iUnderstand": "I understand"
     },
     "startBtn": "Start the guide",
-    "joinedGuide": "There are guides who have already joined"
+    "joinedGuide": "There are guides who have already joined",
+    "tourNotFound": "Tour not found",
+    "tourNumberRequired": "Please enter the tour number.",
+    "startDateRequired": "Please enter the start date."
   }
 }

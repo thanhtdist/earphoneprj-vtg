@@ -1,6 +1,8 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 function NotFound() {
+    const { t } = useTranslation();
     console.log("Not Found Page");
     return (
         <div
@@ -12,7 +14,7 @@ function NotFound() {
                 height: "100vh"
             }}
         >
-            <h2>404 - Page Not Found</h2>
+            <h2>{t('notFoundPage')}</h2>
         </div>
     );
 }

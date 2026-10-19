@@ -4,7 +4,6 @@ import {
     getTourByNumberAndDate,
 } from '../../apis/api';
 import { useTranslation } from 'react-i18next';
-import { messages } from '../../messages';
 import Header from '../common/Header';
 import GuideTourConfirm from './GuideTourConfirm';
 import Loading from '../Loading';
@@ -30,7 +29,8 @@ const StartFindTour = () => {
             const getTourByNumberAndDateResponse = await getTourByNumberAndDate(data);
             if (getTourByNumberAndDateResponse?.statusCode !== 200) {
                 console.log('Find tour error:', getTourByNumberAndDateResponse);
-                setError(messages.tour.notFound);
+                // Keep the key, so the message follows a UI-language change
+                setError('startGuidePage.tourNotFound');
                 setTour(null);
             } else {
                 console.log('Find tour:', getTourByNumberAndDateResponse.data[0]);
@@ -96,7 +96,7 @@ const StartFindTour = () => {
                                         {...register('tourNumber', { required: true })}
                                     />
                                     {errors.tourNumber && (
-                                        <span className="text-danger">ツアー番号を入力してください。</span>
+                                        <span className="text-danger">{t('startGuidePage.tourNumberRequired')}</span>
                                     )}
                                 </div>
                                 <div className="mb-3">
@@ -127,7 +127,7 @@ const StartFindTour = () => {
                                             control={control}
                                             defaultValue={null}
                                             rules={{
-                                                required: '出発日を入力してください。',                                               
+                                                required: true,                                               
                                               }}
                                             render={({ field }) => (
                                                 <DatePicker
@@ -142,9 +142,9 @@ const StartFindTour = () => {
                                         />
                                         
                                     </div>
-                                    {errors.departureDate && <span className="text-danger">{errors.departureDate.message}</span>}
+                                    {errors.departureDate && <span className="text-danger">{t('startGuidePage.startDateRequired')}</span>}
                                 </div>
-                                {error && <p className="text-danger">{error}</p>}
+                                {error && <p className="text-danger">{t(error)}</p>}
                                 {/* <DatePicker selected={startDate} onChange={setStartDate} dateFormat="YYYY-MM-dd" required showIcon></DatePicker> */}
                                 <div className="text-center">
                                     <button type="submit" className="btn btn-danger">

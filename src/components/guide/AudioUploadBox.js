@@ -82,12 +82,12 @@ const AudioUploadBox = ({ meetingSession, logger }) => {
         logger.info('Current file:' + JSON.stringify(file));
         if (file) {
             if (!file.type.startsWith("audio")) {
-                setErrorMessage(`Unsupported file type ${file.type}. Please upload an audio file.`);
+                setErrorMessage(t('audioUpload.unsupportedType', { type: file.type }));
                 return;
             }
 
             if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
-                setErrorMessage(`File size exceeds ${MAX_FILE_SIZE_MB} MB. Please upload a smaller file.`);
+                setErrorMessage(t('audioUpload.fileTooLarge', { size: MAX_FILE_SIZE_MB }));
                 return;
             }
             setUploading(true); // Start uploading
@@ -107,7 +107,7 @@ const AudioUploadBox = ({ meetingSession, logger }) => {
             } catch (error) {
                 console.error('An error occurred during the upload: ' + JSON.stringify(error));
                 logger.error('An error occurred during the upload: ' + JSON.stringify(error));
-                setErrorMessage("An error occurred during the upload. Please try again.");
+                setErrorMessage(t('audioUpload.uploadFailed'));
             } finally {
                 setUploading(false);
             }

@@ -5,6 +5,7 @@ import {
   createAppInstanceUsers,
   addChannelMembership,
   startMeetingTranscription,
+  stopMeetingTranscription,
   getMeetingByTourId,
   startOrJoinLiveSession,
 } from '../../apis/api';
@@ -30,6 +31,8 @@ import {
   SPEAK_VOICE_LANGUAGES_KEY,
   getVoiceLanguages,
   getBaseLanguage,
+  getLanguageCode,
+  getTranscribeLanguageCode,
 } from '../../utils/constant';
 import Header from '../common/Header';
 import MessageBox from '../chat/MessageBox';
@@ -153,8 +156,18 @@ function StartLiveSession() {
   // apart from the ones that were there all along. Null until the first list is read
   const knownAudioInputIdsRef = useRef(null);
   const userType = `Guide`;
-  // UI-only for now: not wired into transcription/translation yet, just the selector itself
   const [selectedSpeakLanguage, setSelectedSpeakLanguage] = useState(SPEAK_VOICE_LANGUAGES_KEY);
+  // Whether the tour has the translation function: undefined until known. Without it there is no
+  // language selection, the Guide joins in Japanese. Kept apart from `tour`, which opens the WebSocket
+  const [isTranslationEnabled, setIsTranslationEnabled] = useState(undefined);
+  useEffect(() => {
+    getMeetingByTourId(tourId).then((response) => {
+      // Unknown (tour not found, no answer): keep the selection, joining reports what is wrong
+      const isEnabled = response?.statusCode === 200 ? response.data.useTheTranslationFunction === true : true;
+      setIsTranslationEnabled(isEnabled);
+      setIsLoading(!isEnabled);   // the join below starts at once, show it as loading from the first frame
+    });
+  }, [tourId]);
   //const audioData = useRef([]); // Ref to store audio data
 
   useEffect(() => {
@@ -898,7 +911,8 @@ function StartLiveSession() {
   const connectWebSocket = useConnectWebSocket({
     wsRef,
     tourId: tourId,
-    languageCode: 'ja-JP',
+    // The language the Guide speaks (Amazon Translate code): the server sends it to the others as guideLanguage
+    languageCode: getLanguageCode(selectedSpeakLanguage),
     userType: userType,
     onConnectionUpdate: (message) => setParticipantsCount({
       total: message.connectionCount,
@@ -921,7 +935,7 @@ function StartLiveSession() {
       const payload = {
         action: 'translateAudio',
         inputText: text,
-        sourceLanguageCode: 'ja-JP',
+        sourceLanguageCode: getLanguageCode(selectedSpeakLanguage),
         tourId: tourId
       };
       wsRef.current.send(JSON.stringify(payload));
@@ -929,7 +943,7 @@ function StartLiveSession() {
     } else {
       console.warn('❌ WebSocket is not open');
     }
-  }, [tourId, wsRef]);
+  }, [tourId, wsRef, selectedSpeakLanguage]);
 
 
   useEffect(() => {
@@ -1061,11 +1075,13 @@ function StartLiveSession() {
     //console.log("enableMeetingTranscription selectedVoiceLanguage", selectedVoiceLanguage);
     console.log("enableMeetingTranscription meetingSession", meetingSession);
     const enableMeetingTranscription = async (meetingId, languageCode) => {
+      // Stop a transcription left by an earlier join (it keeps its language); fails when none is running, which is fine
+      await stopMeetingTranscription(meetingId);
       console.log("enableLiveTranscription languageCode", languageCode);
       const startMeetingTranscriptionResponse = await startMeetingTranscription(meetingId, languageCode);
       console.log("enableLiveTranscription startMeetingTranscriptionResponse", startMeetingTranscriptionResponse);
     };
-    enableMeetingTranscription(meetingSession.configuration.meetingId, SPEAK_VOICE_LANGUAGES_KEY);
+    enableMeetingTranscription(meetingSession.configuration.meetingId, getTranscribeLanguageCode(selectedSpeakLanguage));
 
     // const socket = new WebSocket("wss://0vfx6925gk.execute-api.us-east-1.amazonaws.com/prod");
 
@@ -1106,7 +1122,7 @@ function StartLiveSession() {
     // socket.onclose = (event) => {
     //   console.warn("WebSocketxxx closed:", event);
     // };
-  }, [meetingSession]);
+  }, [meetingSession, selectedSpeakLanguage]);
 
 
   // Connect WebSocket
@@ -1213,6 +1229,16 @@ function StartLiveSession() {
 
   }, [tourId, startLiveAduioSession, getMeetingAttendeeInfoFromCookies, rejoinLiveAduioSession]);
 
+  // No translation on the tour: nothing to choose, join as soon as the page knows (once)
+  const hasAutoJoinedRef = useRef(false);
+  useEffect(() => {
+    if (isTranslationEnabled !== false || hasAutoJoinedRef.current) {
+      return;
+    }
+    hasAutoJoinedRef.current = true;
+    joinLiveSession();
+  }, [isTranslationEnabled, joinLiveSession]);
+
   // Call requestWakeLock once the meeting session is set:
   // useEffect(() => {
   //   if (meetingSession) {
@@ -1286,30 +1312,27 @@ function StartLiveSession() {
         </audio>
         {!isSessionReady ? (
           <>
-            {/* Same box/select markup as the listener's own selector (MultiLangAudio.js),
-                just colored with the guide's page color instead of the listener's teal
-                (.guide-box-selected-language / .guide-selected-language in
-                StartLiveSession.css). UI-only for now - the picked language is not wired
-                into transcription or translation yet, see joinLiveSession / getVoiceLanguages */}
-            <div className="guide-box-selected-language">
-              <h3 className='title-box'>{t('voiceLanguageLbl.speaking')}</h3>
-              <div className="select-container">
-                <select
-                  className='guide-selected-language notranslate'
-                  lang={getBaseLanguage(i18n.language)}
-                  translate="no"
-                  value={selectedSpeakLanguage}
-                  onChange={(e) => setSelectedSpeakLanguage(e.target.value)}
-                >
-                  {getVoiceLanguages(i18n.language).map((language) => (
-                    <option key={`${getBaseLanguage(i18n.language)}-${language.key}`} value={language.key}>
-                      {language.label}
-                    </option>
-                  ))}
-                </select>
+            {isTranslationEnabled && (
+              <div className="guide-box-selected-language">
+                <h3 className='title-box'>{t('voiceLanguageLbl.speaking')}</h3>
+                <div className="select-container">
+                  <select
+                    className='guide-selected-language notranslate'
+                    lang={getBaseLanguage(i18n.language)}
+                    translate="no"
+                    value={selectedSpeakLanguage}
+                    onChange={(e) => setSelectedSpeakLanguage(e.target.value)}
+                  >
+                    {getVoiceLanguages(i18n.language).map((language) => (
+                      <option key={`${getBaseLanguage(i18n.language)}-${language.key}`} value={language.key}>
+                        {language.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
-            </div>
-            {isLoading === true ? (
+            )}
+            {isLoading === true || isTranslationEnabled === undefined ? (
               <div className="loading">
                 <div className="spinner"></div>
                 <p>{t('loading')}</p>

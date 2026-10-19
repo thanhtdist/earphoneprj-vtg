@@ -23,7 +23,7 @@ throughout the listener code.**
 | Target languages | a fixed array | `translate-audio/handler.ts:9` |
 | Listener: "original" audio | the live meeting stream is bound **only** when `ja-JP` is selected | `MultiLangAudio.js:119-142` |
 | Listener: translated audio | skipped **only** for `ja-JP` | `MultiLangAudio.js:702-705` |
-| Listener routing | a whole screen for the Japanese case | `LiveViewer.js:58-62`, `JapaneseAudio.js`, `LiveViewerJa.js` |
+| Listener routing | a whole screen for the Japanese case | `LiveViewer.js:58-62`, `JapaneseAudio.js` (the separate `/viewer_ja` screen, `LiveViewerJa.js`, was removed on 2026-10-19) |
 
 The good news: **transcription is already parameterised.** `start-meeting-transcription` takes
 `languageCode` and passes it to `EngineTranscribeSettings` — the caller just never varies it.
@@ -93,4 +93,4 @@ The document's 5〜8人日＋検証 is realistic **for the code changes**, on th
 | 3 | Listener selects the source language | live meeting audio, no translated audio queued |
 | 4 | Source language changed before going live | transcription starts in the new language |
 | 5 | Unsupported pair | a clear message, not silence |
-| 6 | `/viewer_ja` and the sub-guide screen | still work on a non-Japanese tour |
+| 6 | The sub-guide screen | still works on a non-Japanese tour |

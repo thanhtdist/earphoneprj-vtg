@@ -310,6 +310,27 @@ export async function startMeetingTranscription(meetingId, languageCode) {
 }
 
 /**
+ * Stop the transcription of a meeting (it keeps its language until it is stopped).
+ * @param {string} meetingId - The ID of the meeting.
+ * @returns {Promise<string|null>} null when nothing was stopped, e.g. no transcription is running yet.
+ */
+export async function stopMeetingTranscription(meetingId) {
+  try {
+    const restOperation = post({
+      apiName: 'MeetingVTGRestApi', // The name of the API defined in backend.ts
+      path: 'meetings/' + meetingId + '/transcription/stop',
+    });
+
+    const { body } = await restOperation.response;
+    const response = await body.json();
+    return response.data;
+  } catch (error) {
+    console.log('POST call stopMeetingTranscription failed: ', error.response?.body ?? error);
+    return null;
+  }
+}
+
+/**
  * Translate text only, no speech synthesis. Used by chat message translation (task #13).
  * Hits the dedicated `translate-text` endpoint (a copy of `translate-text-speech` without the
  * Polly step), returning `{ translatedText, sourceLanguageCode }`.

@@ -1,1 +1,0 @@
-export const GUIDE_NOT_START = 'Guide does not start, please wait...';

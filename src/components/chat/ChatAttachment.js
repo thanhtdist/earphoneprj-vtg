@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { GrDocumentPdf } from "react-icons/gr";
+import { useTranslation } from 'react-i18next';
 import { viewPresignedUrl } from '../../apis/api'; // Assuming this is the correct path to your API function
 import '../../styles/ChatAttachment.css';
 
 export const ChatAttachment = ({ fileKey, name, type, size = 0 }) => {
+    const { t } = useTranslation();
     const [url, setUrl] = useState(null);
 
     const isImage = type?.startsWith('image/');
@@ -25,7 +27,7 @@ export const ChatAttachment = ({ fileKey, name, type, size = 0 }) => {
         fetchSignedUrl();
     }, [fileKey]);
 
-    if (!url) return <div className="attachment-loading">Loading...</div>;
+    if (!url) return <div className="attachment-loading">{t('loading')}</div>;
 
     return (
         <div className="attachment-container">

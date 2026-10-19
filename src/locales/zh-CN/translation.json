@@ -4,6 +4,7 @@
   "joinBtn": "加入",
   "loading": "请稍候...",
   "guideNotStarted": "导游尚未开始，请稍候...",
+  "notFoundPage": "404 - 页面未找到",
   "microChecking": "正在检查麦克风... 请稍候。",
   "noMicroMsg": "您的麦克风目前被阻止。请在浏览器设置或本网站中启用麦克风权限后继续。",
   "microSelectionLbl": "选择输入麦克风",
@@ -63,6 +64,11 @@
   "playFileBtn": "播放文件",
   "pauseFileBtn": "暂停",
   "uploading": "上传中...",
+  "audioUpload": {
+    "unsupportedType": "不支持的文件类型 {{type}}。请上传音频文件。",
+    "fileTooLarge": "文件大小超过 {{size}} MB。请上传较小的文件。",
+    "uploadFailed": "上传时发生错误。请重试。"
+  },
   "transcriptionTxt": "主持人说话的语言：",
   "translationTxt": "我正在收听的语言：",
   "transcriptions": "语音识别结果",
@@ -97,6 +103,9 @@
       "iUnderstand": "我已了解"
     },
     "startBtn": "开始导览",
-    "joinedGuide": "已有导游加入"
+    "joinedGuide": "已有导游加入",
+    "tourNotFound": "未找到旅行团",
+    "tourNumberRequired": "请输入旅行团编号。",
+    "startDateRequired": "请输入开始日期。"
   }
 }

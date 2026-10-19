@@ -4,6 +4,7 @@
   "joinBtn": "참여",
   "loading": "잠시만 기다려 주세요...",
   "guideNotStarted": "가이드가 아직 시작하지 않았습니다. 잠시만 기다려 주세요...",
+  "notFoundPage": "404 - 페이지를 찾을 수 없습니다",
   "microChecking": "마이크를 확인하는 중입니다... 잠시만 기다려 주세요.",
   "noMicroMsg": "현재 마이크가 차단되어 있습니다. 계속하려면 브라우저 설정 또는 이 사이트에서 마이크 접근을 허용해 주세요.",
   "microSelectionLbl": "입력 마이크 선택",
@@ -63,6 +64,11 @@
   "playFileBtn": "파일 재생",
   "pauseFileBtn": "일시정지",
   "uploading": "업로드 중...",
+  "audioUpload": {
+    "unsupportedType": "지원하지 않는 파일 형식입니다({{type}}). 오디오 파일을 업로드해 주세요.",
+    "fileTooLarge": "파일 크기가 {{size}}MB를 초과합니다. 더 작은 파일을 업로드해 주세요.",
+    "uploadFailed": "업로드 중 오류가 발생했습니다. 다시 시도해 주세요."
+  },
   "transcriptionTxt": "호스트가 말하는 언어: ",
   "translationTxt": "내가 듣는 언어:",
   "transcriptions": "음성 인식 결과",
@@ -97,6 +103,9 @@
       "iUnderstand": "이해했습니다"
     },
     "startBtn": "가이드 시작",
-    "joinedGuide": "이미 참여한 가이드가 있습니다"
+    "joinedGuide": "이미 참여한 가이드가 있습니다",
+    "tourNotFound": "투어를 찾을 수 없습니다",
+    "tourNumberRequired": "투어 번호를 입력해 주세요.",
+    "startDateRequired": "시작일을 입력해 주세요."
   }
 }

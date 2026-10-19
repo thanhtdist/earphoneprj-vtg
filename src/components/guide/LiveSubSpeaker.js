@@ -33,7 +33,7 @@ import AudioMicControl from '../common/AudioMicControl';
 import AudioListenToggle from '../common/AudioListenToggle';
 import BroadcastStatusBar from '../common/BroadcastStatusBar';
 import { getUserStyle } from '../../utils/getUserStyle';
-import { SPEAK_VOICE_LANGUAGES_KEY, getVoiceLanguages, getBaseLanguage } from '../../utils/constant';
+import { DEFAULT_GUIDE_LANGUAGE_CODE } from '../../utils/constant';
 import { audioInputFingerprint, audioInputIds, listAudioInputs, pickPreferredAudioInput } from '../../utils/audioInput';
 import { logBrowserSupport } from '../../utils/browserSupport';
 import {
@@ -76,28 +76,23 @@ function LiveSubSpeaker() {
   const [audioInputDevices, setAudioInputDevices] = useState([]);
   const [channelArn, setChannelArn] = useState('');
   const [userArn, setUserArn] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
   const [isMicOn, setIsMicOn] = useState(false); // State for microphone status
   const [transformVFD, setTransformVFD] = useState(null);
   const [microChecking, setMicroChecking] = useState(t('microChecking'));
   const [noMicroMsg, setNoMicoMsg] = useState(t('noMicroMsg'));
   //const [logger, setLogger] = useState(null);
   const [participantsCount, setParticipantsCount] = useState(0);
-  // Gates the join flow behind a language pick, mirroring the guide's own
-  // pre-join screen (StartLiveSession.js). UI-only for now: not wired into
-  // transcription/translation yet, the picked value is not sent anywhere
-  const [selectedSpeakLanguage, setSelectedSpeakLanguage] = useState(SPEAK_VOICE_LANGUAGES_KEY);
-  const [hasJoined, setHasJoined] = useState(false);
+  // The Sub-Guide has no language of its own: it follows the Guide's (guideLanguage, Japanese until the server says)
+  const [guideLanguage, setGuideLanguage] = useState(DEFAULT_GUIDE_LANGUAGE_CODE);
   // Set only once initializeMeetingSession's bind + audioVideo.start() have both actually
   // finished - see MultiLangAudio.js/JapaneseAudio.js's isSessionReady for why gating the mic
-  // control on hasJoined alone (set the instant Join is clicked, before any readiness check
-  // has even run) would leave it visible before there is a session to control
+  // control on joining alone (before any readiness check has even run) would leave it visible
+  // before there is a session to control
   const [isSessionReady, setIsSessionReady] = useState(false);
   // Non-blocking replacement for alert('Guide does not start...') - see the same viewer files
   // for the pattern. The old alert() here left the Sub-Guide stuck on a loading spinner
-  // forever afterwards (isLoading was never reset in that branch), with no retry short of a
-  // reload - this overlay plus the poll below is also what recovers automatically once the
-  // Guide actually starts
+  // forever afterwards, with no retry short of a reload - this overlay plus the poll below is
+  // also what recovers automatically once the Guide actually starts
   const [showWaitingForGuide, setShowWaitingForGuide] = useState(false);
 
   // Sheet 3, extended (same as the Listener screens): even once the meeting itself is
@@ -373,7 +368,6 @@ function LiveSubSpeaker() {
   const userType = 'Sub-Guide';
   // Function to join the meeting
   const joinMeeting = useCallback(async (meetingData, channelId) => {
-    setIsLoading(true);
     try {
       // if (!meetingId || !channelId || !hostId) {
       //   alert('Meeting ID, Channel ID, and hostId are required');
@@ -419,8 +413,6 @@ function LiveSubSpeaker() {
 
     } catch (error) {
       console.error('Error joining the meeting:', error);
-    } finally {
-      setIsLoading(false);
     }
   }, [initializeMeetingSession, createAppUserAndJoinChannel, tourId]);
 
@@ -666,14 +658,12 @@ function LiveSubSpeaker() {
 
   // Function to get the meeting and attendee information from the cookies
   const getMeetingAttendeeInfoFromCookies = useCallback(async (retrievedSubGuide) => {
-    setIsLoading(true);
     console.log("Retrieved cookie:", retrievedSubGuide);
     // Awaited - isSessionReady is set inside initializeMeetingSession itself, once bind +
     // start() actually finish, not the instant this call is fired off
     await initializeMeetingSession(retrievedSubGuide.meeting, retrievedSubGuide.attendee, 'cookie');
     setUserArn(retrievedSubGuide.userArn);
     setChannelArn(retrievedSubGuide.channelArn);
-    setIsLoading(false);
   }, [initializeMeetingSession]);
 
   // Sheet 3 of "VTG - investigation report - no-japansese-audio.xlsx" (Solution 2): same
@@ -821,14 +811,15 @@ function LiveSubSpeaker() {
     joinAudioSessionRef.current = joinAudioSession;
   }, [joinAudioSession]);
 
-  // Join is gated behind the language selector below (see the pre-join render
-  // block) instead of running automatically on mount - same gesture as the
-  // guide's own screen (StartLiveSession.js)
-  const handleJoinClick = () => {
-    setHasJoined(true);
-    setIsLoading(true);
+  // Nothing to choose before joining, so join as soon as the screen opens (once: joinAudioSession changes)
+  const hasAutoJoinedRef = useRef(false);
+  useEffect(() => {
+    if (hasAutoJoinedRef.current) {
+      return;
+    }
+    hasAutoJoinedRef.current = true;
     joinAudioSession();
-  };
+  }, [joinAudioSession]);
 
   useEffect(() => {
     getAudioInputDevices();
@@ -989,14 +980,20 @@ function LiveSubSpeaker() {
   const connectWebSocket = useConnectWebSocket({
     wsRef,
     tourId: tourId,
-    languageCode: 'ja-JP',
+    languageCode: guideLanguage,
     userType: userType,
-    onConnectionUpdate: (message) => setParticipantsCount({
-      total: message.connectionCount,
-      guide: message.guideCount,
-      subGuide: message.subGuideCount,
-      user: message.userCount,
-    }),
+    onConnectionUpdate: (message) => {
+      setParticipantsCount({
+        total: message.connectionCount,
+        guide: message.guideCount,
+        subGuide: message.subGuideCount,
+        user: message.userCount,
+      });
+      // Kept while no Guide is connected (null), e.g. while the Guide reloads the page
+      if (message.guideLanguage) {
+        setGuideLanguage(message.guideLanguage);
+      }
+    },
   });
 
   useWebSocketVisibilityHandler({
@@ -1004,6 +1001,17 @@ function LiveSubSpeaker() {
     connectWebSocket,
     wsRef,
   });
+
+  // languageCode is only sent when the socket opens: tell the server once the Guide's language is known,
+  // so that nothing is translated into it for this connection
+  const registeredLanguageRef = useRef(guideLanguage);
+  useEffect(() => {
+    if (registeredLanguageRef.current === guideLanguage) {
+      return;
+    }
+    registeredLanguageRef.current = guideLanguage;
+    wsRef.current?.send(JSON.stringify({ action: 'selectLanguage', languageCode: guideLanguage }));
+  }, [guideLanguage]);
 
   // Check if the tour exists, if not, show a not found page
   if (tour === null) {
@@ -1024,18 +1032,15 @@ function LiveSubSpeaker() {
       )}
       {/* <Participants count={participantsCount} /> */}
       <Header count={participantsCount} tourId={tourId} userType={userType} />
-      {/* Broadcast status is meaningless before the sub-guide has even joined,
-          same as the guide's own pre-join screen (StartLiveSession.js) */}
-      {hasJoined && (<BroadcastStatusBar isMicOn={isMicOn} userType={userType} t={t} />)}
+      {/* Broadcast status is meaningless before the session is ready */}
+      {isSessionReady && (<BroadcastStatusBar isMicOn={isMicOn} userType={userType} t={t} />)}
       <div
-        className={hasJoined ? "live-sub-container" : "live-viewer-container-center"}
+        className={isSessionReady ? "live-sub-container" : "live-viewer-container-center"}
         style={{ '--page-color': pageColor }}
       >
-        {hasJoined && (
-          <p className='titleSubLive'>
-            {t('pageTitles.subGuide')}
-          </p>
-        )}
+        <p className='titleSubLive'>
+          {t('pageTitles.subGuide')}
+        </p>
         {/* <div className='title-sub-live-upload'>
           <div className='time'>
             <p >2025/01/01</p>
@@ -1045,42 +1050,7 @@ function LiveSubSpeaker() {
         <TourTitle tour={tour} />
         <audio id='audioElementSub' ref={audioRef} >
         </audio>
-        {!hasJoined ? (
-          <>
-            {/* Same pre-join language selector as the guide (StartLiveSession.js),
-                reusing its classes - they're already colored via --page-color,
-                which is orange here instead of the guide's red. UI-only for now,
-                see selectedSpeakLanguage */}
-            <div className="guide-box-selected-language">
-              <h3 className='title-box'>{t('voiceLanguageLbl.speaking')}</h3>
-              <div className="select-container">
-                <select
-                  className='guide-selected-language notranslate'
-                  lang={getBaseLanguage(i18n.language)}
-                  translate="no"
-                  value={selectedSpeakLanguage}
-                  onChange={(e) => setSelectedSpeakLanguage(e.target.value)}
-                >
-                  {getVoiceLanguages(i18n.language).map((language) => (
-                    <option key={`${getBaseLanguage(i18n.language)}-${language.key}`} value={language.key}>
-                      {language.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-            {isLoading ? (
-              <div className="loading">
-                <div className="spinner"></div>
-                <p>{t('loading')}</p>
-              </div>
-            ) : (
-              <div className='btn' onClick={handleJoinClick}>
-                <button className='guide-btn-join'>{t('joinBtn')}</button>
-              </div>
-            )}
-          </>
-        ) : isSessionReady ? (
+        {isSessionReady ? (
           <>
             {(noMicroMsg) ? (
               <>
