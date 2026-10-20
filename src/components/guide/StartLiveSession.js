@@ -932,6 +932,22 @@ function StartLiveSession() {
     wsRef,
   });
 
+  // languageCode is only sent when the socket opens, which happens as soon as the tour is loaded -
+  // before the Guide picks a language. Tell the server when the selection changes, so that the
+  // Sub-Guide and the listeners get it as guideLanguage
+  const registeredSpeakLanguageRef = useRef(getLanguageCode(selectedSpeakLanguage));
+  useEffect(() => {
+    const languageCode = getLanguageCode(selectedSpeakLanguage);
+    if (registeredSpeakLanguageRef.current === languageCode) {
+      return;
+    }
+    registeredSpeakLanguageRef.current = languageCode;
+    // Not open yet: connectState will carry this value when it opens
+    if (wsRef.current?.readyState === WebSocket.OPEN) {
+      wsRef.current.send(JSON.stringify({ action: 'selectLanguage', languageCode }));
+    }
+  }, [selectedSpeakLanguage]);
+
   // Handle sending text to the WebSocket server
   const handleTranslateAudio = useCallback((text) => {
     console.log('Sending text to WebSocket', wsRef.current?.readyState);

@@ -1,6 +1,7 @@
 import AWS from 'aws-sdk';
 import { APIGatewayProxyWebsocketHandlerV2 } from 'aws-lambda';
 import { Config } from '@configs/config';
+import { updateConnectionHistoryAndBroadcast } from '../common/connectionUtils';
 
 const dynamoDB = new AWS.DynamoDB.DocumentClient({ region: Config.region });
 
@@ -23,7 +24,7 @@ export const handler: APIGatewayProxyWebsocketHandlerV2 = async (event) => {
 
     // update, not put - a put here would overwrite tourId/userType on the row, dropping this
     // connection out of the tourId-index the fan-out queries and out of the role counts
-    await dynamoDB
+    const updated = await dynamoDB
       .update({
         TableName: Config.dbTables.WEBSOCKETCONNECTIONS,
         Key: { connectionId },
@@ -32,8 +33,22 @@ export const handler: APIGatewayProxyWebsocketHandlerV2 = async (event) => {
           ':languageCode': languageCode,
           ':updatedAt': new Date().toISOString(),
         },
+        ReturnValues: 'ALL_NEW',
       })
       .promise();
+
+    // The Guide's language is what the Sub-Guide and the listeners follow (guideLanguage):
+    // tell them now, instead of at the next connect or disconnect
+    const { tourId, userType } = updated.Attributes || {};
+    if (userType === 'Guide' && tourId) {
+      await updateConnectionHistoryAndBroadcast(
+        tourId,
+        languageCode,
+        userType,
+        event.requestContext.domainName,
+        event.requestContext.stage
+      );
+    }
 
     return {
       statusCode: 200,

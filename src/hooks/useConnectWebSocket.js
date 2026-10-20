@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 import Config from '../utils/config';
+import { logRegisteredLanguage } from '../utils/meetingHealth';
 
 const useConnectWebSocket = ({
   wsRef,
@@ -32,6 +33,7 @@ const useConnectWebSocket = ({
       };
       ws.send(JSON.stringify(connectStatePayload));
       console.log('📤 WebSocket Sent connectState:', connectStatePayload);
+      logRegisteredLanguage(userType, languageCode);
 
       // Gửi thêm custom message nếu cần
       if (additionalInit) {

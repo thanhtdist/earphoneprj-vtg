@@ -29,10 +29,11 @@ export async function updateConnectionHistoryAndBroadcast(
   const userCount = connections.filter(c => c.userType === 'User').length;
 
   // The language the Guide speaks now, so that the Sub-Guide and the listeners know what is spoken.
-  // With several Guide devices connected, the one connected last wins. null while no Guide is connected
+  // With several Guide devices connected, the one that connected or changed its language last wins
+  // (updatedAt, set by connectState and selectLanguage). null while no Guide is connected
   const guideConnection = connections
     .filter(c => c.userType === 'Guide')
-    .sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt)))[0];
+    .sort((a, b) => String(b.updatedAt ?? b.createdAt).localeCompare(String(a.updatedAt ?? a.createdAt)))[0];
   const guideLanguage = guideConnection?.languageCode ?? null;
 
   await dynamoDB

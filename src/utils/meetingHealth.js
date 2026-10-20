@@ -5,6 +5,7 @@
 //   [Meeting] 10. identity   — which meeting is being joined, and where the id came from
 //   [Meeting] 11. connection — what the session is doing right now
 //   [Meeting] 12. attendees  — who the server says is in the meeting
+//   [Meeting] 20. registered — the languageCode this page last sent to the server for its connection
 //
 // These exist because a session can fail in a way that leaves every audio step looking
 // healthy. A meeting id kept in a cookie outlives the meeting it names: the page joins,
@@ -30,6 +31,9 @@ const log = (text) => {
 
 const pinned = (step, text, healthy) =>
   log(`[Meeting] ${step}. ${text} — ${healthy ? 'ok' : 'check'}`);
+
+// The connection.languageCode of this page, by role: the Sub-Guide follows the Guide when both show the same
+export const logRegisteredLanguage = (userType, languageCode) => log(`[Meeting] 20. ${userType} registered ${languageCode}`);
 
 // Meeting and attendee ids are long random strings; the first block is enough to tell two
 // of them apart, and a full one wraps to three lines on a phone

@@ -43,7 +43,7 @@ import {
   watchAudioInputStreams,
 } from '../../utils/audioDiagnostics';
 import { isVoiceFocusDisabled, watchOutgoingAudio } from '../../utils/audioFlow';
-import { noteTourMeetingId, logMeetingIdentity, watchMeetingConnection, watchMeetingAttendees, logMicStartTiming, logListenStartTiming, logMeetingTransition } from '../../utils/meetingHealth';
+import { noteTourMeetingId, logMeetingIdentity, watchMeetingConnection, watchMeetingAttendees, logMicStartTiming, logListenStartTiming, logMeetingTransition, logRegisteredLanguage } from '../../utils/meetingHealth';
 import { logChannelTransition } from '../../utils/chatHealth';
 import { watchGuidePresence } from '../../utils/guidePresence';
 import DebugLogPanel from '../common/DebugLogPanel';
@@ -1011,6 +1011,7 @@ function LiveSubSpeaker() {
     }
     registeredLanguageRef.current = guideLanguage;
     wsRef.current?.send(JSON.stringify({ action: 'selectLanguage', languageCode: guideLanguage }));
+    logRegisteredLanguage('Sub-Guide', guideLanguage);
   }, [guideLanguage]);
 
   // Check if the tour exists, if not, show a not found page
