@@ -17,7 +17,8 @@ const AudioUploadBox = ({ meetingSession, logger }) => {
         instruction: null,
         closingSpeech: null,
     }); // Tracks the audio file for each type
-    const [errorMessage, setErrorMessage] = useState("");
+    // The key and its values, not the translated text: translated at render, the message follows a UI language change
+    const [errorMessage, setErrorMessage] = useState(null);
     const [isPlaying, setIsPlaying] = useState(false);
     const audioElementRef = useRef(null);
     const audioContextRef = useRef(null);
@@ -76,18 +77,18 @@ const AudioUploadBox = ({ meetingSession, logger }) => {
     };
 
     const handleFileUpload = async (event) => {
-        setErrorMessage(""); // Reset error message 
+        setErrorMessage(null); // Reset error message
         const file = event.target.files[0];
         console.log('Current file:', file);
         logger.info('Current file:' + JSON.stringify(file));
         if (file) {
             if (!file.type.startsWith("audio")) {
-                setErrorMessage(t('audioUpload.unsupportedType', { type: file.type }));
+                setErrorMessage({ key: 'audioUpload.unsupportedType', values: { type: file.type } });
                 return;
             }
 
             if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
-                setErrorMessage(t('audioUpload.fileTooLarge', { size: MAX_FILE_SIZE_MB }));
+                setErrorMessage({ key: 'audioUpload.fileTooLarge', values: { size: MAX_FILE_SIZE_MB } });
                 return;
             }
             setUploading(true); // Start uploading
@@ -107,7 +108,7 @@ const AudioUploadBox = ({ meetingSession, logger }) => {
             } catch (error) {
                 console.error('An error occurred during the upload: ' + JSON.stringify(error));
                 logger.error('An error occurred during the upload: ' + JSON.stringify(error));
-                setErrorMessage(t('audioUpload.uploadFailed'));
+                setErrorMessage({ key: 'audioUpload.uploadFailed' });
             } finally {
                 setUploading(false);
             }
@@ -307,7 +308,7 @@ const AudioUploadBox = ({ meetingSession, logger }) => {
                         </button>
                     </div>
                 )}
-                {errorMessage && <p className="error-message">{errorMessage}</p>}
+                {errorMessage && <p className="error-message">{t(errorMessage.key, errorMessage.values)}</p>}
                 {currentAudioFile && (<p><a target="_blank" rel="noopener noreferrer" href={currentAudioFile.url} style={{ color: "green" }}>{currentAudioFile.name}</a></p>)}
             </div>
             </div>
