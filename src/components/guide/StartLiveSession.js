@@ -386,8 +386,11 @@ function StartLiveSession() {
         // Name stays 'Guide' so extra devices are not numbered Guide2/Guide3.
         userArn = await createAppInstanceUsers(uuidv4(), userType);
         console.log('Guide chat identity created for the channel:', userArn);
-        await addChannelMembership(channelArn, userArn);
       }
+      // Always, also for the cookie's identity: it may be a member of another channel than the
+      // one the tour points at now (e.g. a tour whose channel was replaced before this fix).
+      // Joining a channel one is already in changes nothing
+      await addChannelMembership(channelArn, userArn);
 
       setUserArn(userArn);
       setChannelArn(channelArn);
@@ -457,7 +460,8 @@ function StartLiveSession() {
   }, [attachToMeeting]);
 
   // Rejoin after the tour's meeting has expired in Chime. `channelId` is kept for call-site
-  // compatibility but no longer used - the backend returns the tour's channel. The cookie's
+  // compatibility but no longer used - the backend returns the tour's channel, kept across the
+  // expiry so the chat history stays. The cookie's
   // chat identity is reused so the guide stays the same person in the channel across the expiry.
   const rejoinLiveAduioSession = useCallback((channelId, expiredMeetingId) => {
     const retrievedMainGuide = JSONCookieUtils.getJSONCookie("Main-Guide" + tourId);

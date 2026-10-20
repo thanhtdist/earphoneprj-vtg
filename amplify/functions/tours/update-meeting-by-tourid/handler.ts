@@ -15,7 +15,7 @@ import { Config } from '@configs/config';
  *     expectedMeetingId === ''    -> the tour should have no meeting yet (first Guide start)
  *     expectedMeetingId === <id>  -> the tour should still point at this now-expired id (rejoin)
  *
- *     Only ONE concurrent caller creates the Chime meeting + channel: it takes a claim lock on
+ *     Only ONE concurrent caller creates the Chime meeting (+ the channel, when the tour has none yet): it takes a claim lock on
  *     the tour item (meetingCreating / meetingCreatingAt), creates the resources, then commits
  *     them. Every other caller polls the tour row and is handed the winner's meeting to join.
  *     This is what closes the "two Guides start simultaneously" race (Issue 3).
@@ -194,34 +194,40 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       const newMeetingId = meetingResp.Meeting?.MeetingId;
       if (!newMeetingId) throw new Error('Chime createMeeting returned no MeetingId');
 
-      const userResp = await chimeIdentity.createAppInstanceUser({
-        AppInstanceArn: Config.appInstanceArn,
-        AppInstanceUserId: uuid(),
-        ClientRequestToken: uuid(),
-        Name: 'Guide',
-        ExpirationSettings: {
-          ExpirationCriterion: 'CREATED_TIMESTAMP',
-          ExpirationDays: Config.appInstanceUserExpirationDays,
-        },
-      }).promise();
-      const ownerArn = userResp.AppInstanceUserArn;
-      if (!ownerArn) throw new Error('Chime createAppInstanceUser returned no ARN');
+      // The channel belongs to the tour, not to the meeting: an expired meeting is replaced, its
+      // channel is kept so the chat history survives the rejoin (as #93 did on the client).
+      // Only the first start of the tour creates one
+      let newChannelId: string | undefined = tourRes.Item.channelId;
+      if (!newChannelId) {
+        const userResp = await chimeIdentity.createAppInstanceUser({
+          AppInstanceArn: Config.appInstanceArn,
+          AppInstanceUserId: uuid(),
+          ClientRequestToken: uuid(),
+          Name: 'Guide',
+          ExpirationSettings: {
+            ExpirationCriterion: 'CREATED_TIMESTAMP',
+            ExpirationDays: Config.appInstanceUserExpirationDays,
+          },
+        }).promise();
+        const ownerArn = userResp.AppInstanceUserArn;
+        if (!ownerArn) throw new Error('Chime createAppInstanceUser returned no ARN');
 
-      const channelResp = await chimeMessaging.createChannel({
-        AppInstanceArn: Config.appInstanceArn,
-        Name: 'LiveSession',
-        Mode: 'UNRESTRICTED',
-        Privacy: 'PUBLIC',
-        ClientRequestToken: uuid(),
-        ChimeBearer: ownerArn,
-        ExpirationSettings: {
-          ExpirationCriterion: 'LAST_MESSAGE_TIMESTAMP',
-          ExpirationDays: Config.channelExpirationDays,
-        },
-      }).promise();
-      const newChannelArn = channelResp.ChannelArn;
-      if (!newChannelArn) throw new Error('Chime createChannel returned no ChannelArn');
-      const newChannelId = newChannelArn.split('/').pop();
+        const channelResp = await chimeMessaging.createChannel({
+          AppInstanceArn: Config.appInstanceArn,
+          Name: 'LiveSession',
+          Mode: 'UNRESTRICTED',
+          Privacy: 'PUBLIC',
+          ClientRequestToken: uuid(),
+          ChimeBearer: ownerArn,
+          ExpirationSettings: {
+            ExpirationCriterion: 'LAST_MESSAGE_TIMESTAMP',
+            ExpirationDays: Config.channelExpirationDays,
+          },
+        }).promise();
+        const newChannelArn = channelResp.ChannelArn;
+        if (!newChannelArn) throw new Error('Chime createChannel returned no ChannelArn');
+        newChannelId = newChannelArn.split('/').pop();
+      }
 
       // Commit - only if we still hold the lock we took above.
       try {

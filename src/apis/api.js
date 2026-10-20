@@ -94,7 +94,8 @@ export async function addChannelMembership(channelArn, userArn) {
     const response = await body.json();
     return response.data;
   } catch (error) {
-    console.log('POST call addChannelMembership failed: ', JSON.parse(error.response.body));
+    // Never throws: the Guide calls it on every join, a failure must not stop the join
+    console.log('POST call addChannelMembership failed: ', error.response?.body ?? error);
   }
 }
 
