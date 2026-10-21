@@ -17,7 +17,7 @@ import {
 import '../../styles/LiveViewer.css';
 import Config from '../../utils/config';
 import metricReport from '../../utils/MetricReport';
-import JSONCookieUtils from '../../utils/JSONCookieUtils';
+import TourSessionStore from '../../utils/tourSessionStore';
 import { checkAvailableMeeting } from '../../utils/MeetingUtils';
 import { v4 as uuidv4 } from 'uuid';
 import { useTranslation } from 'react-i18next';
@@ -228,9 +228,10 @@ function JapaneseAudio() {
   );
 
   const getMeetingAttendeeInfoFromCookies = useCallback(
-    (retrievedUser) => {
+    (retrievedUser, liveMeeting) => {
       //setIsLoading(true);
-      initializeMeetingSession(retrievedUser.meeting, retrievedUser.attendee, 'cookie');
+      // Only the attendee comes from storage; the meeting is the live one its id was matched to
+      initializeMeetingSession(liveMeeting, retrievedUser.attendee, 'cookie');
       //setMeeting(retrievedUser.meeting);
       //setAttendee(retrievedUser.attendee);
       setUserArn(retrievedUser.userArn);
@@ -274,7 +275,7 @@ function JapaneseAudio() {
         // setAttendee(attendeeData);
         setChannelArn(channelArn);
         setUserArn(userArn);
-        console.log('Cookie set for 1 day!');
+        console.log('User session saved for 1 day');
         //setIsJoinAudio(true);
         const user = {
           meeting: meetingData,
@@ -283,7 +284,7 @@ function JapaneseAudio() {
           channelArn,
         };
 
-        JSONCookieUtils.setJSONCookie('User' + tourId, user, 1);
+        TourSessionStore.saveTourSession(tourId, 'User', user);
 
       } catch (error) {
         console.error('Error joining the meeting:', error);
@@ -302,40 +303,39 @@ function JapaneseAudio() {
   const rejoinAudioSession = useCallback(
     async (meeting, channelId) => {
       try {
-        const retrievedUser = JSONCookieUtils.getJSONCookie('User' + tourId);
+        const retrievedUser = TourSessionStore.loadTourSession(tourId, 'User');
         console.log('Check retrievedUser:', retrievedUser);
-        console.log('Check retrievedUser meeting:', retrievedUser?.meeting);
         console.log('Check retrievedUser channel:', retrievedUser?.channelArn);
         console.log('Check Input channelId:', channelId);
         console.log('Check Input meeting:', meeting.MeetingId);
-        console.log('Check retrievedUser meetingId:', retrievedUser?.meeting.MeetingId);
+        console.log('Check retrievedUser meetingId:', retrievedUser?.meetingId);
         console.log('Check retrievedUser channelId:', retrievedUser?.channelArn.split('/').pop());
         console.log('Check retrievedUser channelId:', `${Config.appInstanceArn}/channel/${channelId}`);
         const channelArn = `${Config.appInstanceArn}/channel/${channelId}`;
         if (retrievedUser) {
           const isMeetingMatched =
-            retrievedUser.meeting.MeetingId === meeting.MeetingId;
+            retrievedUser.meetingId === meeting.MeetingId;
           const isChannelMatched =
             retrievedUser.channelArn === channelArn;
 
           if (isMeetingMatched && isChannelMatched) {
             const meetingData = await checkAvailableMeeting(
-              retrievedUser.meeting.MeetingId,
+              retrievedUser.meetingId,
               'User'
             );
             if (meetingData) {
-              logMeetingTransition(retrievedUser.meeting.MeetingId, meeting.MeetingId, 'cookie meeting+channel match the tour, reusing it');
+              logMeetingTransition(retrievedUser.meetingId, meeting.MeetingId, 'cookie meeting+channel match the tour, reusing it');
               logChannelTransition(retrievedUser.channelArn, channelArn, 'cookie meeting+channel match the tour, reusing it');
-              getMeetingAttendeeInfoFromCookies(retrievedUser);
+              getMeetingAttendeeInfoFromCookies(retrievedUser, meeting);
               return;
             }
-            logMeetingTransition(retrievedUser.meeting.MeetingId, meeting.MeetingId, 'cookie matched, but that meeting is no longer available - joining the tour\'s instead');
+            logMeetingTransition(retrievedUser.meetingId, meeting.MeetingId, 'cookie matched, but that meeting is no longer available - joining the tour\'s instead');
             logChannelTransition(retrievedUser.channelArn, channelArn, 'cookie\'s meeting is no longer available, using the tour\'s channel');
           } else if (!isMeetingMatched) {
-            logMeetingTransition(retrievedUser.meeting.MeetingId, meeting.MeetingId, "cookie's meeting differs from the tour's, joining the tour's instead");
+            logMeetingTransition(retrievedUser.meetingId, meeting.MeetingId, "cookie's meeting differs from the tour's, joining the tour's instead");
             logChannelTransition(retrievedUser.channelArn, channelArn, "cookie's meeting was wrong, using the tour's channel");
           } else {
-            logMeetingTransition(retrievedUser.meeting.MeetingId, meeting.MeetingId, 'cookie meeting matches, but its channel does not - joining the tour\'s channel instead');
+            logMeetingTransition(retrievedUser.meetingId, meeting.MeetingId, 'cookie meeting matches, but its channel does not - joining the tour\'s channel instead');
             logChannelTransition(retrievedUser.channelArn, channelArn, "cookie's channel differs from the tour's");
           }
         } else {

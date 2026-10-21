@@ -24,7 +24,7 @@ import Config from '../../utils/config';
 import metricReport from '../../utils/MetricReport';
 //import { getPOSTLogger } from '../utils/MeetingLogger';
 //import { checkAvailableMeeting } from '../utils/MeetingUtils';
-import JSONCookieUtils from '../../utils/JSONCookieUtils';
+import TourSessionStore from '../../utils/tourSessionStore';
 import { v4 as uuidv4 } from 'uuid';
 import { useTranslation } from 'react-i18next';
 import {
@@ -401,8 +401,8 @@ function StartLiveSession() {
         userArn: userArn,
         channelArn: channelArn,
       };
-      JSONCookieUtils.setJSONCookie("Main-Guide" + tourId, mainGuide, 1);
-      console.log("attachToMeeting Cookie set Main-Guide for 1 day!");
+      TourSessionStore.saveTourSession(tourId, "Main-Guide", mainGuide);
+      console.log("attachToMeeting saved the Main-Guide session for 1 day");
     } catch (error) {
       console.error('Error attaching to the meeting:', error);
     } finally {
@@ -450,7 +450,7 @@ function StartLiveSession() {
 
   // Start a live audio session - this browser knows of no live meeting for the tour.
   const startLiveAduioSession = useCallback(() => {
-    JSONCookieUtils.deleteCookie("Main-Guide" + tourId);
+    TourSessionStore.clearTourSession(tourId, "Main-Guide");
     return enterServerLiveSession('');
   }, [tourId, enterServerLiveSession]);
 
@@ -464,8 +464,8 @@ function StartLiveSession() {
   // expiry so the chat history stays. The cookie's
   // chat identity is reused so the guide stays the same person in the channel across the expiry.
   const rejoinLiveAduioSession = useCallback((channelId, expiredMeetingId) => {
-    const retrievedMainGuide = JSONCookieUtils.getJSONCookie("Main-Guide" + tourId);
-    JSONCookieUtils.deleteCookie("Main-Guide" + tourId);
+    const retrievedMainGuide = TourSessionStore.loadTourSession(tourId, "Main-Guide");
+    TourSessionStore.clearTourSession(tourId, "Main-Guide");
     return enterServerLiveSession(expiredMeetingId || '', retrievedMainGuide?.userArn);
   }, [tourId, enterServerLiveSession]);
 
@@ -764,7 +764,7 @@ function StartLiveSession() {
 
   // Function to get the meeting and attendee information from the cookies
   const getMeetingAttendeeInfoFromCookies = useCallback(async (liveMeeting, channelId) => {
-    const retrievedMainGuide = JSONCookieUtils.getJSONCookie("Main-Guide" + tourId);
+    const retrievedMainGuide = TourSessionStore.loadTourSession(tourId, "Main-Guide");
     console.log("Retrieved cookie:", retrievedMainGuide);
 
     // No cookie means "this browser has not been here", not "this tour has no session".
@@ -782,20 +782,22 @@ function StartLiveSession() {
     // Tested this way rather than by re-enabling the commented-out checkAvailableMeeting
     // below: getMeeting resolves with { statusCode: 404 } instead of throwing, and that
     // object is truthy, so `if (!meeting) return` could never have fired
-    if (retrievedMainGuide?.meeting?.MeetingId !== liveMeeting.MeetingId) {
-      console.log('The cookie names a stale meeting, joining the tour one instead:', retrievedMainGuide?.meeting?.MeetingId);
-      logMeetingTransition(retrievedMainGuide?.meeting?.MeetingId ?? null, liveMeeting.MeetingId, 'cookie names a stale meeting, joining the tour\'s live meeting instead');
+    if (retrievedMainGuide?.meetingId !== liveMeeting.MeetingId) {
+      console.log('The cookie names a stale meeting, joining the tour one instead:', retrievedMainGuide?.meetingId);
+      logMeetingTransition(retrievedMainGuide?.meetingId ?? null, liveMeeting.MeetingId, 'cookie names a stale meeting, joining the tour\'s live meeting instead');
       logChannelTransition(retrievedMainGuide?.channelArn ?? null, `${Config.appInstanceArn}/channel/${channelId}`, "cookie's meeting was stale, using the tour's channel");
-      JSONCookieUtils.deleteCookie("Main-Guide" + tourId);
+      TourSessionStore.clearTourSession(tourId, "Main-Guide");
       await joinExistingSession(liveMeeting, channelId);
       return;
     }
     // const meeting = await checkAvailableMeeting(retrievedMainGuide.meeting.MeetingId, "Main-Guide");
     // console.log('getMeetingResponse:', meeting);
     // if (!meeting) return;
-    logMeetingTransition(retrievedMainGuide.meeting.MeetingId, retrievedMainGuide.meeting.MeetingId, 'cookie meeting matches the tour, reusing it');
+    logMeetingTransition(retrievedMainGuide.meetingId, retrievedMainGuide.meetingId, 'cookie meeting matches the tour, reusing it');
     logChannelTransition(retrievedMainGuide.channelArn, `${Config.appInstanceArn}/channel/${channelId}`, 'cookie meeting matches; channel is always taken from the tour, not the cookie');
-    await initializeMeetingSession(retrievedMainGuide.meeting, retrievedMainGuide.attendee, 'cookie');
+    // The stored meetingId matches the live one, so join with the live meeting object; only the
+    // attendee is read back from storage
+    await initializeMeetingSession(liveMeeting, retrievedMainGuide.attendee, 'cookie');
     setUserArn(retrievedMainGuide.userArn);
     //setUserId(retrievedMainGuide.userArn.split('/').pop());
     // Derived from the tour rather than read back from the cookie, so the two can never drift

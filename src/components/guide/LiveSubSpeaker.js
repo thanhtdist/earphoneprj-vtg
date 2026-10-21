@@ -21,7 +21,7 @@ import Config from '../../utils/config';
 import metricReport from '../../utils/MetricReport';
 import { getPOSTLogger } from '../../utils/MeetingLogger';
 import { checkAvailableMeeting } from '../../utils/MeetingUtils';
-import JSONCookieUtils from '../../utils/JSONCookieUtils';
+import TourSessionStore from '../../utils/tourSessionStore';
 import { v4 as uuidv4 } from 'uuid';
 import { useTranslation } from 'react-i18next';
 import Header from '../common/Header';
@@ -398,7 +398,7 @@ function LiveSubSpeaker() {
       setChannelArn(createAppUserAndJoinChannelResponse.channelArn);
       setUserArn(createAppUserAndJoinChannelResponse.userArn);
 
-      // Storage the Sub-Guide information in the cookies
+      // Remember the Sub-Guide session in this browser
       // Define your data
       const subGuide = {
         meeting: meetingData,
@@ -407,9 +407,9 @@ function LiveSubSpeaker() {
         channelArn: createAppUserAndJoinChannelResponse.channelArn,
       };
 
-      // Set the JSON cookie for 1 day
-      JSONCookieUtils.setJSONCookie("Sub-Guide" + tourId, subGuide, 1);
-      console.log("Cookie set for 1 day!");
+      // Kept for 1 day
+      TourSessionStore.saveTourSession(tourId, "Sub-Guide", subGuide);
+      console.log("Sub-Guide session saved for 1 day");
 
     } catch (error) {
       console.error('Error joining the meeting:', error);
@@ -657,11 +657,12 @@ function LiveSubSpeaker() {
   }, []);
 
   // Function to get the meeting and attendee information from the cookies
-  const getMeetingAttendeeInfoFromCookies = useCallback(async (retrievedSubGuide) => {
+  const getMeetingAttendeeInfoFromCookies = useCallback(async (retrievedSubGuide, liveMeeting) => {
     console.log("Retrieved cookie:", retrievedSubGuide);
     // Awaited - isSessionReady is set inside initializeMeetingSession itself, once bind +
     // start() actually finish, not the instant this call is fired off
-    await initializeMeetingSession(retrievedSubGuide.meeting, retrievedSubGuide.attendee, 'cookie');
+    // Only the attendee comes from storage; the meeting is the live one its id was matched to
+    await initializeMeetingSession(liveMeeting, retrievedSubGuide.attendee, 'cookie');
     setUserArn(retrievedSubGuide.userArn);
     setChannelArn(retrievedSubGuide.channelArn);
   }, [initializeMeetingSession]);
@@ -718,32 +719,32 @@ function LiveSubSpeaker() {
     async (meeting, channelId) => {
       try {
         // Retrieve and parse the "Sub-Guide" cookie
-        const retrievedSubGuide = JSONCookieUtils.getJSONCookie("Sub-Guide" + tourId);
+        const retrievedSubGuide = TourSessionStore.loadTourSession(tourId, "Sub-Guide");
         console.log("Retrieved cookie:", retrievedSubGuide);
         const channelArn = `${Config.appInstanceArn}/channel/${channelId}`;
         if (retrievedSubGuide) {
           // Validate the retrieved cookie structure
-          const isMeetingMatched = retrievedSubGuide.meeting.MeetingId === meeting.MeetingId;
+          const isMeetingMatched = retrievedSubGuide.meetingId === meeting.MeetingId;
           const isChannelMatched = retrievedSubGuide.channelArn === channelArn;
           const isMatched = isMeetingMatched && isChannelMatched;
           if (isMatched) {
             console.log("Sub-Guide cookie matched the current meeting and channel");
             // Call checkMatchedMeeting only once and store the result
-            const meetingData = await checkAvailableMeeting(retrievedSubGuide.meeting.MeetingId, "Sub-Guide");
+            const meetingData = await checkAvailableMeeting(retrievedSubGuide.meetingId, "Sub-Guide");
             console.log('getMeetingResponse:', meetingData);
             if (meetingData) {
-              logMeetingTransition(retrievedSubGuide.meeting.MeetingId, meeting.MeetingId, 'cookie meeting+channel match the tour, reusing it');
+              logMeetingTransition(retrievedSubGuide.meetingId, meeting.MeetingId, 'cookie meeting+channel match the tour, reusing it');
               logChannelTransition(retrievedSubGuide.channelArn, channelArn, 'cookie meeting+channel match the tour, reusing it');
-              getMeetingAttendeeInfoFromCookies(retrievedSubGuide);
+              getMeetingAttendeeInfoFromCookies(retrievedSubGuide, meeting);
               return;
             }
-            logMeetingTransition(retrievedSubGuide.meeting.MeetingId, meeting.MeetingId, 'cookie matched, but that meeting is no longer available - joining the tour\'s instead');
+            logMeetingTransition(retrievedSubGuide.meetingId, meeting.MeetingId, 'cookie matched, but that meeting is no longer available - joining the tour\'s instead');
             logChannelTransition(retrievedSubGuide.channelArn, channelArn, 'cookie\'s meeting is no longer available, using the tour\'s channel');
           } else if (!isMeetingMatched) {
-            logMeetingTransition(retrievedSubGuide.meeting.MeetingId, meeting.MeetingId, "cookie's meeting differs from the tour's, joining the tour's instead");
+            logMeetingTransition(retrievedSubGuide.meetingId, meeting.MeetingId, "cookie's meeting differs from the tour's, joining the tour's instead");
             logChannelTransition(retrievedSubGuide.channelArn, channelArn, "cookie's meeting was wrong, using the tour's channel");
           } else {
-            logMeetingTransition(retrievedSubGuide.meeting.MeetingId, meeting.MeetingId, 'cookie meeting matches, but its channel does not - joining the tour\'s channel instead');
+            logMeetingTransition(retrievedSubGuide.meetingId, meeting.MeetingId, 'cookie meeting matches, but its channel does not - joining the tour\'s channel instead');
             logChannelTransition(retrievedSubGuide.channelArn, channelArn, "cookie's channel differs from the tour's");
           }
         } else {

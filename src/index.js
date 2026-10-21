@@ -8,6 +8,12 @@ import outputs from "./amplify_outputs.json";
 import './i18n';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
+import TourSessionStore from './utils/tourSessionStore';
+
+// Before anything joins: drop the per-tour cookies older builds left behind, and expired tours
+TourSessionStore.dropLegacyTourCookies();
+TourSessionStore.pruneTourSessions();
+
 // Connect the Amplify backend resource from outputs file to the frontend
 Amplify.configure(outputs);
 
