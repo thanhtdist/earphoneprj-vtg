@@ -1067,7 +1067,7 @@ function StartLiveSession() {
 
     return () => {
       clearTimeout(settleTimer);
-      meetingSession.audioVideo.realtimeUnsubscribeFromAttendeeIdPresence(callback);
+      meetingSession.audioVideo.realtimeUnsubscribeToAttendeeIdPresence(callback);
       setBroadcastClaim(CLAIM_CHECKING);
     };
 
@@ -1423,7 +1423,7 @@ function StartLiveSession() {
         {/* Chatting before the guide has even joined doesn't make sense - there is no channel
             (channelArn) to send to yet anyway */}
         {(isSessionReady) && chatRestriction !== "nochat" && (
-          <MessageBox userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} userType={userType} statusChat={chatRestriction} chatLanguage="ja" />
+          <MessageBox userArn={userArn} sessionId={Config.sessionId} channelArn={channelArn} userType={userType} statusChat={chatRestriction} chatLanguage={getLanguageCode(selectedSpeakLanguage)} />
         )}
       </div>
       {/* Reads the console on the device itself, `npm start` only */}
