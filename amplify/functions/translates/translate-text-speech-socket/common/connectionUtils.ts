@@ -4,6 +4,20 @@ import { Config } from '@configs/config';
 
 const dynamoDB = new AWS.DynamoDB.DocumentClient({ region: Config.region });
 
+/**
+ * The language the Guide speaks now, so that the Sub-Guide and the listeners know what is spoken.
+ * With several Guide devices connected, the one that connected or changed its language last wins
+ * (updatedAt, set by connectState and selectLanguage).
+ * @param connections - the connections of one tour
+ * @returns the language code, or null while no Guide is connected
+ */
+export function findGuideLanguage(connections: Record<string, any>[]): string | null {
+  const guideConnection = connections
+    .filter(c => c.userType === 'Guide')
+    .sort((a, b) => String(b.updatedAt ?? b.createdAt).localeCompare(String(a.updatedAt ?? a.createdAt)))[0];
+  return guideConnection?.languageCode ?? null;
+}
+
 export async function updateConnectionHistoryAndBroadcast(
   tourId: string,
   languageCode: string,
@@ -28,13 +42,7 @@ export async function updateConnectionHistoryAndBroadcast(
   const subGuideCount = connections.filter(c => c.userType === 'Sub-Guide').length;
   const userCount = connections.filter(c => c.userType === 'User').length;
 
-  // The language the Guide speaks now, so that the Sub-Guide and the listeners know what is spoken.
-  // With several Guide devices connected, the one that connected or changed its language last wins
-  // (updatedAt, set by connectState and selectLanguage). null while no Guide is connected
-  const guideConnection = connections
-    .filter(c => c.userType === 'Guide')
-    .sort((a, b) => String(b.updatedAt ?? b.createdAt).localeCompare(String(a.updatedAt ?? a.createdAt)))[0];
-  const guideLanguage = guideConnection?.languageCode ?? null;
+  const guideLanguage = findGuideLanguage(connections);
 
   await dynamoDB
     .put({

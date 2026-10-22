@@ -42,6 +42,7 @@ import { checkAuth } from './functions/users/check-auth/resource';
 import { activeAdmin } from './functions/users/active-admin/resource';
 import { refreshToken } from './functions/users/refresh-token/resource';
 import { getMeetingByTourId } from './functions/tours/get-meeting-by-tourid/resource';
+import { getGuideLanguage } from './functions/tours/get-guide-language/resource';
 import { getTourByNumberAndDate } from './functions/tours/get-tour-by-number-and-date/resource';
 import { updateMeetingByTourId } from './functions/tours/update-meeting-by-tourid/resource';
 import { defaultWS } from './functions/translates/translate-text-speech-socket/default/resource';
@@ -90,6 +91,7 @@ const backend = defineBackend({
   activeAdmin, // active admin by the admin
   refreshToken, // refresh token by the admin
   getMeetingByTourId, // get meeting by tourID
+  getGuideLanguage, // get the language the Guide of a tour speaks
   updateMeetingByTourId,
   getTourByNumberAndDate,
   defaultWS, // default WebSocket handler
@@ -404,6 +406,11 @@ meetingByTourIdPath.addMethod("GET", new LambdaIntegration(
 // add PUT method for /tours/{TourID}/meeting with getMeetingByTourId Lambda integration
 meetingByTourIdPath.addMethod("PUT", new LambdaIntegration(
   backend.updateMeetingByTourId.resources.lambda
+));
+
+// add GET method for /tours/{TourID}/guide-language with getGuideLanguage Lambda integration
+tourIdPath.addResource("guide-language").addMethod("GET", new LambdaIntegration(
+  backend.getGuideLanguage.resources.lambda
 ));
 
 
