@@ -78,6 +78,11 @@ export const LANGUAGE_BY_VOICE_KEY = {
 export const getLanguageCode = (voiceLanguageKey) =>
     LANGUAGE_BY_VOICE_KEY[voiceLanguageKey] || getBaseLanguage(voiceLanguageKey)
 
+// Voice-language key of an Amazon Translate code ("zh" -> "cmn-CN"), undefined when it is not one of the voice
+// languages. The server reports the Guide's language as a code, the Guide's selector works with keys
+export const getVoiceLanguageKey = (languageCode) =>
+    Object.keys(LANGUAGE_BY_VOICE_KEY).find((key) => LANGUAGE_BY_VOICE_KEY[key] === languageCode)
+
 // Language the Guide is taken to speak until the server says otherwise, as an Amazon Translate code
 export const DEFAULT_GUIDE_LANGUAGE_CODE = getLanguageCode(SPEAK_VOICE_LANGUAGES_KEY)
 

@@ -7,6 +7,7 @@ import {
   startMeetingTranscription,
   stopMeetingTranscription,
   getMeetingByTourId,
+  getGuideLanguage,
   startOrJoinLiveSession,
 } from '../../apis/api';
 import {
@@ -33,7 +34,9 @@ import {
   getBaseLanguage,
   getLanguageCode,
   getTranscribeLanguageCode,
+  getVoiceLanguageKey,
 } from '../../utils/constant';
+import { hasJoinedTour, markTourJoined } from '../../utils/joinedTour';
 import Header from '../common/Header';
 import MessageBox from '../chat/MessageBox';
 //import { useLocation } from 'react-router-dom';
@@ -61,6 +64,7 @@ import {
   watchMeetingAttendees,
   logMicStartTiming,
   logMeetingTransition,
+  logRegisteredLanguage,
 } from '../../utils/meetingHealth';
 import { logChannelTransition } from '../../utils/chatHealth';
 import {
@@ -84,6 +88,9 @@ import useWebSocketVisibilityHandler from '../../hooks/useWebSocketVisibilityHan
  * The main speaker can talk & listen from the sub-speaker
  * The main speaker can also chat with the sub-speaker or listener
  */
+// How often a Guide device still on the language selection asks whether another Guide has joined meanwhile
+const GUIDE_LANGUAGE_POLL_MS = 3000;
+
 function StartLiveSession() {
   // Create a WebSocket reference
   const wsRef = useRef(null);
@@ -168,6 +175,65 @@ function StartLiveSession() {
       setIsLoading(!isEnabled);   // the join below starts at once, show it as loading from the first frame
     });
   }, [tourId]);
+
+  // The language the Guide of the tour speaks, as the server knows it: undefined until known, null when no
+  // Guide is connected. A Guide device joining after another one follows it: no selection, it joins by itself
+  // and leaves the transcription alone. After a reload of a tab that joined before, with a Guide still there,
+  // the selection is back, preselected with that language
+  const [currentGuideLanguage, setCurrentGuideLanguage] = useState(undefined);
+  const [isFollowing, setIsFollowing] = useState(false);
+  const [hasJoinedBefore] = useState(() => hasJoinedTour(tourId));
+  // Set once this device follows another one: the transcription is shared by the meeting and was
+  // started by the Guide who chose the language
+  const followsGuideRef = useRef(false);
+  // Set once the join starts, by the button or by itself: from then on the selection is settled
+  const joinStartedRef = useRef(false);
+  // `canFollow` is false for a reload with a Guide still there: that one keeps the selection, preselected
+  const applyGuideLanguage = useCallback((guideLanguage, canFollow) => {
+    const voiceKey = getVoiceLanguageKey(guideLanguage);
+    if (voiceKey) {
+      setSelectedSpeakLanguage(voiceKey);
+    }
+    const follows = Boolean(guideLanguage) && canFollow;
+    if (follows) {
+      followsGuideRef.current = true;
+      setIsLoading(true);   // the join below starts at once, show it as loading from the first frame
+      setIsFollowing(true);
+    }
+    setCurrentGuideLanguage(guideLanguage);
+  }, []);
+  useEffect(() => {
+    getGuideLanguage(tourId).then((guideLanguage) => applyGuideLanguage(guideLanguage, !hasJoinedBefore));
+  }, [tourId, hasJoinedBefore, applyGuideLanguage]);
+
+  // Still on the selection with no Guide in the tour: ask again, so that when another Guide device joins this
+  // one leaves the selection and joins too, as if the page had been opened a moment later. A tab that joined
+  // before counts too: with nobody there it was never a reload that keeps its selection
+  const isChoosingLanguage = isTranslationEnabled === true && currentGuideLanguage === null && isLoading !== true;
+  useEffect(() => {
+    if (!isChoosingLanguage) {
+      return undefined;
+    }
+    const timer = setInterval(() => {
+      getGuideLanguage(tourId).then((guideLanguage) => {
+        if (guideLanguage && !joinStartedRef.current) {
+          applyGuideLanguage(guideLanguage, true);
+        }
+      });
+    }, GUIDE_LANGUAGE_POLL_MS);
+    return () => clearInterval(timer);
+  }, [isChoosingLanguage, tourId, applyGuideLanguage]);
+
+  // Another Guide device chose a new language: follow it without reloading
+  const [broadcastGuideLanguage, setBroadcastGuideLanguage] = useState(null);
+  useEffect(() => {
+    const voiceKey = getVoiceLanguageKey(broadcastGuideLanguage);
+    if (!voiceKey || voiceKey === selectedSpeakLanguage) {
+      return;
+    }
+    followsGuideRef.current = true;
+    setSelectedSpeakLanguage(voiceKey);
+  }, [broadcastGuideLanguage, selectedSpeakLanguage]);
   //const audioData = useRef([]); // Ref to store audio data
 
   useEffect(() => {
@@ -920,12 +986,15 @@ function StartLiveSession() {
     // The language the Guide speaks (Amazon Translate code): the server sends it to the others as guideLanguage
     languageCode: getLanguageCode(selectedSpeakLanguage),
     userType: userType,
-    onConnectionUpdate: (message) => setParticipantsCount({
-      total: message.connectionCount,
-      guide: message.guideCount,
-      subGuide: message.subGuideCount,
-      user: message.userCount,
-    }),
+    onConnectionUpdate: (message) => {
+      setParticipantsCount({
+        total: message.connectionCount,
+        guide: message.guideCount,
+        subGuide: message.subGuideCount,
+        user: message.userCount,
+      });
+      setBroadcastGuideLanguage(message.guideLanguage ?? null);
+    },
   });
 
   useWebSocketVisibilityHandler({
@@ -947,11 +1016,17 @@ function StartLiveSession() {
     // Not open yet: connectState will carry this value when it opens
     if (wsRef.current?.readyState === WebSocket.OPEN) {
       wsRef.current.send(JSON.stringify({ action: 'selectLanguage', languageCode }));
+      logRegisteredLanguage(userType, languageCode);
     }
-  }, [selectedSpeakLanguage]);
+  }, [selectedSpeakLanguage, userType]);
 
   // Handle sending text to the WebSocket server
   const handleTranslateAudio = useCallback((text) => {
+    // The transcription is shared by the meeting, so every Guide device receives it: only the one
+    // broadcasting sends the text to be translated, or the others would translate the same sentence again
+    if (!isMicOnRef.current) {
+      return;
+    }
     console.log('Sending text to WebSocket', wsRef.current?.readyState);
     if (wsRef.current?.readyState === WebSocket.OPEN) {
       const payload = {
@@ -1091,7 +1166,8 @@ function StartLiveSession() {
 
   // Send the language code to the listener
   useEffect(() => {
-    if (!meetingSession) {
+    // A Guide device following another one must not restart the transcription of the meeting
+    if (!meetingSession || followsGuideRef.current) {
       return;
     }
     //console.log("enableMeetingTranscription selectedVoiceLanguage", selectedVoiceLanguage);
@@ -1175,6 +1251,8 @@ function StartLiveSession() {
   // Triggered by the guide clicking Join (after picking a language) instead of running
   // automatically on mount, so there is a chance to pick a language first - see the render
   const joinLiveSession = useCallback(() => {
+    joinStartedRef.current = true;
+    markTourJoined(tourId);
 
     // Step 1: Check if the meeting is existed in tour
     // call getMeetingByTourId API to check if the meeting is existed in tour
@@ -1251,15 +1329,16 @@ function StartLiveSession() {
 
   }, [tourId, startLiveAduioSession, getMeetingAttendeeInfoFromCookies, rejoinLiveAduioSession]);
 
-  // No translation on the tour: nothing to choose, join as soon as the page knows (once)
+  // No translation on the tour, or another Guide device to follow: nothing to choose, join as soon as the
+  // page knows (once)
   const hasAutoJoinedRef = useRef(false);
   useEffect(() => {
-    if (isTranslationEnabled !== false || hasAutoJoinedRef.current) {
+    if ((isTranslationEnabled !== false && !isFollowing) || hasAutoJoinedRef.current) {
       return;
     }
     hasAutoJoinedRef.current = true;
     joinLiveSession();
-  }, [isTranslationEnabled, joinLiveSession]);
+  }, [isTranslationEnabled, isFollowing, joinLiveSession]);
 
   // Call requestWakeLock once the meeting session is set:
   // useEffect(() => {
@@ -1334,7 +1413,7 @@ function StartLiveSession() {
         </audio>
         {!isSessionReady ? (
           <>
-            {isTranslationEnabled && (
+            {isTranslationEnabled && !isFollowing && (
               <div className="guide-box-selected-language">
                 <h3 className='title-box'>{t('voiceLanguageLbl.speaking')}</h3>
                 <div className="select-container">
@@ -1354,7 +1433,7 @@ function StartLiveSession() {
                 </div>
               </div>
             )}
-            {isLoading === true || isTranslationEnabled === undefined ? (
+            {isLoading === true || isTranslationEnabled === undefined || currentGuideLanguage === undefined ? (
               <div className="loading">
                 <div className="spinner"></div>
                 <p>{t('loading')}</p>

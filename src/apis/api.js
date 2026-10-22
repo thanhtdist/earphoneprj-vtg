@@ -396,6 +396,26 @@ export async function getMeetingByTourId(tourId) {
 }
 
 /**
+ * Language the Guide of a tour speaks, as registered on the Guide's WebSocket connection.
+ * @param {string} tourId - The ID of the tour.
+ * @returns {Promise<string|null>} Amazon Translate code, null when no Guide is connected or the call failed.
+ */
+export async function getGuideLanguage(tourId) {
+  try {
+    const restOperation = get({
+      apiName: 'TourVTGRestApi',
+      path: `tours/${encodeURIComponent(tourId)}/guide-language`, // endpoint defined in backend.ts
+    });
+    const { body } = await restOperation.response;
+    const response = await body.json();
+    return response?.data?.guideLanguage ?? null;
+  } catch (error) {
+    console.log('GET call getGuideLanguage failed: ', error);
+    return null;
+  }
+}
+
+/**
  * Update a meetingId by tourId
  * @param {string} tourId - The ID of the tour.
  * @returns {Promise<any>} The response data from the API call.
