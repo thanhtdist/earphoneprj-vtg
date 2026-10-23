@@ -1,9 +1,11 @@
 import { defineFunction } from "@aws-amplify/backend";
+import { LAMBDA_NODE_RUNTIME } from "../../../configs/runtime";
 
 /**
  * This function adds a member to a channel when a participant joins a channel(group chat) to chat with others.
  */
 export const addChannelMembership = defineFunction({
   name: "add-channel-membership", // Lamda function name is used to create in the cloud
+  runtime: LAMBDA_NODE_RUNTIME, // Node.js version the function runs on
   entry: "./handler.ts" // Path to the handler file to make business logic
 });

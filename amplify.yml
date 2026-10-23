@@ -1,6 +1,10 @@
 version: 1
 backend:
   phases:
+    preBuild:
+      commands:
+        - nvm install # Use the Node version pinned in .nvmrc
+        - node -v
     build:
       commands:
         - npm ci --cache .npm --prefer-offline --force
@@ -9,6 +13,8 @@ frontend:
   phases:
     preBuild:
       commands:
+        - nvm install # Use the Node version pinned in .nvmrc
+        - node -v
         - npm install --force
         - cp ./amplify_outputs.json ./src/ # This will copy the file to src
     build:

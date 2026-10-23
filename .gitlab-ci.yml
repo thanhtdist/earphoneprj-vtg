@@ -12,7 +12,7 @@ variables:
 
 frontend:lint:
   stage: lint
-  image: node:20
+  image: node:24 # Same Node as .nvmrc
   before_script:
     # Install npm dependencies
     - npm install --cache .npm --prefer-offline --force
@@ -26,16 +26,11 @@ frontend:lint:
 
 frontend:build:
   stage: build
-  image: node:20
+  timeout: 30m # Fail fast instead of holding the runner for the default hour
+  image: node:24 # Same Node as .nvmrc
   before_script:
-    # Install aws-cli (Debian-based)
-    - apt-get update
-    - apt-get install -y awscli
-    # Configure AWS
-    - aws configure set region $AWS_REGION
-    - aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
-    - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
-    - aws configure set default.region $AWS_REGION
+    # No aws-cli: ampx reads AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY and AWS_REGION
+    # from the environment, and installing it through apt could hang the job for the full hour
     # Install npm dependencies
     - npm install --cache .npm --prefer-offline --force
     # amplify_outputs.json is git-ignored but imported by src/index.js, so it has to be
